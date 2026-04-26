@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Luci di San Celeste</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<audio id="bg-music" src="music/UFO Sighting Loop.mp3" loop preload="auto"></audio>
+
+<div id="game-container">
+  <canvas id="gameCanvas" width="800" height="500"></canvas>
+  <div id="hud">
+    <div class="hud-section"><span class="hud-label">📍</span><span class="hud-value" id="hud-area">Piazza del Borgo</span></div>
+    <div class="hud-section"><span class="hud-label">🕵️</span><span class="hud-value">WASD Muovi | E Interagisci</span></div>
+    <div class="hud-section"><span class="hud-label">🔍</span><span class="hud-value" id="hud-clues">0/8</span></div>
+    <div class="hud-section">
+      <span class="hud-label">[J]</span><span class="hud-value">Diario</span>
+      <span class="hud-label">[I]</span><span class="hud-value">Inv</span>
+      <span id="hud-ded-hint" class="hud-value" style="display:none"><span class="hud-label">[T]</span><span class="hud-blinking">Teoria</span></span>
+      <button id="mute-btn" class="mute-btn" title="Musica ON/OFF" onclick="toggleMusic()">🔊</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMIZE OVERLAY -->
+<div id="customize-overlay" class="overlay active">
+  <div class="panel" style="max-width:520px">
+    <h2>🕵️ Crea il tuo Detective</h2>
+    <div style="display:flex;gap:20px;align-items:flex-start">
+      <div style="flex-shrink:0;text-align:center">
+        <canvas id="previewCanvas" width="48" height="56" style="image-rendering:pixelated;border:2px solid #d4a843;background:#1a1c20;width:96px;height:112px"></canvas>
+        <p style="font-size:10px;color:#6b7b6b;margin-top:4px">Anteprima</p>
+      </div>
+      <div style="flex:1">
+        <label class="custom-label">Nome</label>
+        <input type="text" id="custom-name" class="custom-input" value="Detective Maurizio" maxlength="24">
+        <label class="custom-label">Colore Cappotto</label>
+        <div class="color-row" id="coat-colors">
+          <span class="color-swatch selected" data-color="#8B7355" style="background:#8B7355" title="Beige"></span>
+          <span class="color-swatch" data-color="#5C5C5C" style="background:#5C5C5C" title="Grigio"></span>
+          <span class="color-swatch" data-color="#6B4E3D" style="background:#6B4E3D" title="Marrone"></span>
+          <span class="color-swatch" data-color="#2D3047" style="background:#2D3047" title="Blu notte"></span>
+          <span class="color-swatch" data-color="#3D5A3C" style="background:#3D5A3C" title="Verde scuro"></span>
+        </div>
+        <label class="custom-label">Dettaglio (Cappello / Interno)</label>
+        <div class="color-row" id="detail-colors">
+          <span class="color-swatch selected" data-color="#2D3047" style="background:#2D3047" title="Blu notte"></span>
+          <span class="color-swatch" data-color="#1A1C20" style="background:#1A1C20" title="Nero"></span>
+          <span class="color-swatch" data-color="#4A3000" style="background:#4A3000" title="Marrone scuro"></span>
+          <span class="color-swatch" data-color="#2D4020" style="background:#2D4020" title="Verde bosco"></span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="customize-start">Inizia l'Indagine</button>
+  </div>
+</div>
+
+<!-- DIALOGUE OVERLAY -->
+<div id="dialogue-overlay" class="overlay">
+  <div class="panel" id="dialogue-panel">
+    <div class="npc-name" id="dialogue-npc-name"></div>
+    <div class="dialogue-text" id="dialogue-text"></div>
+    <div id="dialogue-choices"></div>
+  </div>
+</div>
+
+<!-- JOURNAL OVERLAY -->
+<div id="journal-overlay" class="overlay">
+  <div class="panel" id="journal-panel">
+    <button class="pnl-close" id="journal-close">✕</button>
+    <h2>📓 Diario dell'Investigatore</h2>
+    <div id="journal-content"></div>
+  </div>
+</div>
+
+<!-- INVENTORY OVERLAY -->
+<div id="inventory-overlay" class="overlay">
+  <div class="panel">
+    <button class="pnl-close" id="inventory-close">✕</button>
+    <h2>🎒 Inventario</h2>
+    <div id="inventory-content"></div>
+  </div>
+</div>
+
+<!-- DEDUCTION OVERLAY -->
+<div id="deduction-overlay" class="overlay">
+  <div class="panel" style="max-width:700px">
+    <button class="pnl-close" id="deduction-close">✕</button>
+    <h2>🔬 Pannello di Deduzione</h2>
+    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina ogni indizio nello slot corretto per formulare un'ipotesi</p>
+    <div class="deduction-layout">
+      <div class="deduction-column" id="deduction-clues">
+        <h3>Indizi disponibili</h3>
+      </div>
+      <div class="deduction-column" id="deduction-slots">
+        <h3>Ipotesi</h3>
+        <div class="deduction-slot" data-slot="posizione">Posizione</div>
+        <div class="deduction-slot" data-slot="data">Data / Cronologia</div>
+        <div class="deduction-slot" data-slot="prova">Prova fisica</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="deduction-confirm" disabled>Conferma Ipotesi</button>
+  </div>
+</div>
+
+<!-- ENDING OVERLAY -->
+<div id="ending-overlay" class="overlay">
+  <div class="panel" style="max-width:650px">
+    <h2 id="ending-title"></h2>
+    <div class="ending-text" id="ending-text"></div>
+    <div style="text-align:center;margin-top:16px;color:#6b7b6b;font-size:12px">Premi ENTER per ricominciare</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="src/data.js"></script>
+<script src="src/game.js"></script>
+</body>
+</html>

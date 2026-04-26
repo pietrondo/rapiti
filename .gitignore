@@ -1,0 +1,6 @@
+music/
+node_modules/
+.serena/
+*.mp3
+*.wav
+*.ogg
