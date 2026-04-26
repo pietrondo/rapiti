@@ -228,3 +228,21 @@ body {
   background:#2d3047; color:#e8dcc8; border:1px solid #4a5568; outline:none;
 }
 .scene-select:focus { border-color:#d4a843; }
+
+/* ── RECORDER PUZZLE ── */
+.rec-cable-btn {
+  display:block; width:100%; padding:8px; margin:4px 0;
+  font-family:'Courier New',monospace; font-size:13px; font-weight:bold;
+  cursor:pointer; border:3px solid transparent; transition:border-color 0.15s;
+}
+.rec-bobin-btn {
+  display:block; width:100%; padding:8px; margin:4px 0;
+  background:#2d3047; color:#e8dcc8; border:1px solid #4a5568;
+  font-family:'Courier New',monospace; font-size:13px; cursor:pointer;
+}
+.rec-bobin-btn:hover { border-color:#d4a843; }
+.rec-power-btn {
+  display:block; margin:8px auto; cursor:pointer; border:2px solid #4a5568;
+  border-radius:50%; transition:border-color 0.2s;
+}
+.rec-power-btn:hover { border-color:#d4a843; }

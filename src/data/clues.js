@@ -12,7 +12,8 @@ var clues = [
   { id: 'diario_enzo',     name: 'Diario di Enzo Bellandi',               area: 'cascina',  desc: 'Il diario del nipote di Teresa. "16 marzo 1977 — Le luci sono tornate. Sono uguali a quelle del nonno. Cerchi nel grano. Loro mi osservano."' },
   { id: 'tracce_circolari',name: 'Tracce circolari nel terreno',          area: 'campo',    desc: 'Cerchi perfetti nel terreno, erba piegata in senso orario. Diametro: circa 8 metri. Il terreno è vetrificato ai bordi.' },
   { id: 'lettera_censurata',name:'Lettera militare censurata',            area: 'archivio', desc: 'Ministero della Difesa, 1961. "Operazione Sirio — recupero materiali non terrestri — massima segretezza." Timbrata: NON DIVULGARE.' },
-  { id: 'radio_audio',     name: 'Registrazione radio — voce disturbata',  area: 'bar_interno',desc: 'Una voce filtrata dalle interferenze radio: "...non guardare... quando si ferma...". Origine sconosciuta.' }
+  { id: 'radio_audio',     name: 'Registrazione radio — voce disturbata',  area: 'bar_interno',desc: 'Una voce filtrata dalle interferenze radio: "...non guardare... quando si ferma...". Origine sconosciuta.' },
+  { id: 'registro_monte_ferro', name:'Nastro registrato — Monte Ferro',        area: 'monte_ferro',desc: '"Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—". Il nastro si interrompe bruscamente.' }
 ];
 
 /** Costruisce dizionario indizi per lookup */
@@ -51,10 +52,14 @@ var areaObjects = {
     { id: 'mappa_campi', x: 320, y: 100, w: 18, h: 14, type: 'clue', drawHint: true },
     { id: 'tracce_circolari', x: 180, y: 160, w: 60, h: 40, type: 'clue', drawHint: true, requires: 'mappa_campi' },
     { id: 'door_cascina', x: 185, y: 224, w: 30, h: 16, type: 'door', toArea: 'cascina', toSpawnX: 195, toSpawnY: 160, drawHint: false },
+    { id: 'door_monte_ferro', x: 320, y: 55, w: 30, h: 16, type: 'door', toArea: 'monte_ferro', toSpawnX: 195, toSpawnY: 200, drawHint: false },
     { id: 'gatto_campo', x: 320, y: 130, w: 8, h: 6, type: 'gatto', drawHint: false }
   ],
   bar_interno: [
     { id: 'radio_bar', x: 295, y: 152, w: 20, h: 12, type: 'radio', drawHint: true }
+  ],
+  monte_ferro: [
+    { id: 'recorder', x: 40, y: 105, w: 28, h: 16, type: 'recorder', drawHint: true }
   ],
   municipio: [],
   cascina_interno: []

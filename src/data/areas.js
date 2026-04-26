@@ -363,6 +363,47 @@ var areas = {
       drawExitSign(ctx, 170, CANVAS_H-18, 'CASCINA');
       drawVignette(ctx);
     }
+  },
+
+  monte_ferro: {
+    name: 'Stazione Radio Monte Ferro',
+    walkableTop: 8,
+    colliders: [{x:18,y:105,w:165,h:25},{x:238,y:20,w:158,h:175}],
+    npcs: [],
+    exits: [],
+    draw: function(ctx) {
+      ctx.fillStyle = PALETTE.violetBlue; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(0,185,CANVAS_W,65);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(0,0,CANVAS_W,5);
+      // Antenna
+      ctx.fillStyle = PALETTE.alumGrey; ctx.fillRect(340,5,5,95);
+      for(var at=0;at<4;at++){ctx.fillRect(333+at*3,15+at*18,20,2);}
+      // Edificio
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(240,20,148,168);
+      // Finestra sbarrata
+      ctx.fillStyle = PALETTE.nightBlue; ctx.fillRect(260,46,30,32);
+      ctx.fillStyle = PALETTE.alumGrey;
+      for(var fb=0;fb<5;fb++){ctx.fillRect(261,48+fb*7,28,2);}
+      // Registratore
+      ctx.fillStyle = PALETTE.alumGrey; ctx.fillRect(30,90,42,28);
+      ctx.fillStyle = PALETTE.nightBlue; ctx.fillRect(36,98,30,12);
+      ctx.fillStyle = PALETTE.earthBrown; ctx.beginPath();ctx.arc(42,104,5,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(60,104,5,0,Math.PI*2);ctx.fill();
+      var pulse=Math.sin(Date.now()*0.005)*0.4+0.6;
+      ctx.fillStyle='rgba(204,0,0,'+pulse.toFixed(2)+')';ctx.fillRect(46,88,4,4);
+      // Scrivania
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(18,118,168,12);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(24,130,5,55);ctx.fillRect(170,130,5,55);
+      // Cavi
+      ctx.strokeStyle=PALETTE.alumGrey+'88';ctx.beginPath();ctx.moveTo(50,118);ctx.lineTo(50,185);
+      ctx.moveTo(40,118);ctx.lineTo(10,185);ctx.stroke();
+      // Armadietto + bobine
+      ctx.fillStyle = PALETTE.alumGrey; ctx.fillRect(382,125,16,55);
+      ctx.fillStyle = PALETTE.earthBrown;ctx.fillRect(200,55,10,10);ctx.fillRect(215,52,10,10);ctx.fillRect(208,65,10,10);
+      ctx.fillStyle = 'rgba(100,140,200,0.10)';ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+      drawExitSign(ctx, 170, CANVAS_H-18, 'CAMPO');
+      drawVignette(ctx);
+    }
   }
 };
 

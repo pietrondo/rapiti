@@ -72,6 +72,9 @@ function handleKeyDown(e) {
   if (ph === 'scene' && key === 'Escape') {
     closeScenePuzzle(); e.preventDefault();
   }
+  if (ph === 'recorder' && key === 'Escape') {
+    closeRecorderPuzzle(); e.preventDefault();
+  }
 }
 
 function handleKeyUp(e) {
@@ -138,6 +141,12 @@ function checkInteractions() {
       }
       continue;
     }
+    if (o.type === 'recorder') {
+      if (rectCollision(px - 8, py - 8, 16, 16, o.x - 4, o.y - 4, o.w + 8, o.h + 8)) {
+        gameState.interactionTarget = { type: 'recorder', obj: o }; return;
+      }
+      continue;
+    }
     if (o.type === 'door') {
       if (rectCollision(px - 8, py - 8, 16, 16, o.x - 4, o.y - 4, o.w + 8, o.h + 8)) {
         gameState.interactionTarget = { type: 'door', obj: o }; return;
@@ -172,6 +181,7 @@ function handleInteract() {
   else if (t.type === 'object') { collectClue(t.obj); }
   else if (t.type === 'door') { changeArea(t.obj.toArea, t.obj.toSpawnX, t.obj.toSpawnY); }
   else if (t.type === 'radio') { openRadioPuzzle(); }
+  else if (t.type === 'recorder') { openRecorderPuzzle(); }
   else if (t.type === 'scene') { collectClue(t.obj); if (gameState.cluesFound.filter(function(c){return c.indexOf('scena_')===0;}).length >= 3) openScenePuzzle(); }
   else if (t.type === 'gatto') { showToast('Miao. (Il gatto ti ignora con eleganza.)'); }
 }
