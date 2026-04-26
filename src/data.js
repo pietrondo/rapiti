@@ -43,6 +43,14 @@ var gameState = {
   introText: '',
   introCharIndex: 0,
   endingType: null,
+  // Nuovi campi v2
+  prologueStep: 0,
+  prologueTimer: 0,
+  radioFrequency: 0,
+  radioTarget: 72,
+  radioSolved: false,
+  npcTrust: { ruggeri: 0, neri: 0, teresa: 0, anselmo: 0 },
+  screenShake: 0,
   keys: {},
   dialogueNpcId: null,
   message: '',
@@ -66,7 +74,8 @@ var clues = [
   { id: 'lanterna_rotta',  name: 'Lanterna rotta',                        area: 'piazza',   desc: 'Una lanterna a olio frantumata vicino alla fontana. Vetri sparsi. C\'è un residuo nerastro sullo stoppino.' },
   { id: 'diario_enzo',     name: 'Diario di Enzo Bellandi',               area: 'cascina',  desc: 'Il diario del nipote di Teresa. "16 marzo 1977 — Le luci sono tornate. Sono uguali a quelle del nonno. Cerchi nel grano. Loro mi osservano."' },
   { id: 'tracce_circolari',name: 'Tracce circolari nel terreno',          area: 'campo',    desc: 'Cerchi perfetti nel terreno, erba piegata in senso orario. Diametro: circa 8 metri. Il terreno è vetrificato ai bordi.' },
-  { id: 'lettera_censurata',name:'Lettera militare censurata',            area: 'archivio', desc: 'Ministero della Difesa, 1961. "Operazione Sirio — recupero materiali non terrestri — massima segretezza." Timbrata: NON DIVULGARE.' }
+  { id: 'lettera_censurata',name:'Lettera militare censurata',            area: 'archivio', desc: 'Ministero della Difesa, 1961. "Operazione Sirio — recupero materiali non terrestri — massima segretezza." Timbrata: NON DIVULGARE.' },
+  { id: 'radio_audio',     name: 'Registrazione radio — voce disturbata',  area: 'bar_interno',desc: 'Una voce filtrata dalle interferenze radio: "...non guardare... quando si ferma...". Origine sconosciuta.' }
 ];
 
 /** Costruisce dizionario indizi per lookup */
@@ -101,6 +110,9 @@ var areaObjects = {
     { id: 'tracce_circolari', x: 180, y: 160, w: 60, h: 40, type: 'clue', drawHint: true, requires: 'mappa_campi' },
     { id: 'door_cascina', x: 185, y: 224, w: 30, h: 16, type: 'door', toArea: 'cascina', toSpawnX: 195, toSpawnY: 160, drawHint: false },
     { id: 'gatto_campo', x: 320, y: 130, w: 8, h: 6, type: 'gatto', drawHint: false }
+  ],
+  bar_interno: [
+    { id: 'radio_bar', x: 295, y: 152, w: 20, h: 12, type: 'radio', drawHint: true }
   ]
 };
 

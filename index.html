@@ -106,6 +106,27 @@
   </div>
 </div>
 
+<!-- RADIO OVERLAY -->
+<div id="radio-overlay" class="overlay">
+  <div class="panel" style="max-width:450px">
+    <button class="pnl-close" id="radio-close">✕</button>
+    <h2>📻 Radio — Sintonizzazione</h2>
+    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina la manopola per trovare il segnale</p>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0">
+      <span class="radio-label">MHz</span>
+      <div class="radio-bar" id="radio-bar">
+        <div class="radio-fill" id="radio-fill"></div>
+        <div class="radio-knob" id="radio-knob"></div>
+      </div>
+      <span class="radio-label" id="radio-value">0.0</span>
+    </div>
+    <div class="radio-indicator" id="radio-indicator">
+      <span class="radio-status" id="radio-status">🔴 Statico</span>
+    </div>
+    <div id="radio-message" style="color:#d4a843;text-align:center;font-size:13px;margin:8px 0;min-height:20px"></div>
+  </div>
+</div>
+
 <!-- ENDING OVERLAY -->
 <div id="ending-overlay" class="overlay">
   <div class="panel" style="max-width:650px">

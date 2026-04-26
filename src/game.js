@@ -17,11 +17,12 @@ function initEventListeners() {
   document.getElementById('inventory-close').addEventListener('click', closeInventory);
   document.getElementById('deduction-close').addEventListener('click', closeDeduction);
   document.getElementById('deduction-confirm').addEventListener('click', checkDeduction);
+  document.getElementById('radio-close').addEventListener('click', closeRadioPuzzle);
   document.getElementById('customize-start').addEventListener('click', applyCustomization);
-  // Color swatch clicks
   setupColorSwatches('coat-colors', 'body');
   setupColorSwatches('detail-colors', 'detail');
   setupDragDrop();
+  setupRadio();
 }
 
 /** Collega i click dei color-swatch al gameState.playerColors */
@@ -163,6 +164,13 @@ function handleKeyDown(e) {
 
   // Fasi cinematiche
   if (ph === 'title' && key === 'Enter') {
+    gameState.gamePhase = 'prologue_cutscene';
+    gameState.prologueStep = 0;
+    gameState.prologueTimer = 0;
+    return;
+  }
+  if (ph === 'prologue_cutscene' && key === 'Enter') {
+    // Skip cutscene
     gameState.gamePhase = 'intro';
     gameState.introSlide = 0;
     return;
@@ -215,6 +223,9 @@ function handleKeyDown(e) {
   // Deduction — ESC to close
   if (ph === 'deduction' && key === 'Escape') {
     closeDeduction(); e.preventDefault();
+  }
+  if (ph === 'radio' && key === 'Escape') {
+    closeRadioPuzzle(); e.preventDefault();
   }
 }
 
@@ -282,6 +293,12 @@ function checkInteractions() {
       }
       continue;
     }
+    if (o.type === 'radio') {
+      if (rectCollision(px - 8, py - 8, 16, 16, o.x - 4, o.y - 4, o.w + 8, o.h + 8)) {
+        gameState.interactionTarget = { type: 'radio', obj: o }; return;
+      }
+      continue;
+    }
     if (o.type === 'gatto') {
       if (rectCollision(px - 8, py - 8, 16, 16, o.x - 4, o.y - 4, o.w + 8, o.h + 8)) {
         gameState.interactionTarget = { type: 'gatto' }; return;
@@ -303,6 +320,7 @@ function handleInteract() {
   if (t.type === 'npc') { startDialogue(t.id); }
   else if (t.type === 'object') { collectClue(t.obj); }
   else if (t.type === 'door') { changeArea(t.obj.toArea, t.obj.toSpawnX, t.obj.toSpawnY); }
+  else if (t.type === 'radio') { openRadioPuzzle(); }
   else if (t.type === 'gatto') { showToast('Miao. (Il gatto ti ignora con eleganza.)'); }
 }
 
@@ -338,6 +356,7 @@ function render(ctx) {
   var ph = gameState.gamePhase;
 
   if (ph === 'title') { renderTitle(ctx); }
+  else if (ph === 'prologue_cutscene') { renderPrologueCutscene(ctx); }
   else if (ph === 'intro') { renderIntroSlide(ctx); }
   else if (ph === 'prologue') { renderPrologue(ctx); }
   else if (ph === 'tutorial') { renderTutorial(ctx); }
@@ -351,6 +370,145 @@ function render(ctx) {
   if (gameState.fadeDir !== 0) renderFade(ctx);
 
   ctx.restore();
+}
+
+/** Prologo cutscene — Elena nel campo, luci, cerchi, frammento */
+function renderPrologueCutscene(ctx) {
+  var step = gameState.prologueStep;
+  var t = gameState.prologueTimer * 0.016; // ~60fps timer
+
+  // Step 0-1: campo notturno, erba ondulata
+  if (step <= 1) {
+    ctx.fillStyle = PALETTE.nightBlue; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+    // Stelle
+    ctx.fillStyle = PALETTE.creamPaper;
+    [30,80,140,200,260,310,360,50,120,180,340,380].forEach(function(x,i){
+      ctx.fillRect(x, 8+(i*23)%40, 1+((i*3)%2), 1+((i*7)%2));
+    });
+    // Luna
+    ctx.fillStyle = PALETTE.lanternYel; ctx.beginPath(); ctx.arc(60,25,12,0,Math.PI*2); ctx.fill();
+    // Montagne
+    ctx.fillStyle = PALETTE.violetBlue;
+    ctx.beginPath(); ctx.moveTo(0,80); ctx.lineTo(50,50); ctx.lineTo(130,65); ctx.lineTo(200,45);
+    ctx.lineTo(300,60); ctx.lineTo(400,78); ctx.lineTo(400,90); ctx.lineTo(0,90); ctx.fill();
+    // Terreno / erba (ondulata)
+    ctx.fillStyle = PALETTE.oliveGreen;
+    ctx.fillRect(0,95,CANVAS_W,155);
+    // Erba alta ondulata (animazione)
+    ctx.fillStyle = PALETTE.darkForest;
+    for(var g=0; g<CANVAS_W; g+=6){
+      var wave = Math.sin(g*0.05 + t*3) * 4;
+      ctx.fillRect(g, 93+wave, 3, 20+Math.abs(wave));
+    }
+    // Sentiero
+    ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(180,90,40,160);
+  }
+
+  // Step 2: luce dal terreno
+  if (step >= 2) {
+    // Aggiungi luce pulsante dal terreno
+    var pulse = Math.sin(t * 4) * 0.3 + 0.7;
+    var glowIntensity = Math.min(1, (step - 2) * 0.5 + pulse * 0.3);
+    ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.6).toFixed(2) + ')';
+    ctx.beginPath(); ctx.arc(200, 130, 50 + Math.sin(t*3) * 15, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,' + (glowIntensity * 0.8).toFixed(2) + ')';
+    ctx.beginPath(); ctx.arc(200, 130, 20 + Math.sin(t*2) * 8, 0, Math.PI*2); ctx.fill();
+    // Raggi di luce verso l'alto
+    ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.3).toFixed(2) + ')';
+    for(var r=0; r<8; r++){
+      ctx.fillRect(198 + r*2, 70 + Math.sin(r+t*2)*5, 2, 60);
+    }
+  }
+
+  // Step 4: 3 cerchi concentrici
+  if (step >= 4) {
+    var circleAlpha = Math.min(1, (step - 4) * 0.4 + Math.sin(t*2)*0.1);
+    ctx.strokeStyle = 'rgba(212,168,67,' + circleAlpha.toFixed(2) + ')';
+    ctx.lineWidth = 2;
+    for(var c=0; c<3; c++){
+      var radius = 15 + c * 18 + Math.sin(t*3 + c)*3;
+      ctx.beginPath(); ctx.arc(200, 130, radius, 0, Math.PI*2); ctx.stroke();
+    }
+    ctx.lineWidth = 1;
+    // Erba piegata dentro i cerchi
+    ctx.fillStyle = PALETTE.oliveGreen + 'AA';
+    for(var a=0; a<24; a++){
+      var rad = a * Math.PI / 12;
+      for(var r2=0; r2<3; r2++){
+        var rv = 20 + r2 * 16;
+        ctx.fillRect(198 + Math.cos(rad)*rv, 128 + Math.sin(rad)*rv, 3, 2);
+      }
+    }
+  }
+
+  // Step 5: Elena (sprite che corre)
+  if (step >= 1 && step <= 5) {
+    var elenaX = step >= 5 ? 200 : 50 + t * 20 % 150;
+    var elenaY = 115;
+    // Sprite di Elena (sagoma femminile semplice)
+    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(elenaX-3, elenaY+8, 7, 2);
+    ctx.fillStyle = '#6B4E3D'; ctx.fillRect(elenaX-2, elenaY+4, 1, 5); ctx.fillRect(elenaX+1, elenaY+4, 1, 5); // gambe
+    ctx.fillStyle = '#3D5A3C'; ctx.fillRect(elenaX-3, elenaY, 6, 5); // vestito
+    ctx.fillStyle = '#D4A84B'; ctx.fillRect(elenaX-2, elenaY-6, 5, 6); // testa
+    ctx.fillStyle = '#1A1C20'; ctx.fillRect(elenaX-1, elenaY-4, 1, 1); ctx.fillRect(elenaX+1, elenaY-4, 1, 1); // occhi
+    // Lanterna
+    ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(elenaX-6, elenaY-2, 3, 6);
+    ctx.fillStyle = 'rgba(212,168,67,0.25)'; ctx.beginPath(); ctx.arc(elenaX-5, elenaY+1, 10, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Step 6: raccoglie frammento
+  if (step >= 6) {
+    ctx.fillStyle = PALETTE.alumGrey; ctx.fillRect(196, 132, 6, 4);
+    ctx.fillStyle = PALETTE.creamPaper + '88'; ctx.fillRect(197, 131, 4, 2);
+  }
+
+  // Step 7-8: schermo si illumina / fade to white
+  if (step >= 7) {
+    var flash = Math.min(1, (step - 7) * 0.4 + (gameState.prologueTimer - (step === 7 ? 60 : 0)) * 0.02);
+    ctx.fillStyle = 'rgba(255,255,255,' + Math.min(0.9, flash).toFixed(2) + ')';
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+  }
+
+  // Step 8: titolo su bianco
+  if (step >= 8) {
+    ctx.fillStyle = PALETTE.nightBlue;
+    ctx.font = 'bold 20px "Courier New",monospace'; ctx.textAlign = 'center';
+    ctx.fillText('LE LUCI DI SAN CELESTE', 200, 120);
+    ctx.font = '11px "Courier New",monospace';
+    ctx.fillStyle = PALETTE.slateGrey;
+    ctx.fillText('1979 — Un\'indagine della Prefettura', 200, 140);
+    ctx.textAlign = 'start';
+  }
+
+  // Testo didascalico in basso
+  if (step < 8) {
+    var subtitles = [
+      'San Celeste, 25 luglio 1979. Ore 23:40.',
+      'Elena Bellandi corre tra l\'erba alta.',
+      '',
+      'Una luce si accende dal terreno... non dal cielo.',
+      '',
+      'Tre cerchi appaiono nel grano.',
+      'Elena si ferma.',
+      'Raccoglie un piccolo oggetto metallico.',
+      'La luce diventa accecante.',
+      ''
+    ];
+    var txt = subtitles[step] || '';
+    if (txt) {
+      ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(50, 210, 300, 22);
+      ctx.fillStyle = PALETTE.creamPaper; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(txt, 200, 226);
+      ctx.textAlign = 'start';
+    }
+  }
+  if (step === 8) {
+    var alpha = 0.4 + Math.sin(Date.now()*0.003)*0.4;
+    ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+    ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+    ctx.fillText('Attendi...', 200, 230);
+    ctx.textAlign = 'start';
+  }
 }
 
 function renderTitle(ctx) {
@@ -563,10 +721,17 @@ function renderArea(ctx) {
   for (var k = 0; k < objs.length; k++) {
     var o = objs[k];
     if (o.type === 'gatto') {
-      // Draw orange cat
       ctx.fillStyle = '#C4956A'; ctx.fillRect(o.x, o.y, o.w, o.h);
       ctx.fillStyle = '#D4A843'; ctx.fillRect(o.x + 1, o.y, 3, 2);
       ctx.fillStyle = '#1A1C20'; ctx.fillRect(o.x + 2, o.y + 1, 1, 1); ctx.fillRect(o.x + 5, o.y + 1, 1, 1);
+      continue;
+    }
+    if (o.type === 'radio') {
+      var pulse = Math.sin(Date.now() * 0.006) * 0.3 + 0.5;
+      ctx.fillStyle = 'rgba(212,168,67,' + pulse.toFixed(2) + ')';
+      ctx.beginPath(); ctx.arc(o.x + o.w/2, o.y + o.h/2, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(o.x+2, o.y, o.w-4, o.h);
+      ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(o.x+4, o.y+2, 2, 2);
       continue;
     }
     if (gameState.cluesFound.indexOf(o.id) >= 0) continue;
@@ -622,6 +787,7 @@ function renderInteractionHint(ctx) {
   if (t.type === 'npc') label = 'Parla';
   else if (t.type === 'object') label = 'Raccogli';
   else if (t.type === 'door') label = 'Entra / Esci';
+  else if (t.type === 'radio') label = 'Accendi Radio';
   else if (t.type === 'gatto') label = 'Accarezza';
   ctx.fillStyle = PALETTE.nightBlue + 'CC'; ctx.fillRect(px - 35, py - 10, 70, 12);
   ctx.fillStyle = PALETTE.lanternYel; ctx.font = '8px "Courier New",monospace';
@@ -928,6 +1094,83 @@ function checkDeduction() {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   SEZIONE 9B: RADIO PUZZLE
+   ══════════════════════════════════════════════════════════════ */
+
+function openRadioPuzzle() {
+  if (gameState.gamePhase !== 'playing') return;
+  gameState.previousPhase = 'playing';
+  gameState.gamePhase = 'radio';
+  gameState.radioFrequency = 0;
+  updateRadioKnob(0);
+  document.getElementById('radio-message').textContent = '';
+  document.getElementById('radio-overlay').classList.add('active');
+}
+
+function closeRadioPuzzle() {
+  document.getElementById('radio-overlay').classList.remove('active');
+  gameState.gamePhase = 'playing';
+}
+
+function setupRadio() {
+  var bar = document.getElementById('radio-bar');
+  var knob = document.getElementById('radio-knob');
+  if (!bar || !knob) return;
+  var dragging = false;
+
+  var moveKnob = function(clientX) {
+    var rect = bar.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    updateRadioKnob(pct);
+  };
+
+  bar.addEventListener('mousedown', function(e) { dragging = true; moveKnob(e.clientX); });
+  document.addEventListener('mousemove', function(e) { if (dragging) moveKnob(e.clientX); });
+  document.addEventListener('mouseup', function() { dragging = false; });
+  // Touch support
+  bar.addEventListener('touchstart', function(e) { dragging = true; moveKnob(e.touches[0].clientX); });
+  document.addEventListener('touchmove', function(e) { if (dragging) moveKnob(e.touches[0].clientX); });
+  document.addEventListener('touchend', function() { dragging = false; });
+}
+
+function updateRadioKnob(pct) {
+  gameState.radioFrequency = pct;
+  var knob = document.getElementById('radio-knob');
+  var fill = document.getElementById('radio-fill');
+  if (!knob) return;
+  knob.style.left = pct + '%';
+  if (fill) fill.style.width = pct + '%';
+  document.getElementById('radio-value').textContent = (pct / 10).toFixed(1);
+
+  // Status: 0-69 static, 70-74 interference, 75+ clear
+  var statusEl = document.getElementById('radio-status');
+  var target = gameState.radioTarget;
+  var dist = Math.abs(pct - target);
+
+  if (dist < 3) {
+    statusEl.textContent = '🟢 Segnale chiaro';
+    statusEl.className = 'radio-status clear';
+    if (!gameState.radioSolved) {
+      gameState.radioSolved = true;
+      document.getElementById('radio-message').textContent = '"...non guardare... quando si ferma..."';
+      document.getElementById('radio-message').className = 'radio-message-found';
+      // Aggiungi indizio audio al diario
+      if (gameState.cluesFound.indexOf('radio_audio') === -1) {
+        gameState.cluesFound.push('radio_audio');
+        updateHUD();
+        setTimeout(function() { showToast('Registrazione radio salvata nel diario.'); }, 600);
+      }
+    }
+  } else if (dist < 10) {
+    statusEl.textContent = '🟡 Interferenza';
+    statusEl.className = 'radio-status interference';
+  } else {
+    statusEl.textContent = '🔴 Statico';
+    statusEl.className = 'radio-status static';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
    SEZIONE 10: AREE E TRANSIZIONI
    ══════════════════════════════════════════════════════════════ */
 
@@ -1046,6 +1289,21 @@ var ctx;
 
 function gameLoop() {
   var ph = gameState.gamePhase;
+
+  // Prologo auto-avanzamento
+  if (ph === 'prologue_cutscene') {
+    gameState.prologueTimer++;
+    var adv = [150, 250, 150, 180, 200, 180, 150, 200, 120];
+    if (gameState.prologueStep < adv.length && gameState.prologueTimer >= adv[gameState.prologueStep]) {
+      gameState.prologueTimer = 0;
+      gameState.prologueStep++;
+      if (gameState.prologueStep >= 9) {
+        gameState.gamePhase = 'intro';
+        gameState.introSlide = 0;
+      }
+    }
+  }
+
   if (ph === 'playing') {
     updatePlayerPosition();
     checkInteractions();
