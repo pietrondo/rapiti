@@ -15,7 +15,7 @@
   <div id="hud">
     <div class="hud-section"><span class="hud-label">📍</span><span class="hud-value" id="hud-area">Piazza del Borgo</span></div>
     <div class="hud-section"><span class="hud-label">🕵️</span><span class="hud-value">WASD Muovi | E Interagisci</span></div>
-    <div class="hud-section"><span class="hud-label">🔍</span><span class="hud-value" id="hud-clues">0/8</span></div>
+    <div class="hud-section"><span class="hud-label">🔍</span><span class="hud-value" id="hud-clues">0/9</span></div>
     <div class="hud-section">
       <span class="hud-label">[J]</span><span class="hud-value">Diario</span>
       <span class="hud-label">[I]</span><span class="hud-value">Inv</span>
@@ -25,7 +25,6 @@
   </div>
 </div>
 
-<!-- CUSTOMIZE OVERLAY -->
 <div id="customize-overlay" class="overlay active">
   <div class="panel" style="max-width:520px">
     <h2>🕵️ Crea il tuo Detective</h2>
@@ -58,7 +57,6 @@
   </div>
 </div>
 
-<!-- DIALOGUE OVERLAY -->
 <div id="dialogue-overlay" class="overlay">
   <div class="panel" id="dialogue-panel">
     <div class="npc-name" id="dialogue-npc-name"></div>
@@ -67,34 +65,21 @@
   </div>
 </div>
 
-<!-- JOURNAL OVERLAY -->
 <div id="journal-overlay" class="overlay">
-  <div class="panel" id="journal-panel">
-    <button class="pnl-close" id="journal-close">✕</button>
-    <h2>📓 Diario dell'Investigatore</h2>
-    <div id="journal-content"></div>
-  </div>
+  <div class="panel"><button class="pnl-close" id="journal-close">✕</button><h2>📓 Diario</h2><div id="journal-content"></div></div>
 </div>
 
-<!-- INVENTORY OVERLAY -->
 <div id="inventory-overlay" class="overlay">
-  <div class="panel">
-    <button class="pnl-close" id="inventory-close">✕</button>
-    <h2>🎒 Inventario</h2>
-    <div id="inventory-content"></div>
-  </div>
+  <div class="panel"><button class="pnl-close" id="inventory-close">✕</button><h2>🎒 Inventario</h2><div id="inventory-content"></div></div>
 </div>
 
-<!-- DEDUCTION OVERLAY -->
 <div id="deduction-overlay" class="overlay">
   <div class="panel" style="max-width:700px">
     <button class="pnl-close" id="deduction-close">✕</button>
     <h2>🔬 Pannello di Deduzione</h2>
-    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina ogni indizio nello slot corretto per formulare un'ipotesi</p>
+    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina ogni indizio nello slot corretto</p>
     <div class="deduction-layout">
-      <div class="deduction-column" id="deduction-clues">
-        <h3>Indizi disponibili</h3>
-      </div>
+      <div class="deduction-column" id="deduction-clues"><h3>Indizi</h3></div>
       <div class="deduction-column" id="deduction-slots">
         <h3>Ipotesi</h3>
         <div class="deduction-slot" data-slot="posizione">Posizione</div>
@@ -106,7 +91,6 @@
   </div>
 </div>
 
-<!-- RADIO OVERLAY -->
 <div id="radio-overlay" class="overlay">
   <div class="panel" style="max-width:450px">
     <button class="pnl-close" id="radio-close">✕</button>
@@ -114,20 +98,33 @@
     <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina la manopola per trovare il segnale</p>
     <div style="display:flex;align-items:center;gap:12px;margin:16px 0">
       <span class="radio-label">MHz</span>
-      <div class="radio-bar" id="radio-bar">
-        <div class="radio-fill" id="radio-fill"></div>
-        <div class="radio-knob" id="radio-knob"></div>
-      </div>
+      <div class="radio-bar" id="radio-bar"><div class="radio-fill" id="radio-fill"></div><div class="radio-knob" id="radio-knob"></div></div>
       <span class="radio-label" id="radio-value">0.0</span>
     </div>
-    <div class="radio-indicator" id="radio-indicator">
-      <span class="radio-status" id="radio-status">🔴 Statico</span>
-    </div>
+    <div class="radio-indicator"><span class="radio-status" id="radio-status">🔴 Statico</span></div>
     <div id="radio-message" style="color:#d4a843;text-align:center;font-size:13px;margin:8px 0;min-height:20px"></div>
   </div>
 </div>
 
-<!-- ENDING OVERLAY -->
+<div id="registry-overlay" class="overlay">
+  <div class="panel" style="max-width:550px">
+    <button class="pnl-close" id="registry-close">✕</button>
+    <h2>📋 Ricostruisci il Registro</h2>
+    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina i fogli nell'ordine cronologico</p>
+    <div style="display:flex;gap:16px;margin:12px 0">
+      <div style="flex:1"><h3 style="font-size:13px;color:#d4a843;margin-bottom:6px">Fogli sparsi</h3><div id="registry-pages"></div></div>
+      <div style="flex:1"><h3 style="font-size:13px;color:#d4a843;margin-bottom:6px">Ordine cronologico</h3>
+        <div class="registry-slot" data-slot="0">1° Scomparso</div>
+        <div class="registry-slot" data-slot="1">2° Scomparso</div>
+        <div class="registry-slot" data-slot="2">3° Scomparso</div>
+        <div class="registry-slot" data-slot="3">4° Scomparso</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="registry-confirm" disabled>Conferma Ordine</button>
+    <div id="registry-result" style="text-align:center;margin-top:8px;font-size:13px;min-height:20px"></div>
+  </div>
+</div>
+
 <div id="ending-overlay" class="overlay">
   <div class="panel" style="max-width:650px">
     <h2 id="ending-title"></h2>
@@ -136,10 +133,28 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="src/data.js"></script>
-<script src="src/game.js"></script>
+<!-- DATA MODULES -->
+<script src="src/config.js"></script>
+<script src="src/data/clues.js"></script>
+<script src="src/data/npcs.js"></script>
+<script src="src/data/areas.js"></script>
+<script src="src/data/puzzles.js"></script>
+<!-- GAME MODULES -->
+<script src="src/game/engine.js"></script>
+<script src="src/game/init.js"></script>
+<script src="src/game/audio.js"></script>
+<script src="src/game/customize.js"></script>
+<script src="src/game/input.js"></script>
+<script src="src/game/render.js"></script>
+<script src="src/game/dialogue.js"></script>
+<script src="src/game/radio.js"></script>
+<script src="src/game/registry.js"></script>
+<script src="src/game/deduction.js"></script>
+<script src="src/game/transition.js"></script>
+<script src="src/game/endings.js"></script>
+<script src="src/game/loop.js"></script>
+
 </body>
 </html>

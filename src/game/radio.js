@@ -1,0 +1,74 @@
+"use strict";
+
+function openRadioPuzzle() {
+  if (gameState.gamePhase !== 'playing') return;
+  gameState.previousPhase = 'playing';
+  gameState.gamePhase = 'radio';
+  gameState.radioFrequency = 0;
+  updateRadioKnob(0);
+  document.getElementById('radio-message').textContent = '';
+  document.getElementById('radio-overlay').classList.add('active');
+}
+
+function closeRadioPuzzle() {
+  document.getElementById('radio-overlay').classList.remove('active');
+  gameState.gamePhase = 'playing';
+}
+
+function setupRadio() {
+  var bar = document.getElementById('radio-bar');
+  var knob = document.getElementById('radio-knob');
+  if (!bar || !knob) return;
+  var dragging = false;
+
+  var moveKnob = function(clientX) {
+    var rect = bar.getBoundingClientRect();
+    var pct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    updateRadioKnob(pct);
+  };
+
+  bar.addEventListener('mousedown', function(e) { dragging = true; moveKnob(e.clientX); });
+  document.addEventListener('mousemove', function(e) { if (dragging) moveKnob(e.clientX); });
+  document.addEventListener('mouseup', function() { dragging = false; });
+  // Touch support
+  bar.addEventListener('touchstart', function(e) { dragging = true; moveKnob(e.touches[0].clientX); });
+  document.addEventListener('touchmove', function(e) { if (dragging) moveKnob(e.touches[0].clientX); });
+  document.addEventListener('touchend', function() { dragging = false; });
+}
+
+function updateRadioKnob(pct) {
+  gameState.radioFrequency = pct;
+  var knob = document.getElementById('radio-knob');
+  var fill = document.getElementById('radio-fill');
+  if (!knob) return;
+  knob.style.left = pct + '%';
+  if (fill) fill.style.width = pct + '%';
+  document.getElementById('radio-value').textContent = (pct / 10).toFixed(1);
+
+  // Status: 0-69 static, 70-74 interference, 75+ clear
+  var statusEl = document.getElementById('radio-status');
+  var target = gameState.radioTarget;
+  var dist = Math.abs(pct - target);
+
+  if (dist < 3) {
+    statusEl.textContent = '\uD83D\uDFE2 Segnale chiaro';
+    statusEl.className = 'radio-status clear';
+    if (!gameState.radioSolved) {
+      gameState.radioSolved = true;
+      document.getElementById('radio-message').textContent = '"...non guardare... quando si ferma..."';
+      document.getElementById('radio-message').className = 'radio-message-found';
+      // Aggiungi indizio audio al diario
+      if (gameState.cluesFound.indexOf('radio_audio') === -1) {
+        gameState.cluesFound.push('radio_audio');
+        updateHUD();
+        setTimeout(function() { showToast('Registrazione radio salvata nel diario.'); }, 600);
+      }
+    }
+  } else if (dist < 10) {
+    statusEl.textContent = '\uD83D\uDFE1 Interferenza';
+    statusEl.className = 'radio-status interference';
+  } else {
+    statusEl.textContent = '\uD83D\uDD34 Statico';
+    statusEl.className = 'radio-status static';
+  }
+}

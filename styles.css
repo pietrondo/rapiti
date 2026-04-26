@@ -197,3 +197,21 @@ body {
 .radio-status.clear { color:#44cc44; background:rgba(68,204,68,0.1); }
 .radio-message-found { animation:radioGlow 0.5s ease-out; }
 @keyframes radioGlow { 0%{text-shadow:0 0 10px #d4a843;} 100%{text-shadow:none;} }
+
+/* ── REGISTRY PUZZLE ── */
+.registry-slot {
+  min-height:50px; border:2px dashed #4a5568; margin:6px 0; padding:8px;
+  display:flex; align-items:center; justify-content:center;
+  color:#6b7b6b; font-size:12px; transition:border-color 0.2s;
+}
+.registry-slot.filled { border-color:#d4a843; border-style:solid; color:#e8dcc8; }
+.registry-slot.drag-over { border-color:#c4956a; background:rgba(196,149,106,0.15); }
+
+.registry-page {
+  background:#2d3047; border:1px solid #4a5568; padding:10px; margin:4px 0;
+  cursor:grab; user-select:none; font-size:12px; text-align:center;
+}
+.registry-page:active { cursor:grabbing; }
+.registry-page.placed { opacity:0.4; cursor:default; }
+.registry-page .reg-year { color:#d4a843; font-weight:bold; font-size:14px; display:block; }
+.registry-page .reg-detail { color:#a0a8b0; font-size:10px; margin-top:2px; display:block; }
