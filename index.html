@@ -125,6 +125,36 @@
   </div>
 </div>
 
+<!-- SCENE INVESTIGATION OVERLAY -->
+<div id="scene-overlay" class="overlay">
+  <div class="panel" style="max-width:500px">
+    <button class="pnl-close" id="scene-close">✕</button>
+    <h2>🔍 Ricostruzione della Scena</h2>
+    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Hai trovato 3 elementi. Ricostruisci cosa è successo.</p>
+    <div style="margin:12px 0">
+      <p style="color:#d4a843;font-size:13px;margin-bottom:8px">Elementi trovati:</p>
+      <div id="scene-elements" style="margin-bottom:12px"></div>
+    </div>
+    <p style="color:#d4a843;font-size:13px;margin-bottom:8px">Ricostruzione:</p>
+    <div>
+      <label style="color:#a0a8b0;font-size:12px;display:block;margin:6px 0">Punto di partenza</label>
+      <select id="scene-slot1" class="scene-select">
+        <option value="">---</option>
+      </select>
+      <label style="color:#a0a8b0;font-size:12px;display:block;margin:6px 0">Movimento</label>
+      <select id="scene-slot2" class="scene-select">
+        <option value="">---</option>
+      </select>
+      <label style="color:#a0a8b0;font-size:12px;display:block;margin:6px 0">Punto di arrivo</label>
+      <select id="scene-slot3" class="scene-select">
+        <option value="">---</option>
+      </select>
+    </div>
+    <button class="btn-primary" id="scene-confirm" disabled>Conferma Ricostruzione</button>
+    <div id="scene-result" style="text-align:center;margin-top:8px;font-size:13px;min-height:20px"></div>
+  </div>
+</div>
+
 <div id="ending-overlay" class="overlay">
   <div class="panel" style="max-width:650px">
     <h2 id="ending-title"></h2>
@@ -151,6 +181,7 @@
 <script src="src/game/dialogue.js"></script>
 <script src="src/game/radio.js"></script>
 <script src="src/game/registry.js"></script>
+<script src="src/game/scene.js"></script>
 <script src="src/game/deduction.js"></script>
 <script src="src/game/transition.js"></script>
 <script src="src/game/endings.js"></script>

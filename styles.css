@@ -215,3 +215,16 @@ body {
 .registry-page.placed { opacity:0.4; cursor:default; }
 .registry-page .reg-year { color:#d4a843; font-weight:bold; font-size:14px; display:block; }
 .registry-page .reg-detail { color:#a0a8b0; font-size:10px; margin-top:2px; display:block; }
+
+@keyframes glitchPulse {
+  0% { opacity: 1; transform: translateX(0); }
+  25% { opacity: 0.6; transform: translateX(-1px); }
+  75% { opacity: 0.8; transform: translateX(1px); }
+  100% { opacity: 0.5; transform: translateX(0); }
+}
+
+.scene-select {
+  width:100%; padding:8px; font-size:13px; font-family:'Courier New',monospace;
+  background:#2d3047; color:#e8dcc8; border:1px solid #4a5568; outline:none;
+}
+.scene-select:focus { border-color:#d4a843; }

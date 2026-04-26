@@ -4,15 +4,19 @@ function startDialogue(npcId) {
   gameState.dialogueNpcId = npcId;
   gameState.previousPhase = gameState.gamePhase;
   gameState.gamePhase = 'dialogue';
-  // Osvaldo e Gino hanno solo stato 0
   if (npcId === 'osvaldo' || npcId === 'gino') {
     gameState.dialogueTree = dialogueNodes[npcId + '_s0'];
   } else {
     var state = gameState.npcStates[npcId];
-    var nodeKey = npcId + '_s' + state;
-    var node = dialogueNodes[nodeKey];
-    if (!node) node = dialogueNodes[npcId + '_s0'];
-    gameState.dialogueTree = node;
+    // Teresa state 2: memoria instabile
+    if (npcId === 'teresa' && state >= 2) {
+      gameState.dialogueTree = dialogueNodes['teresa_s2_memory'];
+    } else {
+      var nodeKey = npcId + '_s' + state;
+      var node = dialogueNodes[nodeKey];
+      if (!node) node = dialogueNodes[npcId + '_s0'];
+      gameState.dialogueTree = node;
+    }
   }
   renderDialogueHTML();
   document.getElementById('dialogue-overlay').classList.add('active');
@@ -29,7 +33,23 @@ function renderDialogueHTML() {
   var npcData = npcsData.find(function(n) { return n.id === npcId; });
   var npcName = npcData ? npcData.name : '???';
   document.getElementById('dialogue-npc-name').textContent = npcName;
-  document.getElementById('dialogue-text').textContent = node.text;
+  var rawText = node.text;
+  if (node.memoryCorrupt) {
+    var html = '';
+    for (var c = 0; c < rawText.length; c++) {
+      var ch = rawText[c];
+      if (ch === '%' || ch === '#' || ch === '@') {
+        var corruptChars = '▓▒░█▄▀■□▪▫●○◘◙';
+        var rnd = corruptChars[Math.floor(Math.random() * corruptChars.length)];
+        html += '<span style="color:#cc4444;text-shadow:0 0 4px #cc4444;animation:glitchPulse 0.3s infinite alternate">' + rnd + '</span>';
+      } else {
+        html += ch;
+      }
+    }
+    document.getElementById('dialogue-text').innerHTML = html;
+  } else {
+    document.getElementById('dialogue-text').textContent = rawText;
+  }
   var choicesDiv = document.getElementById('dialogue-choices');
   choicesDiv.innerHTML = '';
   if (node.choices && node.choices.length > 0) {

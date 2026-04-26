@@ -26,6 +26,7 @@ var areaObjects = {
     { id: 'bar_door', x: 38, y: 178, w: 14, h: 18, type: 'door', toArea: 'bar_interno', toSpawnX: 195, toSpawnY: 200, drawHint: false },
     { id: 'door_archivio', x: 187, y: 5, w: 26, h: 18, type: 'door', toArea: 'archivio', toSpawnX: 195, toSpawnY: 210, drawHint: false },
     { id: 'door_cascina', x: 357, y: 158, w: 36, h: 16, type: 'door', toArea: 'cascina', toSpawnX: 55, toSpawnY: 130, drawHint: false },
+    { id: 'door_municipio', x: 195, y: 50, w: 30, h: 16, type: 'door', toArea: 'municipio', toSpawnX: 195, toSpawnY: 200, drawHint: false },
     { id: 'gatto_piazza', x: 88, y: 151, w: 8, h: 6, type: 'gatto', drawHint: false }
   ],
   archivio: [
@@ -38,8 +39,12 @@ var areaObjects = {
     { id: 'simboli_portone', x: 280, y: 150, w: 20, h: 24, type: 'clue', drawHint: true },
     { id: 'frammento', x: 140, y: 210, w: 10, h: 8, type: 'clue', drawHint: true, requires: 'simboli_portone' },
     { id: 'diario_enzo', x: 70, y: 120, w: 14, h: 12, type: 'clue', drawHint: true, requires: 'frammento' },
+    { id: 'scena_lanterna', x: 135, y: 200, w: 14, h: 10, type: 'scene', drawHint: true },
+    { id: 'scena_impronte', x: 195, y: 210, w: 14, h: 10, type: 'scene', drawHint: true, requires: 'scena_lanterna' },
+    { id: 'scena_segni', x: 310, y: 195, w: 14, h: 10, type: 'scene', drawHint: true, requires: 'scena_impronte' },
     { id: 'door_piazza2', x: 10, y: 145, w: 30, h: 16, type: 'door', toArea: 'piazza', toSpawnX: 360, toSpawnY: 160, drawHint: false },
     { id: 'door_campo', x: 185, y: 87, w: 30, h: 16, type: 'door', toArea: 'campo', toSpawnX: 195, toSpawnY: 210, drawHint: false },
+    { id: 'door_cascina_int', x: 268, y: 85, w: 20, h: 16, type: 'door', toArea: 'cascina_interno', toSpawnX: 195, toSpawnY: 200, drawHint: false },
     { id: 'gatto_cascina', x: 55, y: 210, w: 8, h: 6, type: 'gatto', drawHint: false }
   ],
   campo: [
@@ -50,5 +55,7 @@ var areaObjects = {
   ],
   bar_interno: [
     { id: 'radio_bar', x: 295, y: 152, w: 20, h: 12, type: 'radio', drawHint: true }
-  ]
+  ],
+  municipio: [],
+  cascina_interno: []
 };

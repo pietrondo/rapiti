@@ -439,6 +439,7 @@ function renderInteractionHint(ctx) {
   else if (t.type === 'object') label = 'Raccogli';
   else if (t.type === 'door') label = 'Entra / Esci';
   else if (t.type === 'radio') label = 'Accendi Radio';
+  else if (t.type === 'scene') label = 'Esamina';
   else if (t.type === 'gatto') label = 'Accarezza';
   ctx.fillStyle = PALETTE.nightBlue + 'CC'; ctx.fillRect(px - 35, py - 10, 70, 12);
   ctx.fillStyle = PALETTE.lanternYel; ctx.font = '8px "Courier New",monospace';

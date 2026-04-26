@@ -264,6 +264,105 @@ var areas = {
       drawExitSign(ctx, 170, CANVAS_H-18, 'PIAZZA');
       drawVignette(ctx);
     }
+  },
+
+  /* ── MUNICIPIO INTERNO ── */
+  municipio: {
+    name: 'Municipio — Ufficio del Sindaco',
+    walkableTop: 8,
+    colliders: [
+      {x:20, y:130, w:120, h:50},
+      {x:260, y:0, w:140, h:200}
+    ],
+    npcs: [{ id: 'ruggeri', x: 200, y: 155 }],
+    exits: [],
+    draw: function(ctx) {
+      // Ufficio anni 70
+      ctx.fillStyle = PALETTE.fadedBeige; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+      ctx.fillStyle = PALETTE.greyBrown; ctx.fillRect(0,200,CANVAS_W,50);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(0,0,CANVAS_W,8);
+      // Scrivania sindaco
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(140,120,180,16);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(145,136,8,64); ctx.fillRect(305,136,8,64);
+      // Poltrona dietro scrivania
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(210,100,60,30);
+      ctx.fillStyle = PALETTE.burntOrange; ctx.fillRect(215,95,50,25);
+      // Foto Presidente sul muro
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(60,20,30,36);
+      ctx.fillStyle = PALETTE.fadedBeige; ctx.fillRect(64,24,22,28);
+      ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(68,28,14,16);
+      // Bandiera
+      ctx.fillStyle = '#009246'; ctx.fillRect(100,20,2,30);
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(102,20,2,30);
+      ctx.fillStyle = '#CE2B37'; ctx.fillRect(104,20,2,30);
+      // Finestra
+      ctx.fillStyle = PALETTE.nightBlue; ctx.fillRect(320,25,50,60);
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(318,23,54,4); ctx.fillRect(318,83,54,4);
+      ctx.fillRect(342,23,4,64);
+      // Lampada scrivania
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(155,106,4,16);
+      ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(148,96,18,12);
+      ctx.fillStyle = 'rgba(212,168,67,0.12)'; ctx.beginPath(); ctx.arc(157,126,28,0,Math.PI*2); ctx.fill();
+      // Telefono
+      ctx.fillStyle = '#1A1C20'; ctx.fillRect(170,126,12,6);
+      // Cartella "RISERVATO"
+      ctx.fillStyle = PALETTE.burntOrange; ctx.fillRect(280,124,22,14);
+      ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(282,127,18,2);
+      drawExitSign(ctx, 170, CANVAS_H-18, 'PIAZZA');
+      drawVignette(ctx);
+    }
+  },
+
+  /* ── CASCINA INTERNO ── */
+  cascina_interno: {
+    name: 'Cascina — Stanza di Teresa',
+    walkableTop: 8,
+    colliders: [
+      {x:10, y:120, w:120, h:60},
+      {x:280, y:60, w:25, h:110}
+    ],
+    npcs: [{ id: 'teresa', x: 120, y: 175 }],
+    exits: [],
+    draw: function(ctx) {
+      // Stanza calda, intima
+      ctx.fillStyle = PALETTE.greyBrown; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(0,0,CANVAS_W,8);
+      ctx.fillStyle = PALETTE.slateGrey; ctx.fillRect(0,200,CANVAS_W,50);
+      // Letto
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(20,130,100,18);
+      ctx.fillStyle = PALETTE.burntOrange; ctx.fillRect(22,110,96,22);
+      ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(26,114,88,14);
+      // Cuscino
+      ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(28,134,30,10);
+      // Comodino
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(130,134,16,30);
+      ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(134,140,8,6); // lumino
+      // Finestra
+      ctx.fillStyle = PALETTE.nightBlue; ctx.fillRect(300,30,50,50);
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(298,28,54,4); ctx.fillRect(298,78,54,4);
+      ctx.fillRect(322,28,4,54);
+      // Luna dalla finestra
+      ctx.fillStyle = PALETTE.lanternYel+'44'; ctx.beginPath(); ctx.arc(330,45,8,0,Math.PI*2); ctx.fill();
+      // Sedia
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(270,150,20,24);
+      ctx.fillStyle = PALETTE.burntOrange; ctx.fillRect(272,146,16,6);
+      // Foto di Enzo sul muro
+      ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(200,40,20,26);
+      ctx.fillStyle = PALETTE.fadedBeige; ctx.fillRect(203,43,14,14);
+      ctx.fillStyle = PALETTE.burntOrange; ctx.fillRect(203,38,14,6);
+      // Tappeto
+      ctx.fillStyle = PALETTE.burntOrange+'88'; ctx.fillRect(30,165,260,8);
+      // Crocifisso al muro
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(194,12,2,20);
+      ctx.fillStyle = PALETTE.earthBrown; ctx.fillRect(190,16,10,2);
+      // Luce calda diffusa
+      ctx.fillStyle = 'rgba(212,168,67,0.06)'; ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+      // Statua Sant'Antonio
+      ctx.fillStyle = PALETTE.greyBrown; ctx.fillRect(10,106,14,20);
+      ctx.fillStyle = PALETTE.creamPaper; ctx.beginPath(); ctx.arc(17,100,6,0,Math.PI*2); ctx.fill();
+      drawExitSign(ctx, 170, CANVAS_H-18, 'CASCINA');
+      drawVignette(ctx);
+    }
   }
 };
 

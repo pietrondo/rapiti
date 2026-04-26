@@ -16,6 +16,8 @@ function initEventListeners() {
   document.getElementById('radio-close').addEventListener('click', closeRadioPuzzle);
   document.getElementById('registry-close').addEventListener('click', closeRegistryPuzzle);
   document.getElementById('registry-confirm').addEventListener('click', checkRegistry);
+  document.getElementById('scene-close').addEventListener('click', closeScenePuzzle);
+  document.getElementById('scene-confirm').addEventListener('click', checkScene);
   document.getElementById('customize-start').addEventListener('click', applyCustomization);
   setupColorSwatches('coat-colors', 'body');
   setupColorSwatches('detail-colors', 'detail');

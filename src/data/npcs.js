@@ -91,6 +91,43 @@ var dialogueNodes = {
   teresa_s2_promessa: { text: 'Grazie, ispettore. Qualunque cosa trovi... mi dica solo se Enzo è vivo. È tutto quello che chiedo.' },
   teresa_s2_loro: { text: 'Quelli che vengono dal cielo. Mio nonno li chiamava "i visitatori". Diceva che non sono cattivi... ma nemmeno buoni. Sono solo... diversi.' },
 
+  teresa_s2_memory: {
+    text: 'Mio n%%%ote Enzo... scriv&&&va cose strane. Dicev# che "loro" tornano%%. Ogni 116 a@@@i. Io non d%rmevo. Lo aspettavo. Sempre.',
+    memoryCorrupt: true,
+    choices: [
+      {text: 'Ha detto "nipote" e "tornano"?', next:'teresa_mem1_a'},
+      {text: 'Ha detto "nipote" e "dormivo"?', next:'teresa_mem1_b'}
+    ]
+  },
+  teresa_mem1_a: {
+    text: 'Sì... torn@%%%. È la parola giust#. Tornano. Loro t%r%%no. Io le h% viste nel camp@. Enzo le ha viste. E poi non c\'er# più.',
+    memoryCorrupt: true,
+    choices: [
+      {text: 'Dove ha visto le luci esattamente?', next:'teresa_mem2_a'},
+      {text: 'Enzo è sparito nel campo?', next:'teresa_mem2_b'}
+    ]
+  },
+  teresa_mem1_b: {
+    text: 'Io d&rmivo. Aspett#vo. Sempre sveglia d# notte da quand@ è succ%%so. Il sonno non arriva. E quan%% arriva... sogno le l%ci.',
+    memoryCorrupt: true,
+    choices: [
+      {text: 'Cosa sogna?', next:'teresa_mem2_a'},
+      {text: 'Da quanto non dorme?', next:'teresa_mem2_b'}
+    ]
+  },
+  teresa_mem2_a: {
+    text: '%l centro del camp&. Dov% l\'erba è pie%ata. Enzo dicev% che lì si sente un ronzio. Come un apiario. Ma non ci son% api.',
+    choices: [
+      {text: 'Grazie Teresa. Ho capito.', next:null, effect:{giveClue:'frammento'}}
+    ]
+  },
+  teresa_mem2_b: {
+    text: 'Non d%rmo da quand@ Enzo... da quand# se n\'è andato. Tengo il suo diario sotto il cuscino. Lo v%d%? È tutto quello che mi rimane.',
+    choices: [
+      {text: 'Posso vedere il diario?', next:null, effect:{giveClueHint:'diario_enzo'}}
+    ]
+  },
+
   /* ── ARCHIVISTA NERI ── */
   neri_s0: {
     text: 'Un investigatore della prefettura? Finalmente qualcuno di razionale in questo paese di superstiziosi. Io sono Neri, l\'archivista. Come posso aiutarla?',
