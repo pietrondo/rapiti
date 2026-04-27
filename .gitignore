@@ -4,3 +4,15 @@ node_modules/
 *.mp3
 *.wav
 *.ogg
+dist/
+electron-main.js
+package.json
+package-lock.json
+installer.nsi
+img_req.json
+img_result.json
+models.json
+payload.json
+payload2.json
+result.json
+test.json

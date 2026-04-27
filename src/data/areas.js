@@ -59,8 +59,8 @@ var areas = {
       // Gatto
       ctx.fillStyle = '#E8913A'; ctx.fillRect(112, 154, 8, 5); ctx.fillRect(115, 151, 4, 3);
       // Cartelli uscita
-      drawExitSign(ctx, 170, 4, 'ARCHIVIO');
-      drawExitSign(ctx, 348, 153, 'CASCINA');
+      drawExitSign(ctx, 170, 2, 'ARCHIVIO');
+      drawExitSign(ctx, 348, 150, 'CASCINA');
       // Vignetta
       drawVignette(ctx);
     }
@@ -165,8 +165,8 @@ var areas = {
       // Erba a ciuffi
       ctx.fillStyle = PALETTE.darkForest;
       for(var g=0;g<CANVAS_W;g+=18) ctx.fillRect(g, 99, 3, 5+(g*7)%3);
-      drawExitSign(ctx, 4, 143, 'PIAZZA');
-      drawExitSign(ctx, 168, 84, 'CAMPO');
+      drawExitSign(ctx, 4, 140, 'PIAZZA');
+      drawExitSign(ctx, 168, 80, 'CAMPO');
       drawVignette(ctx);
     }
   },
@@ -411,18 +411,14 @@ var areas = {
 
 function drawExitSign(ctx, x, y, label) {
   ctx.fillStyle = PALETTE.lanternYel;
-  ctx.fillRect(x, y, label.length * 8 + 8, 14);
+  ctx.fillRect(x, y, label.length * 8 + 12, 14);
   ctx.fillStyle = PALETTE.nightBlue;
-  ctx.fillRect(x + 2, y + 2, label.length * 8 + 4, 10);
+  ctx.fillRect(x + 2, y + 2, label.length * 8 + 8, 10);
   ctx.font = '8px "Courier New",monospace';
   ctx.fillStyle = PALETTE.creamPaper;
-  ctx.fillText(label, x + 4, y + 12);
+  ctx.fillText(label, x + 4, y + 11);
 }
 
 function drawVignette(ctx) {
-  ctx.fillStyle = 'rgba(0,0,0,0.12)';
-  ctx.fillRect(0, 0, 14, CANVAS_H);
-  ctx.fillRect(CANVAS_W - 14, 0, 14, CANVAS_H);
-  ctx.fillRect(0, 0, CANVAS_W, 8);
-  ctx.fillRect(0, CANVAS_H - 8, CANVAS_W, 8);
+  // Rimosso — ora gestito da Vignette.draw() in effects.js
 }

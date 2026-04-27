@@ -22,6 +22,14 @@ function changeArea(areaId, spawnX, spawnY) {
     gameState.currentArea = areaId;
     gameState.player.x = spawnX;
     gameState.player.y = spawnY;
+    // Inizializza effetti per la nuova area
+    ParticleSystem.clear();
+    LightingSystem.setupAreaLights(areaId);
+    if (areaId === 'campo') {
+      ParticleSystem.createFireflies(spawnX, spawnY);
+    } else if (areaId === 'archivio' || areaId === 'cascina_interno') {
+      ParticleSystem.createDust(spawnX, spawnY);
+    }
     updateHUD();
     gameState.fadeDir = -1;
     gameState.fadeCallback = function() { gameState.fadeDir = 0; gameState.fadeCallback = null; };

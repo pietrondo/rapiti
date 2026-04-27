@@ -192,6 +192,11 @@ function collectClue(obj) {
   updateHUD();
   var c = cluesMap[obj.id];
   showToast('Hai raccolto: ' + c.name);
+  // Effetti visivi quando si raccoglie un indizio
+  var px = gameState.player.x + gameState.player.w / 2;
+  var py = gameState.player.y + gameState.player.h / 2;
+  ParticleSystem.createSparkles(px, py);
+  ScreenShake.shake(2, 8);
   updateNPCStates();
 }
 

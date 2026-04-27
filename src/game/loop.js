@@ -22,6 +22,10 @@ function gameLoop() {
   if (ph === 'playing') {
     updatePlayerPosition();
     checkInteractions();
+    // Aggiorna sistemi effetti
+    ParticleSystem.update();
+    LightingSystem.update();
+    ScreenShake.update();
   }
   updateFade();
   if (gameState.messageTimer > 0) {

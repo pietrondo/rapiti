@@ -4,6 +4,10 @@ function render(ctx) {
   ctx.save();
   ctx.scale(2, 2);
   ctx.imageSmoothingEnabled = false;
+  
+  // Applica screen shake
+  ScreenShake.apply(ctx);
+  
   var ph = gameState.gamePhase;
 
   if (ph === 'title') { renderTitle(ctx); }
@@ -15,6 +19,10 @@ function render(ctx) {
     renderArea(ctx);
     renderPlayer(ctx);
     renderInteractionHint(ctx);
+    // Effetti visivi avanzati
+    LightingSystem.draw(ctx, gameState.player.x, gameState.player.y);
+    ParticleSystem.draw(ctx);
+    Vignette.draw(ctx, CANVAS_W, CANVAS_H);
   }
   else if (ph === 'ending') { renderEndingScreen(ctx); }
   if (ph === 'customize') { renderTitle(ctx); } // Background durante customize
@@ -361,11 +369,11 @@ function renderArea(ctx) {
     for (var j = 0; j < npcsData.length; j++) { if (npcsData[j].id === n.id) { npc = npcsData[j]; break; } }
     if (!npc) continue;
     drawSprite(ctx, n.x, n.y, npc.colors, npc.details, 'npc');
-    ctx.fillStyle = PALETTE.nightBlue + '88';
     var tw = ctx.measureText(npc.name).width + 8;
-    ctx.fillRect(n.x - tw / 2, n.y - 22, tw, 10);
+    ctx.fillStyle = 'rgba(26,28,32,0.85)';
+    ctx.fillRect(n.x - tw / 2, n.y - 24, tw, 10);
     ctx.fillStyle = PALETTE.lanternYel; ctx.font = '7px "Courier New",monospace';
-    ctx.textAlign = 'center'; ctx.fillText(npc.name, n.x, n.y - 14); ctx.textAlign = 'start';
+    ctx.textAlign = 'center'; ctx.fillText(npc.name, n.x, n.y - 16); ctx.textAlign = 'start';
   }
   // Render interactable objects
   var objs = areaObjects[gameState.currentArea] || [];
