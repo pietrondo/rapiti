@@ -16,3 +16,8 @@ payload.json
 payload2.json
 result.json
 test.json
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
