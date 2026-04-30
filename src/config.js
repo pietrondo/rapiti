@@ -28,12 +28,12 @@ var PLAYER_H = 14;
    ══════════════════════════════════════════════════════════════ */
 
 var gameState = {
-  currentArea: 'piazza',
+  currentArea: 'piazze',
   gamePhase: 'title',
   previousPhase: null,
-  player: { x: 195, y: 125, w: PLAYER_W, h: PLAYER_H, dir: 'down', frame: 0 },
+  player: { x: 195, y: 188, w: PLAYER_W, h: PLAYER_H, dir: 'down', frame: 0 },
   cluesFound: [],
-  npcStates: { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0 },
+  npcStates: { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0, don_pietro: 0 },
   playerName: 'Detective Maurizio',
   playerColors: { body: '#8B7355', head: '#D4A84B', legs: '#3D3025', detail: '#2D3047' },
   musicEnabled: true,
@@ -58,5 +58,6 @@ var gameState = {
   fadeAlpha: 0,
   fadeDir: 0,
   fadeCallback: null,
+  showMiniMap: true,
   titleAnim: 0
 };

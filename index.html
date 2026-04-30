@@ -19,6 +19,7 @@
     <div class="hud-section">
       <span class="hud-label">[J]</span><span class="hud-value">Diario</span>
       <span class="hud-label">[I]</span><span class="hud-value">Inv</span>
+      <span class="hud-label">[N]</span><span class="hud-value">Mappa</span>
       <span id="hud-ded-hint" class="hud-value" style="display:none"><span class="hud-label">[T]</span><span class="hud-blinking">Teoria</span></span>
       <button id="mute-btn" class="mute-btn" title="Musica ON/OFF" onclick="toggleMusic()">🔊</button>
     </div>
@@ -165,10 +166,15 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- STORY SYSTEM -->
+<script src="src/story/storyData.js"></script>
+<script src="src/story/StoryManager.js"></script>
 <!-- DATA MODULES -->
 <script src="src/config.js"></script>
 <script src="src/data/clues.js"></script>
 <script src="src/data/npcs.js"></script>
+<!-- TEXTURE GENERATOR -->
+<script src="src/game/textureGenerator.js"></script>
 <script src="src/data/areas.js"></script>
 <script src="src/data/puzzles.js"></script>
 <!-- SPRITE GENERATOR & EFFECTS -->

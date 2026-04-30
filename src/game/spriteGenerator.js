@@ -5,34 +5,56 @@
  */
 
 const SpriteGenerator = {
-  FRAME_SIZE: 16,
+  FRAME_SIZE: 32,
   
-  // Palette colori per il detective
+  // Palette colori per il detective (stile EarthBound)
   PALETTE: {
-    SKIN: '#DCB48C',
-    COAT: '#283246',
-    COAT_LIGHT: '#3C4A64',
-    HAT: '#1E283A',
-    HAIR: '#32281E',
-    PANTS: '#232D41',
-    SHOES: '#140F0A',
-    EYE: '#1E1E1E',
-    TIE: '#8B0000',
+    SKIN: '#F5C6A0',
+    SKIN_SHADOW: '#D4A47A',
+    COAT: '#3A4A6B',
+    COAT_LIGHT: '#4D5F8A',
+    COAT_DARK: '#2A3550',
+    HAT: '#2A3550',
+    HAT_LIGHT: '#3A4A6B',
+    HAIR: '#4A3020',
+    HAIR_LIGHT: '#5A4030',
+    PANTS: '#2A3040',
+    SHOES: '#1A1510',
+    SHOES_LIGHT: '#2A2015',
+    EYE: '#1A1A2A',
+    EYE_WHITE: '#FFFFFF',
+    TIE: '#8B1A1A',
+    TIE_LIGHT: '#A02020',
     SHIRT: '#E8E0D0',
+    SHIRT_SHADOW: '#D0C8B8',
+    MOUTH: '#A07060',
+    COLLAR: '#F0E8D8',
   },
 
   /**
-   * Genera sprite sheet del player (4 direzioni x 4 frame)
-   * @returns {HTMLCanvasElement} Canvas 64x64 con tutti i frame
+   * Genera sprite sheet del player con colori personalizzati
+   * @param {Object} colors - {body, bodyLight, bodyDark, detail, detailLight, legs, head, headShadow}
+   * @returns {HTMLCanvasElement} Canvas 128x128 con tutti i frame
    */
-  generatePlayerSheet() {
+  generatePlayerSheet(colors) {
     const canvas = document.createElement('canvas');
-    const size = this.FRAME_SIZE * 4; // 4 frame per riga
+    const size = this.FRAME_SIZE * 4; // 4 frame per riga = 128
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
     
     ctx.imageSmoothingEnabled = false;
+    
+    // Merge custom colors with palette defaults
+    const c = colors || {};
+    const coat = c.body || this.PALETTE.COAT;
+    const coatLight = c.bodyLight || this._lighten(coat, 0.15);
+    const coatDark = c.bodyDark || this._darken(coat, 0.2);
+    const hat = c.detail || this.PALETTE.HAT;
+    const hatLight = c.detailLight || this._lighten(hat, 0.15);
+    const skin = c.head || this.PALETTE.SKIN;
+    const skinShadow = c.headShadow || this._darken(skin, 0.15);
+    const pants = c.legs || this.PALETTE.PANTS;
     
     const directions = ['down', 'up', 'left', 'right'];
     
@@ -40,123 +62,241 @@ const SpriteGenerator = {
       for (let frame = 0; frame < 4; frame++) {
         const ox = frame * this.FRAME_SIZE;
         const oy = dirIndex * this.FRAME_SIZE;
-        this._drawPlayerFrame(ctx, ox, oy, dir, frame);
+        this._drawPlayerFrame(ctx, ox, oy, dir, frame, {
+          coat, coatLight, coatDark, hat, hatLight, skin, skinShadow, pants
+        });
       }
     });
     
     return canvas;
   },
+  
+  /**
+   * Schiarisce un colore hex
+   */
+  _lighten(hex, amount) {
+    var r = parseInt(hex.slice(1,3), 16);
+    var g = parseInt(hex.slice(3,5), 16);
+    var b = parseInt(hex.slice(5,7), 16);
+    r = Math.min(255, Math.round(r + (255 - r) * amount));
+    g = Math.min(255, Math.round(g + (255 - g) * amount));
+    b = Math.min(255, Math.round(b + (255 - b) * amount));
+    return '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
+  },
+  
+  /**
+   * Scurisce un colore hex
+   */
+  _darken(hex, amount) {
+    var r = parseInt(hex.slice(1,3), 16);
+    var g = parseInt(hex.slice(3,5), 16);
+    var b = parseInt(hex.slice(5,7), 16);
+    r = Math.max(0, Math.round(r * (1 - amount)));
+    g = Math.max(0, Math.round(g * (1 - amount)));
+    b = Math.max(0, Math.round(b * (1 - amount)));
+    return '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
+  },
 
   /**
-   * Disegna un singolo frame del player
+   * Disegna un singolo frame del player (stile EarthBound 32×32)
    */
-  _drawPlayerFrame(ctx, ox, oy, direction, frame) {
-    const f = this.FRAME_SIZE;
+  _drawPlayerFrame(ctx, ox, oy, direction, frame, colors) {
+    const f = this.FRAME_SIZE; // 32
+    const c = colors || this.PALETTE;
     
-    // Offset animazione camminata
-    let legOffset = 0;
-    if (frame === 1 || frame === 3) {
-      legOffset = frame === 1 ? -1 : 1;
-    }
-    let bobY = (frame % 2 === 0) ? 0 : 1;
+    // === Animazione camminata ===
+    let legFrame = frame; // 0,1,2,3
+    let legOffsetX = [0, 2, 0, -2][legFrame];
+    let legOffsetY = [0, -1, 0, -1][legFrame];
+    let bodyBob = (frame % 2 === 0) ? 0 : 1;
+    let armSwing = [0, 3, 0, -3][legFrame];
     
     ctx.save();
-    ctx.translate(ox, oy + bobY);
+    ctx.translate(ox, oy + bodyBob);
     
-    // === CORPO (impermeabile) ===
-    ctx.fillStyle = this.PALETTE.COAT;
-    ctx.fillRect(4, 4, 8, 6); // torso
+    // === CAPELLO (fedora) — stile EarthBound, tesa larga ===
+    // Tesa del cappello
+    ctx.fillStyle = c.hat;
+    ctx.fillRect(8, 2, 16, 3); // tesa orizzontale
+    // Cupola
+    ctx.fillRect(11, -2, 10, 5);
+    // Piega cupola
+    ctx.fillStyle = c.hatLight;
+    ctx.fillRect(13, -1, 6, 3);
+    // Fascia
+    ctx.fillStyle = c.coatLight;
+    ctx.fillRect(11, 2, 10, 1);
     
-    // Dettagli impermeabile (bottone centrale)
-    ctx.fillStyle = this.PALETTE.COAT_LIGHT;
-    ctx.fillRect(7, 5, 2, 4);
+    // === TESTA (proporzioni chibi, grande) ===
+    // Base pelle
+    ctx.fillStyle = c.skin;
+    ctx.fillRect(10, 4, 12, 10);
+    // Ombra sotto cappello
+    ctx.fillStyle = c.skinShadow;
+    ctx.fillRect(10, 4, 12, 2);
     
-    // Colletto
-    ctx.fillStyle = this.PALETTE.SHIRT;
-    ctx.fillRect(6, 4, 4, 1);
-    
-    // Cravatta
-    ctx.fillStyle = this.PALETTE.TIE;
-    ctx.fillRect(7, 5, 2, 2);
-    
-    // === TESTA ===
-    ctx.fillStyle = this.PALETTE.SKIN;
-    ctx.fillRect(5, 0, 6, 4);
-    
-    // === CAPPELLO (fedora) ===
-    ctx.fillStyle = this.PALETTE.HAT;
-    ctx.fillRect(3, 0, 10, 1); // tesa
-    ctx.fillRect(5, -1, 6, 2); // cupola
-    
-    // === GAMBE ===
-    ctx.fillStyle = this.PALETTE.PANTS;
-    // Gamba sinistra
-    ctx.fillRect(5, 10, 2, 4 + legOffset);
-    // Gamba destra
-    ctx.fillRect(9, 10, 2, 4 - legOffset);
-    
-    // === SCARPE ===
-    ctx.fillStyle = this.PALETTE.SHOES;
-    ctx.fillRect(5, 14 + legOffset, 2, 1);
-    ctx.fillRect(9, 14 - legOffset, 2, 1);
-    
-    // === FACCIA (variabile per direzione) ===
+    // Faccia (variabile per direzione)
     switch (direction) {
       case 'down':
-        // Occhi visti dall'alto (in basso dello sprite)
+        // Occhi EarthBound (grandi, espressivi)
+        ctx.fillStyle = this.PALETTE.EYE_WHITE;
+        ctx.fillRect(12, 7, 3, 3);
+        ctx.fillRect(17, 7, 3, 3);
+        // Iris
         ctx.fillStyle = this.PALETTE.EYE;
-        ctx.fillRect(6, 2, 1, 1);
-        ctx.fillRect(9, 2, 1, 1);
+        ctx.fillRect(13, 8, 2, 2);
+        ctx.fillRect(18, 8, 2, 2);
+        // Sopracciglie
+        ctx.fillStyle = this.PALETTE.HAIR;
+        ctx.fillRect(12, 6, 3, 1);
+        ctx.fillRect(17, 6, 3, 1);
         // Bocca
-        ctx.fillRect(7, 3, 2, 1);
+        ctx.fillStyle = this.PALETTE.MOUTH;
+        ctx.fillRect(14, 11, 4, 1);
+        // Ombra mento
+        ctx.fillStyle = c.skinShadow;
+        ctx.fillRect(13, 12, 6, 2);
         break;
         
       case 'up':
-        // Schiena - niente faccia visibile
+        // Schiena — capelli visibili
         ctx.fillStyle = this.PALETTE.HAIR;
-        ctx.fillRect(5, 0, 6, 2);
+        ctx.fillRect(10, 4, 12, 6);
+        ctx.fillStyle = this.PALETTE.HAIR_LIGHT;
+        ctx.fillRect(11, 5, 10, 4);
+        // Collo
+        ctx.fillStyle = c.skinShadow;
+        ctx.fillRect(13, 10, 6, 2);
         break;
         
       case 'left':
-        // Vista laterale sinistra
+        // Vista laterale sinistra — un occhio
+        ctx.fillStyle = this.PALETTE.EYE_WHITE;
+        ctx.fillRect(10, 7, 3, 3);
         ctx.fillStyle = this.PALETTE.EYE;
-        ctx.fillRect(5, 1, 1, 1);
+        ctx.fillRect(11, 8, 2, 2);
         ctx.fillStyle = this.PALETTE.HAIR;
-        ctx.fillRect(5, 0, 2, 2);
+        ctx.fillRect(10, 6, 3, 1);
+        // Bocca di profilo
+        ctx.fillStyle = this.PALETTE.MOUTH;
+        ctx.fillRect(11, 11, 2, 1);
+        // Capelli lato
+        ctx.fillRect(10, 4, 2, 6);
         break;
         
       case 'right':
-        // Vista laterale destra
+        // Vista laterale destra — un occhio
+        ctx.fillStyle = this.PALETTE.EYE_WHITE;
+        ctx.fillRect(19, 7, 3, 3);
         ctx.fillStyle = this.PALETTE.EYE;
-        ctx.fillRect(10, 1, 1, 1);
+        ctx.fillRect(20, 8, 2, 2);
         ctx.fillStyle = this.PALETTE.HAIR;
-        ctx.fillRect(9, 0, 2, 2);
+        ctx.fillRect(19, 6, 3, 1);
+        ctx.fillStyle = this.PALETTE.MOUTH;
+        ctx.fillRect(21, 11, 2, 1);
+        ctx.fillRect(20, 4, 2, 6);
         break;
     }
+    
+    // === COLLO / CAMICIA ===
+    ctx.fillStyle = this.PALETTE.SHIRT;
+    ctx.fillRect(13, 14, 6, 3);
+    ctx.fillStyle = this.PALETTE.SHIRT_SHADOW;
+    ctx.fillRect(14, 15, 4, 2);
+    // Colletto
+    ctx.fillStyle = this.PALETTE.COLLAR;
+    ctx.fillRect(12, 14, 3, 2);
+    ctx.fillRect(17, 14, 3, 2);
+    // Cravatta
+    ctx.fillStyle = this.PALETTE.TIE;
+    ctx.fillRect(15, 14, 2, 4);
+    ctx.fillStyle = this.PALETTE.TIE_LIGHT;
+    ctx.fillRect(15, 14, 2, 2);
+    
+    // === CORPO (impermeabile trenchcoat) ===
+    // Base impermeabile
+    ctx.fillStyle = c.coat;
+    ctx.fillRect(10, 17, 12, 8);
+    // Ombra lato
+    ctx.fillStyle = c.coatDark;
+    ctx.fillRect(10, 17, 2, 8);
+    // Luce lato
+    ctx.fillStyle = c.coatLight;
+    ctx.fillRect(18, 17, 2, 8);
+    // Bottoni
+    ctx.fillStyle = c.coatLight;
+    ctx.fillRect(15, 18, 2, 1);
+    ctx.fillRect(15, 20, 2, 1);
+    ctx.fillRect(15, 22, 2, 1);
+    // Bavero
+    ctx.fillStyle = c.coatLight;
+    ctx.fillRect(11, 17, 3, 2);
+    ctx.fillRect(18, 17, 3, 2);
+    // Tasche
+    ctx.fillStyle = c.coatDark;
+    ctx.fillRect(11, 21, 3, 3);
+    ctx.fillRect(18, 21, 3, 3);
+    
+    // === BRACCIA ===
+    // Braccio sinistro (oscilla con camminata)
+    ctx.fillStyle = c.coat;
+    ctx.fillRect(7, 17 + armSwing, 3, 8);
+    ctx.fillStyle = c.coatDark;
+    ctx.fillRect(7, 17 + armSwing, 1, 8);
+    // Mano
+    ctx.fillStyle = c.skin;
+    ctx.fillRect(7, 24 + armSwing, 3, 2);
+    
+    // Braccio destro (oscilla opposto)
+    ctx.fillStyle = c.coat;
+    ctx.fillRect(22, 17 - armSwing, 3, 8);
+    ctx.fillStyle = c.coatLight;
+    ctx.fillRect(24, 17 - armSwing, 1, 8);
+    ctx.fillStyle = c.skin;
+    ctx.fillRect(22, 24 - armSwing, 3, 2);
+    
+    // === GAMBE ===
+    // Gamba sinistra
+    ctx.fillStyle = c.pants;
+    ctx.fillRect(11, 25, 4, 5 + legOffsetY);
+    ctx.fillRect(11 + legOffsetX, 29 + legOffsetY, 4, 2);
+    // Ombra piega
+    ctx.fillStyle = c.coatDark;
+    ctx.fillRect(11, 25, 1, 5 + legOffsetY);
+    
+    // Gamba destra
+    ctx.fillStyle = c.pants;
+    ctx.fillRect(17, 25, 4, 5 - legOffsetY);
+    ctx.fillRect(17 - legOffsetX, 29 - legOffsetY, 4, 2);
+    ctx.fillStyle = c.coatDark;
+    ctx.fillRect(17, 25, 1, 5 - legOffsetY);
+    
+    // === SCARPE ===
+    ctx.fillStyle = this.PALETTE.SHOES;
+    ctx.fillRect(10 + legOffsetX, 30 + legOffsetY, 5, 2);
+    ctx.fillRect(17 - legOffsetX, 30 - legOffsetY, 5, 2);
+    ctx.fillStyle = this.PALETTE.SHOES_LIGHT;
+    ctx.fillRect(11 + legOffsetX, 30 + legOffsetY, 3, 1);
+    ctx.fillRect(18 - legOffsetX, 30 - legOffsetY, 3, 1);
     
     ctx.restore();
   },
 
   /**
-   * Genera sprite sheet per un NPC
+   * Genera sprite sheet per un NPC (stile EarthBound 32×32)
    * @param {Object} npcData - Dati NPC da npcs.js
    * @returns {HTMLCanvasElement}
    */
   generateNPCSheet(npcData) {
     const canvas = document.createElement('canvas');
-    const f = this.FRAME_SIZE;
+    const f = this.FRAME_SIZE; // 32
     canvas.width = f * 2; // 2 frame
     canvas.height = f * 4; // 4 direzioni
     const ctx = canvas.getContext('2d');
     
     ctx.imageSmoothingEnabled = false;
     
-    const colors = npcData.spriteColors || {
-      body: '#8B7355',
-      head: '#DCB48C',
-      legs: '#4A4A4A',
-      detail: '#6B5335'
-    };
+    const colors = npcData.spriteColors || this._getDefaultNPCColors(npcData.id);
     
     const directions = ['down', 'up', 'left', 'right'];
     
@@ -172,56 +312,240 @@ const SpriteGenerator = {
   },
 
   /**
-   * Disegna un frame NPC
+   * Colori default per NPC se non specificati
+   */
+  _getDefaultNPCColors(npcId) {
+    var presets = {
+      ruggeri:  { body: '#5C5C5C', bodyLight: '#7A7A7A', bodyDark: '#4A4A4A', head: '#F5C6A0', legs: '#3D3025', detail: '#2D3047', accent: '#8B1A1A' },
+      teresa:   { body: '#6B4E3D', bodyLight: '#8B6E5D', bodyDark: '#5B3E2D', head: '#F5C6A0', legs: '#3D3025', detail: '#8B7355', accent: '#C4956A' },
+      neri:     { body: '#8B7D6B', bodyLight: '#A59785', bodyDark: '#7B6D5B', head: '#F5C6A0', legs: '#3D3025', detail: '#A0A8B0', accent: '#4A5568' },
+      valli:    { body: '#4A5568', bodyLight: '#5A6578', bodyDark: '#3A4558', head: '#F5C6A0', legs: '#2D3047', detail: '#3D5A3C', accent: '#D4A843' },
+      osvaldo:  { body: '#8B7D6B', bodyLight: '#A59785', bodyDark: '#7B6D5B', head: '#F5C6A0', legs: '#3D3025', detail: '#B8A88A', accent: '#44AA44' },
+      gino:     { body: '#5C7A4B', bodyLight: '#7C9A6B', bodyDark: '#4C6A3B', head: '#F5C6A0', legs: '#3D3025', detail: '#A0A8B0', accent: '#D4A843' },
+      anselmo:  { body: '#6B5B4F', bodyLight: '#8B7B6F', bodyDark: '#5B4B3F', head: '#F5C6A0', legs: '#3D3025', detail: '#5C5C5C', accent: '#8B7D6B' },
+    };
+    return presets[npcId] || { body: '#8B7355', bodyLight: '#A59375', bodyDark: '#7B6345', head: '#F5C6A0', legs: '#4A4A4A', detail: '#6B5335', accent: '#D4A843' };
+  },
+
+  /**
+   * Proprietà corporee per NPC (variazioni fisiche)
+   */
+  _getNPCBodyProps(npcId) {
+    var presets = {
+      ruggeri:  { bodyW: 12, bodyH: 9, headY: 3, legH: 5, shoeW: 5, thick: 0 },
+      teresa:   { bodyW: 13, bodyH: 8, headY: 5, legH: 4, shoeW: 5, thick: 1 },
+      neri:     { bodyW: 11, bodyH: 8, headY: 4, legH: 5, shoeW: 5, thick: 0 },
+      valli:    { bodyW: 13, bodyH: 9, headY: 3, legH: 5, shoeW: 5, thick: 1 },
+      osvaldo:  { bodyW: 12, bodyH: 8, headY: 4, legH: 5, shoeW: 5, thick: 1 },
+      gino:     { bodyW: 11, bodyH: 7, headY: 5, legH: 4, shoeW: 5, thick: 0 },
+      anselmo:  { bodyW: 10, bodyH: 7, headY: 5, legH: 4, shoeW: 4, thick: 0 },
+    };
+    return presets[npcId] || { bodyW: 12, bodyH: 8, headY: 4, legH: 5, shoeW: 5, thick: 0 };
+  },
+
+  /**
+   * Disegna un frame NPC (stile EarthBound 32×32)
    */
   _drawNPCFrame(ctx, ox, oy, direction, frame, colors, npcData) {
-    const f = this.FRAME_SIZE;
-    
-    let bobY = (frame % 2 === 0) ? 0 : 1;
-    
+    const f = this.FRAME_SIZE; // 32
+
+    // === Variazioni corporee per NPC ===
+    var npcProps = this._getNPCBodyProps(npcData.id);
+
+    // === Animazione camminata ===
+    var legSwing = [0, 2, 0, -2][frame % 4];
+    var armSwing = [0, 3, 0, -3][frame % 4];
+    var bodyBob = (frame % 2 === 0) ? 0 : 1;
+
     ctx.save();
-    ctx.translate(ox, oy + bobY);
-    
-    // Corpo
-    ctx.fillStyle = colors.body;
-    ctx.fillRect(4, 4, 8, 6);
-    
-    // Testa
-    ctx.fillStyle = colors.head;
-    ctx.fillRect(5, 0, 6, 4);
-    
-    // Dettagli specifici NPC
-    if (npcData.name === 'Ruggeri') {
-      // Occhiali
-      ctx.fillStyle = '#333';
-      ctx.fillRect(6, 1, 1, 1);
-      ctx.fillRect(9, 1, 1, 1);
-      ctx.fillRect(7, 1, 2, 1);
-    } else if (npcData.name === 'Teresa') {
-      // Sciarpa
+    ctx.translate(ox, oy + bodyBob);
+
+    // === CAPELLO / COPRICAPO (specifico per NPC) ===
+    if (npcData.id === 'ruggeri') {
+      // Cappello elegante sindaco
       ctx.fillStyle = colors.detail;
-      ctx.fillRect(5, 3, 6, 1);
-    } else if (npcData.name === 'Valli') {
-      // Cappello da contadino
+      ctx.fillRect(10, 0, 12, 2); // tesa
+      ctx.fillRect(12, -2, 8, 3); // cupola
+    } else if (npcData.id === 'teresa') {
+      // Scialle/cappello da nonna
       ctx.fillStyle = colors.detail;
-      ctx.fillRect(3, 0, 10, 1);
-      ctx.fillRect(5, -1, 6, 2);
+      ctx.fillRect(9, 2, 14, 3);
+      ctx.fillRect(10, 4, 12, 2); // laterali
+    } else if (npcData.id === 'valli') {
+      // Cappello militare
+      ctx.fillStyle = colors.body;
+      ctx.fillRect(9, 0, 14, 2);
+      ctx.fillRect(11, -2, 10, 3);
+      ctx.fillStyle = colors.accent;
+      ctx.fillRect(14, -1, 4, 2); // distintivo
+    } else if (npcData.id === 'gino') {
+      // Berretto da postino
+      ctx.fillStyle = colors.body;
+      ctx.fillRect(10, 1, 12, 2);
+      ctx.fillRect(12, -1, 8, 3);
+      ctx.fillStyle = colors.detail;
+      ctx.fillRect(10, 2, 12, 1);
+    } else if (npcData.id === 'anselmo') {
+      // Cappello largo da vecchio
+      ctx.fillStyle = colors.detail;
+      ctx.fillRect(7, 1, 18, 2);
+      ctx.fillRect(10, -1, 12, 3);
     }
     
-    // Gambe
-    ctx.fillStyle = colors.legs;
-    ctx.fillRect(5, 10, 2, 4);
-    ctx.fillRect(9, 10, 2, 4);
+    // === TESTA (chibi, grande) ===
+    ctx.fillStyle = colors.head;
+    ctx.fillRect(10, 4, 12, 10);
+    // Ombra
+    ctx.fillStyle = '#D4A47A';
+    ctx.fillRect(10, 4, 12, 2);
     
-    // Faccia base
-    ctx.fillStyle = '#1E1E1E';
-    if (direction === 'down') {
-      ctx.fillRect(6, 1, 1, 1);
-      ctx.fillRect(9, 1, 1, 1);
-    } else if (direction === 'left') {
-      ctx.fillRect(5, 1, 1, 1);
-    } else if (direction === 'right') {
-      ctx.fillRect(10, 1, 1, 1);
+    // === FACCIA ===
+    switch (direction) {
+      case 'down':
+        // Occhi EarthBound
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(12, 7, 3, 3);
+        ctx.fillRect(17, 7, 3, 3);
+        ctx.fillStyle = '#1A1A2A';
+        ctx.fillRect(13, 8, 2, 2);
+        ctx.fillRect(18, 8, 2, 2);
+        // Sopracciglie
+        ctx.fillStyle = colors.detail;
+        ctx.fillRect(12, 6, 3, 1);
+        ctx.fillRect(17, 6, 3, 1);
+        // Bocca
+        ctx.fillStyle = '#A07060';
+        ctx.fillRect(14, 11, 4, 1);
+        
+        // Dettagli specifici NPC
+        if (npcData.id === 'ruggeri') {
+          // Occhiali
+          ctx.fillStyle = '#333';
+          ctx.fillRect(11, 7, 5, 1);
+          ctx.fillRect(16, 7, 5, 1);
+          ctx.fillRect(15, 7, 2, 1);
+        } else if (npcData.id === 'neri') {
+          // Pince-nez
+          ctx.fillStyle = '#8B8B00';
+          ctx.fillRect(11, 8, 5, 1);
+          ctx.fillRect(16, 8, 5, 1);
+        } else if (npcData.id === 'osvaldo') {
+          // Baffi
+          ctx.fillStyle = '#5A4030';
+          ctx.fillRect(12, 10, 8, 1);
+        } else if (npcData.id === 'anselmo') {
+          // Rughe
+          ctx.fillStyle = '#C4A480';
+          ctx.fillRect(12, 5, 8, 1);
+          ctx.fillRect(12, 6, 8, 1);
+        }
+        break;
+        
+      case 'up':
+        // Schiena
+        if (npcData.id === 'teresa') {
+          ctx.fillStyle = colors.detail;
+          ctx.fillRect(10, 4, 12, 6); // scialle
+        } else {
+          ctx.fillStyle = colors.head;
+          ctx.fillRect(10, 4, 12, 6);
+        }
+        break;
+        
+      case 'left':
+        // Profilo sinistro
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(10, 7, 3, 3);
+        ctx.fillStyle = '#1A1A2A';
+        ctx.fillRect(11, 8, 2, 2);
+        ctx.fillStyle = '#A07060';
+        ctx.fillRect(11, 11, 2, 1);
+        break;
+        
+      case 'right':
+        // Profilo destro
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(19, 7, 3, 3);
+        ctx.fillStyle = '#1A1A2A';
+        ctx.fillRect(20, 8, 2, 2);
+        ctx.fillStyle = '#A07060';
+        ctx.fillRect(21, 11, 2, 1);
+        break;
+    }
+    
+    // === CORPO (con shading 3-tone e variazioni NPC) ===
+    var bw = npcProps.bodyW;
+    var bh = npcProps.bodyH;
+    var bx = 16 - bw / 2;
+    var by = 17;
+    ctx.fillStyle = colors.body;
+    ctx.fillRect(bx, by, bw, bh);
+    // Ombra laterale
+    ctx.fillStyle = colors.bodyDark;
+    ctx.fillRect(bx, by, 2, bh);
+    // Luce laterale
+    ctx.fillStyle = colors.bodyLight;
+    ctx.fillRect(bx + bw - 2, by, 2, bh);
+    // Ombra inferiore
+    ctx.fillStyle = colors.bodyDark;
+    ctx.fillRect(bx, by + bh - 1, bw, 1);
+    
+    // Dettagli specifici NPC sul corpo
+    if (npcData.id === 'ruggeri') {
+      // Cravatta
+      ctx.fillStyle = colors.accent;
+      ctx.fillRect(15, 17, 2, 4);
+    } else if (npcData.id === 'osvaldo') {
+      // Grembiule
+      ctx.fillStyle = '#E8E0D0';
+      ctx.fillRect(11, 19, 10, 6);
+    } else if (npcData.id === 'valli') {
+      // Spalline
+      ctx.fillStyle = colors.accent;
+      ctx.fillRect(10, 17, 3, 2);
+      ctx.fillRect(19, 17, 3, 2);
+    } else if (npcData.id === 'gino') {
+      // Borsa
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(18, 18, 5, 5);
+    } else if (npcData.id === 'anselmo') {
+      // Giaccone vecchio
+      ctx.fillStyle = colors.detail;
+      ctx.fillRect(10, 17, 12, 1);
+    }
+    
+    // === BRACCIA (con animazione oscilazione) ===
+    ctx.fillStyle = colors.body;
+    ctx.fillRect(7, by + armSwing, 3, 7);
+    ctx.fillRect(22, by - armSwing, 3, 7);
+    // Mani
+    ctx.fillStyle = colors.head;
+    ctx.fillRect(7, by + 6 + armSwing, 3, 2);
+    ctx.fillRect(22, by + 6 - armSwing, 3, 2);
+    
+    // === GAMBE (con animazione camminata) ===
+    var legY = by + bh;
+    var lh = npcProps.legH;
+    ctx.fillStyle = colors.legs;
+    ctx.fillRect(11, legY, 4, lh + legSwing / 2);
+    ctx.fillRect(17, legY, 4, lh - legSwing / 2);
+    // Ombra piega
+    ctx.fillStyle = colors.bodyDark;
+    ctx.fillRect(11, legY, 1, lh + legSwing / 2);
+    ctx.fillRect(17, legY, 1, lh - legSwing / 2);
+    // Piedi (suola + tomaia)
+    ctx.fillStyle = '#1A1510';
+    ctx.fillRect(10, legY + lh + legSwing / 2, npcProps.shoeW, 2);
+    ctx.fillRect(17, legY + lh - legSwing / 2, npcProps.shoeW, 2);
+    ctx.fillStyle = '#2A2015';
+    ctx.fillRect(11, legY + lh + legSwing / 2, 3, 1);
+    ctx.fillRect(18, legY + lh - legSwing / 2, 3, 1);
+    
+    // Bastone per Anselmo
+    if (npcData.id === 'anselmo') {
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(6, 15, 2, 16);
+      ctx.fillRect(5, 14, 4, 2);
     }
     
     ctx.restore();
@@ -243,14 +567,14 @@ const SpriteGenerator = {
     
     // Sfondo base
     const skyColors = {
-      piazza: ['#1a1a2e', '#16213e', '#0f3460'],
-      archivio: ['#2d1b0e', '#3d2b1e', '#4d3b2e'],
-      cascina: ['#1a2a1a', '#2a3a2a', '#1a3a1a'],
-      campo: ['#0a0a1a', '#1a1a2a', '#0a1a2a'],
-      bar_interno: ['#2a1a0a', '#3a2a1a', '#4a3a2a'],
-      municipio: ['#1a1a2e', '#2a2a3e', '#3a3a4e'],
-      cascina_interno: ['#2d1b0e', '#3d2b1e', '#4d3b2e'],
-      monte_ferro: ['#0a0a1a', '#1a1a2a', '#2a2a3a']
+      piazze: ['#1a1a2e', '#16213e', '#0f3460'],
+      chiesa: ['#1a1a2e', '#16213e', '#0f3460'],
+      cimitero: ['#0a0a1a', '#1a1a2a', '#0a1a2a'],
+      giardini: ['#1a2a1a', '#2a3a2a', '#1a3a1a'],
+      bar_exterior: ['#2a1a0a', '#3a2a1a', '#4a3a2a'],
+      residenziale: ['#1a1a2e', '#2a2a3e', '#3a3a4e'],
+      industriale: ['#2d1b0e', '#3d2b1e', '#4d3b2e'],
+      polizia: ['#0a0a1a', '#1a1a2a', '#2a2a3a']
     };
     
     const colors = skyColors[areaId] || ['#1a1a2e', '#16213e', '#0f3460'];
@@ -265,29 +589,8 @@ const SpriteGenerator = {
     
     // Disegna elementi specifici per area
     switch (areaId) {
-      case 'piazza':
+      case 'piazze':
         this._drawPiazza(ctx);
-        break;
-      case 'archivio':
-        this._drawArchivio(ctx);
-        break;
-      case 'cascina':
-        this._drawCascina(ctx);
-        break;
-      case 'campo':
-        this._drawCampo(ctx);
-        break;
-      case 'bar_interno':
-        this._drawBar(ctx);
-        break;
-      case 'municipio':
-        this._drawMunicipio(ctx);
-        break;
-      case 'cascina_interno':
-        this._drawCascinaInterno(ctx);
-        break;
-      case 'monte_ferro':
-        this._drawMonteFerro(ctx);
         break;
     }
     

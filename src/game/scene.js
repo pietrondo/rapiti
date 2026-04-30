@@ -76,8 +76,13 @@ function checkScene() {
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;
     showToast('Scena ricostruita! Parla con Teresa nella stanza della cascina.');
-    // Sblocca Teresa state 1
+    
+    // Notifica StoryManager
+    StoryManager.onPuzzleSolved('scene');
+    
+    // Sblocca Teresa state 1 (retrocompatibilità)
     if (gameState.npcStates.teresa < 1) gameState.npcStates.teresa = 1;
+    
     setTimeout(function() { closeScenePuzzle(); }, 1500);
   } else {
     result.textContent = '✗ Ricostruzione errata. Riprova.';
@@ -90,24 +95,26 @@ function checkScene() {
    ══════════════════════════════════════════════════════════════ */
 
 function determineEndingV2() {
+  // Usa StoryManager per determinare il finale
+  if (typeof StoryManager !== 'undefined' && StoryManager.determineEnding) {
+    var ending = StoryManager.determineEnding();
+    return ending ? ending.id : 'psychological';
+  }
+  
+  // Fallback al vecchio sistema se StoryManager non è disponibile
   var cf = gameState.cluesFound;
-  // Teoria valutata in base agli indizi presenti
   var militaryScore = 0, alienScore = 0, psychScore = 0, secretEligible = false;
 
-  // Militare: base, test, sparizioni
   if (cf.indexOf('lettera_censurata') >= 0) militaryScore += 2;
   if (cf.indexOf('radio_audio') >= 0) militaryScore += 1;
   if (cf.indexOf('registro_1861') >= 0) militaryScore += 1;
 
-  // Extraterrestre: oggetto, luce, pattern
   if (cf.indexOf('frammento') >= 0) alienScore += 2;
   if (cf.indexOf('tracce_circolari') >= 0) alienScore += 2;
   if (cf.indexOf('simboli_portone') >= 0) alienScore += 1;
 
-  // Psicologico: isteria, testimonianze deboli
-  psychScore = 8 - cf.length; // Meno indizi = più probabile psicologico
+  psychScore = 8 - cf.length;
 
-  // Segreto: TUTTO (militare + alieno)
   if (militaryScore >= 2 && alienScore >= 3 && cf.length >= 6) {
     secretEligible = true;
   }
@@ -116,7 +123,6 @@ function determineEndingV2() {
   if (alienScore > militaryScore && alienScore > 3) return 'alien';
   if (militaryScore > alienScore && militaryScore > 3) return 'military';
   if (psychScore >= 5 || cf.length < 2) return 'psychological';
-  // Default
   if (alienScore >= militaryScore) return 'alien';
   return 'military';
 }

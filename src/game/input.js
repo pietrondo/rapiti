@@ -49,6 +49,11 @@ function handleKeyDown(e) {
     if (key === 'j' || key === 'J') { openJournal(); e.preventDefault(); }
     if (key === 'i' || key === 'I') { openInventory(); e.preventDefault(); }
     if ((key === 't' || key === 'T') && canOpenDeduction()) { openDeduction(); e.preventDefault(); }
+    if (key === 'n' || key === 'N') {
+      gameState.showMiniMap = !gameState.showMiniMap;
+      showToast(gameState.showMiniMap ? 'Minimappa visibile' : 'Minimappa nascosta');
+      e.preventDefault();
+    }
     if (key === 'm' || key === 'M') { toggleMusic(); e.preventDefault(); }
   }
 
@@ -101,6 +106,9 @@ function updatePlayerPosition() {
   if (area.colliders) {
     for (var ci = 0; ci < area.colliders.length; ci++) {
       var col = area.colliders[ci];
+      if (rectCollision(p.x, p.y, p.w, p.h, col.x, col.y, col.w, col.h)) {
+        continue;
+      }
       if (rectCollision(nx, ny, p.w, p.h, col.x, col.y, col.w, col.h)) {
         // Prova solo asse X
         if (!rectCollision(nx, p.y, p.w, p.h, col.x, col.y, col.w, col.h)) { ny = p.y; }
@@ -124,6 +132,24 @@ function checkInteractions() {
   var p = gameState.player;
   var px = p.x + p.w / 2, py = p.y + p.h / 2;
   var area = areas[gameState.currentArea];
+  if (area.exits) {
+    for (var ei = 0; ei < area.exits.length; ei++) {
+      var ex = area.exits[ei];
+      if (ex.requiresPuzzle) continue;
+      if (ex.dir === 'up' && px >= ex.xRange[0] && px <= ex.xRange[1] && py <= (area.walkableTop || 0) + 72) {
+        gameState.interactionTarget = { type: 'door', obj: { toArea: ex.to, toSpawnX: ex.spawnX, toSpawnY: ex.spawnY } }; return;
+      }
+      if (ex.dir === 'down' && px >= ex.xRange[0] && px <= ex.xRange[1] && py >= CANVAS_H - 34) {
+        gameState.interactionTarget = { type: 'door', obj: { toArea: ex.to, toSpawnX: ex.spawnX, toSpawnY: ex.spawnY } }; return;
+      }
+      if (ex.dir === 'left' && py >= ex.xRange[0] && py <= ex.xRange[1] && px <= 34) {
+        gameState.interactionTarget = { type: 'door', obj: { toArea: ex.to, toSpawnX: ex.spawnX, toSpawnY: ex.spawnY } }; return;
+      }
+      if (ex.dir === 'right' && py >= ex.xRange[0] && py <= ex.xRange[1] && px >= CANVAS_W - 34) {
+        gameState.interactionTarget = { type: 'door', obj: { toArea: ex.to, toSpawnX: ex.spawnX, toSpawnY: ex.spawnY } }; return;
+      }
+    }
+  }
   // NPC detection
   for (var i = 0; i < area.npcs.length; i++) {
     var n = area.npcs[i];
@@ -189,6 +215,12 @@ function handleInteract() {
 function collectClue(obj) {
   if (gameState.cluesFound.indexOf(obj.id) >= 0) return;
   gameState.cluesFound.push(obj.id);
+  
+  // Notifica StoryManager
+  if (typeof StoryManager !== 'undefined') {
+    StoryManager.onClueFound(obj.id);
+  }
+  
   updateHUD();
   var c = cluesMap[obj.id];
   showToast('Hai raccolto: ' + c.name);

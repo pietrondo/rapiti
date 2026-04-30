@@ -10,7 +10,8 @@ var npcsData = [
   { id:'valli', name:'Capitano Valli', colors:{body:'#4A5568',head:'#D4A84B',legs:'#2D3047',detail:'#3D5A3C'}, details:[] },
   { id:'osvaldo', name:'Osvaldo il Barista', colors:{body:'#8B7D6B',head:'#D4A84B',legs:'#3D3025',detail:'#B8A88A'}, details:[] },
   { id:'gino', name:'Gino il Postino', colors:{body:'#5C7A4B',head:'#D4A84B',legs:'#3D3025',detail:'#A0A8B0'}, details:[] },
-  { id:'anselmo', name:'Anselmo il Vecchio', colors:{body:'#6B5B4F',head:'#D4A84B',legs:'#3D3025',detail:'#5C5C5C'}, details:[] }
+  { id:'anselmo', name:'Anselmo il Vecchio', colors:{body:'#6B5B4F',head:'#D4A84B',legs:'#3D3025',detail:'#5C5C5C'}, details:[] },
+  { id:'don_pietro', name:'Don Pietro', colors:{body:'#1A1C20',head:'#D4A84B',legs:'#3D3025',detail:'#E8DCC8'}, details:[] }
 ];
 
 /** Albero dialoghi — tutti i nodi di conversazione */
@@ -27,7 +28,7 @@ var dialogueNodes = {
   ruggeri_s0_luci: { text: 'Fandonie. Contadini che hanno bevuto troppo vino e scambiato un elicottero per... non so cosa. Non abbiamo tempo per queste sciocchezze.' },
   ruggeri_s0_casi: {
     text: 'Mah... nel 1861, a sentir le storie dei vecchi, due persone sparirono. Ma furono temporali forti quell\'anno. Forse annegati nel fiume. Chieda all\'archivista Neri, se proprio vuole.',
-    effect: { hint: 'archivio' }
+    effect: { hint: 'chiesa' }
   },
   ruggeri_s0_pensa: { text: 'Penso che lei stia perdendo tempo, ispettore. La prefettura ha di meglio da fare che inseguire leggende. Ma faccia pure il suo lavoro.' },
 
@@ -243,12 +244,25 @@ var dialogueNodes = {
   },
   anselmo_s1_significa: {text:'Non lo so. Ma so che ogni 5-7 anni le luci tornano. E ogni volta qualcuno sparisce. 1952, 1969, 1974... e ora il 1979. È un ciclo. Vada all\'archivio. Guardi i registri. Forse lei è più bravo di me a capire.'},
   anselmo_s1_1952: {text:'Nel 1952 c\'erano già. Esattamente uguali a oggi. Io lo dissi ai carabinieri. Mi presero per matto. Chiusero il caso in 3 giorni. "Annegamento accidentale". Ma il fiume è a 15 chilometri da qui.'},
-  anselmo_s1_altro: {text:'Diceva che il terreno "respirava". Che sentiva un tono, un ronzio, prima che le luci apparissero. Io non le ho mai creduto. Forse avrei dovuto.'}
+  anselmo_s1_altro: {text:'Diceva che il terreno "respirava". Che sentiva un tono, un ronzio, prima che le luci apparissero. Io non le ho mai creduto. Forse avrei dovuto.'},
+
+  /* ── DON PIETRO ── */
+  don_pietro_s0: {
+    text: 'Buonasera. Sono Don Pietro. Lei è il forestiero che tutti cercano. La chiesa è aperta, ma le consiglio di non restare dopo mezzanotte. Le voci... si sentono meglio nel buio.',
+    choices: [
+      {text: 'Quali voci, Don Pietro?', next:'don_pietro_s0_voci'},
+      {text: 'C\'entra qualcosa con le luci?', next:'don_pietro_s0_luci'},
+      {text: 'Grazie, padre. Ci penserò.', next:'don_pietro_s0_grazie'}
+    ]
+  },
+  don_pietro_s0_voci: {text:'Nella cripta, sotto la chiesa. Da settimane si sente un... ronzio. Come un motore lontano. Ma non c\'è nessun motore. Il parroco vecchio diceva che qui c\'era un tempio, molto prima della chiesa.'},
+  don_pietro_s0_luci: {text:'Le luci... non sono di questo mondo. Ma non sono nemmeno del cielo. Vengono da sotto. Come se la terra stessa... respirasse. Mio nonno raccontava la stessa storia, nel 1861.'},
+  don_pietro_s0_grazie: {text:'Buona sera, figliolo. E... stia attento. Il paese ha molti segreti, e alcuni preferiscono restare sepolti.'}
 };
 
 /** Effetti dei dialoghi applicati dopo la scelta */
 var dialogueEffects = {
-  hint_archivio: function() { showToast('Il Sindaco ha parlato dell\'Archivio Comunale.'); },
+  hint_chiesa: function() { showToast('Il Sindaco ha parlato della Chiesa.'); },
   give_frammento: function() {
     if(gameState.cluesFound.indexOf('frammento')===-1){
       gameState.cluesFound.push('frammento');
@@ -257,7 +271,7 @@ var dialogueEffects = {
     }
   },
   hint_diario_enzo: function() {
-    var obj=areaObjects.cascina.find(function(o){return o.id==='diario_enzo';});
+    var obj=areaObjects.giardini.find(function(o){return o.id==='diario_enzo';});
     if(obj)obj.requires=null;
     showToast('Teresa ha detto che il diario è nella stanza di Enzo.');
   },

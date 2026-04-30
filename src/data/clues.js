@@ -1,19 +1,19 @@
 /* ══════════════════════════════════════════════════════════════
-   INDIZI E OGGETTI D'AREA
-   ══════════════════════════════════════════════════════════════ */
+    INDIZI E OGGETTI D'AREA
+    ══════════════════════════════════════════════════════════════ */
 
 /** Indizi — 9 totali */
 var clues = [
-  { id: 'registro_1861',   name: 'Registro delle sparizioni del 1861',    area: 'archivio', desc: 'Un vecchio registro polveroso. Due persone scomparse nel 1861, mai ritrovate. Le date coincidono con forti temporali magnetici.' },
-  { id: 'mappa_campi',     name: 'Mappa catastale dei campi',             area: 'campo',    desc: 'Mappa del 1890. Mostra le proprietà agricole a nord del paese. Il Campo delle Luci è segnato come "Podere Sant\'Elmo".' },
-  { id: 'frammento',       name: 'Frammento metallico freddo',            area: 'cascina',  desc: 'Un frammento di metallo argentato, innaturalmente freddo al tatto. Non si scalda. La superficie è liscia come vetro.' },
-  { id: 'simboli_portone', name: 'Simboli incisi sul portone',            area: 'cascina',  desc: 'Simboli comparsi la notte delle luci. Non sono cristiani né runici. Formano un pattern circolare... come una costellazione.' },
-  { id: 'lanterna_rotta',  name: 'Lanterna rotta',                        area: 'piazza',   desc: 'Una lanterna a olio frantumata vicino alla fontana. Vetri sparsi. C\'è un residuo nerastro sullo stoppino.' },
-  { id: 'diario_enzo',     name: 'Diario di Enzo Bellandi',               area: 'cascina',  desc: 'Il diario del nipote di Teresa. "16 marzo 1977 — Le luci sono tornate. Sono uguali a quelle del nonno. Cerchi nel grano. Loro mi osservano."' },
-  { id: 'tracce_circolari',name: 'Tracce circolari nel terreno',          area: 'campo',    desc: 'Cerchi perfetti nel terreno, erba piegata in senso orario. Diametro: circa 8 metri. Il terreno è vetrificato ai bordi.' },
-  { id: 'lettera_censurata',name:'Lettera militare censurata',            area: 'archivio', desc: 'Ministero della Difesa, 1961. "Operazione Sirio — recupero materiali non terrestri — massima segretezza." Timbrata: NON DIVULGARE.' },
-  { id: 'radio_audio',     name: 'Registrazione radio — voce disturbata',  area: 'bar_interno',desc: 'Una voce filtrata dalle interferenze radio: "...non guardare... quando si ferma...". Origine sconosciuta.' },
-  { id: 'registro_monte_ferro', name:'Nastro registrato — Monte Ferro',        area: 'monte_ferro',desc: '"Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—". Il nastro si interrompe bruscamente.' }
+  { id: 'registro_1861',   name: 'Registro delle sparizioni del 1861',    area: 'chiesa', desc: 'Un vecchio registro polveroso. Due persone scomparse nel 1861, mai ritrovate. Le date coincidono con forti temporali magnetici.' },
+  { id: 'mappa_campi',     name: 'Mappa catastale dei campi',             area: 'piazze', desc: 'Mappa del 1890. Mostra le proprietà agricole a nord del paese. Il Campo delle Luci è segnato come "Podere Sant\'Elmo".' },
+  { id: 'frammento',       name: 'Frammento metallico freddo',            area: 'cimitero',  desc: 'Un frammento di metallo argentato, innaturalmente freddo al tatto. Non si scalda. La superficie è liscia come vetro.' },
+  { id: 'simboli_portone', name: 'Simboli incisi sul portone',            area: 'cimitero',  desc: 'Simboli comparsi la notte delle luci. Non sono cristiani né runici. Formano un pattern circolare... come una costellazione.' },
+  { id: 'lanterna_rotta',  name: 'Lanterna rotta',                        area: 'piazze',   desc: 'Una lanterna a olio frantumata vicino alla fontana. Vetri sparsi. C\'è un residuo nerastro sullo stoppino.' },
+  { id: 'diario_enzo',     name: 'Diario di Enzo Bellandi',               area: 'giardini',  desc: 'Il diario del nipote di Teresa. "16 marzo 1977 — Le luci sono tornate. Sono uguali a quelle del nonno. Cerchi nel grano. Loro mi osservano."' },
+  { id: 'tracce_circolari',name: 'Tracce circolari nel terreno',          area: 'giardini',    desc: 'Cerchi perfetti nel terreno, erba piegata in senso orario. Diametro: circa 8 metri. Il terreno è vetrificato ai bordi.' },
+  { id: 'lettera_censurata',name:'Lettera militare censurata',            area: 'chiesa', desc: 'Ministero della Difesa, 1961. "Operazione Sirio — recupero materiali non terrestri — massima segretezza." Timbrata: NON DIVULGARE.' },
+  { id: 'radio_audio',     name: 'Registrazione radio — voce disturbata',  area: 'bar_exterior',desc: 'Una voce filtrata dalle interferenze radio: "...non guardare... quando si ferma...". Origine sconosciuta.' },
+  { id: 'registro_monte_ferro', name:'Nastro registrato — Monte Ferro',        area: 'industriale',desc: '"Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—". Il nastro si interrompe bruscamente.' }
 ];
 
 /** Costruisce dizionario indizi per lookup */
@@ -22,45 +22,29 @@ clues.forEach(function(c){ cluesMap[c.id] = c; });
 
 /** Oggetti interattivi nelle aree — posizione su canvas 400×250 */
 var areaObjects = {
-  piazza: [
-    { id: 'lanterna_rotta', x: 120, y: 175, w: 16, h: 12, type: 'clue', drawHint: true },
-    { id: 'bar_door', x: 38, y: 178, w: 14, h: 18, type: 'door', toArea: 'bar_interno', toSpawnX: 195, toSpawnY: 200, drawHint: false },
-    { id: 'door_archivio', x: 187, y: 5, w: 26, h: 18, type: 'door', toArea: 'archivio', toSpawnX: 195, toSpawnY: 210, drawHint: false },
-    { id: 'door_cascina', x: 357, y: 158, w: 36, h: 16, type: 'door', toArea: 'cascina', toSpawnX: 55, toSpawnY: 130, drawHint: false },
-    { id: 'door_municipio', x: 195, y: 50, w: 30, h: 16, type: 'door', toArea: 'municipio', toSpawnX: 195, toSpawnY: 200, drawHint: false },
-    { id: 'gatto_piazza', x: 88, y: 151, w: 8, h: 6, type: 'gatto', drawHint: false }
+  piazze: [
+    { id: 'mappa_campi', x: 94, y: 151, w: 18, h: 14, type: 'clue', drawHint: true },
+    { id: 'lanterna_rotta', x: 212, y: 166, w: 12, h: 10, type: 'clue', drawHint: true, requires: 'mappa_campi' },
+    { id: 'gatto_piazze', x: 276, y: 162, w: 8, h: 6, type: 'gatto', drawHint: false }
   ],
-  archivio: [
-    { id: 'registro_1861', x: 300, y: 100, w: 18, h: 14, type: 'clue', drawHint: true },
-    { id: 'lettera_censurata', x: 80, y: 50, w: 16, h: 12, type: 'clue', drawHint: true, requires: 'registro_1861' },
-    { id: 'door_piazza', x: 185, y: 224, w: 30, h: 16, type: 'door', toArea: 'piazza', toSpawnX: 195, toSpawnY: 40, drawHint: false },
-    { id: 'gatto_archivio', x: 180, y: 204, w: 8, h: 6, type: 'gatto', drawHint: false }
+  chiesa: [
+    { id: 'registro_1861', x: 170, y: 100, w: 18, h: 14, type: 'clue', drawHint: true },
+    { id: 'lettera_censurata', x: 220, y: 60, w: 16, h: 12, type: 'clue', drawHint: true, requires: 'registro_1861' }
   ],
-  cascina: [
-    { id: 'simboli_portone', x: 280, y: 150, w: 20, h: 24, type: 'clue', drawHint: true },
-    { id: 'frammento', x: 140, y: 210, w: 10, h: 8, type: 'clue', drawHint: true, requires: 'simboli_portone' },
-    { id: 'diario_enzo', x: 70, y: 120, w: 14, h: 12, type: 'clue', drawHint: true, requires: 'frammento' },
-    { id: 'scena_lanterna', x: 135, y: 200, w: 14, h: 10, type: 'scene', drawHint: true },
-    { id: 'scena_impronte', x: 195, y: 210, w: 14, h: 10, type: 'scene', drawHint: true, requires: 'scena_lanterna' },
-    { id: 'scena_segni', x: 310, y: 195, w: 14, h: 10, type: 'scene', drawHint: true, requires: 'scena_impronte' },
-    { id: 'door_piazza2', x: 10, y: 145, w: 30, h: 16, type: 'door', toArea: 'piazza', toSpawnX: 360, toSpawnY: 160, drawHint: false },
-    { id: 'door_campo', x: 185, y: 87, w: 30, h: 16, type: 'door', toArea: 'campo', toSpawnX: 195, toSpawnY: 210, drawHint: false },
-    { id: 'door_cascina_int', x: 268, y: 85, w: 20, h: 16, type: 'door', toArea: 'cascina_interno', toSpawnX: 195, toSpawnY: 200, drawHint: false },
-    { id: 'gatto_cascina', x: 55, y: 210, w: 8, h: 6, type: 'gatto', drawHint: false }
+  cimitero: [
+    { id: 'simboli_portone', x: 310, y: 120, w: 20, h: 24, type: 'clue', drawHint: true },
+    { id: 'frammento', x: 150, y: 170, w: 10, h: 8, type: 'clue', drawHint: true, requires: 'simboli_portone' }
   ],
-  campo: [
-    { id: 'mappa_campi', x: 320, y: 100, w: 18, h: 14, type: 'clue', drawHint: true },
-    { id: 'tracce_circolari', x: 180, y: 160, w: 60, h: 40, type: 'clue', drawHint: true, requires: 'mappa_campi' },
-    { id: 'door_cascina', x: 185, y: 224, w: 30, h: 16, type: 'door', toArea: 'cascina', toSpawnX: 195, toSpawnY: 160, drawHint: false },
-    { id: 'door_monte_ferro', x: 320, y: 55, w: 30, h: 16, type: 'door', toArea: 'monte_ferro', toSpawnX: 195, toSpawnY: 200, drawHint: false },
-    { id: 'gatto_campo', x: 320, y: 130, w: 8, h: 6, type: 'gatto', drawHint: false }
+  giardini: [
+    { id: 'diario_enzo', x: 60, y: 180, w: 14, h: 12, type: 'clue', drawHint: true },
+    { id: 'tracce_circolari', x: 200, y: 170, w: 40, h: 30, type: 'clue', drawHint: true, requires: 'diario_enzo' }
   ],
-  bar_interno: [
-    { id: 'radio_bar', x: 295, y: 152, w: 20, h: 12, type: 'radio', drawHint: true }
+  bar_exterior: [
+    { id: 'radio_bar', x: 306, y: 146, w: 20, h: 12, type: 'radio', drawHint: true }
   ],
-  monte_ferro: [
-    { id: 'recorder', x: 40, y: 105, w: 28, h: 16, type: 'recorder', drawHint: true }
+  residenziale: [],
+  industriale: [
+    { id: 'recorder', x: 100, y: 150, w: 28, h: 16, type: 'recorder', drawHint: true }
   ],
-  municipio: [],
-  cascina_interno: []
+  polizia: []
 };

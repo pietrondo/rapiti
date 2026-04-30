@@ -55,11 +55,23 @@ function updateRadioKnob(pct) {
     statusEl.className = 'radio-status clear';
     if (!gameState.radioSolved) {
       gameState.radioSolved = true;
+      
+      // Notifica StoryManager
+      if (typeof StoryManager !== 'undefined') {
+        StoryManager.onPuzzleSolved('radio');
+      }
+      
       document.getElementById('radio-message').textContent = '"...non guardare... quando si ferma..."';
       document.getElementById('radio-message').className = 'radio-message-found';
       // Aggiungi indizio audio al diario
       if (gameState.cluesFound.indexOf('radio_audio') === -1) {
         gameState.cluesFound.push('radio_audio');
+        
+        // Notifica StoryManager
+        if (typeof StoryManager !== 'undefined') {
+          StoryManager.onClueFound('radio_audio');
+        }
+        
         updateHUD();
         setTimeout(function() { showToast('Registrazione radio salvata nel diario.'); }, 600);
       }

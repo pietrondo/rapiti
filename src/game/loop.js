@@ -21,6 +21,7 @@ function gameLoop() {
 
   if (ph === 'playing') {
     updatePlayerPosition();
+    checkAreaExits();
     checkInteractions();
     // Aggiorna sistemi effetti
     ParticleSystem.update();
@@ -51,19 +52,19 @@ function showToast(msg) {
 function updateHUD() {
   var area = areas[gameState.currentArea];
   document.getElementById('hud-area').textContent = area ? area.name : '???';
-  document.getElementById('hud-clues').textContent = gameState.cluesFound.length + '/8';
+  document.getElementById('hud-clues').textContent = gameState.cluesFound.length + '/' + clues.length;
   var dedHint = document.getElementById('hud-ded-hint');
   if (canOpenDeduction()) { dedHint.style.display = 'inline'; }
   else { dedHint.style.display = 'none'; }
 }
 
 function resetGame() {
-  gameState.currentArea = 'piazza';
+  gameState.currentArea = 'piazze';
   gameState.gamePhase = 'title';
   gameState.previousPhase = null;
-  gameState.player = { x: 195, y: 125, w: PLAYER_W, h: PLAYER_H, dir: 'down', frame: 0 };
+  gameState.player = { x: 195, y: 188, w: PLAYER_W, h: PLAYER_H, dir: 'down', frame: 0 };
   gameState.cluesFound = [];
-  gameState.npcStates = { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0 };
+  gameState.npcStates = { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0, don_pietro: 0 };
   gameState.puzzleSolved = false;
   gameState.puzzleAttempts = 0;
   gameState.endingType = null;
@@ -74,11 +75,16 @@ function resetGame() {
   gameState.fadeAlpha = 0;
   gameState.fadeDir = 0;
   gameState.fadeCallback = null;
+  gameState.showMiniMap = true;
+  // Clear sprite cache
+  spriteCache.player = null;
+  spriteCache.playerColors = null;
+  spriteCache.npcs = {};
   // Reset area objects
   var reqs = {
-    cascina: [['frammento', 'simboli_portone'], ['diario_enzo', 'frammento']],
-    archivio: [['lettera_censurata', 'registro_1861']],
-    campo: [['tracce_circolari', 'mappa_campi']]
+    cimitero: [['frammento', 'simboli_portone']],
+    chiesa: [['lettera_censurata', 'registro_1861']],
+    giardini: [['tracce_circolari', 'diario_enzo']]
   };
   for (var ar in reqs) {
     for (var i = 0; i < reqs[ar].length; i++) {
@@ -91,22 +97,34 @@ function resetGame() {
   for (var o = 0; o < overlays.length; o++) {
     document.getElementById(overlays[o]).classList.remove('active');
   }
+  // Reset StoryManager
+  if (typeof StoryManager !== 'undefined') {
+    StoryManager.reset();
+  }
   updateHUD();
 }
 
 window.onload = function() {
   ctx = initCanvas();
+  
+  // Inizializza StoryManager
+  if (typeof initStoryManager === 'function') {
+    initStoryManager();
+  }
+  
   initAudio();
   initEventListeners();
   updateHUD();
   updateMuteButton();
+  
   // Override collectClue: trigger finale dopo aver raccolto le tracce al Campo
   var origCollect = collectClue;
   collectClue = function(obj) {
     origCollect(obj);
-    if (obj.id === 'tracce_circolari' && gameState.puzzleSolved && gameState.currentArea === 'campo') {
+    if (obj.id === 'tracce_circolari' && gameState.puzzleSolved && gameState.currentArea === 'giardini') {
       setTimeout(function() { triggerEnding(); }, 2500);
     }
   };
+  
   requestAnimationFrame(gameLoop);
 };

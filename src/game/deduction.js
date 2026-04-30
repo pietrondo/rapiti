@@ -107,6 +107,10 @@ function checkDeduction() {
   gameState.puzzleAttempts++;
   if (correct) {
     gameState.puzzleSolved = true;
+    
+    // Notifica StoryManager
+    StoryManager.onPuzzleSolved('deduction');
+    
     document.getElementById('deduction-overlay').classList.remove('active');
     gameState.gamePhase = 'playing';
     updateNPCStates();

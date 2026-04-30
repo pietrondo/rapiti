@@ -118,6 +118,12 @@ function checkRegistry() {
     result.style.color = '#44cc44';
     gameState.radioSolved = true; // Reuse flag — indica che il puzzle registro è risolto
     document.getElementById('registry-confirm').disabled = true;
+    
+    // Notifica StoryManager
+    if (typeof StoryManager !== 'undefined') {
+      StoryManager.onPuzzleSolved('registry');
+    }
+    
     // Sblocca dialogo Neri stato 2
     if (gameState.npcStates.neri < 1) gameState.npcStates.neri = 1;
     showToast('Schema scoperto: le sparizioni seguono un ciclo. Neri vorrà parlarti.');

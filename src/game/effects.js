@@ -193,7 +193,7 @@ var LightingSystem = {
     this.lights = [];
     
     switch (areaId) {
-      case 'piazza':
+      case 'piazze':
         // Lampioni
         this.addLight(50, 100, 40, '#FFAA44', 0.2);
         this.addLight(200, 100, 40, '#FFAA44', 0.2);
@@ -203,31 +203,74 @@ var LightingSystem = {
         this.addLight(76, 52, 20, '#FFCC66', 0.15);
         break;
         
-      case 'archivio':
-        // Lampada sulla scrivania
-        this.addLight(180, 160, 50, '#FFAA44', 0.3);
+      case 'chiesa':
+        // Vetrate colorate
+        this.addLight(185, 50, 30, '#FF4444', 0.2);
+        this.addLight(203, 50, 30, '#4444FF', 0.2);
+        // Lampada confessionale
+        this.addLight(196, 104, 30, '#FFAA44', 0.25);
         break;
         
-      case 'campo':
-        // Lucciole (gestite dal ParticleSystem)
+      case 'cimitero':
+        // Mausoleo
+        this.addLight(310, 100, 25, '#FFCC66', 0.15);
         break;
         
-      case 'bar_interno':
-        // Luci del bancone
-        this.addLight(100, 80, 30, '#FFAA44', 0.25);
-        this.addLight(200, 80, 30, '#FFAA44', 0.25);
-        this.addLight(300, 80, 30, '#FFAA44', 0.25);
+      case 'giardini':
+        // Fontana piccola
+        this.addLight(200, 164, 20, '#AABBDD', 0.2);
+        // Farfalla
+        var t = Date.now() * 0.001;
+        var bx = 250 + Math.sin(t*1.2)*20;
+        var by = 120 + Math.cos(t*1.8)*10;
+        this.addLight(bx, by, 15, '#AA66CC', 0.3);
         break;
         
-      case 'cascina_interno':
-        // Luce calda dalla finestra
-        this.addLight(350, 80, 40, '#FFCC66', 0.2);
+      case 'bar_exterior':
+        // Insegna luminosa
+        var signPulse = Math.sin(Date.now()*0.003)*0.3+0.7;
+        this.addLight(190, 30, 25, '#CC0000', signPulse*0.3);
+        // Finestre illuminate
+        this.addLight(132, 52, 20, '#FFAA44', 0.2);
+        this.addLight(232, 52, 20, '#FFAA44', 0.2);
         break;
         
-      case 'monte_ferro':
-        // Torce della miniera
-        this.addLight(260, 120, 25, '#FF6600', 0.25);
-        this.addLight(300, 120, 25, '#FF6600', 0.25);
+      case 'residenziale':
+        // Finestre case
+        this.addLight(37, 52, 18, '#FFCC66', 0.15);
+        this.addLight(67, 52, 18, '#FFCC66', 0.15);
+        this.addLight(177, 47, 20, '#FFCC66', 0.15);
+        this.addLight(212, 47, 20, '#FFCC66', 0.15);
+        this.addLight(317, 57, 16, '#FFCC66', 0.15);
+        break;
+        
+      case 'industriale':
+        // Capannoni
+        var flicker = Math.sin(Date.now()*0.005)*0.3+0.5;
+        this.addLight(47, 47, 20, '#FFAA44', flicker*0.2);
+        this.addLight(82, 47, 20, '#FFAA44', flicker*0.2);
+        this.addLight(217, 57, 18, '#FFAA44', 0.15);
+        // Ciminiera fumo (luci riflesse)
+        this.addLight(350, 15, 30, '#FFFFFF', 0.1);
+        break;
+        
+      case 'polizia':
+        // Insegna
+        this.addLight(200, 18, 35, '#CC0000', 0.25);
+        // Finestre con sbarre
+        this.addLight(132, 52, 20, '#AABBDD', 0.15);
+        this.addLight(172, 52, 20, '#AABBDD', 0.15);
+        this.addLight(222, 52, 20, '#AABBDD', 0.15);
+        this.addLight(262, 52, 20, '#AABBDD', 0.15);
+        // Lampeggianti auto
+        var flash = Math.sin(Date.now()*0.006) > 0;
+        if(flash) {
+          this.addLight(295, 143, 12, '#FF0000', 0.3);
+          this.addLight(315, 143, 12, '#0000FF', 0.2);
+        } else {
+          this.addLight(295, 143, 12, '#0000FF', 0.2);
+          this.addLight(315, 143, 12, '#FF0000', 0.3);
+        }
         break;
     }
   },

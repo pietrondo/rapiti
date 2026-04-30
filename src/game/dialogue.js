@@ -1,23 +1,28 @@
 "use strict";
 
+/**
+ * Avvia un dialogo con un NPC
+ * Usa StoryManager per determinare il nodo corretto
+ */
 function startDialogue(npcId) {
   gameState.dialogueNpcId = npcId;
   gameState.previousPhase = gameState.gamePhase;
   gameState.gamePhase = 'dialogue';
-  if (npcId === 'osvaldo' || npcId === 'gino') {
-    gameState.dialogueTree = dialogueNodes[npcId + '_s0'];
-  } else {
-    var state = gameState.npcStates[npcId];
-    // Teresa state 2: memoria instabile
-    if (npcId === 'teresa' && state >= 2) {
-      gameState.dialogueTree = dialogueNodes['teresa_s2_memory'];
-    } else {
-      var nodeKey = npcId + '_s' + state;
-      var node = dialogueNodes[nodeKey];
-      if (!node) node = dialogueNodes[npcId + '_s0'];
-      gameState.dialogueTree = node;
-    }
+  
+  // Usa StoryManager per determinare il nodo di dialogo
+  var nodeKey = StoryManager.getDialogueNodeForNPC(npcId);
+  var node = dialogueNodes[nodeKey];
+  
+  // Fallback se il nodo non esiste
+  if (!node) {
+    node = dialogueNodes[npcId + '_s0'];
   }
+  
+  gameState.dialogueTree = node;
+  
+  // Registra che abbiamo parlato con questo NPC
+  StoryManager.onDialogueStarted(npcId);
+  
   renderDialogueHTML();
   document.getElementById('dialogue-overlay').classList.add('active');
 }
@@ -90,11 +95,15 @@ function selectDialogueChoice(index) {
 }
 
 function applyDialogueEffect(effect) {
-  if (effect.hint && effect.hint === 'archivio') { dialogueEffects.hint_archivio(); }
+  if (effect.hint && effect.hint === 'chiesa') { dialogueEffects.hint_chiesa(); }
   if (effect.giveClue) {
     var cid = effect.giveClue;
     if (gameState.cluesFound.indexOf(cid) === -1) {
       gameState.cluesFound.push(cid);
+      
+      // Notifica StoryManager
+      StoryManager.onClueFound(cid);
+      
       var action = cid === 'frammento' ? 'give_frammento' : cid === 'lettera_censurata' ? 'give_lettera' : null;
       if (action && dialogueEffects[action]) dialogueEffects[action]();
       else { updateHUD(); showToast('Hai raccolto: ' + cluesMap[cid].name); }
@@ -104,6 +113,11 @@ function applyDialogueEffect(effect) {
     if (effect.giveClueHint === 'diario_enzo') dialogueEffects.hint_diario_enzo();
     if (effect.giveClueHint === 'mappa_campi') dialogueEffects.hint_mappa();
   }
+  
+  // Aggiorna stati NPC tramite StoryManager
+  StoryManager.checkQuestProgress();
+  
+  // Mantieni retrocompatibilità
   updateNPCStates();
 }
 

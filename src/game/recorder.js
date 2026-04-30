@@ -128,9 +128,21 @@ function playRecorder() {
     result.textContent = '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
     result.style.color = '#44cc44';
     document.getElementById('recorder-play').disabled = true;
+    
+    // Notifica StoryManager
+    if (typeof StoryManager !== 'undefined') {
+      StoryManager.onPuzzleSolved('recorder');
+    }
+    
     // Add clue
     if (gameState.cluesFound.indexOf('registro_monte_ferro') === -1) {
       gameState.cluesFound.push('registro_monte_ferro');
+      
+      // Notifica StoryManager
+      if (typeof StoryManager !== 'undefined') {
+        StoryManager.onClueFound('registro_monte_ferro');
+      }
+      
       updateHUD();
       showToast('Registrazione Monte Ferro salvata nel diario.');
     }
