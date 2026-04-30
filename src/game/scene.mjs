@@ -3,9 +3,21 @@
    ══════════════════════════════════════════════════════════════ */
 
 const sceneElements = [
-  { id: 'scena_lanterna', name: 'Lanterna rotta', desc: 'Caduta a terra, vetro rotto. Qualcuno l\'ha lasciata cadere di corsa.' },
-  { id: 'scena_impronte', name: 'Impronte nel fango', desc: 'Impronte che girano in cerchio, poi tornano indietro. Movimento circolare.' },
-  { id: 'scena_segni', name: 'Segni nel terreno', desc: 'Cerchi perfetti nel grano. Il centro è sprofondato di qualche centimetro.' }
+  {
+    id: 'scena_lanterna',
+    name: 'Lanterna rotta',
+    desc: "Caduta a terra, vetro rotto. Qualcuno l'ha lasciata cadere di corsa.",
+  },
+  {
+    id: 'scena_impronte',
+    name: 'Impronte nel fango',
+    desc: 'Impronte che girano in cerchio, poi tornano indietro. Movimento circolare.',
+  },
+  {
+    id: 'scena_segni',
+    name: 'Segni nel terreno',
+    desc: 'Cerchi perfetti nel grano. Il centro è sprofondato di qualche centimetro.',
+  },
 ];
 
 const sceneFound = [];
@@ -66,7 +78,7 @@ export function checkScene() {
   var s2 = document.getElementById('scene-slot2').value;
   var s3 = document.getElementById('scene-slot3').value;
   // Soluzione: Lanterna = partenza, Impronte = movimento, Segni = arrivo
-  var correct = (s1 === 'scena_lanterna' && s2 === 'scena_impronte' && s3 === 'scena_segni');
+  var correct = s1 === 'scena_lanterna' && s2 === 'scena_impronte' && s3 === 'scena_segni';
   var result = document.getElementById('scene-result');
   if (correct) {
     sceneSolved = true;
@@ -74,14 +86,16 @@ export function checkScene() {
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;
     showToast('Scena ricostruita! Parla con Teresa nella stanza della cascina.');
-    
+
     // Notifica StoryManager
     StoryManager.onPuzzleSolved('scene');
-    
+
     // Sblocca Teresa state 1 (retrocompatibilità)
     if (gameState.npcStates.teresa < 1) gameState.npcStates.teresa = 1;
-    
-    setTimeout(function() { closeScenePuzzle(); }, 1500);
+
+    setTimeout(() => {
+      closeScenePuzzle();
+    }, 1500);
   } else {
     result.textContent = '✗ Ricostruzione errata. Riprova.';
     result.style.color = '#cc4444';
@@ -98,10 +112,13 @@ export function determineEndingV2() {
     var ending = StoryManager.determineEnding();
     return ending ? ending.id : 'psychological';
   }
-  
+
   // Fallback al vecchio sistema se StoryManager non è disponibile
   var cf = gameState.cluesFound;
-  var militaryScore = 0, alienScore = 0, psychScore = 0, secretEligible = false;
+  var militaryScore = 0,
+    alienScore = 0,
+    psychScore = 0,
+    secretEligible = false;
 
   if (cf.indexOf('lettera_censurata') >= 0) militaryScore += 2;
   if (cf.indexOf('radio_audio') >= 0) militaryScore += 1;
@@ -138,20 +155,28 @@ export function showEndingOverlayV2() {
   var endings = {
     military: {
       title: 'Finale: Esperimento FUORI CONTROLLO',
-      text: 'I droni del Progetto SIRIO. Esperimenti radio militari iniziati nel 1961 e mai fermati. La lettera censurata è la prova.\n\nLe luci? Riflessi dei velivoli sperimentali sulle nuvole basse. Le sparizioni? Testimoni "ricollocati" con nuove identità.\n\nIl Capitano Valli confessa. Il Ministero insabbia. Ma il tuo rapporto è già partito per Roma.\n\n"Esperimenti militari non autorizzati su civili. Chiedo l\'intervento della magistratura."\n— ' + name
+      text:
+        'I droni del Progetto SIRIO. Esperimenti radio militari iniziati nel 1961 e mai fermati. La lettera censurata è la prova.\n\nLe luci? Riflessi dei velivoli sperimentali sulle nuvole basse. Le sparizioni? Testimoni "ricollocati" con nuove identità.\n\nIl Capitano Valli confessa. Il Ministero insabbia. Ma il tuo rapporto è già partito per Roma.\n\n"Esperimenti militari non autorizzati su civili. Chiedo l\'intervento della magistratura."\n— ' +
+        name,
     },
     alien: {
       title: 'Finale: NON SONO SOLI',
-      text: 'Il frammento metallico è tecnologia non umana. I cerchi nel grano sono tracce di atterraggio. I simboli sulla cascina... un messaggio che nessuno ha ancora decifrato.\n\nIl ciclo di 116 anni è reale. Nel 1861 come nel 1979. Qualcosa torna. Qualcosa osserva.\n\nMentre scrivi il rapporto, la radio nella tua tasca emette un suono che non hai mai sentito prima.\n\n"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche."\n— ' + name
+      text:
+        'Il frammento metallico è tecnologia non umana. I cerchi nel grano sono tracce di atterraggio. I simboli sulla cascina... un messaggio che nessuno ha ancora decifrato.\n\nIl ciclo di 116 anni è reale. Nel 1861 come nel 1979. Qualcosa torna. Qualcosa osserva.\n\nMentre scrivi il rapporto, la radio nella tua tasca emette un suono che non hai mai sentito prima.\n\n"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche."\n— ' +
+        name,
     },
     psychological: {
       title: 'Finale: ISTERIA COLLETTIVA',
-      text: 'Nessuna prova concreta. Testimonianze contraddittorie. La suggestione ha fatto il resto.\n\nSan Celeste è un paese di anziani e superstizioni. Le luci erano probabilmente fuochi fatui o riflessi atmosferici. Le sparizioni? Persone che se ne sono andate per conto loro.\n\nIl caso viene archiviato. Ma mentre lasci il paese, una luce nel retrovisore... no, sarà stato un lampione.\n\n"Caso n. 79-034. Archiviato per insufficienza di prove."\n— ' + name
+      text:
+        'Nessuna prova concreta. Testimonianze contraddittorie. La suggestione ha fatto il resto.\n\nSan Celeste è un paese di anziani e superstizioni. Le luci erano probabilmente fuochi fatui o riflessi atmosferici. Le sparizioni? Persone che se ne sono andate per conto loro.\n\nIl caso viene archiviato. Ma mentre lasci il paese, una luce nel retrovisore... no, sarà stato un lampione.\n\n"Caso n. 79-034. Archiviato per insufficienza di prove."\n— ' +
+        name,
     },
     secret: {
       title: 'Finale: NON È ARRIVATO. È STATO APERTO.',
-      text: 'Hai capito tutto.\n\nIl fenomeno esisteva PRIMA dei test militari. Nel 1952, nel 1969, nel 1974. I militari del Progetto SIRIO hanno provato a studiarlo. Controllarlo. E hanno solo peggiorato le cose.\n\n"Non è arrivato. È stato aperto."\n\nQualcosa era già qui. Sotto San Celeste. I test radio hanno aperto una porta che doveva restare chiusa.\n\nRegistri il rapporto. Ti fermi. La radio nella stanza vuota si accende da sola.\n\nVoce: "...non dovevi guardare quando si ferma..."\n\nSilenzio.\n\nBuio.\n\nFine.\n— ' + name
-    }
+      text:
+        'Hai capito tutto.\n\nIl fenomeno esisteva PRIMA dei test militari. Nel 1952, nel 1969, nel 1974. I militari del Progetto SIRIO hanno provato a studiarlo. Controllarlo. E hanno solo peggiorato le cose.\n\n"Non è arrivato. È stato aperto."\n\nQualcosa era già qui. Sotto San Celeste. I test radio hanno aperto una porta che doveva restare chiusa.\n\nRegistri il rapporto. Ti fermi. La radio nella stanza vuota si accende da sola.\n\nVoce: "...non dovevi guardare quando si ferma..."\n\nSilenzio.\n\nBuio.\n\nFine.\n— ' +
+        name,
+    },
   };
   var e = endings[et];
   document.getElementById('ending-title').textContent = e.title;

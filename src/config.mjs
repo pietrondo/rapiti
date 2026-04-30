@@ -9,25 +9,23 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-"use strict";
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // PALETTE
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export const PALETTE = Object.freeze({
-  nightBlue:   '#1A1C20',
-  violetBlue:  '#2D3047',
-  darkForest:  '#3D5A3C',
-  oliveGreen:  '#5C7A4B',
-  greyBrown:   '#8B7D6B',
-  fadedBeige:  '#B8A88A',
-  earthBrown:  '#6B5B4F',
+  nightBlue: '#1A1C20',
+  violetBlue: '#2D3047',
+  darkForest: '#3D5A3C',
+  oliveGreen: '#5C7A4B',
+  greyBrown: '#8B7D6B',
+  fadedBeige: '#B8A88A',
+  earthBrown: '#6B5B4F',
   burntOrange: '#C4956A',
-  lanternYel:  '#D4A843',
-  creamPaper:  '#E8DCC8',
-  alumGrey:    '#A0A8B0',
-  slateGrey:   '#4A5568'
+  lanternYel: '#D4A843',
+  creamPaper: '#E8DCC8',
+  alumGrey: '#A0A8B0',
+  slateGrey: '#4A5568',
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -76,7 +74,7 @@ export const gameState = {
   fadeDir: 0,
   fadeCallback: null,
   showMiniMap: true,
-  titleAnim: 0
+  titleAnim: 0,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════

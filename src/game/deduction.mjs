@@ -19,15 +19,19 @@ export function openDeduction() {
     el.textContent = c.name;
     el.draggable = true;
     el.setAttribute('data-clue-id', c.id);
-    el.addEventListener('dragstart', function(e) {
+    el.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('text/plain', e.target.getAttribute('data-clue-id'));
     });
     cluesDiv.appendChild(el);
   }
   var slots = document.querySelectorAll('.deduction-slot');
   for (var s = 0; s < slots.length; s++) {
-    var label = slots[s].getAttribute('data-slot') === 'posizione' ? 'Posizione' :
-      slots[s].getAttribute('data-slot') === 'data' ? 'Data / Cronologia' : 'Prova fisica';
+    var label =
+      slots[s].getAttribute('data-slot') === 'posizione'
+        ? 'Posizione'
+        : slots[s].getAttribute('data-slot') === 'data'
+          ? 'Data / Cronologia'
+          : 'Prova fisica';
     slots[s].innerHTML = label;
     slots[s].classList.remove('filled');
     slots[s].removeAttribute('data-placed-clue');
@@ -45,16 +49,16 @@ export function setupDragDrop() {
   var slots = document.querySelectorAll('.deduction-slot');
   for (var i = 0; i < slots.length; i++) {
     var slot = slots[i];
-    slot.addEventListener('dragover', function(e) {
+    slot.addEventListener('dragover', (e) => {
       e.preventDefault();
       var s = e.target.closest('.deduction-slot');
       if (s) s.classList.add('drag-over');
     });
-    slot.addEventListener('dragleave', function(e) {
+    slot.addEventListener('dragleave', (e) => {
       var s = e.target.closest('.deduction-slot');
       if (s) s.classList.remove('drag-over');
     });
-    slot.addEventListener('drop', function(e) {
+    slot.addEventListener('drop', (e) => {
       e.preventDefault();
       var s = e.target.closest('.deduction-slot');
       if (!s) return;
@@ -66,8 +70,12 @@ export function setupDragDrop() {
         if (allSlots[j].getAttribute('data-placed-clue') === clueId) {
           allSlots[j].removeAttribute('data-placed-clue');
           allSlots[j].classList.remove('filled');
-          var lbl = allSlots[j].getAttribute('data-slot') === 'posizione' ? 'Posizione' :
-            allSlots[j].getAttribute('data-slot') === 'data' ? 'Data / Cronologia' : 'Prova fisica';
+          var lbl =
+            allSlots[j].getAttribute('data-slot') === 'posizione'
+              ? 'Posizione'
+              : allSlots[j].getAttribute('data-slot') === 'data'
+                ? 'Data / Cronologia'
+                : 'Prova fisica';
           allSlots[j].innerHTML = lbl;
         }
       }
@@ -88,7 +96,10 @@ export function updateDeductionConfirmButton() {
   var slots = document.querySelectorAll('.deduction-slot');
   var allFilled = true;
   for (var i = 0; i < slots.length; i++) {
-    if (!slots[i].getAttribute('data-placed-clue')) { allFilled = false; break; }
+    if (!slots[i].getAttribute('data-placed-clue')) {
+      allFilled = false;
+      break;
+    }
   }
   document.getElementById('deduction-confirm').disabled = !allFilled;
 }
@@ -100,15 +111,18 @@ export function checkDeduction() {
   for (var i = 0; i < slots.length; i++) {
     var slotType = slots[i].getAttribute('data-slot');
     var placed = slots[i].getAttribute('data-placed-clue');
-    if (placed !== solution[slotType]) { correct = false; break; }
+    if (placed !== solution[slotType]) {
+      correct = false;
+      break;
+    }
   }
   gameState.puzzleAttempts++;
   if (correct) {
     gameState.puzzleSolved = true;
-    
+
     // Notifica StoryManager
     StoryManager.onPuzzleSolved('deduction');
-    
+
     document.getElementById('deduction-overlay').classList.remove('active');
     gameState.gamePhase = 'playing';
     updateNPCStates();
@@ -117,7 +131,7 @@ export function checkDeduction() {
   } else {
     showToast('Ipotesi errata. Riprova a collegare gli indizi.');
     if (gameState.puzzleAttempts >= 3) {
-      showToast('Suggerimento: parlane con l\'Archivista Neri.');
+      showToast("Suggerimento: parlane con l'Archivista Neri.");
     }
   }
 }

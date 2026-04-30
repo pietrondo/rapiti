@@ -9,13 +9,21 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-"use strict";
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // CORE CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { PALETTE, CANVAS_W, CANVAS_H, PLAYER_SPEED, PLAYER_W, PLAYER_H, gameState, resetGameState, VERSION } from './config.mjs';
+import {
+  CANVAS_H,
+  CANVAS_W,
+  gameState,
+  PALETTE,
+  PLAYER_H,
+  PLAYER_SPEED,
+  PLAYER_W,
+  resetGameState,
+  VERSION,
+} from './config.mjs';
 
 // Esporta globalmente per retrocompatibilità durante la transizione
 window.PALETTE = PALETTE;
@@ -163,7 +171,6 @@ async function initializeGame() {
       requestAnimationFrame(gameLoop);
       console.log('[Main] Game loop started');
     }
-
   } catch (error) {
     console.error('[Main] Initialization failed:', error);
     document.body.innerHTML = `
@@ -187,5 +194,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Esporta funzioni utili per debugging
-export { loadScript, loadModule, initializeGame };
-export { PALETTE, CANVAS_W, CANVAS_H, gameState, VERSION };
+export { CANVAS_H, CANVAS_W, gameState, initializeGame, loadModule, loadScript, PALETTE, VERSION };

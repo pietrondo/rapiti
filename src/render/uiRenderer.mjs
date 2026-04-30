@@ -12,7 +12,7 @@ const VISUAL = {
   paper: '#E8DCC8',
   rust: '#C4956A',
   signal: '#91B7FF',
-  danger: '#CC4444'
+  danger: '#CC4444',
 };
 
 export function fillGradientRect(ctx, x, y, w, h, topColor, bottomColor) {
@@ -85,9 +85,13 @@ export function drawTitleLandscape(ctx, t) {
   ctx.globalAlpha = 1;
 
   ctx.fillStyle = 'rgba(120,150,255,0.12)';
-  ctx.beginPath(); ctx.arc(210 + Math.sin(t * 0.7) * 12, 48, 34 + Math.sin(t * 1.7) * 7, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(210 + Math.sin(t * 0.7) * 12, 48, 34 + Math.sin(t * 1.7) * 7, 0, Math.PI * 2);
+  ctx.fill();
   ctx.fillStyle = 'rgba(232,240,255,0.82)';
-  ctx.beginPath(); ctx.arc(210 + Math.sin(t * 0.7) * 12, 48, 12, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(210 + Math.sin(t * 0.7) * 12, 48, 12, 0, Math.PI * 2);
+  ctx.fill();
   ctx.fillStyle = 'rgba(145,183,255,0.12)';
   ctx.beginPath();
   ctx.moveTo(198, 62);
@@ -98,8 +102,16 @@ export function drawTitleLandscape(ctx, t) {
 
   ctx.fillStyle = '#111824';
   ctx.beginPath();
-  ctx.moveTo(0, 134); ctx.lineTo(45, 100); ctx.lineTo(105, 122); ctx.lineTo(162, 88);
-  ctx.lineTo(232, 118); ctx.lineTo(295, 92); ctx.lineTo(400, 132); ctx.lineTo(400, 170); ctx.lineTo(0, 170); ctx.fill();
+  ctx.moveTo(0, 134);
+  ctx.lineTo(45, 100);
+  ctx.lineTo(105, 122);
+  ctx.lineTo(162, 88);
+  ctx.lineTo(232, 118);
+  ctx.lineTo(295, 92);
+  ctx.lineTo(400, 132);
+  ctx.lineTo(400, 170);
+  ctx.lineTo(0, 170);
+  ctx.fill();
   ctx.fillStyle = '#17251E';
   ctx.fillRect(0, 150, CANVAS_W, 100);
 
@@ -130,40 +142,75 @@ export function drawObjectIcon(ctx, o) {
   var cy = Math.round(o.y + o.h / 2);
   var pulse = Math.sin(Date.now() * 0.005) * 0.25 + 0.55;
   ctx.fillStyle = 'rgba(212,168,67,' + (pulse * 0.22).toFixed(2) + ')';
-  ctx.beginPath(); ctx.arc(cx, cy, 13, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 13, 0, Math.PI * 2);
+  ctx.fill();
   ctx.fillStyle = 'rgba(232,220,200,0.18)';
-  ctx.beginPath(); ctx.arc(cx, cy, 7 + Math.sin(Date.now() * 0.006) * 2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 7 + Math.sin(Date.now() * 0.006) * 2, 0, Math.PI * 2);
+  ctx.fill();
 
   if (o.id === 'mappa_campi') {
-    ctx.fillStyle = '#CDBB86'; ctx.fillRect(o.x, o.y, o.w, o.h);
-    ctx.fillStyle = '#8B7355'; ctx.fillRect(o.x + 2, o.y + 3, o.w - 4, 1); ctx.fillRect(o.x + 4, o.y + 7, o.w - 6, 1);
-    ctx.fillStyle = '#3D5A3C'; ctx.fillRect(o.x + 3, o.y + 9, 5, 3);
+    ctx.fillStyle = '#CDBB86';
+    ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.fillStyle = '#8B7355';
+    ctx.fillRect(o.x + 2, o.y + 3, o.w - 4, 1);
+    ctx.fillRect(o.x + 4, o.y + 7, o.w - 6, 1);
+    ctx.fillStyle = '#3D5A3C';
+    ctx.fillRect(o.x + 3, o.y + 9, 5, 3);
   } else if (o.id === 'lanterna_rotta') {
-    ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(o.x + 3, o.y, 5, 7);
-    ctx.fillStyle = PALETTE.alumGrey; ctx.fillRect(o.x, o.y + 7, 10, 2); ctx.fillRect(o.x + 9, o.y + 4, 3, 2);
-    ctx.fillStyle = VISUAL.danger; ctx.fillRect(o.x + 1, o.y + 9, 2, 1); ctx.fillRect(o.x + 8, o.y + 9, 2, 1);
+    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillRect(o.x + 3, o.y, 5, 7);
+    ctx.fillStyle = PALETTE.alumGrey;
+    ctx.fillRect(o.x, o.y + 7, 10, 2);
+    ctx.fillRect(o.x + 9, o.y + 4, 3, 2);
+    ctx.fillStyle = VISUAL.danger;
+    ctx.fillRect(o.x + 1, o.y + 9, 2, 1);
+    ctx.fillRect(o.x + 8, o.y + 9, 2, 1);
   } else if (o.id === 'registro_1861' || o.id === 'diario_enzo') {
     ctx.fillStyle = o.id === 'registro_1861' ? '#6B3F2A' : '#7A2323';
     ctx.fillRect(o.x, o.y, o.w, o.h);
-    ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(o.x + 3, o.y + 3, o.w - 6, 2);
-    ctx.fillStyle = PALETTE.lanternYel; ctx.fillRect(o.x + 2, o.y, 2, o.h);
+    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillRect(o.x + 3, o.y + 3, o.w - 6, 2);
+    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillRect(o.x + 2, o.y, 2, o.h);
   } else if (o.id === 'lettera_censurata') {
-    ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(o.x, o.y, o.w, o.h);
-    ctx.fillStyle = '#1A1C20'; ctx.fillRect(o.x + 2, o.y + 3, o.w - 4, 2); ctx.fillRect(o.x + 2, o.y + 8, o.w - 7, 1);
-    ctx.fillStyle = VISUAL.danger; ctx.fillRect(o.x + o.w - 5, o.y + 2, 3, 3);
+    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillRect(o.x, o.y, o.w, o.h);
+    ctx.fillStyle = '#1A1C20';
+    ctx.fillRect(o.x + 2, o.y + 3, o.w - 4, 2);
+    ctx.fillRect(o.x + 2, o.y + 8, o.w - 7, 1);
+    ctx.fillStyle = VISUAL.danger;
+    ctx.fillRect(o.x + o.w - 5, o.y + 2, 3, 3);
   } else if (o.id === 'simboli_portone') {
-    ctx.strokeStyle = VISUAL.signal; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = PALETTE.creamPaper; ctx.fillRect(cx - 1, cy - 8, 2, 16); ctx.fillRect(cx - 8, cy - 1, 16, 2);
-  } else if (o.id === 'frammento') {
-    ctx.fillStyle = '#C8D0DA'; ctx.fillRect(o.x + 1, o.y, 7, 3); ctx.fillRect(o.x, o.y + 3, 9, 3); ctx.fillRect(o.x + 2, o.y + 6, 5, 2);
-    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(o.x + 2, o.y + 1, 4, 1);
-  } else if (o.id === 'tracce_circolari') {
-    ctx.strokeStyle = PALETTE.lanternYel; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.ellipse(cx, cy, 20, 10, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = VISUAL.signal;
     ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.ellipse(cx, cy, 12, 6, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillRect(cx - 1, cy - 8, 2, 16);
+    ctx.fillRect(cx - 8, cy - 1, 16, 2);
+  } else if (o.id === 'frammento') {
+    ctx.fillStyle = '#C8D0DA';
+    ctx.fillRect(o.x + 1, o.y, 7, 3);
+    ctx.fillRect(o.x, o.y + 3, 9, 3);
+    ctx.fillRect(o.x + 2, o.y + 6, 5, 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(o.x + 2, o.y + 1, 4, 1);
+  } else if (o.id === 'tracce_circolari') {
+    ctx.strokeStyle = PALETTE.lanternYel;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 20, 10, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 12, 6, 0, 0, Math.PI * 2);
+    ctx.stroke();
   } else {
     ctx.fillStyle = PALETTE.lanternYel;
     ctx.fillRect(cx - 4, cy - 4, 8, 8);
@@ -180,7 +227,7 @@ export function getAreaShortName(areaId) {
     bar_exterior: 'Bar',
     residenziale: 'Case',
     industriale: 'Industria',
-    polizia: 'Polizia'
+    polizia: 'Polizia',
   };
   return names[areaId] || areaId;
 }
@@ -188,13 +235,21 @@ export function getAreaShortName(areaId) {
 export function drawArrow(ctx, dir, x, y) {
   ctx.beginPath();
   if (dir === 'up') {
-    ctx.moveTo(x, y - 5); ctx.lineTo(x - 6, y + 4); ctx.lineTo(x + 6, y + 4);
+    ctx.moveTo(x, y - 5);
+    ctx.lineTo(x - 6, y + 4);
+    ctx.lineTo(x + 6, y + 4);
   } else if (dir === 'down') {
-    ctx.moveTo(x, y + 5); ctx.lineTo(x - 6, y - 4); ctx.lineTo(x + 6, y - 4);
+    ctx.moveTo(x, y + 5);
+    ctx.lineTo(x - 6, y - 4);
+    ctx.lineTo(x + 6, y - 4);
   } else if (dir === 'left') {
-    ctx.moveTo(x - 5, y); ctx.lineTo(x + 4, y - 6); ctx.lineTo(x + 4, y + 6);
+    ctx.moveTo(x - 5, y);
+    ctx.lineTo(x + 4, y - 6);
+    ctx.lineTo(x + 4, y + 6);
   } else {
-    ctx.moveTo(x + 5, y); ctx.lineTo(x - 4, y - 6); ctx.lineTo(x - 4, y + 6);
+    ctx.moveTo(x + 5, y);
+    ctx.lineTo(x - 4, y - 6);
+    ctx.lineTo(x - 4, y + 6);
   }
   ctx.closePath();
   ctx.fill();
@@ -255,7 +310,7 @@ export function renderMiniMap(ctx) {
     bar_exterior: { x: 73, y: 44 },
     residenziale: { x: 45, y: 64 },
     industriale: { x: 45, y: 84 },
-    polizia: { x: 45, y: 101 }
+    polizia: { x: 45, y: 101 },
   };
   var x = 8;
   var y = 8;
@@ -315,5 +370,5 @@ window.UIRenderer = {
   renderAreaExitMarkers: renderAreaExitMarkers,
   renderMiniMap: renderMiniMap,
   drawMapLink: drawMapLink,
-  renderFade: renderFade
+  renderFade: renderFade,
 };

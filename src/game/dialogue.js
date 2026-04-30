@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Avvia un dialogo con un NPC
  * Usa StoryManager per determinare il nodo corretto
@@ -8,21 +6,21 @@ function startDialogue(npcId) {
   gameState.dialogueNpcId = npcId;
   gameState.previousPhase = gameState.gamePhase;
   gameState.gamePhase = 'dialogue';
-  
+
   // Usa StoryManager per determinare il nodo di dialogo
   var nodeKey = StoryManager.getDialogueNodeForNPC(npcId);
   var node = dialogueNodes[nodeKey];
-  
+
   // Fallback se il nodo non esiste
   if (!node) {
     node = dialogueNodes[npcId + '_s0'];
   }
-  
+
   gameState.dialogueTree = node;
-  
+
   // Registra che abbiamo parlato con questo NPC
   StoryManager.onDialogueStarted(npcId);
-  
+
   renderDialogueHTML();
   document.getElementById('dialogue-overlay').classList.add('active');
 }
@@ -35,7 +33,7 @@ function renderDialogueHTML() {
     return;
   }
   var npcId = gameState.dialogueNpcId;
-  var npcData = npcsData.find(function(n) { return n.id === npcId; });
+  var npcData = npcsData.find((n) => n.id === npcId);
   var npcName = npcData ? npcData.name : '???';
   document.getElementById('dialogue-npc-name').textContent = npcName;
   var rawText = node.text;
@@ -46,7 +44,10 @@ function renderDialogueHTML() {
       if (ch === '%' || ch === '#' || ch === '@') {
         var corruptChars = '▓▒░█▄▀■□▪▫●○◘◙';
         var rnd = corruptChars[Math.floor(Math.random() * corruptChars.length)];
-        html += '<span style="color:#cc4444;text-shadow:0 0 4px #cc4444;animation:glitchPulse 0.3s infinite alternate">' + rnd + '</span>';
+        html +=
+          '<span style="color:#cc4444;text-shadow:0 0 4px #cc4444;animation:glitchPulse 0.3s infinite alternate">' +
+          rnd +
+          '</span>';
       } else {
         html += ch;
       }
@@ -62,10 +63,13 @@ function renderDialogueHTML() {
       var ch = node.choices[i];
       var btn = document.createElement('button');
       btn.className = 'choice-btn';
-      btn.textContent = (i + 1) + '. ' + ch.text;
-      btn.addEventListener('click', (function(idx) {
-        return function() { selectDialogueChoice(idx); };
-      })(i));
+      btn.textContent = i + 1 + '. ' + ch.text;
+      btn.addEventListener(
+        'click',
+        ((idx) => () => {
+          selectDialogueChoice(idx);
+        })(i)
+      );
       choicesDiv.appendChild(btn);
     }
   } else {
@@ -95,28 +99,38 @@ function selectDialogueChoice(index) {
 }
 
 function applyDialogueEffect(effect) {
-  if (effect.hint && effect.hint === 'chiesa') { dialogueEffects.hint_chiesa(); }
+  if (effect.hint && effect.hint === 'chiesa') {
+    dialogueEffects.hint_chiesa();
+  }
   if (effect.giveClue) {
     var cid = effect.giveClue;
     if (gameState.cluesFound.indexOf(cid) === -1) {
       gameState.cluesFound.push(cid);
-      
+
       // Notifica StoryManager
       StoryManager.onClueFound(cid);
-      
-      var action = cid === 'frammento' ? 'give_frammento' : cid === 'lettera_censurata' ? 'give_lettera' : null;
+
+      var action =
+        cid === 'frammento'
+          ? 'give_frammento'
+          : cid === 'lettera_censurata'
+            ? 'give_lettera'
+            : null;
       if (action && dialogueEffects[action]) dialogueEffects[action]();
-      else { updateHUD(); showToast('Hai raccolto: ' + cluesMap[cid].name); }
+      else {
+        updateHUD();
+        showToast('Hai raccolto: ' + cluesMap[cid].name);
+      }
     }
   }
   if (effect.giveClueHint) {
     if (effect.giveClueHint === 'diario_enzo') dialogueEffects.hint_diario_enzo();
     if (effect.giveClueHint === 'mappa_campi') dialogueEffects.hint_mappa();
   }
-  
+
   // Aggiorna stati NPC tramite StoryManager
   StoryManager.checkQuestProgress();
-  
+
   // Mantieni retrocompatibilità
   updateNPCStates();
 }

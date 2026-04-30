@@ -7,7 +7,10 @@ export function gameLoop() {
   if (ph === 'prologue_cutscene') {
     gameState.prologueTimer++;
     var adv = [150, 250, 150, 180, 200, 180, 150, 200, 120];
-    if (gameState.prologueStep < adv.length && gameState.prologueTimer >= adv[gameState.prologueStep]) {
+    if (
+      gameState.prologueStep < adv.length &&
+      gameState.prologueTimer >= adv[gameState.prologueStep]
+    ) {
       gameState.prologueTimer = 0;
       gameState.prologueStep++;
       if (gameState.prologueStep >= 9) {
@@ -50,10 +53,14 @@ export function showToast(msg) {
 export function updateHUD() {
   var area = areas[gameState.currentArea];
   document.getElementById('hud-area').textContent = area ? area.name : '???';
-  document.getElementById('hud-clues').textContent = gameState.cluesFound.length + '/' + clues.length;
+  document.getElementById('hud-clues').textContent =
+    gameState.cluesFound.length + '/' + clues.length;
   var dedHint = document.getElementById('hud-ded-hint');
-  if (canOpenDeduction()) { dedHint.style.display = 'inline'; }
-  else { dedHint.style.display = 'none'; }
+  if (canOpenDeduction()) {
+    dedHint.style.display = 'inline';
+  } else {
+    dedHint.style.display = 'none';
+  }
 }
 
 export function resetGame() {
@@ -82,16 +89,23 @@ export function resetGame() {
   var reqs = {
     cimitero: [['frammento', 'simboli_portone']],
     chiesa: [['lettera_censurata', 'registro_1861']],
-    giardini: [['tracce_circolari', 'diario_enzo']]
+    giardini: [['tracce_circolari', 'diario_enzo']],
   };
   for (var ar in reqs) {
     for (var i = 0; i < reqs[ar].length; i++) {
-      var obj = areaObjects[ar].find(function(o) { return o.id === reqs[ar][i][0]; });
+      var obj = areaObjects[ar].find((o) => o.id === reqs[ar][i][0]);
       if (obj) obj.requires = reqs[ar][i][1];
     }
   }
   // Hide all overlays
-  var overlays = ['ending-overlay', 'dialogue-overlay', 'journal-overlay', 'inventory-overlay', 'deduction-overlay', 'customize-overlay'];
+  var overlays = [
+    'ending-overlay',
+    'dialogue-overlay',
+    'journal-overlay',
+    'inventory-overlay',
+    'deduction-overlay',
+    'customize-overlay',
+  ];
   for (var o = 0; o < overlays.length; o++) {
     document.getElementById(overlays[o]).classList.remove('active');
   }
@@ -102,27 +116,33 @@ export function resetGame() {
   updateHUD();
 }
 
-window.onload = function() {
+window.onload = () => {
   ctx = initCanvas();
-  
+
   // Inizializza StoryManager
   if (typeof initStoryManager === 'function') {
     initStoryManager();
   }
-  
+
   initAudio();
   initEventListeners();
   updateHUD();
   updateMuteButton();
-  
+
   // Override collectClue: trigger finale dopo aver raccolto le tracce al Campo
   var origCollect = collectClue;
-  collectClue = function(obj) {
+  collectClue = (obj) => {
     origCollect(obj);
-    if (obj.id === 'tracce_circolari' && gameState.puzzleSolved && gameState.currentArea === 'giardini') {
-      setTimeout(function() { triggerEnding(); }, 2500);
+    if (
+      obj.id === 'tracce_circolari' &&
+      gameState.puzzleSolved &&
+      gameState.currentArea === 'giardini'
+    ) {
+      setTimeout(() => {
+        triggerEnding();
+      }, 2500);
     }
   };
-  
+
   requestAnimationFrame(gameLoop);
 };

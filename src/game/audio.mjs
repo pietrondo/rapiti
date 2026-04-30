@@ -9,7 +9,7 @@ export function startMusic() {
   if (!bgMusic) return;
   var playPromise = bgMusic.play();
   if (playPromise !== undefined) {
-    playPromise.catch(function() {
+    playPromise.catch(() => {
       // Autoplay blocked — will start on next user interaction
     });
   }
@@ -20,7 +20,7 @@ export function toggleMusic() {
   gameState.musicEnabled = !gameState.musicEnabled;
   if (!bgMusic) return;
   if (gameState.musicEnabled) {
-    bgMusic.play().catch(function(){});
+    bgMusic.play().catch(() => {});
   } else {
     bgMusic.pause();
   }

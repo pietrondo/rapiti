@@ -1,14 +1,12 @@
-"use strict";
-
 /* ══════════════════════════════════════════════════════════════
    RECORDER PUZZLE — Monte Ferro
    ══════════════════════════════════════════════════════════════ */
 
 var recorderState = {
   cables: [false, false, false], // rosso, blu, verde
-  bobin: -1,                     // 0=TestA, 1=TestB, 2=TestC
+  bobin: -1, // 0=TestA, 1=TestB, 2=TestC
   powered: false,
-  solved: false
+  solved: false,
 };
 
 function openRecorderPuzzle() {
@@ -64,9 +62,9 @@ function buildRecorderOverlay() {
   document.getElementById('recorder-play').addEventListener('click', playRecorder);
 
   // Cable buttons
-  ['r','b','g'].forEach(function(color) {
+  ['r', 'b', 'g'].forEach((color) => {
     var btn = document.getElementById('rec-cable-' + color);
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', () => {
       var ci = color === 'r' ? 0 : color === 'b' ? 1 : 2;
       recorderState.cables[ci] = !recorderState.cables[ci];
       refreshRecorderUI();
@@ -74,16 +72,16 @@ function buildRecorderOverlay() {
   });
 
   // Bobin buttons
-  [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), function(btn) {
-    btn.addEventListener('click', function() {
+  [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), (btn) => {
+    btn.addEventListener('click', function () {
       var bi = parseInt(this.getAttribute('data-bobin'));
-      recorderState.bobin = (recorderState.bobin === bi) ? -1 : bi;
+      recorderState.bobin = recorderState.bobin === bi ? -1 : bi;
       refreshRecorderUI();
     });
   });
 
   // Power button
-  document.getElementById('rec-power').addEventListener('click', function() {
+  document.getElementById('rec-power').addEventListener('click', () => {
     recorderState.powered = !recorderState.powered;
     refreshRecorderUI();
   });
@@ -92,21 +90,31 @@ function buildRecorderOverlay() {
 function refreshRecorderUI() {
   var rs = recorderState;
   // Cable buttons
-  ['r','b','g'].forEach(function(color, ci) {
+  ['r', 'b', 'g'].forEach((color, ci) => {
     var btn = document.getElementById('rec-cable-' + color);
     btn.style.border = rs.cables[ci] ? '3px solid #d4a843' : '3px solid transparent';
-    btn.textContent = rs.cables[ci] ? (color==='r'?'Rosso ✓':color==='b'?'Blu ✓':'Verde ✓') :
-      (color==='r'?'Rosso':color==='b'?'Blu':'Verde');
+    btn.textContent = rs.cables[ci]
+      ? color === 'r'
+        ? 'Rosso ✓'
+        : color === 'b'
+          ? 'Blu ✓'
+          : 'Verde ✓'
+      : color === 'r'
+        ? 'Rosso'
+        : color === 'b'
+          ? 'Blu'
+          : 'Verde';
   });
 
   // Bobin buttons
-  [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), function(btn) {
+  [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), (btn) => {
     var bi = parseInt(btn.getAttribute('data-bobin'));
-    btn.style.background = (rs.bobin === bi) ? '#d4a843' : '#2d3047';
-    btn.style.color = (rs.bobin === bi) ? '#1a1c20' : '#e8dcc8';
+    btn.style.background = rs.bobin === bi ? '#d4a843' : '#2d3047';
+    btn.style.color = rs.bobin === bi ? '#1a1c20' : '#e8dcc8';
   });
   var bl = ['TEST A (prototipo)', 'TEST B (fase intermedia)', 'TEST C — 1979'];
-  document.getElementById('rec-bobin-label').textContent = rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
+  document.getElementById('rec-bobin-label').textContent =
+    rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
   document.getElementById('rec-bobin-label').style.color = rs.bobin >= 0 ? '#d4a843' : '#6b7b6b';
 
   // Power
@@ -121,32 +129,40 @@ function refreshRecorderUI() {
 
 function playRecorder() {
   var result = document.getElementById('recorder-result');
-  var correct = recorderState.cables[0] && recorderState.cables[1] && recorderState.cables[2] && recorderState.bobin === 2 && recorderState.powered;
+  var correct =
+    recorderState.cables[0] &&
+    recorderState.cables[1] &&
+    recorderState.cables[2] &&
+    recorderState.bobin === 2 &&
+    recorderState.powered;
 
   if (correct) {
     recorderState.solved = true;
-    result.textContent = '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
+    result.textContent =
+      '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
     result.style.color = '#44cc44';
     document.getElementById('recorder-play').disabled = true;
-    
+
     // Notifica StoryManager
     if (typeof StoryManager !== 'undefined') {
       StoryManager.onPuzzleSolved('recorder');
     }
-    
+
     // Add clue
     if (gameState.cluesFound.indexOf('registro_monte_ferro') === -1) {
       gameState.cluesFound.push('registro_monte_ferro');
-      
+
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {
         StoryManager.onClueFound('registro_monte_ferro');
       }
-      
+
       updateHUD();
       showToast('Registrazione Monte Ferro salvata nel diario.');
     }
-    setTimeout(function() { closeRecorderPuzzle(); }, 2000);
+    setTimeout(() => {
+      closeRecorderPuzzle();
+    }, 2000);
   } else {
     result.textContent = '✗ Qualcosa non va. Controlla cavi, bobina e alimentazione.';
     result.style.color = '#cc4444';

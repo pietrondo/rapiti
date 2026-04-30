@@ -1,5 +1,3 @@
-"use strict";
-
 /* ═══════════════════════════════════════════════════════════════════════════════
    ENGINE MODULE - Compatibility Layer
    Questo file ora importa dai moduli in src/engine/ per mantenere compatibilita'

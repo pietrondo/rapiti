@@ -13,7 +13,7 @@ import { SpriteGenerator } from '../game/spriteGenerator.js';
 export const spriteCache = {
   player: null,
   playerColors: null,
-  npcs: {}
+  npcs: {},
 };
 
 /**
@@ -32,7 +32,7 @@ export function getOrCreatePlayerSheet(gameState) {
       detailLight: lighten(c.detail, 15),
       legs: c.legs,
       head: c.head,
-      headShadow: darken(c.head, 15)
+      headShadow: darken(c.head, 15),
     });
   }
   return spriteCache.player;
@@ -48,9 +48,9 @@ export function getOrCreateNPCSheet(npcId, npcsData) {
   if (!spriteCache.npcs[npcId]) {
     let npcData = null;
     for (let i = 0; i < npcsData.length; i++) {
-      if (npcsData[i].id === npcId) { 
-        npcData = npcsData[i]; 
-        break; 
+      if (npcsData[i].id === npcId) {
+        npcData = npcsData[i];
+        break;
       }
     }
     if (npcData) {
@@ -82,7 +82,12 @@ export function lighten(hex, amount) {
   r = Math.min(255, r + amount);
   g = Math.min(255, g + amount);
   b = Math.min(255, b + amount);
-  return '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
+  return (
+    '#' +
+    r.toString(16).padStart(2, '0') +
+    g.toString(16).padStart(2, '0') +
+    b.toString(16).padStart(2, '0')
+  );
 }
 
 /**
@@ -98,5 +103,10 @@ export function darken(hex, amount) {
   r = Math.max(0, r - amount);
   g = Math.max(0, g - amount);
   b = Math.max(0, b - amount);
-  return '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
+  return (
+    '#' +
+    r.toString(16).padStart(2, '0') +
+    g.toString(16).padStart(2, '0') +
+    b.toString(16).padStart(2, '0')
+  );
 }

@@ -1,6 +1,7 @@
 export function initCanvas() {
   var c = document.getElementById('gameCanvas');
-  c.width = CANVAS_W * 2; c.height = CANVAS_H * 2;
+  c.width = CANVAS_W * 2;
+  c.height = CANVAS_H * 2;
   return c.getContext('2d');
 }
 
@@ -28,12 +29,14 @@ export function initEventListeners() {
 export function setupColorSwatches(containerId, colorKey) {
   var container = document.getElementById(containerId);
   if (!container) return;
-  container.addEventListener('click', function(e) {
+  container.addEventListener('click', (e) => {
     var swatch = e.target.closest('.color-swatch');
     if (!swatch) return;
     // Deselect all
     var all = container.querySelectorAll('.color-swatch');
-    for (var i = 0; i < all.length; i++) { all[i].classList.remove('selected'); }
+    for (var i = 0; i < all.length; i++) {
+      all[i].classList.remove('selected');
+    }
     swatch.classList.add('selected');
     gameState.playerColors[colorKey] = swatch.getAttribute('data-color');
     renderCustomizePreview();

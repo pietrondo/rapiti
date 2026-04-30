@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * AREA: PIAZZE
@@ -27,7 +25,7 @@ function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + 5, y + h - 10, w - 10, 10);
   ctx.fillStyle = PALETTE.darkForest;
   ctx.beginPath();
-  ctx.moveTo(x + w/2, y);
+  ctx.moveTo(x + w / 2, y);
   ctx.lineTo(x + w, y + 30);
   ctx.lineTo(x, y + 30);
   ctx.fill();
@@ -40,7 +38,7 @@ function drawMunicipioFacade(ctx, x, y, w, h, t) {
     }
   }
   ctx.fillStyle = PALETTE.accent;
-  ctx.fillRect(x + w/2 - 12, y + h - 35, 24, 30);
+  ctx.fillRect(x + w / 2 - 12, y + h - 35, 24, 30);
 }
 
 function drawPiazzaFountain(ctx, x, y, t) {
@@ -98,28 +96,28 @@ var PiazzeArea = {
   name: 'Piazza del Paese',
   walkableTop: 105,
   colliders: [
-    {x:125, y:48, w:150, h:86},
-    {x:182, y:145, w:42, h:28},
-    {x:302, y:112, w:70, h:56},
-    {x:82,  y:136, w:36, h:34}
+    { x: 125, y: 48, w: 150, h: 86 },
+    { x: 182, y: 145, w: 42, h: 28 },
+    { x: 302, y: 112, w: 70, h: 56 },
+    { x: 82, y: 136, w: 36, h: 34 },
   ],
   npcs: [],
   exits: [
-    {dir:'up',   xRange:[168,232], to:'chiesa',        spawnX:200, spawnY:210},
-    {dir:'down', xRange:[170,230], to:'residenziale',  spawnX:200, spawnY:132},
-    {dir:'left', xRange:[100,140], to:'giardini',      spawnX:360, spawnY:125},
-    {dir:'right',xRange:[122,176], to:'bar_exterior',  spawnX:40,  spawnY:145}
+    { dir: 'up', xRange: [168, 232], to: 'chiesa', spawnX: 200, spawnY: 210 },
+    { dir: 'down', xRange: [170, 230], to: 'residenziale', spawnX: 200, spawnY: 132 },
+    { dir: 'left', xRange: [100, 140], to: 'giardini', spawnX: 360, spawnY: 125 },
+    { dir: 'right', xRange: [122, 176], to: 'bar_exterior', spawnX: 40, spawnY: 145 },
   ],
-  
-  draw: function(ctx) {
+
+  draw: (ctx) => {
     PF.nightSky(ctx, 14);
-    ctx.fillStyle = PALETTE.lanternYel; 
-    ctx.beginPath(); 
-    ctx.arc(340, 22, 14, 0, Math.PI*2); 
+    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.beginPath();
+    ctx.arc(340, 22, 14, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = PALETTE.nightBlue; 
-    ctx.beginPath(); 
-    ctx.arc(346, 18, 10, 0, Math.PI*2); 
+    ctx.fillStyle = PALETTE.nightBlue;
+    ctx.beginPath();
+    ctx.arc(346, 18, 10, 0, Math.PI * 2);
     ctx.fill();
     PF.mountains(ctx);
     var t = Date.now() * 0.001;
@@ -133,18 +131,26 @@ var PiazzeArea = {
     ctx.fillStyle = 'rgba(139,125,107,0.88)';
     ctx.fillRect(0, 130, CANVAS_W, 120);
     ctx.fillStyle = 'rgba(74,85,104,0.32)';
-    for (var r=0; r<10; r++) {
-      for (var c=0; c<15; c++) {
-        ctx.fillRect(c*29+(r%2)*14, 136+r*11, 24, 3);
+    for (var r = 0; r < 10; r++) {
+      for (var c = 0; c < 15; c++) {
+        ctx.fillRect(c * 29 + (r % 2) * 14, 136 + r * 11, 24, 3);
       }
     }
 
     ctx.fillStyle = PALETTE.greyBrown;
     ctx.beginPath();
-    ctx.moveTo(170, 134); ctx.lineTo(230, 134); ctx.lineTo(258, 250); ctx.lineTo(142, 250); ctx.fill();
+    ctx.moveTo(170, 134);
+    ctx.lineTo(230, 134);
+    ctx.lineTo(258, 250);
+    ctx.lineTo(142, 250);
+    ctx.fill();
     ctx.fillStyle = 'rgba(232,220,200,0.14)';
     ctx.beginPath();
-    ctx.moveTo(195, 134); ctx.lineTo(205, 134); ctx.lineTo(220, 250); ctx.lineTo(180, 250); ctx.fill();
+    ctx.moveTo(195, 134);
+    ctx.lineTo(205, 134);
+    ctx.lineTo(220, 250);
+    ctx.lineTo(180, 250);
+    ctx.fill();
 
     drawMunicipioFacade(ctx, 125, 48, 150, 86, t);
     drawPiazzaFountain(ctx, 182, 145, t);
@@ -157,7 +163,7 @@ var PiazzeArea = {
     PF.tree(ctx, 36, 142);
     PF.tree(ctx, 292, 150);
     drawVignette(ctx);
-  }
+  },
 };
 
 // Esporta

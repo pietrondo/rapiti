@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * EFFECTS - Legacy Compatibility Layer
@@ -7,10 +5,10 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* 
+/*
  * NOTA: Questo file è un layer di compatibilità.
  * I nuovi sistemi sono in src/effects/ come moduli separati.
- * 
+ *
  * Per nuovo codice, usa direttamente:
  *   var particles = new ParticleSystem();
  *   var lighting = new LightingSystem();
@@ -24,12 +22,12 @@
 var ParticleSystem = {
   particles: [],
   maxParticles: 200,
-  
-  create: function(x, y, type, options) {
+
+  create: function (x, y, type, options) {
     if (this.particles.length >= this.maxParticles) {
       this.particles.shift();
     }
-    
+
     var particle = {
       x: x,
       y: y,
@@ -42,70 +40,55 @@ var ParticleSystem = {
       color: options.color || '#FFFFFF',
       alpha: options.alpha || 1,
       gravity: options.gravity || 0,
-      friction: options.friction || 0.98
+      friction: options.friction || 0.98,
     };
-    
+
     this.particles.push(particle);
     return particle;
   },
-  
-  createFireflies: function(x, y) {
+
+  createFireflies: function (x, y) {
     for (var i = 0; i < 15; i++) {
-      this.create(
-        x + Math.random() * 300,
-        y + Math.random() * 200,
-        'firefly',
-        {
-          life: 120 + Math.random() * 60,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          size: 1 + Math.random() * 2,
-          color: '#CCFF00',
-          alpha: 0.8
-        }
-      );
+      this.create(x + Math.random() * 300, y + Math.random() * 200, 'firefly', {
+        life: 120 + Math.random() * 60,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: 1 + Math.random() * 2,
+        color: '#CCFF00',
+        alpha: 0.8,
+      });
     }
   },
-  
-  createDust: function(x, y) {
+
+  createDust: function (x, y) {
     for (var i = 0; i < 10; i++) {
-      this.create(
-        x + Math.random() * 200,
-        y + Math.random() * 150,
-        'dust',
-        {
-          life: 180 + Math.random() * 120,
-          vx: (Math.random() - 0.5) * 0.1,
-          vy: (Math.random() - 0.5) * 0.1,
-          size: 1 + Math.random(),
-          color: '#AAAAAA',
-          alpha: 0.4
-        }
-      );
+      this.create(x + Math.random() * 200, y + Math.random() * 150, 'dust', {
+        life: 180 + Math.random() * 120,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
+        size: 1 + Math.random(),
+        color: '#AAAAAA',
+        alpha: 0.4,
+      });
     }
   },
-  
-  createSparkles: function(x, y, color) {
+
+  createSparkles: function (x, y, color) {
     for (var i = 0; i < 20; i++) {
-      var angle = (Math.PI * 2 / 20) * i;
-      this.create(
-        x,
-        y,
-        'sparkle',
-        {
-          life: 30 + Math.random() * 20,
-          vx: Math.cos(angle) * 2,
-          vy: Math.sin(angle) * 2,
-          size: 2 + Math.random() * 2,
-          color: color || '#FFD700',
-          alpha: 1,
-          friction: 0.95
-        }
-      );
+      var angle = ((Math.PI * 2) / 20) * i;
+      this.create(x, y, 'sparkle', {
+        life: 30 + Math.random() * 20,
+        vx: Math.cos(angle) * 2,
+        vy: Math.sin(angle) * 2,
+        size: 2 + Math.random() * 2,
+        color: color || '#FFD700',
+        alpha: 1,
+        friction: 0.95,
+      });
     }
   },
-  
-  update: function() {
+
+  update: function () {
     for (var i = this.particles.length - 1; i >= 0; i--) {
       var p = this.particles[i];
       p.life--;
@@ -114,14 +97,14 @@ var ParticleSystem = {
       p.vy += p.gravity;
       p.vx *= p.friction;
       p.vy *= p.friction;
-      
+
       if (p.life <= 0) {
         this.particles.splice(i, 1);
       }
     }
   },
-  
-  draw: function(ctx) {
+
+  draw: function (ctx) {
     ctx.save();
     for (var i = 0; i < this.particles.length; i++) {
       var p = this.particles[i];
@@ -132,10 +115,10 @@ var ParticleSystem = {
     }
     ctx.restore();
   },
-  
-  clear: function() {
+
+  clear: function () {
     this.particles = [];
-  }
+  },
 };
 
 /**
@@ -144,51 +127,48 @@ var ParticleSystem = {
 var LightingSystem = {
   lights: [],
   ambientLight: 0.3,
-  
-  addLight: function(x, y, radius, color, intensity) {
+
+  addLight: function (x, y, radius, color, intensity) {
     this.lights.push({
       x: x,
       y: y,
       radius: radius,
       color: color || '#ffaa44',
       intensity: intensity || 0.5,
-      flicker: Math.random() * Math.PI * 2
+      flicker: Math.random() * Math.PI * 2,
     });
   },
-  
-  update: function() {
+
+  update: function () {
     for (var i = 0; i < this.lights.length; i++) {
       this.lights[i].flicker += 0.1;
     }
   },
-  
-  draw: function(ctx) {
+
+  draw: function (ctx) {
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    
+
     for (var i = 0; i < this.lights.length; i++) {
       var light = this.lights[i];
       var flicker = 0.9 + Math.sin(light.flicker) * 0.1;
-      var gradient = ctx.createRadialGradient(
-        light.x, light.y, 0,
-        light.x, light.y, light.radius
-      );
+      var gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius);
       gradient.addColorStop(0, light.color);
       gradient.addColorStop(1, 'transparent');
-      
+
       ctx.globalAlpha = light.intensity * flicker;
       ctx.fillStyle = gradient;
       ctx.beginPath();
       ctx.arc(light.x, light.y, light.radius, 0, Math.PI * 2);
       ctx.fill();
     }
-    
+
     ctx.restore();
   },
-  
-  clear: function() {
+
+  clear: function () {
     this.lights = [];
-  }
+  },
 };
 
 /**
@@ -197,13 +177,13 @@ var LightingSystem = {
 var ScreenShake = {
   intensity: 0,
   duration: 0,
-  
-  shake: function(intensity, duration) {
+
+  shake: function (intensity, duration) {
     this.intensity = intensity;
     this.duration = duration;
   },
-  
-  update: function() {
+
+  update: function () {
     if (this.duration > 0) {
       this.duration--;
       this.intensity *= 0.9;
@@ -211,31 +191,35 @@ var ScreenShake = {
       this.intensity = 0;
     }
   },
-  
-  getOffset: function() {
+
+  getOffset: function () {
     if (this.intensity <= 0) return { x: 0, y: 0 };
     return {
       x: (Math.random() - 0.5) * this.intensity,
-      y: (Math.random() - 0.5) * this.intensity
+      y: (Math.random() - 0.5) * this.intensity,
     };
-  }
+  },
 };
 
 /**
  * Vignette - Legacy wrapper
  */
 var Vignette = {
-  draw: function(ctx) {
+  draw: (ctx) => {
     var grad = ctx.createRadialGradient(
-      CANVAS_W / 2, CANVAS_H / 2, 80,
-      CANVAS_W / 2, CANVAS_H / 2, Math.max(CANVAS_W, CANVAS_H)
+      CANVAS_W / 2,
+      CANVAS_H / 2,
+      80,
+      CANVAS_W / 2,
+      CANVAS_H / 2,
+      Math.max(CANVAS_W, CANVAS_H)
     );
     grad.addColorStop(0, 'rgba(0,0,0,0)');
     grad.addColorStop(0.6, 'rgba(10,12,18,0.35)');
     grad.addColorStop(1, 'rgba(10,12,18,0.72)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-  }
+  },
 };
 
 // Esporta
@@ -244,7 +228,7 @@ if (typeof module !== 'undefined' && module.exports) {
     ParticleSystem: ParticleSystem,
     LightingSystem: LightingSystem,
     ScreenShake: ScreenShake,
-    Vignette: Vignette
+    Vignette: Vignette,
   };
 } else if (typeof window !== 'undefined') {
   window.ParticleSystem = ParticleSystem;

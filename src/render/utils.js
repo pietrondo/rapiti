@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { CANVAS_W, CANVAS_H } from '../config.js';
+import { CANVAS_H, CANVAS_W } from '../config.js';
 
 /**
  * Colori visuali standard
@@ -19,7 +19,7 @@ export const VISUAL = {
   paper: '#E8DCC8',
   rust: '#C4956A',
   signal: '#91B7FF',
-  danger: '#CC4444'
+  danger: '#CC4444',
 };
 
 /**
@@ -123,7 +123,7 @@ export function getAreaShortName(areaId) {
     bar_exterior: 'Bar',
     residenziale: 'Case',
     industriale: 'Industria',
-    polizia: 'Polizia'
+    polizia: 'Polizia',
   };
   return names[areaId] || areaId;
 }
@@ -138,13 +138,21 @@ export function getAreaShortName(areaId) {
 export function drawArrow(ctx, dir, x, y) {
   ctx.beginPath();
   if (dir === 'up') {
-    ctx.moveTo(x, y - 5); ctx.lineTo(x - 6, y + 4); ctx.lineTo(x + 6, y + 4);
+    ctx.moveTo(x, y - 5);
+    ctx.lineTo(x - 6, y + 4);
+    ctx.lineTo(x + 6, y + 4);
   } else if (dir === 'down') {
-    ctx.moveTo(x, y + 5); ctx.lineTo(x - 6, y - 4); ctx.lineTo(x + 6, y - 4);
+    ctx.moveTo(x, y + 5);
+    ctx.lineTo(x - 6, y - 4);
+    ctx.lineTo(x + 6, y - 4);
   } else if (dir === 'left') {
-    ctx.moveTo(x - 5, y); ctx.lineTo(x + 4, y - 6); ctx.lineTo(x + 4, y + 6);
+    ctx.moveTo(x - 5, y);
+    ctx.lineTo(x + 4, y - 6);
+    ctx.lineTo(x + 4, y + 6);
   } else {
-    ctx.moveTo(x + 5, y); ctx.lineTo(x - 4, y - 6); ctx.lineTo(x - 4, y + 6);
+    ctx.moveTo(x + 5, y);
+    ctx.lineTo(x - 4, y - 6);
+    ctx.lineTo(x - 4, y + 6);
   }
   ctx.closePath();
   ctx.fill();

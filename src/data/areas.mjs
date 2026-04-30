@@ -11,7 +11,7 @@ const areaTextures = {
   brick: null,
   wood: null,
   stone: null,
-  grass: null
+  grass: null,
 };
 
 export function getAreaTexture(type) {
@@ -27,7 +27,9 @@ export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
   var pulse = 0.5 + Math.sin(t * 2 + phase) * 0.18;
   ctx.fillStyle = PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = warm ? 'rgba(212,168,67,' + pulse.toFixed(2) + ')' : 'rgba(130,160,220,' + pulse.toFixed(2) + ')';
+  ctx.fillStyle = warm
+    ? 'rgba(212,168,67,' + pulse.toFixed(2) + ')'
+    : 'rgba(130,160,220,' + pulse.toFixed(2) + ')';
   ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
   ctx.fillStyle = PALETTE.earthBrown;
   ctx.fillRect(x, y, w, 2);
@@ -58,8 +60,8 @@ export function drawWallTexture(ctx, x, y, w, h, base, alt) {
   ctx.fillStyle = base;
   ctx.fillRect(x, y, w, h);
   for (var i = 0; i < 34; i++) {
-    var tx = x + (i * 17) % Math.max(1, w);
-    var ty = y + (i * 11) % Math.max(1, h);
+    var tx = x + ((i * 17) % Math.max(1, w));
+    var ty = y + ((i * 11) % Math.max(1, h));
     ctx.fillStyle = i % 3 === 0 ? alt : 'rgba(255,255,255,0.06)';
     ctx.fillRect(tx, ty, 4 + (i % 3), 2);
   }
@@ -77,7 +79,9 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + w / 2 - 16, y - 30, 32, 24);
   drawTileRoof(ctx, x + w / 2 - 18, y - 30, 36, PALETTE.greyBrown);
   ctx.fillStyle = PALETTE.creamPaper;
-  ctx.beginPath(); ctx.arc(x + w / 2, y - 17, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x + w / 2, y - 17, 8, 0, Math.PI * 2);
+  ctx.fill();
   ctx.fillStyle = PALETTE.nightBlue;
   ctx.fillRect(x + w / 2 - 1, y - 22, 2, 6);
   ctx.fillRect(x + w / 2 - 1, y - 18, 6, 2);
@@ -108,16 +112,26 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
 export function drawChurchFacade(ctx, x, y, w, h, t) {
   drawWallTexture(ctx, x, y, w, h, PALETTE.greyBrown, 'rgba(232,220,200,0.12)');
   ctx.fillStyle = PALETTE.earthBrown;
-  ctx.beginPath(); ctx.moveTo(x - 10, y); ctx.lineTo(x + w / 2, y - 28); ctx.lineTo(x + w + 10, y); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x - 10, y);
+  ctx.lineTo(x + w / 2, y - 28);
+  ctx.lineTo(x + w + 10, y);
+  ctx.fill();
   ctx.fillStyle = PALETTE.greyBrown;
   ctx.fillRect(x + w / 2 - 22, y - 50, 44, 50);
   ctx.fillStyle = PALETTE.earthBrown;
-  ctx.beginPath(); ctx.moveTo(x + w / 2 - 25, y - 50); ctx.lineTo(x + w / 2, y - 74); ctx.lineTo(x + w / 2 + 25, y - 50); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x + w / 2 - 25, y - 50);
+  ctx.lineTo(x + w / 2, y - 74);
+  ctx.lineTo(x + w / 2 + 25, y - 50);
+  ctx.fill();
   ctx.fillStyle = PALETTE.creamPaper;
   ctx.fillRect(x + w / 2 - 2, y - 66, 4, 18);
   ctx.fillRect(x + w / 2 - 9, y - 59, 18, 4);
   ctx.fillStyle = 'rgba(212,168,67,0.18)';
-  ctx.beginPath(); ctx.arc(x + w / 2, y + 56, 30 + Math.sin(t * 1.5) * 4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x + w / 2, y + 56, 30 + Math.sin(t * 1.5) * 4, 0, Math.PI * 2);
+  ctx.fill();
   drawLitWindow(ctx, x + 24, y + 22, 16, 30, true, t, 0);
   drawLitWindow(ctx, x + w - 40, y + 22, 16, 30, true, t, 1);
   ctx.fillStyle = PALETTE.earthBrown;
@@ -247,8 +261,12 @@ export function drawBench(ctx, x, y) {
 
 export function drawVignette(ctx) {
   var grad = ctx.createRadialGradient(
-    CANVAS_W / 2, CANVAS_H / 2, 80,
-    CANVAS_W / 2, CANVAS_H / 2, Math.max(CANVAS_W, CANVAS_H)
+    CANVAS_W / 2,
+    CANVAS_H / 2,
+    80,
+    CANVAS_W / 2,
+    CANVAS_H / 2,
+    Math.max(CANVAS_W, CANVAS_H)
   );
   grad.addColorStop(0, 'rgba(0,0,0,0)');
   grad.addColorStop(0.6, 'rgba(10,12,18,0.35)');
@@ -272,7 +290,7 @@ if (typeof module !== 'undefined' && module.exports) {
     drawPiazzaFountain: drawPiazzaFountain,
     drawNoticeBoard: drawNoticeBoard,
     drawBench: drawBench,
-    drawVignette: drawVignette
+    drawVignette: drawVignette,
   };
 } else if (typeof window !== 'undefined') {
   window.getAreaTexture = getAreaTexture;

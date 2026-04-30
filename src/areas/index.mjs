@@ -18,14 +18,14 @@ const Areas = {
   residenziale: typeof ResidenzialeArea !== 'undefined' ? ResidenzialeArea : null,
   industriale: typeof IndustrialeArea !== 'undefined' ? IndustrialeArea : null,
   polizia: typeof PoliziaArea !== 'undefined' ? PoliziaArea : null,
-  
+
   // Helper per ottenere un'area
-  get: function(areaId) {
+  get: function (areaId) {
     return this[areaId] || null;
   },
-  
+
   // Lista di tutte le aree
-  getAll: function() {
+  getAll: function () {
     return [
       this.piazze,
       this.chiesa,
@@ -34,12 +34,12 @@ const Areas = {
       this.bar_exterior,
       this.residenziale,
       this.industriale,
-      this.polizia
-    ].filter(function(a) { return a !== null; });
+      this.polizia,
+    ].filter((a) => a !== null);
   },
-  
+
   // Inizializza tutte le aree
-  init: function() {
+  init: function () {
     var all = this.getAll();
     for (var i = 0; i < all.length; i++) {
       if (all[i] && all[i].init) {
@@ -47,7 +47,7 @@ const Areas = {
       }
     }
     return this;
-  }
+  },
 };
 
 // Esporta
@@ -56,6 +56,5 @@ if (typeof module !== 'undefined' && module.exports) {
 } else if (typeof window !== 'undefined') {
   window.Areas = Areas;
 }
-
 
 export default Areas;

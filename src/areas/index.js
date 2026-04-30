@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * AREAS MODULE - Index
@@ -20,14 +18,14 @@ var Areas = {
   residenziale: typeof ResidenzialeArea !== 'undefined' ? ResidenzialeArea : null,
   industriale: typeof IndustrialeArea !== 'undefined' ? IndustrialeArea : null,
   polizia: typeof PoliziaArea !== 'undefined' ? PoliziaArea : null,
-  
+
   // Helper per ottenere un'area
-  get: function(areaId) {
+  get: function (areaId) {
     return this[areaId] || null;
   },
-  
+
   // Lista di tutte le aree
-  getAll: function() {
+  getAll: function () {
     return [
       this.piazze,
       this.chiesa,
@@ -36,12 +34,12 @@ var Areas = {
       this.bar_exterior,
       this.residenziale,
       this.industriale,
-      this.polizia
-    ].filter(function(a) { return a !== null; });
+      this.polizia,
+    ].filter((a) => a !== null);
   },
-  
+
   // Inizializza tutte le aree
-  init: function() {
+  init: function () {
     var all = this.getAll();
     for (var i = 0; i < all.length; i++) {
       if (all[i] && all[i].init) {
@@ -49,7 +47,7 @@ var Areas = {
       }
     }
     return this;
-  }
+  },
 };
 
 // Esporta
