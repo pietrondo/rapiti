@@ -13,6 +13,7 @@
 // PALETTE
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/** @type {Object<string, string>} Game color palette */
 export const PALETTE = Object.freeze({
   nightBlue: '#1A1C20',
   violetBlue: '#2D3047',
@@ -32,16 +33,55 @@ export const PALETTE = Object.freeze({
 // CANVAS & PLAYER CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/** @type {number} Canvas logical width in pixels */
 export const CANVAS_W = 400;
+
+/** @type {number} Canvas logical height in pixels */
 export const CANVAS_H = 250;
+
+/** @type {number} Player movement speed */
 export const PLAYER_SPEED = 1.6;
+
+/** @type {number} Player width in pixels */
 export const PLAYER_W = 10;
+
+/** @type {number} Player height in pixels */
 export const PLAYER_H = 14;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // GAME STATE
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/**
+ * @typedef {Object} Player
+ * @property {number} x
+ * @property {number} y
+ * @property {number} w
+ * @property {number} h
+ * @property {string} dir
+ * @property {number} frame
+ */
+
+/**
+ * @typedef {Object} GameState
+ * @property {string} currentArea
+ * @property {string} gamePhase
+ * @property {string|null} previousPhase
+ * @property {Player} player
+ * @property {Array<string>} cluesFound
+ * @property {Object<string, number>} npcStates
+ * @property {string} playerName
+ * @property {Object<string, string>} playerColors
+ * @property {boolean} musicEnabled
+ * @property {boolean} puzzleSolved
+ * @property {number} puzzleAttempts
+ * @property {number} introSlide
+ * @property {string} introText
+ * @property {number} introCharIndex
+ * @property {string|null} endingType
+ */
+
+/** @type {GameState} Global game state */
 export const gameState = {
   currentArea: 'piazze',
   gamePhase: 'title',

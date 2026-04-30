@@ -1,60 +1,137 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * AREAS MODULE - Index
- * Aggrega tutte le aree di gioco
+ *                    AREA MANAGER (ES6+ CLASS)
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * Central management for all game areas with ES6+ class syntax.
+ *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PiazzeArea, ChiesaArea, CimiteroArea, GiardiniArea, BarExteriorArea, ResidenzialeArea, IndustrialeArea, PoliziaArea */
+class AreaManager {
+  constructor() {
+    this.areas = new Map();
+    this.currentArea = null;
+  }
 
-// Importa le aree (per browser, saranno caricate separatamente)
-const Areas = {
-  // Aree di gioco
-  piazze: typeof PiazzeArea !== 'undefined' ? PiazzeArea : null,
-  chiesa: typeof ChiesaArea !== 'undefined' ? ChiesaArea : null,
-  cimitero: typeof CimiteroArea !== 'undefined' ? CimiteroArea : null,
-  giardini: typeof GiardiniArea !== 'undefined' ? GiardiniArea : null,
-  bar_exterior: typeof BarExteriorArea !== 'undefined' ? BarExteriorArea : null,
-  residenziale: typeof ResidenzialeArea !== 'undefined' ? ResidenzialeArea : null,
-  industriale: typeof IndustrialeArea !== 'undefined' ? IndustrialeArea : null,
-  polizia: typeof PoliziaArea !== 'undefined' ? PoliziaArea : null,
+  /**
+   * Register an area
+   * @param {string} id - Area identifier
+   * @param {Object} area - Area object
+   */
+  register(id, area) {
+    this.areas.set(id, area);
+  }
 
-  // Helper per ottenere un'area
-  get: function (areaId) {
-    return this[areaId] || null;
-  },
+  /**
+   * Get area by ID
+   * @param {string} areaId
+   * @returns {Object|null}
+   */
+  get(areaId) {
+    return this.areas.get(areaId) || null;
+  }
 
-  // Lista di tutte le aree
-  getAll: function () {
-    return [
-      this.piazze,
-      this.chiesa,
-      this.cimitero,
-      this.giardini,
-      this.bar_exterior,
-      this.residenziale,
-      this.industriale,
-      this.polizia,
-    ].filter((a) => a !== null);
-  },
+  /**
+   * Get all registered areas
+   * @returns {Array}
+   */
+  getAll() {
+    return Array.from(this.areas.values()).filter((a) => a !== null);
+  }
 
-  // Inizializza tutte le aree
-  init: function () {
-    var all = this.getAll();
-    for (var i = 0; i < all.length; i++) {
-      if (all[i]?.init) {
-        all[i].init();
-      }
+  /**
+   * Get area names
+   * @returns {Array<string>}
+   */
+  getIds() {
+    return Array.from(this.areas.keys());
+  }
+
+  /**
+   * Initialize all areas
+   * @returns {AreaManager}
+   */
+  init() {
+    for (const area of this.areas.values()) {
+      area?.init?.();
     }
+    console.log('[AreaManager] Initialized');
     return this;
-  },
-};
+  }
 
-// Esporta
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Areas;
-} else if (typeof window !== 'undefined') {
-  window.Areas = Areas;
+  /**
+   * Update current area
+   */
+  update() {
+    this.currentArea?.update?.();
+  }
+
+  /**
+   * Draw current area
+   * @param {CanvasRenderingContext2D} ctx
+   */
+  draw(ctx) {
+    this.currentArea?.draw?.(ctx);
+  }
+
+  /**
+   * Set current area
+   * @param {string} areaId
+   */
+  setCurrent(areaId) {
+    this.currentArea = this.get(areaId);
+  }
+
+  /**
+   * Get current area
+   * @returns {Object|null}
+   */
+  getCurrent() {
+    return this.currentArea;
+  }
+
+  /**
+   * Check if area exists
+   * @param {string} areaId
+   * @returns {boolean}
+   */
+  has(areaId) {
+    return this.areas.has(areaId);
+  }
+
+  /**
+   * Get area count
+   * @returns {number}
+   */
+  count() {
+    return this.areas.size;
+  }
 }
 
-export default Areas;
+// Singleton instance
+const areaManager = new AreaManager();
+
+// Backward compatibility - register global areas
+if (typeof PiazzeArea !== 'undefined') areaManager.register('piazze', PiazzeArea);
+if (typeof ChiesaArea !== 'undefined') areaManager.register('chiesa', ChiesaArea);
+if (typeof CimiteroArea !== 'undefined') areaManager.register('cimitero', CimiteroArea);
+if (typeof GiardiniArea !== 'undefined') areaManager.register('giardini', GiardiniArea);
+if (typeof BarExteriorArea !== 'undefined') areaManager.register('bar_exterior', BarExteriorArea);
+if (typeof ResidenzialeArea !== 'undefined') areaManager.register('residenziale', ResidenzialeArea);
+if (typeof IndustrialeArea !== 'undefined') areaManager.register('industriale', IndustrialeArea);
+if (typeof PoliziaArea !== 'undefined') areaManager.register('polizia', PoliziaArea);
+
+// Global exports
+if (typeof window !== 'undefined') {
+  window.AreaManager = AreaManager;
+  window.areaManager = areaManager;
+  window.Areas = areaManager; // backward compatibility
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { AreaManager, areaManager };
+}
+
+export { AreaManager, areaManager };
+export default areaManager;
