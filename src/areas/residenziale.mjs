@@ -36,7 +36,7 @@ export function drawResidentialArea(ctx, t) {
 
     // Finestre con luce
     var glow = 0.5 + Math.sin(t * 2 + i) * 0.1;
-    ctx.fillStyle = 'rgba(212,168,67,' + glow.toFixed(2) + ')';
+    ctx.fillStyle = `rgba(212,168,67,${glow.toFixed(2)})`;
     ctx.fillRect(h.x + 15, h.y + 25, 20, 25);
     ctx.fillRect(h.x + h.w - 35, h.y + 25, 20, 25);
 

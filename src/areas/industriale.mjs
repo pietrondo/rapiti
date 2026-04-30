@@ -26,11 +26,11 @@ export function drawIndustrialArea(ctx, t) {
   // Fumo
   var smoke1 = 0.3 + Math.sin(t * 1.5) * 0.1;
   var smoke2 = 0.3 + Math.sin(t * 1.5 + 1) * 0.1;
-  ctx.fillStyle = 'rgba(100,100,100,' + smoke1.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(100,100,100,${smoke1.toFixed(2)})`;
   ctx.beginPath();
   ctx.arc(110, 10, 15, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = 'rgba(100,100,100,' + smoke2.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(100,100,100,${smoke2.toFixed(2)})`;
   ctx.beginPath();
   ctx.arc(290, 5, 12, 0, Math.PI * 2);
   ctx.fill();
@@ -38,7 +38,7 @@ export function drawIndustrialArea(ctx, t) {
   // Finestre industriali
   for (var i = 0; i < 5; i++) {
     var glow = 0.4 + Math.sin(t * 2 + i * 0.5) * 0.1;
-    ctx.fillStyle = 'rgba(130,160,220,' + glow.toFixed(2) + ')';
+    ctx.fillStyle = `rgba(130,160,220,${glow.toFixed(2)})`;
     ctx.fillRect(90 + i * 45, 60, 30, 40);
   }
 

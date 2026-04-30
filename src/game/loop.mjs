@@ -54,7 +54,7 @@ export function updateHUD() {
   var area = areas[gameState.currentArea];
   document.getElementById('hud-area').textContent = area ? area.name : '???';
   document.getElementById('hud-clues').textContent =
-    gameState.cluesFound.length + '/' + clues.length;
+    `${gameState.cluesFound.length}/${clues.length}`;
   var dedHint = document.getElementById('hud-ded-hint');
   if (canOpenDeduction()) {
     dedHint.style.display = 'inline';

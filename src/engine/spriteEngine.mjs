@@ -55,7 +55,7 @@ const SpriteEngine = {
 
   /** Genera e cache uno sprite procedurale per un NPC */
   generateNPC: function (npcData) {
-    var key = 'npc_' + npcData.id;
+    var key = `npc_${npcData.id}`;
     if (!this.generated[key]) {
       this.generated[key] = SpriteGenerator.generateNPCSheet(npcData);
     }
@@ -64,7 +64,7 @@ const SpriteEngine = {
 
   /** Genera e cache un background procedurale */
   generateBG: function (areaId, areaData) {
-    var key = 'bg_' + areaId;
+    var key = `bg_${areaId}`;
     if (!this.generated[key]) {
       this.generated[key] = SpriteGenerator.generateBackground(areaId, areaData);
     }

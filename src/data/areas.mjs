@@ -28,8 +28,8 @@ export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
   ctx.fillStyle = PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
   ctx.fillStyle = warm
-    ? 'rgba(212,168,67,' + pulse.toFixed(2) + ')'
-    : 'rgba(130,160,220,' + pulse.toFixed(2) + ')';
+    ? `rgba(212,168,67,${pulse.toFixed(2)})`
+    : `rgba(130,160,220,${pulse.toFixed(2)})`;
   ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
   ctx.fillStyle = PALETTE.earthBrown;
   ctx.fillRect(x, y, w, 2);
@@ -158,7 +158,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   var neon = 0.62 + Math.sin(t * 4) * 0.28;
   ctx.fillStyle = 'rgba(110,18,18,0.72)';
   ctx.fillRect(x + 24, y - 33, w - 48, 25);
-  ctx.fillStyle = 'rgba(220,54,42,' + neon.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(220,54,42,${neon.toFixed(2)})`;
   ctx.fillRect(x + 28, y - 29, w - 56, 17);
   ctx.fillStyle = PALETTE.creamPaper;
   ctx.font = 'bold 11px "Courier New",monospace';
@@ -190,7 +190,7 @@ export function drawBarWindow(ctx, x, y, w, h, t, phase) {
   ctx.fillRect(x - 3, y - 3, w + 6, h + 6);
   ctx.fillStyle = PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = 'rgba(212,168,67,' + (0.42 + Math.sin(t * 2 + phase) * 0.12).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(212,168,67,${(0.42 + Math.sin(t * 2 + phase) * 0.12).toFixed(2)})`;
   ctx.fillRect(x + 3, y + 3, w - 6, h - 6);
   ctx.fillStyle = '#4A2F24';
   ctx.fillRect(x + Math.floor(w / 2) - 1, y, 2, h);
@@ -199,7 +199,7 @@ export function drawBarWindow(ctx, x, y, w, h, t, phase) {
   ctx.fillRect(x + 5, y + 6, 10, 2);
 }
 
-export function drawStripedAwning(ctx, x, y, w, t) {
+export function drawStripedAwning(ctx, x, y, w, _t) {
   ctx.fillStyle = '#6B2F25';
   ctx.fillRect(x - 6, y, w + 12, 3);
   var stripes = Math.floor(w / 12);
@@ -234,7 +234,7 @@ export function drawPiazzaFountain(ctx, x, y, t) {
   ctx.globalAlpha = 1;
 }
 
-export function drawNoticeBoard(ctx, x, y, t) {
+export function drawNoticeBoard(ctx, x, y, _t) {
   ctx.fillStyle = '#5A4030';
   ctx.fillRect(x - 2, y - 2, 44, 54);
   ctx.fillStyle = '#3A2820';

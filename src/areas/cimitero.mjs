@@ -46,7 +46,7 @@ export function drawCemeteryArea(ctx, t) {
 
   // Luce fredda
   var glow = 0.4 + Math.sin(t * 2) * 0.1;
-  ctx.fillStyle = 'rgba(100, 150, 200, ' + glow + ')';
+  ctx.fillStyle = `rgba(100, 150, 200, ${glow})`;
   ctx.beginPath();
   ctx.arc(200, 100, 40, 0, Math.PI * 2);
   ctx.fill();

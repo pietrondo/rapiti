@@ -74,7 +74,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + 26, y + h - 28, 18, 24);
 }
 
-export function drawNoticeBoard(ctx, x, y, t) {
+export function drawNoticeBoard(ctx, x, y, _t) {
   ctx.fillStyle = PALETTE.greyBrown;
   ctx.fillRect(x, y, 28, 38);
   ctx.fillStyle = '#dcb';

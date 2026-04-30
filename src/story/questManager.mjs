@@ -68,13 +68,13 @@ const QuestManager = {
       var quest = storyQuests ? storyQuests[questId] : null;
       var progress = this.activeQuests[questId];
 
-      if (!quest || !quest.stages || !progress) continue;
+      if (!quest?.stages || !progress) continue;
 
       var currentStage = quest.stages[progress.currentStage];
       if (!currentStage) continue;
 
       // Check if stage is completed
-      if (checkConditionFn && checkConditionFn(currentStage.condition)) {
+      if (checkConditionFn?.(currentStage.condition)) {
         // Apply reward
         if (currentStage.reward) {
           this.applyReward(currentStage.reward);
@@ -102,7 +102,7 @@ const QuestManager = {
     this.completedQuests.push(questId);
 
     var quest = storyQuests ? storyQuests[questId] : null;
-    if (quest && quest.onComplete) {
+    if (quest?.onComplete) {
       if (quest.onComplete.message && typeof showToast === 'function') {
         showToast(quest.onComplete.message);
       }
@@ -225,7 +225,7 @@ const QuestManager = {
     var progress = this.activeQuests[questId];
     var quest = storyQuests ? storyQuests[questId] : null;
 
-    if (!progress || !quest || !quest.stages) return 0;
+    if (!progress || !quest?.stages) return 0;
 
     return Math.round((progress.currentStage / quest.stages.length) * 100);
   },

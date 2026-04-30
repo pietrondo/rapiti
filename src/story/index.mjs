@@ -1,337 +1,331 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                         STORY MODULE INDEX
+ *                         STORY MANAGER (ES6+ CLASS)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * Central hub for the modular story management system. Aggregates and exports
- * all story-related functionality including chapter management, quest system,
- * and the core story engine.
- *
- * This module serves as the main entry point for the story system,
- * extracted from the original monolithic StoryManager.js
- *
- * ═══════════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * StoryManager - Central narrative management system
+ * Central narrative management system with ES6+ class syntax.
  * Combines: ChapterManager, QuestManager, StoryEngine
  *
- * This is the main API that replaces the original StoryManager.js
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
-const StoryManager = {
-  /* ── SUBMODULE REFERENCES ── */
 
-  /** Chapter management */
-  chapters: typeof ChapterManager !== 'undefined' ? ChapterManager : null,
+class StoryManager {
+  constructor() {
+    /** Chapter management submodule */
+    this.chapters = typeof ChapterManager !== 'undefined' ? ChapterManager : null;
 
-  /** Quest management */
-  quests: typeof QuestManager !== 'undefined' ? QuestManager : null,
+    /** Quest management submodule */
+    this.quests = typeof QuestManager !== 'undefined' ? QuestManager : null;
 
-  /** Core story engine */
-  engine: typeof StoryEngine !== 'undefined' ? StoryEngine : null,
+    /** Core story engine submodule */
+    this.engine = typeof StoryEngine !== 'undefined' ? StoryEngine : null;
 
-  /* ── INITIALIZATION ── */
+    /** Version info */
+    this.version = '3.0.0-es6';
+    this.buildDate = new Date().toISOString();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // INITIALIZATION
+  // ═══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Initialize all story subsystems
    */
-  init: function () {
-    if (this.chapters) this.chapters.init();
-    if (this.quests) this.quests.init();
-    if (this.engine) this.engine.init();
+  init() {
+    this.chapters?.init();
+    this.quests?.init();
+    this.engine?.init();
 
     // Start from first chapter
-    if (this.chapters) {
-      this.chapters.startChapter('intro');
-    }
+    this.chapters?.startChapter('intro');
 
-    console.log('[StoryManager] Initialized');
-  },
+    console.log(`[StoryManager] Initialized v${this.version}`);
+  }
 
   /**
    * Reset all story state
    */
-  reset: function () {
-    if (this.chapters) this.chapters.reset();
-    if (this.quests) this.quests.reset();
-    if (this.engine) this.engine.reset();
+  reset() {
+    this.chapters?.reset();
+    this.quests?.reset();
+    this.engine?.reset();
 
     // Restart from intro
-    if (this.chapters) {
-      this.chapters.startChapter('intro');
-    }
-  },
+    this.chapters?.startChapter('intro');
+  }
 
-  /* ── DELEGATED API ── */
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // CHAPTER MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  // Chapter management
-  startChapter: function (chapterId) {
-    return this.chapters ? this.chapters.startChapter(chapterId) : false;
-  },
+  startChapter(chapterId) {
+    return this.chapters?.startChapter(chapterId) ?? false;
+  }
 
-  completeCurrentChapter: function () {
-    return this.chapters ? this.chapters.completeCurrentChapter() : false;
-  },
+  completeCurrentChapter() {
+    return this.chapters?.completeCurrentChapter() ?? false;
+  }
 
-  isChapterCompleted: function (chapterId) {
-    return this.chapters ? this.chapters.isChapterCompleted(chapterId) : false;
-  },
+  isChapterCompleted(chapterId) {
+    return this.chapters?.isChapterCompleted(chapterId) ?? false;
+  }
 
-  getCurrentChapter: function () {
-    return this.chapters ? this.chapters.getCurrentChapter() : null;
-  },
+  getCurrentChapter() {
+    return this.chapters?.getCurrentChapter() ?? null;
+  }
 
-  getChapterData: function () {
-    return this.chapters ? this.chapters.getChapterData() : null;
-  },
+  getChapterData() {
+    return this.chapters?.getChapterData() ?? null;
+  }
 
-  completeObjective: function (objectiveId) {
-    return this.chapters ? this.chapters.completeObjective(objectiveId) : false;
-  },
+  completeObjective(objectiveId) {
+    return this.chapters?.completeObjective(objectiveId) ?? false;
+  }
 
-  isObjectiveCompleted: function (chapterId, objectiveId) {
-    return this.chapters ? this.chapters.isObjectiveCompleted(chapterId, objectiveId) : false;
-  },
+  isObjectiveCompleted(chapterId, objectiveId) {
+    return this.chapters?.isObjectiveCompleted(chapterId, objectiveId) ?? false;
+  }
 
-  getCurrentObjectives: function () {
-    return this.chapters ? this.chapters.getCurrentObjectives() : [];
-  },
+  getCurrentObjectives() {
+    return this.chapters?.getCurrentObjectives() ?? [];
+  }
 
-  checkChapterCompletion: function () {
-    return this.chapters ? this.chapters.checkChapterCompletion() : false;
-  },
+  checkChapterCompletion() {
+    return this.chapters?.checkChapterCompletion() ?? false;
+  }
 
-  // Quest management
-  activateQuestsForChapter: function (chapterId) {
-    if (this.quests) {
-      this.quests.activateQuestsForChapter(chapterId);
-    }
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // QUEST MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  checkQuestProgress: function () {
+  activateQuestsForChapter(chapterId) {
+    this.quests?.activateQuestsForChapter(chapterId);
+  }
+
+  checkQuestProgress() {
     if (this.quests && this.engine) {
       this.quests.checkQuestProgress((condition) => this.engine.checkCondition(condition));
     }
-  },
+  }
 
-  completeQuest: function (questId) {
-    return this.quests ? this.quests.completeQuest(questId) : false;
-  },
+  completeQuest(questId) {
+    return this.quests?.completeQuest(questId) ?? false;
+  }
 
-  getActiveQuests: function () {
-    return this.quests ? this.quests.getActiveQuests() : [];
-  },
+  getActiveQuests() {
+    return this.quests?.getActiveQuests() ?? [];
+  }
 
-  applyReward: function (reward) {
-    if (this.quests) this.quests.applyReward(reward);
-  },
+  applyReward(reward) {
+    this.quests?.applyReward(reward);
+  }
 
-  // Flag management
-  setFlag: function (flagName, value) {
-    if (this.engine) {
-      this.engine.setFlag(flagName, value);
-      this.checkEvents();
-    }
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // FLAG MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  getFlag: function (flagName) {
-    return this.engine ? this.engine.getFlag(flagName) : undefined;
-  },
+  setFlag(flagName, value) {
+    this.engine?.setFlag(flagName, value);
+    this.checkEvents();
+  }
 
-  hasFlag: function (flagName) {
-    return this.engine ? this.engine.hasFlag(flagName) : false;
-  },
+  getFlag(flagName) {
+    return this.engine?.getFlag(flagName);
+  }
 
-  clearFlag: function (flagName) {
-    return this.engine ? this.engine.clearFlag(flagName) : false;
-  },
+  hasFlag(flagName) {
+    return this.engine?.hasFlag(flagName) ?? false;
+  }
 
-  // Dialogue system
-  getDialogueNodeForNPC: function (npcId) {
-    return this.engine ? this.engine.getDialogueNodeForNPC(npcId) : npcId + '_s0';
-  },
+  clearFlag(flagName) {
+    return this.engine?.clearFlag(flagName) ?? false;
+  }
 
-  onDialogueStarted: function (npcId) {
-    if (this.engine) {
-      this.engine.onDialogueStarted(npcId);
-      this.checkObjectivesForEvent('talkedTo', npcId);
-      this.checkQuestProgress();
-      this.checkEvents();
-    }
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // DIALOGUE SYSTEM
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  // Condition system
-  checkCondition: function (condition) {
-    return this.engine ? this.engine.checkCondition(condition) : true;
-  },
+  getDialogueNodeForNPC(npcId) {
+    return this.engine?.getDialogueNodeForNPC(npcId) ?? `${npcId}_s0`;
+  }
 
-  // Event system
-  checkEvents: function () {
-    if (this.engine) this.engine.checkEvents();
-  },
+  onDialogueStarted(npcId) {
+    this.engine?.onDialogueStarted(npcId);
+    this.checkObjectivesForEvent('talkedTo', npcId);
+    this.checkQuestProgress();
+    this.checkEvents();
+  }
 
-  triggerEvent: function (eventId) {
-    if (this.engine) this.engine.triggerEvent(eventId);
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // CONDITION SYSTEM
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  wasEventTriggered: function (eventId) {
-    return this.engine ? this.engine.wasEventTriggered(eventId) : false;
-  },
+  checkCondition(condition) {
+    return this.engine?.checkCondition(condition) ?? true;
+  }
 
-  // Ending system
-  determineEnding: function () {
-    return this.engine ? this.engine.determineEnding() : null;
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // EVENT SYSTEM
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  // Statistics tracking
-  onAreaVisited: function (areaId) {
-    if (this.engine) {
-      this.engine.onAreaVisited(areaId);
-      this.checkObjectivesForEvent('visitedArea', areaId);
-      this.checkQuestProgress();
-      this.checkEvents();
-    }
-  },
+  checkEvents() {
+    this.engine?.checkEvents();
+  }
 
-  onClueFound: function (clueId) {
-    if (this.engine) {
-      this.engine.onClueFound(clueId);
-      this.checkObjectivesForEvent('cluesFound', clueId);
-      this.checkQuestProgress();
-      this.checkEvents();
-    }
-  },
+  triggerEvent(eventId) {
+    this.engine?.triggerEvent(eventId);
+  }
 
-  onPuzzleSolved: function (puzzleId) {
-    if (this.engine) {
-      this.engine.onPuzzleSolved(puzzleId);
-      this.checkQuestProgress();
-      this.checkEvents();
-    }
-  },
+  wasEventTriggered(eventId) {
+    return this.engine?.wasEventTriggered(eventId) ?? false;
+  }
 
-  getStats: function () {
-    return this.engine ? this.engine.getStats() : {};
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // ENDING SYSTEM
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  // Objective checking helper
-  checkObjectivesForEvent: function (eventType, target) {
-    if (!this.chapters || !this.chapters.currentChapter) return;
+  determineEnding() {
+    return this.engine?.determineEnding() ?? null;
+  }
 
-    var chapter = storyChapters ? storyChapters[this.chapters.currentChapter] : null;
-    if (!chapter || !chapter.objectives) return;
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // STATISTICS TRACKING
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-    for (var i = 0; i < chapter.objectives.length; i++) {
-      var obj = chapter.objectives[i];
+  onAreaVisited(areaId) {
+    this.engine?.onAreaVisited(areaId);
+    this.checkObjectivesForEvent('visitedArea', areaId);
+    this.checkQuestProgress();
+    this.checkEvents();
+  }
 
+  onClueFound(clueId) {
+    this.engine?.onClueFound(clueId);
+    this.checkObjectivesForEvent('cluesFound', clueId);
+    this.checkQuestProgress();
+    this.checkEvents();
+  }
+
+  onPuzzleSolved(puzzleId) {
+    this.engine?.onPuzzleSolved(puzzleId);
+    this.checkQuestProgress();
+    this.checkEvents();
+  }
+
+  getStats() {
+    return this.engine?.getStats() ?? {};
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // OBJECTIVE CHECKING HELPER
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  checkObjectivesForEvent(eventType, target) {
+    if (!this.chapters?.currentChapter) return;
+
+    const chapter = storyChapters?.[this.chapters.currentChapter];
+    if (!chapter?.objectives) return;
+
+    for (const obj of chapter.objectives) {
       if (obj.condition) {
         if (eventType === 'talkedTo' && obj.condition.talkedTo === target) {
           this.completeObjective(obj.id);
         }
         if (eventType === 'talkedToCount' && obj.condition.talkedToCount) {
-          var count = Object.keys(this.engine.stats.talkedTo).length;
+          const count = Object.keys(this.engine?.stats?.talkedTo ?? {}).length;
           if (count >= obj.condition.talkedToCount) {
             this.completeObjective(obj.id);
           }
         }
       }
     }
-  },
+  }
 
-  // Achievement system
-  unlockAchievement: function (achievementId) {
-    return this.engine ? this.engine.unlockAchievement(achievementId) : false;
-  },
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // ACHIEVEMENTS
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  hasAchievement: function (achievementId) {
-    return this.engine ? this.engine.hasAchievement(achievementId) : false;
-  },
+  unlockAchievement(achievementId) {
+    return this.engine?.unlockAchievement(achievementId) ?? false;
+  }
 
-  getUnlockedAchievements: function () {
-    return this.engine ? this.engine.getUnlockedAchievements() : [];
-  },
+  hasAchievement(achievementId) {
+    return this.engine?.hasAchievement(achievementId) ?? false;
+  }
 
-  /* ── SERIALIZATION ── */
+  getUnlockedAchievements() {
+    return this.engine?.getUnlockedAchievements() ?? [];
+  }
 
-  /**
-   * Export state for saving
-   * @returns {Object} Serialized state
-   */
-  serialize: function () {
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // SERIALIZATION
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  serialize() {
     return {
-      chapters: this.chapters ? this.chapters.serialize() : {},
-      quests: this.quests ? this.quests.serialize() : {},
-      engine: this.engine ? this.engine.serialize() : {},
+      chapters: this.chapters?.serialize() ?? {},
+      quests: this.quests?.serialize() ?? {},
+      engine: this.engine?.serialize() ?? {},
     };
-  },
+  }
 
-  /**
-   * Load state from save
-   * @param {Object} data - Serialized state
-   * @returns {boolean} Success status
-   */
-  deserialize: function (data) {
+  deserialize(data) {
     if (!data) return false;
 
-    if (this.chapters) this.chapters.deserialize(data.chapters);
-    if (this.quests) this.quests.deserialize(data.quests);
-    if (this.engine) this.engine.deserialize(data.engine);
+    this.chapters?.deserialize(data.chapters);
+    this.quests?.deserialize(data.quests);
+    this.engine?.deserialize(data.engine);
 
     return true;
-  },
+  }
 
-  /* ── UTILITY ── */
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // UTILITY
+  // ═══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Get complete story status summary
    * @returns {Object} Status summary
    */
-  getStatus: function () {
+  getStatus() {
     return {
-      currentChapter: this.chapters ? this.chapters.getCurrentChapterId() : null,
-      chapterProgress: this.chapters ? this.chapters.getChapterProgress() : 0,
+      currentChapter: this.chapters?.getCurrentChapterId() ?? null,
+      chapterProgress: this.chapters?.getChapterProgress() ?? 0,
       objectives: this.getCurrentObjectives(),
       activeQuests: this.getActiveQuests(),
-      completedQuests: this.quests ? this.quests.getCompletedQuestCount() : 0,
-      flags: this.engine ? this.engine.getAllFlags() : {},
+      completedQuests: this.quests?.getCompletedQuestCount() ?? 0,
+      flags: this.engine?.getAllFlags() ?? {},
       stats: this.getStats(),
       achievements: this.getUnlockedAchievements(),
     };
-  },
-
-  /**
-   * Version info
-   */
-  version: '2.0.0-modular',
-  buildDate: new Date().toISOString(),
-};
-
-/* ── GLOBAL UTILITY FUNCTIONS ── */
-
-/**
- * Initialize StoryManager
- */
-export function initStoryManager() {
-  StoryManager.init();
+  }
 }
 
-/**
- * Reset StoryManager
- */
+// ═══════════════════════════════════════════════════════════════════════════════
+// SINGLETON INSTANCE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const storyManager = new StoryManager();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GLOBAL UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export function initStoryManager() {
+  storyManager.init();
+}
+
 export function resetStoryManager() {
-  StoryManager.reset();
+  storyManager.reset();
 }
 
 // Global exports
 if (typeof window !== 'undefined') {
-  window.StoryManager = StoryManager;
+  window.StoryManager = storyManager;
   window.initStoryManager = initStoryManager;
   window.resetStoryManager = resetStoryManager;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StoryManager;
-}
-
-export default StoryManager;
+export { StoryManager, storyManager };
+export default storyManager;

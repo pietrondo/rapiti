@@ -63,7 +63,7 @@ UITransitions.prototype.draw = function (ctx) {
     ctx.arc(window.CANVAS_W / 2, window.CANVAS_H / 2, radius, 0, Math.PI * 2);
     ctx.fill();
   } else {
-    ctx.fillStyle = 'rgba(0,0,0,' + alpha + ')';
+    ctx.fillStyle = `rgba(0,0,0,${alpha})`;
     ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
   }
   ctx.restore();

@@ -55,7 +55,7 @@ export function openRegistryPuzzle() {
   // Reset slots
   var slots = document.querySelectorAll('.registry-slot');
   for (var s = 0; s < slots.length; s++) {
-    slots[s].innerHTML = s + 1 + '° Scomparso';
+    slots[s].innerHTML = `${s + 1}° Scomparso`;
     slots[s].classList.remove('filled');
     slots[s].removeAttribute('data-placed-year');
   }
@@ -96,8 +96,8 @@ export function setupRegistry() {
           allSlots[j].removeAttribute('data-placed-year');
           allSlots[j].classList.remove('filled');
           allSlots[j].innerHTML =
-            parseInt(allSlots[j].getAttribute('data-slot')) + 1 + '° Scomparso';
-          var oldPage = document.querySelector('.registry-page[data-year="' + year + '"]');
+            `${parseInt(allSlots[j].getAttribute('data-slot'), 10) + 1}° Scomparso`;
+          var oldPage = document.querySelector(`.registry-page[data-year="${year}"]`);
           if (oldPage) {
             oldPage.classList.remove('placed');
             oldPage.draggable = true;
@@ -107,7 +107,7 @@ export function setupRegistry() {
       // Free current slot if occupied
       if (s.getAttribute('data-placed-year')) {
         var oldY = s.getAttribute('data-placed-year');
-        var oldP = document.querySelector('.registry-page[data-year="' + oldY + '"]');
+        var oldP = document.querySelector(`.registry-page[data-year="${oldY}"]`);
         if (oldP) {
           oldP.classList.remove('placed');
           oldP.draggable = true;
@@ -122,7 +122,7 @@ export function setupRegistry() {
         '</span><span class="reg-detail">' +
         match.detail +
         '</span>';
-      var page = document.querySelector('.registry-page[data-year="' + year + '"]');
+      var page = document.querySelector(`.registry-page[data-year="${year}"]`);
       if (page) {
         page.classList.add('placed');
         page.draggable = false;

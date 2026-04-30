@@ -2,8 +2,18 @@
  * Tests for Configuration Module
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
-import { PALETTE, CANVAS_W, CANVAS_H, PLAYER_SPEED, PLAYER_W, PLAYER_H, gameState, resetGameState, VERSION } from '../src/config.mjs';
+import { beforeEach, describe, expect, it } from '@jest/globals';
+import {
+  CANVAS_H,
+  CANVAS_W,
+  gameState,
+  PALETTE,
+  PLAYER_H,
+  PLAYER_SPEED,
+  PLAYER_W,
+  resetGameState,
+  VERSION,
+} from '../src/config.mjs';
 
 describe('Configuration Module', () => {
   describe('PALETTE', () => {
@@ -103,9 +113,9 @@ describe('Configuration Module', () => {
       gameState.cluesFound.push('test-clue');
       gameState.gamePhase = 'playing';
       gameState.puzzleSolved = true;
-      
+
       resetGameState();
-      
+
       expect(gameState.cluesFound).toEqual([]);
       expect(gameState.gamePhase).toBe('title');
       expect(gameState.puzzleSolved).toBe(false);
@@ -114,9 +124,9 @@ describe('Configuration Module', () => {
     it('should reset player position', () => {
       gameState.player.x = 999;
       gameState.player.y = 999;
-      
+
       resetGameState();
-      
+
       expect(gameState.player.x).toBe(195);
       expect(gameState.player.y).toBe(188);
     });
@@ -124,9 +134,9 @@ describe('Configuration Module', () => {
     it('should reset NPC states', () => {
       gameState.npcStates.ruggeri = 2;
       gameState.npcStates.teresa = 1;
-      
+
       resetGameState();
-      
+
       expect(gameState.npcStates.ruggeri).toBe(0);
       expect(gameState.npcStates.teresa).toBe(0);
     });

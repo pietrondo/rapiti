@@ -48,7 +48,7 @@ LightingSystem.prototype.draw = function (ctx) {
     var gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius);
 
     var alpha = 0.4 * light.intensity;
-    gradient.addColorStop(0, light.color.replace(')', ', ' + alpha + ')').replace('rgb', 'rgba'));
+    gradient.addColorStop(0, light.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba'));
     gradient.addColorStop(1, 'transparent');
 
     ctx.fillStyle = gradient;
@@ -111,7 +111,7 @@ TorchSystem.prototype.setPosition = function (x, y, angle) {
   this.active = true;
 };
 
-TorchSystem.prototype.update = function (dt) {
+TorchSystem.prototype.update = function (_dt) {
   // Flicker casuale
   this.flicker = 0.9 + Math.random() * 0.2;
 };
@@ -183,7 +183,7 @@ ShadowSystem.prototype.setLightSource = function (x, y) {
   this.lightSource = { x: x, y: y };
 };
 
-ShadowSystem.prototype.update = function (dt) {
+ShadowSystem.prototype.update = function (_dt) {
   // Movimento luce per simulare giorno
   this.lightSource.x = 200 + Math.sin(Date.now() / 10000) * 150;
 };

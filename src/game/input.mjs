@@ -115,25 +115,25 @@ export function updatePlayerPosition() {
   var dx = 0,
     dy = 0;
   var k = gameState.keys;
-  if (k['w'] || k['W'] || k['ArrowUp']) {
+  if (k.w || k.W || k.ArrowUp) {
     dy = -PLAYER_SPEED;
     p.dir = 'up';
   }
-  if (k['s'] || k['S'] || k['ArrowDown']) {
+  if (k.s || k.S || k.ArrowDown) {
     dy = PLAYER_SPEED;
     p.dir = 'down';
   }
-  if (k['a'] || k['A'] || k['ArrowLeft']) {
+  if (k.a || k.A || k.ArrowLeft) {
     dx = -PLAYER_SPEED;
     p.dir = 'left';
   }
-  if (k['d'] || k['D'] || k['ArrowRight']) {
+  if (k.d || k.D || k.ArrowRight) {
     dx = PLAYER_SPEED;
     p.dir = 'right';
   }
   if (dx !== 0 && dy !== 0) {
-    dx *= 0.707;
-    dy *= 0.707;
+    dx *= Math.SQRT1_2;
+    dy *= Math.SQRT1_2;
   }
   var nx = p.x + dx,
     ny = p.y + dy;
@@ -313,7 +313,7 @@ export function collectClue(obj) {
 
   updateHUD();
   var c = cluesMap[obj.id];
-  showToast('Hai raccolto: ' + c.name);
+  showToast(`Hai raccolto: ${c.name}`);
   // Effetti visivi quando si raccoglie un indizio
   var px = gameState.player.x + gameState.player.w / 2;
   var py = gameState.player.y + gameState.player.h / 2;
@@ -347,7 +347,7 @@ export function openJournal() {
     var c = clues[i];
     var found = gameState.cluesFound.indexOf(c.id) >= 0;
     var div = document.createElement('div');
-    div.className = 'clue-item' + (found ? ' found' : '');
+    div.className = `clue-item${found ? ' found' : ''}`;
     div.innerHTML =
       '<strong>' +
       (found ? '✓ ' : '? ') +
@@ -356,9 +356,7 @@ export function openJournal() {
       '<div class="clue-status">' +
       (found ? 'RACCOLTO' : 'Non ancora trovato') +
       '</div>' +
-      (found
-        ? '<div style="margin-top:4px;font-size:12px;color:#a0a8b0">' + c.desc + '</div>'
-        : '');
+      (found ? `<div style="margin-top:4px;font-size:12px;color:#a0a8b0">${c.desc}</div>` : '');
     content.appendChild(div);
   }
   document.getElementById('journal-overlay').classList.add('active');

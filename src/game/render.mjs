@@ -4,13 +4,13 @@
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 // Re-export from modules for backward compatibility
-var spriteCache = SpriteManager
+var _spriteCache = SpriteManager
   ? SpriteManager.spriteCache
   : { player: null, playerColors: null, npcs: {} };
-var animState = SpriteManager
+var _animState = SpriteManager
   ? SpriteManager.animState
   : { playerFrame: 0, playerTimer: 0, isMoving: false, lastX: 0, lastY: 0 };
-var VISUAL = UIRenderer
+var _VISUAL = UIRenderer
   ? UIRenderer.VISUAL
   : {
       ink: '#0B0C12',

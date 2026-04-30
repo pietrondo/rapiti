@@ -13,7 +13,7 @@ export function startDialogue(npcId) {
 
   // Fallback se il nodo non esiste
   if (!node) {
-    node = dialogueNodes[npcId + '_s0'];
+    node = dialogueNodes[`${npcId}_s0`];
   }
 
   gameState.dialogueTree = node;
@@ -63,7 +63,7 @@ export function renderDialogueHTML() {
       var ch = node.choices[i];
       var btn = document.createElement('button');
       btn.className = 'choice-btn';
-      btn.textContent = i + 1 + '. ' + ch.text;
+      btn.textContent = `${i + 1}. ${ch.text}`;
       btn.addEventListener(
         'click',
         ((idx) => () => {
@@ -83,7 +83,7 @@ export function renderDialogueHTML() {
 
 export function selectDialogueChoice(index) {
   var node = gameState.dialogueTree;
-  if (!node || !node.choices || index >= node.choices.length) return;
+  if (!node?.choices || index >= node.choices.length) return;
   var ch = node.choices[index];
   if (ch.effect) applyDialogueEffect(ch.effect);
   if (ch.next) {
@@ -119,7 +119,7 @@ export function applyDialogueEffect(effect) {
       if (action && dialogueEffects[action]) dialogueEffects[action]();
       else {
         updateHUD();
-        showToast('Hai raccolto: ' + cluesMap[cid].name);
+        showToast(`Hai raccolto: ${cluesMap[cid].name}`);
       }
     }
   }

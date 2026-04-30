@@ -20,8 +20,8 @@ const sceneElements = [
   },
 ];
 
-const sceneFound = [];
-var sceneSolved = false;
+let sceneFound = [];
+var _sceneSolved = false;
 
 export function openScenePuzzle() {
   if (gameState.gamePhase !== 'playing') return;
@@ -37,7 +37,7 @@ export function openScenePuzzle() {
       sceneFound.push(sceneElements[i]);
       var el = document.createElement('div');
       el.style.cssText = 'color:#44cc44;font-size:12px;margin:4px 0';
-      el.textContent = '✓ ' + sceneElements[i].name;
+      el.textContent = `✓ ${sceneElements[i].name}`;
       foundDiv.appendChild(el);
     }
   }
@@ -81,7 +81,7 @@ export function checkScene() {
   var correct = s1 === 'scena_lanterna' && s2 === 'scena_impronte' && s3 === 'scena_segni';
   var result = document.getElementById('scene-result');
   if (correct) {
-    sceneSolved = true;
+    _sceneSolved = true;
     result.textContent = '✓ Elena non stava scappando. Stava tornando verso qualcosa.';
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;

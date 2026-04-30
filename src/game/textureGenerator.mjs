@@ -2,7 +2,7 @@
  * Texture Generator for EarthBound-style backgrounds
  * Creates detailed 16x16 or 32x32 tile textures for walls, floors, etc.
  */
-const TextureGenerator = {
+const _TextureGenerator = {
   /**
    * Generate brick wall texture (EarthBound style)
    * @param {number} width - Width in pixels

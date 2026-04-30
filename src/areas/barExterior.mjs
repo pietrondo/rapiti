@@ -30,7 +30,7 @@ export function drawBarExteriorArea(ctx, t) {
   var neon = 0.62 + Math.sin(t * 4) * 0.28;
   ctx.fillStyle = 'rgba(110,18,18,0.72)';
   ctx.fillRect(120, 40, 160, 25);
-  ctx.fillStyle = 'rgba(220,54,42,' + neon.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(220,54,42,${neon.toFixed(2)})`;
   ctx.fillRect(124, 44, 152, 17);
   ctx.fillStyle = PALETTE.creamPaper;
   ctx.font = 'bold 11px "Courier New",monospace';
@@ -46,9 +46,9 @@ export function drawBarExteriorArea(ctx, t) {
   ctx.fillRect(112, 70, 34, 42);
   ctx.fillRect(226, 70, 34, 42);
 
-  ctx.fillStyle = 'rgba(212,168,67,' + glow1.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(212,168,67,${glow1.toFixed(2)})`;
   ctx.fillRect(115, 73, 28, 36);
-  ctx.fillStyle = 'rgba(212,168,67,' + glow2.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(212,168,67,${glow2.toFixed(2)})`;
   ctx.fillRect(229, 73, 28, 36);
 
   // Porta

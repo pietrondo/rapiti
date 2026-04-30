@@ -115,13 +115,13 @@ FireflySystem.prototype.draw = function (ctx) {
     var f = this.fireflies[i];
     var glow = 0.3 + Math.sin(f.phase) * 0.3;
 
-    ctx.fillStyle = 'rgba(200, 255, 100, ' + glow + ')';
+    ctx.fillStyle = `rgba(200, 255, 100, ${glow})`;
     ctx.beginPath();
     ctx.arc(f.x, f.y, 2, 0, Math.PI * 2);
     ctx.fill();
 
     // Alone
-    ctx.fillStyle = 'rgba(200, 255, 100, ' + glow * 0.3 + ')';
+    ctx.fillStyle = `rgba(200, 255, 100, ${glow * 0.3})`;
     ctx.beginPath();
     ctx.arc(f.x, f.y, 6, 0, Math.PI * 2);
     ctx.fill();
@@ -178,7 +178,7 @@ DustSystem.prototype.draw = function (ctx) {
   ctx.save();
   for (var i = 0; i < this.particles.length; i++) {
     var p = this.particles[i];
-    ctx.fillStyle = 'rgba(200, 200, 180, ' + p.alpha + ')';
+    ctx.fillStyle = `rgba(200, 200, 180, ${p.alpha})`;
     ctx.fillRect(p.x, p.y, p.size, p.size);
   }
   ctx.restore();

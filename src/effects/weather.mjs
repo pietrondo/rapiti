@@ -111,7 +111,7 @@ WeatherSystem.prototype.draw = function (ctx) {
 
   // Flash fulmine
   if (this.screenFlash > 0) {
-    ctx.fillStyle = 'rgba(255, 255, 255, ' + this.screenFlash * 0.8 + ')';
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.screenFlash * 0.8})`;
     ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
   }
 

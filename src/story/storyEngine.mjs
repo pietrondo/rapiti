@@ -116,7 +116,7 @@ const StoryEngine = {
     var trigger = storyDialogueTriggers ? storyDialogueTriggers[npcId] : null;
     if (!trigger) {
       console.warn('[StoryEngine] No dialogue trigger for NPC:', npcId);
-      return npcId + '_s0';
+      return `${npcId}_s0`;
     }
 
     // Find matching state
@@ -129,7 +129,7 @@ const StoryEngine = {
       }
     }
 
-    return trigger.defaultNode || npcId + '_s0';
+    return trigger.defaultNode || `${npcId}_s0`;
   },
 
   /**
@@ -391,7 +391,7 @@ const StoryEngine = {
    * Register clue found
    * @param {string} clueId - Clue identifier
    */
-  onClueFound: function (clueId) {
+  onClueFound: function (_clueId) {
     this.stats.cluesFound++;
   },
 

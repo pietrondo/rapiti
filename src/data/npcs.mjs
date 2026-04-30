@@ -3,7 +3,7 @@
    ══════════════════════════════════════════════════════════════ */
 
 /** Dati visivi NPC */
-const npcsData = [
+const _npcsData = [
   {
     id: 'ruggeri',
     name: 'Sindaco Ruggeri',
@@ -55,7 +55,7 @@ const npcsData = [
 ];
 
 /** Albero dialoghi — tutti i nodi di conversazione */
-const dialogueNodes = {
+const _dialogueNodes = {
   /* ── SINDACO RUGGERI ── */
   ruggeri_s0: {
     text: 'Benvenuto a San Celeste, ispettore. Sono il sindaco Ruggeri. La situazione è sotto controllo... solo superstizioni popolari.',
@@ -391,7 +391,7 @@ const dialogueNodes = {
 };
 
 /** Effetti dei dialoghi applicati dopo la scelta */
-const dialogueEffects = {
+const _dialogueEffects = {
   hint_chiesa: () => {
     showToast('Il Sindaco ha parlato della Chiesa.');
   },

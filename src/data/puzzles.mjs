@@ -2,7 +2,7 @@
    REGISTRY PUZZLE DATA
    ══════════════════════════════════════════════════════════════ */
 
-const registryData = [
+const _registryData = [
   {
     year: '1952',
     detail:

@@ -2,7 +2,7 @@
  * Tests for Puzzle Validation Module
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { gameState, resetGameState } from '../src/config.mjs';
 
 // Setup globals before importing modules
@@ -15,7 +15,7 @@ global.cluesMap = {
 };
 
 global.StoryManager = {
-  onPuzzleSolved: jest.fn()
+  onPuzzleSolved: jest.fn(),
 };
 
 // Shared mock elements
@@ -95,6 +95,4 @@ describe('Puzzle Validation', () => {
       expect(canOpenDeduction()).toBe(true);
     });
   });
-
-
 });

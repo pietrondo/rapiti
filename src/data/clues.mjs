@@ -73,7 +73,7 @@ clues.forEach((c) => {
 });
 
 /** Oggetti interattivi nelle aree — posizione su canvas 400×250 */
-const areaObjects = {
+const _areaObjects = {
   piazze: [
     { id: 'mappa_campi', x: 94, y: 151, w: 18, h: 14, type: 'clue', drawHint: true },
     {

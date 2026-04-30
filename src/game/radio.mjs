@@ -53,8 +53,8 @@ export function updateRadioKnob(pct) {
   var knob = document.getElementById('radio-knob');
   var fill = document.getElementById('radio-fill');
   if (!knob) return;
-  knob.style.left = pct + '%';
-  if (fill) fill.style.width = pct + '%';
+  knob.style.left = `${pct}%`;
+  if (fill) fill.style.width = `${pct}%`;
   document.getElementById('radio-value').textContent = (pct / 10).toFixed(1);
 
   // Status: 0-69 static, 70-74 interference, 75+ clear

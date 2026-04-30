@@ -80,13 +80,13 @@ export function setupDragDrop() {
         }
       }
       if (s.getAttribute('data-placed-clue')) {
-        var oldId = s.getAttribute('data-placed-clue');
+        var _oldId = s.getAttribute('data-placed-clue');
         s.removeAttribute('data-placed-clue');
       }
       var c = cluesMap[clueId];
       s.setAttribute('data-placed-clue', clueId);
       s.classList.add('filled');
-      s.innerHTML = '✓ ' + c.name;
+      s.innerHTML = `✓ ${c.name}`;
       updateDeductionConfirmButton();
     });
   }

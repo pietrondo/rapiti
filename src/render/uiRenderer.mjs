@@ -66,9 +66,9 @@ export function drawPrompt(ctx, text, x, y) {
   var tw = ctx.measureText(text).width + 24;
   ctx.fillStyle = 'rgba(10,11,18,0.78)';
   ctx.fillRect(x - tw / 2, y - 10, tw, 16);
-  ctx.strokeStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+  ctx.strokeStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
   ctx.strokeRect(x - tw / 2 + 1, y - 9, tw - 2, 14);
-  ctx.fillStyle = 'rgba(232,220,200,' + alpha.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(232,220,200,${alpha.toFixed(2)})`;
   ctx.fillText(text, x, y + 2);
 }
 
@@ -141,7 +141,7 @@ export function drawObjectIcon(ctx, o) {
   var cx = Math.round(o.x + o.w / 2);
   var cy = Math.round(o.y + o.h / 2);
   var pulse = Math.sin(Date.now() * 0.005) * 0.25 + 0.55;
-  ctx.fillStyle = 'rgba(212,168,67,' + (pulse * 0.22).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(212,168,67,${(pulse * 0.22).toFixed(2)})`;
   ctx.beginPath();
   ctx.arc(cx, cy, 13, 0, Math.PI * 2);
   ctx.fill();
@@ -256,7 +256,7 @@ export function drawArrow(ctx, dir, x, y) {
 }
 
 export function renderAreaExitMarkers(ctx, area) {
-  if (!area || !area.exits) return;
+  if (!area?.exits) return;
   var tick = Date.now() * 0.006;
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
@@ -268,22 +268,22 @@ export function renderAreaExitMarkers(ctx, area) {
     var alpha = 0.2 + Math.sin(tick + i) * 0.08;
 
     if (ex.dir === 'up') {
-      ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
       ctx.fillRect(ex.xRange[0], area.walkableTop - 2, ex.xRange[1] - ex.xRange[0], 8);
       y = area.walkableTop + 62;
     } else if (ex.dir === 'down') {
-      ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
       ctx.fillRect(ex.xRange[0], CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
       y = CANVAS_H - 18;
     } else if (ex.dir === 'left') {
       x = 36;
       y = mid;
-      ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
       ctx.fillRect(0, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     } else {
       x = CANVAS_W - 36;
       y = mid;
-      ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
       ctx.fillRect(CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     }
 
@@ -352,7 +352,7 @@ export function drawMapLink(ctx, nodes, ox, oy, a, b) {
 }
 
 export function renderFade(ctx) {
-  ctx.fillStyle = 'rgba(0,0,0,' + (gameState.fadeAlpha / 100).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(0,0,0,${(gameState.fadeAlpha / 100).toFixed(2)})`;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 }
 

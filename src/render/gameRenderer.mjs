@@ -82,7 +82,7 @@ export function renderArea(ctx) {
     }
     if (o.type === 'radio') {
       var pulse = Math.sin(Date.now() * 0.006) * 0.3 + 0.5;
-      ctx.fillStyle = 'rgba(212,168,67,' + pulse.toFixed(2) + ')';
+      ctx.fillStyle = `rgba(212,168,67,${pulse.toFixed(2)})`;
       ctx.beginPath();
       ctx.arc(o.x + o.w / 2, o.y + o.h / 2, 13, 0, Math.PI * 2);
       ctx.fill();
@@ -101,7 +101,7 @@ export function renderArea(ctx) {
     }
     if (o.type === 'recorder') {
       var rp = Math.sin(Date.now() * 0.005) * 0.25 + 0.55;
-      ctx.fillStyle = 'rgba(145,183,255,' + (rp * 0.2).toFixed(2) + ')';
+      ctx.fillStyle = `rgba(145,183,255,${(rp * 0.2).toFixed(2)})`;
       ctx.beginPath();
       ctx.arc(o.x + o.w / 2, o.y + o.h / 2, 17, 0, Math.PI * 2);
       ctx.fill();
@@ -169,7 +169,7 @@ export function renderPlayer(ctx) {
 }
 
 // Legacy drawSprite (kept for fallback)
-export function drawSprite(ctx, cx, cy, colors, details, type, dir) {
+export function drawSprite(ctx, cx, cy, colors, _details, type, dir) {
   var s = type === 'player' ? 1 : 0.85;
   dir = dir || 'down';
   var isLeft = dir === 'left';
@@ -223,7 +223,7 @@ export function renderInteractionHint(ctx) {
   else if (t.type === 'scene') label = 'Esamina';
   else if (t.type === 'gatto') label = 'Accarezza';
   ctx.font = '8px "Courier New",monospace';
-  var text = '[E] ' + label;
+  var text = `[E] ${label}`;
   var w = ctx.measureText(text).width + 18;
   ctx.fillStyle = 'rgba(8,9,14,0.86)';
   ctx.fillRect(px - w / 2, py - 13, w, 16);

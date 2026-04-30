@@ -108,7 +108,7 @@ const StoryManager = {
 
     // Notifica
     if (typeof showToast === 'function') {
-      showToast('Capitolo: ' + chapter.title);
+      showToast(`Capitolo: ${chapter.title}`);
     }
 
     return true;
@@ -306,7 +306,7 @@ const StoryManager = {
       var quest = storyQuests[questId];
       var progress = this.activeQuests[questId];
 
-      if (!quest || !quest.stages) continue;
+      if (!quest?.stages) continue;
 
       var currentStage = quest.stages[progress.currentStage];
       if (!currentStage) continue;
@@ -339,7 +339,7 @@ const StoryManager = {
     this.completedQuests.push(questId);
 
     var quest = storyQuests[questId];
-    if (quest && quest.onComplete) {
+    if (quest?.onComplete) {
       if (quest.onComplete.message && typeof showToast === 'function') {
         showToast(quest.onComplete.message);
       }
@@ -381,7 +381,7 @@ const StoryManager = {
     var trigger = storyDialogueTriggers[npcId];
     if (!trigger) {
       console.warn('[StoryManager] Nessun trigger per NPC:', npcId);
-      return npcId + '_s0';
+      return `${npcId}_s0`;
     }
 
     // Cerca lo stato che corrisponde alle condizioni attuali
@@ -536,7 +536,7 @@ const StoryManager = {
     if (!this.currentChapter) return;
 
     var chapter = storyChapters[this.currentChapter];
-    if (!chapter || !chapter.objectives) return;
+    if (!chapter?.objectives) return;
 
     for (var i = 0; i < chapter.objectives.length; i++) {
       var obj = chapter.objectives[i];

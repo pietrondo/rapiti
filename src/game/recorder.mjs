@@ -63,7 +63,7 @@ export function buildRecorderOverlay() {
 
   // Cable buttons
   ['r', 'b', 'g'].forEach((color) => {
-    var btn = document.getElementById('rec-cable-' + color);
+    var btn = document.getElementById(`rec-cable-${color}`);
     btn.addEventListener('click', () => {
       var ci = color === 'r' ? 0 : color === 'b' ? 1 : 2;
       recorderState.cables[ci] = !recorderState.cables[ci];
@@ -74,7 +74,7 @@ export function buildRecorderOverlay() {
   // Bobin buttons
   [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), (btn) => {
     btn.addEventListener('click', function () {
-      var bi = parseInt(this.getAttribute('data-bobin'));
+      var bi = parseInt(this.getAttribute('data-bobin'), 10);
       recorderState.bobin = recorderState.bobin === bi ? -1 : bi;
       refreshRecorderUI();
     });
@@ -91,7 +91,7 @@ export function refreshRecorderUI() {
   var rs = recorderState;
   // Cable buttons
   ['r', 'b', 'g'].forEach((color, ci) => {
-    var btn = document.getElementById('rec-cable-' + color);
+    var btn = document.getElementById(`rec-cable-${color}`);
     btn.style.border = rs.cables[ci] ? '3px solid #d4a843' : '3px solid transparent';
     btn.textContent = rs.cables[ci]
       ? color === 'r'
@@ -108,7 +108,7 @@ export function refreshRecorderUI() {
 
   // Bobin buttons
   [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), (btn) => {
-    var bi = parseInt(btn.getAttribute('data-bobin'));
+    var bi = parseInt(btn.getAttribute('data-bobin'), 10);
     btn.style.background = rs.bobin === bi ? '#d4a843' : '#2d3047';
     btn.style.color = rs.bobin === bi ? '#1a1c20' : '#e8dcc8';
   });

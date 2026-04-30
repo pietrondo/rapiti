@@ -34,10 +34,10 @@ const Engine = {
    * Initialize all engine subsystems
    */
   init: function () {
-    if (this.SpriteEngine && this.SpriteEngine.init) {
+    if (this.SpriteEngine?.init) {
       this.SpriteEngine.init();
     }
-    if (this.ProceduralRenderer && this.ProceduralRenderer.init) {
+    if (this.ProceduralRenderer?.init) {
       this.ProceduralRenderer.init();
     }
   },
@@ -104,7 +104,7 @@ const Engine = {
         this.BuildingRenderers.drawFountain(ctx, x, y, width);
         break;
       case 'lamp':
-        this.BuildingRenderers.drawStreetLamp(ctx, x, y, options && options.isOn);
+        this.BuildingRenderers.drawStreetLamp(ctx, x, y, options?.isOn);
         break;
     }
   },
@@ -327,7 +327,7 @@ const Engine = {
    */
   perfStart: (label) => {
     if (typeof performance !== 'undefined' && performance.mark) {
-      performance.mark(label + '-start');
+      performance.mark(`${label}-start`);
     }
   },
 
@@ -337,8 +337,8 @@ const Engine = {
    */
   perfEnd: (label) => {
     if (typeof performance !== 'undefined' && performance.mark) {
-      performance.mark(label + '-end');
-      performance.measure(label, label + '-start', label + '-end');
+      performance.mark(`${label}-end`);
+      performance.measure(label, `${label}-start`, `${label}-end`);
     }
   },
 

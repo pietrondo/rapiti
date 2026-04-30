@@ -42,7 +42,7 @@ const Areas = {
   init: function () {
     var all = this.getAll();
     for (var i = 0; i < all.length; i++) {
-      if (all[i] && all[i].init) {
+      if (all[i]?.init) {
         all[i].init();
       }
     }

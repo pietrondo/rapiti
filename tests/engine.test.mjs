@@ -2,7 +2,7 @@
  * Tests for Engine Module
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { Engine, engine } from '../src/engine/index.mjs';
 
 describe('Engine Module', () => {

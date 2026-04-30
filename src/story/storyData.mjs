@@ -238,7 +238,7 @@ const storyQuests = {
       {
         id: 'find_scene_elements',
         description: 'Trova tutti gli elementi della scena',
-        condition: { hasClue: 'scena_lanterna', hasClue: 'scena_impronte', hasClue: 'scena_segni' },
+        condition: { hasClue: 'scena_segni' },
         reward: { setFlag: 'scene_elements_complete' },
       },
       {

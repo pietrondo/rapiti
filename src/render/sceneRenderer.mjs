@@ -45,15 +45,15 @@ export function renderPrologueCutscene(ctx) {
   if (step >= 2) {
     var pulse = Math.sin(t * 4) * 0.3 + 0.7;
     var glowIntensity = Math.min(1, (step - 2) * 0.5 + pulse * 0.3);
-    ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.6).toFixed(2) + ')';
+    ctx.fillStyle = `rgba(200,220,255,${(glowIntensity * 0.6).toFixed(2)})`;
     ctx.beginPath();
     ctx.arc(200, 130, 50 + Math.sin(t * 3) * 15, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,' + (glowIntensity * 0.8).toFixed(2) + ')';
+    ctx.fillStyle = `rgba(255,255,255,${(glowIntensity * 0.8).toFixed(2)})`;
     ctx.beginPath();
     ctx.arc(200, 130, 20 + Math.sin(t * 2) * 8, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.3).toFixed(2) + ')';
+    ctx.fillStyle = `rgba(200,220,255,${(glowIntensity * 0.3).toFixed(2)})`;
     for (var r = 0; r < 8; r++) {
       ctx.fillRect(198 + r * 2, 70 + Math.sin(r + t * 2) * 5, 2, 60);
     }
@@ -62,7 +62,7 @@ export function renderPrologueCutscene(ctx) {
   // Step 4: 3 cerchi concentrici
   if (step >= 4) {
     var circleAlpha = Math.min(1, (step - 4) * 0.4 + Math.sin(t * 2) * 0.1);
-    ctx.strokeStyle = 'rgba(212,168,67,' + circleAlpha.toFixed(2) + ')';
+    ctx.strokeStyle = `rgba(212,168,67,${circleAlpha.toFixed(2)})`;
     ctx.lineWidth = 2;
     for (var c = 0; c < 3; c++) {
       var radius = 15 + c * 18 + Math.sin(t * 3 + c) * 3;
@@ -71,7 +71,7 @@ export function renderPrologueCutscene(ctx) {
       ctx.stroke();
     }
     ctx.lineWidth = 1;
-    ctx.fillStyle = PALETTE.oliveGreen + 'AA';
+    ctx.fillStyle = `${PALETTE.oliveGreen}AA`;
     for (var a = 0; a < 24; a++) {
       var rad = (a * Math.PI) / 12;
       for (var r2 = 0; r2 < 3; r2++) {
@@ -109,7 +109,7 @@ export function renderPrologueCutscene(ctx) {
   if (step >= 6) {
     ctx.fillStyle = PALETTE.alumGrey;
     ctx.fillRect(196, 132, 6, 4);
-    ctx.fillStyle = PALETTE.creamPaper + '88';
+    ctx.fillStyle = `${PALETTE.creamPaper}88`;
     ctx.fillRect(197, 131, 4, 2);
   }
 
@@ -119,7 +119,7 @@ export function renderPrologueCutscene(ctx) {
       1,
       (step - 7) * 0.4 + (gameState.prologueTimer - (step === 7 ? 60 : 0)) * 0.02
     );
-    ctx.fillStyle = 'rgba(255,255,255,' + Math.min(0.9, flash).toFixed(2) + ')';
+    ctx.fillStyle = `rgba(255,255,255,${Math.min(0.9, flash).toFixed(2)})`;
     ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
   }
 
@@ -162,7 +162,7 @@ export function renderPrologueCutscene(ctx) {
   }
   if (step === 8) {
     var alpha = 0.4 + Math.sin(Date.now() * 0.003) * 0.4;
-    ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+    ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
     ctx.font = '9px "Courier New",monospace';
     ctx.textAlign = 'center';
     ctx.fillText('Attendi...', 200, 230);
@@ -241,7 +241,7 @@ export function renderIntroSlide(ctx) {
     lines = [
       '',
       "Quell'uomo sei tu,",
-      name + '.',
+      `${name}.`,
       '',
       'Un detective pragmatico, razionale,',
       "con un debole per il caffe'",
@@ -259,7 +259,7 @@ export function renderIntroSlide(ctx) {
     ctx.fillText("L'INCARICO", 200, 82);
     lines = [
       '',
-      '"Detective ' + name + ',',
+      `"Detective ${name},`,
       'vada a San Celeste.',
       'Scopra cosa sta succedendo.',
       'E torni con delle risposte."',
@@ -345,7 +345,7 @@ export function renderEndingScreen(ctx) {
   ctx.fillStyle = PALETTE.nightBlue;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
   var t = Date.now() * 0.001;
-  ctx.fillStyle = PALETTE.creamPaper + '22';
+  ctx.fillStyle = `${PALETTE.creamPaper}22`;
   for (var i = 0; i < 30; i++) {
     ctx.fillRect((i * 117) % CANVAS_W, (i * 53 + Math.sin(t + i) * 3) % CANVAS_H, 2, 2);
   }

@@ -37,7 +37,7 @@ export function drawPoliceArea(ctx, t) {
 
   // Finestre
   var glow = 0.5 + Math.sin(t * 1.8) * 0.1;
-  ctx.fillStyle = 'rgba(130,160,220,' + glow.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(130,160,220,${glow.toFixed(2)})`;
   ctx.fillRect(120, 65, 40, 30);
   ctx.fillRect(180, 65, 40, 30);
   ctx.fillRect(240, 65, 40, 30);

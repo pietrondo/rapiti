@@ -57,7 +57,7 @@ const ChapterManager = {
 
     // Notify via toast if available
     if (typeof showToast === 'function') {
-      showToast('Capitolo: ' + chapter.title);
+      showToast(`Capitolo: ${chapter.title}`);
     }
 
     return true;
@@ -74,7 +74,7 @@ const ChapterManager = {
     this.completedChapters.push(this.currentChapter);
 
     // Execute completion actions
-    if (chapter && chapter.onComplete) {
+    if (chapter?.onComplete) {
       if (chapter.onComplete.setFlag && typeof StoryManager !== 'undefined') {
         StoryManager.setFlag(chapter.onComplete.setFlag);
       }
@@ -143,7 +143,7 @@ const ChapterManager = {
     if (!this.currentChapter) return false;
 
     var chapter = storyChapters[this.currentChapter];
-    if (!chapter || !chapter.objectives) return false;
+    if (!chapter?.objectives) return false;
 
     var objective = null;
     for (var i = 0; i < chapter.objectives.length; i++) {
@@ -180,7 +180,7 @@ const ChapterManager = {
     if (!this.currentChapter) return false;
 
     var chapter = storyChapters[this.currentChapter];
-    if (!chapter || !chapter.requiredObjectives) return false;
+    if (!chapter?.requiredObjectives) return false;
 
     var completed = this.completedObjectives[this.currentChapter] || [];
 
@@ -208,7 +208,7 @@ const ChapterManager = {
     if (!this.currentChapter) return [];
 
     var chapter = storyChapters[this.currentChapter];
-    if (!chapter || !chapter.objectives) return [];
+    if (!chapter?.objectives) return [];
 
     var completed = this.completedObjectives[this.currentChapter] || [];
     var required = chapter.requiredObjectives || [];
@@ -229,7 +229,7 @@ const ChapterManager = {
     if (!this.currentChapter) return 0;
 
     var chapter = storyChapters[this.currentChapter];
-    if (!chapter || !chapter.objectives || chapter.objectives.length === 0) {
+    if (!chapter?.objectives || chapter.objectives.length === 0) {
       return 100;
     }
 
