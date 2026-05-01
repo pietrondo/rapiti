@@ -66,6 +66,13 @@ export function closeScenePuzzle() {
   gameState.gamePhase = 'playing';
 }
 
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.openScenePuzzle = openScenePuzzle;
+  window.closeScenePuzzle = closeScenePuzzle;
+  window.checkScene = checkScene;
+}
+
 export function updateSceneConfirm() {
   var s1 = document.getElementById('scene-slot1').value;
   var s2 = document.getElementById('scene-slot2').value;

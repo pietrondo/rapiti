@@ -135,3 +135,11 @@ export function checkDeduction() {
     }
   }
 }
+
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.canOpenDeduction = canOpenDeduction;
+  window.openDeduction = openDeduction;
+  window.closeDeduction = closeDeduction;
+  window.checkDeduction = checkDeduction;
+}

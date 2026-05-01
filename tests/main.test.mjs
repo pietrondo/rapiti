@@ -16,6 +16,7 @@ describe('main.js integration', () => {
     expect(src).toContain('window.initAudio');
     expect(src).toContain('window.initEventListeners');
     expect(src).toContain('window.initStoryManager');
+    expect(src).toContain('window.resetGame');
     // Ensure the old broken pattern is gone
     expect(src).not.toMatch(/typeof\s+initEventListeners\s*===\s*['"]function['"]/);
     expect(src).not.toMatch(/typeof\s+initAudio\s*===\s*['"]function['"]/);

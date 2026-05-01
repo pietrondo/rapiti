@@ -13,6 +13,12 @@ export function closeRadioPuzzle() {
   gameState.gamePhase = 'playing';
 }
 
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.openRadioPuzzle = openRadioPuzzle;
+  window.closeRadioPuzzle = closeRadioPuzzle;
+}
+
 export function setupRadio() {
   var bar = document.getElementById('radio-bar');
   var knob = document.getElementById('radio-knob');

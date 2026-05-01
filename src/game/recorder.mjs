@@ -23,6 +23,13 @@ export function closeRecorderPuzzle() {
   gameState.gamePhase = 'playing';
 }
 
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.openRecorderPuzzle = openRecorderPuzzle;
+  window.closeRecorderPuzzle = closeRecorderPuzzle;
+  window.playRecorder = playRecorder;
+}
+
 export function buildRecorderOverlay() {
   var div = document.createElement('div');
   div.id = 'recorder-overlay';

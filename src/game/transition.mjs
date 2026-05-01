@@ -89,3 +89,11 @@ export function updateHUD() {
   var cluesEl = document.getElementById('hud-clues');
   if (cluesEl) cluesEl.textContent = gameState.cluesFound.length + '/9';
 }
+
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.updateHUD = updateHUD;
+  window.checkAreaExits = checkAreaExits;
+  window.changeArea = changeArea;
+  window.updateFade = updateFade;
+}

@@ -40,6 +40,38 @@ export function initEventListeners() {
   setupRegistry();
 }
 
+/** Stub — mostra un messaggio toast temporaneo */
+export function showToast(msg) {
+  var toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('active');
+  setTimeout(function () {
+    toast.classList.remove('active');
+  }, 2500);
+}
+
+/** Stub — gestisce interazione con oggetti/NPC */
+export function handleInteract() {
+  console.log('[Interact] Interazione non ancora implementata');
+}
+
+/** Stub — apre il diario */
+export function openJournal() {
+  document.getElementById('journal-overlay').classList.add('active');
+}
+
+/** Stub — apre l'inventario */
+export function openInventory() {
+  document.getElementById('inventory-overlay').classList.add('active');
+}
+
+/** Stub — chiude pannelli aperti */
+export function closePanels() {
+  document.getElementById('journal-overlay').classList.remove('active');
+  document.getElementById('inventory-overlay').classList.remove('active');
+}
+
 // Global exports for dynamic module loading compatibility
 if (typeof window !== 'undefined') {
   window.initCanvas = initCanvas;
@@ -48,6 +80,13 @@ if (typeof window !== 'undefined') {
   window.setupDragDrop = setupDragDrop;
   window.setupRadio = setupRadio;
   window.setupRegistry = setupRegistry;
+  window.showToast = showToast;
+  window.handleInteract = handleInteract;
+  window.openJournal = openJournal;
+  window.openInventory = openInventory;
+  window.closePanels = closePanels;
+  window.closeJournal = closeJournal;
+  window.closeInventory = closeInventory;
 }
 
 /** Collega i click dei color-swatch al gameState.playerColors */

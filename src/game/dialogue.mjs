@@ -141,3 +141,8 @@ export function closeDialogue() {
   gameState.dialogueNpcId = null;
   gameState.dialogueTree = null;
 }
+
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.closeDialogue = closeDialogue;
+}
