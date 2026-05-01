@@ -132,3 +132,9 @@ const _areaObjects = {
   industriale: [{ id: 'recorder', x: 100, y: 150, w: 28, h: 16, type: 'recorder', drawHint: true }],
   polizia: [],
 };
+
+// Global exports for bundle compatibility
+if (typeof window !== 'undefined') {
+  window.clues = clues;
+  window.cluesMap = cluesMap;
+}

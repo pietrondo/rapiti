@@ -238,3 +238,8 @@ const _TextureGenerator = {
     return this._cache[key];
   },
 };
+
+// Global export for bundle compatibility
+if (typeof window !== 'undefined') {
+  window.TextureGenerator = _TextureGenerator;
+}

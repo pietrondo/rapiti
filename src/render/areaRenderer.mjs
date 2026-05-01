@@ -12,9 +12,9 @@ export function renderArea(ctx) {
   for (var i = 0; i < area.npcs.length; i++) {
     var n = area.npcs[i];
     var npc = null;
-    for (var j = 0; j < npcsData.length; j++) {
-      if (npcsData[j].id === n.id) {
-        npc = npcsData[j];
+    for (var j = 0; j < window.npcsData.length; j++) {
+      if (window.npcsData[j].id === n.id) {
+        npc = window.npcsData[j];
         break;
       }
     }

@@ -14,7 +14,7 @@ export function getOrCreatePlayerSheet() {
   if (!spriteCache.player || spriteCache.playerColors !== JSON.stringify(gameState.playerColors)) {
     spriteCache.playerColors = JSON.stringify(gameState.playerColors);
     var c = gameState.playerColors;
-    spriteCache.player = SpriteGenerator.generatePlayerSheet({
+    spriteCache.player = window.SpriteGenerator.generatePlayerSheet({
       body: c.body,
       bodyLight: _lighten(c.body, 15),
       bodyDark: _darken(c.body, 20),
@@ -61,14 +61,14 @@ export function _darken(hex, amount) {
 export function getOrCreateNPCSheet(npcId) {
   if (!spriteCache.npcs[npcId]) {
     var npcData = null;
-    for (var i = 0; i < npcsData.length; i++) {
-      if (npcsData[i].id === npcId) {
-        npcData = npcsData[i];
+    for (var i = 0; i < window.npcsData.length; i++) {
+      if (window.npcsData[i].id === npcId) {
+        npcData = window.npcsData[i];
         break;
       }
     }
     if (npcData) {
-      spriteCache.npcs[npcId] = SpriteGenerator.generateNPCSheet(npcData);
+      spriteCache.npcs[npcId] = window.SpriteGenerator.generateNPCSheet(npcData);
     }
   }
   return spriteCache.npcs[npcId] || null;

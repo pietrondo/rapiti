@@ -13,7 +13,7 @@ export function openDeduction() {
   cluesDiv.innerHTML = '';
   var keyClues = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
   for (var i = 0; i < keyClues.length; i++) {
-    var c = cluesMap[keyClues[i]];
+    var c = window.cluesMap[keyClues[i]];
     var el = document.createElement('div');
     el.className = 'draggable-clue';
     el.textContent = c.name;
@@ -83,7 +83,7 @@ export function setupDragDrop() {
         var _oldId = s.getAttribute('data-placed-clue');
         s.removeAttribute('data-placed-clue');
       }
-      var c = cluesMap[clueId];
+      var c = window.cluesMap[clueId];
       s.setAttribute('data-placed-clue', clueId);
       s.classList.add('filled');
       s.innerHTML = `✓ ${c.name}`;
@@ -125,13 +125,13 @@ export function checkDeduction() {
 
     document.getElementById('deduction-overlay').classList.remove('active');
     gameState.gamePhase = 'playing';
-    updateNPCStates();
-    showToast('Ipotesi confermata! Torna al Campo delle Luci per la verifica finale.');
-    updateHUD();
+    window.updateNPCStates();
+    window.showToast('Ipotesi confermata! Torna al Campo delle Luci per la verifica finale.');
+    window.updateHUD();
   } else {
-    showToast('Ipotesi errata. Riprova a collegare gli indizi.');
+    window.showToast('Ipotesi errata. Riprova a collegare gli indizi.');
     if (gameState.puzzleAttempts >= 3) {
-      showToast("Suggerimento: parlane con l'Archivista Neri.");
+      window.showToast("Suggerimento: parlane con l'Archivista Neri.");
     }
   }
 }

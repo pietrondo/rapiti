@@ -119,7 +119,7 @@ export function applyDialogueEffect(effect) {
       if (action && dialogueEffects[action]) dialogueEffects[action]();
       else {
         updateHUD();
-        showToast(`Hai raccolto: ${cluesMap[cid].name}`);
+        window.showToast(`Hai raccolto: ${window.cluesMap[cid].name}`);
       }
     }
   }
@@ -129,10 +129,10 @@ export function applyDialogueEffect(effect) {
   }
 
   // Aggiorna stati NPC tramite StoryManager
-  StoryManager.checkQuestProgress();
+  window.StoryManager.checkQuestProgress();
 
   // Mantieni retrocompatibilità
-  updateNPCStates();
+  window.updateNPCStates();
 }
 
 export function closeDialogue() {

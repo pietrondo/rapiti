@@ -87,6 +87,12 @@ if (typeof window !== 'undefined') {
   window.closePanels = closePanels;
   window.closeJournal = closeJournal;
   window.closeInventory = closeInventory;
+  window.updateNPCStates = updateNPCStates;
+}
+
+/** Stub — aggiorna stati NPC dopo puzzle/dialogo */
+export function updateNPCStates() {
+  console.log('[updateNPCStates] Stub — nessun aggiornamento NPC');
 }
 
 /** Collega i click dei color-swatch al gameState.playerColors */

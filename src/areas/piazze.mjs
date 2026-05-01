@@ -5,13 +5,13 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, TextureGenerator, drawVignette */
+/* global PALETTE, CANVAS_W, CANVAS_H */
 
 const areaTextures = {};
 
 export function getAreaTexture(type) {
   if (!areaTextures[type]) {
-    areaTextures[type] = TextureGenerator.getOrCreateTexture(type, 400, 250);
+    areaTextures[type] = window.TextureGenerator.getOrCreateTexture(type, 400, 250);
   }
   return areaTextures[type];
 }
@@ -110,7 +110,7 @@ const PiazzeArea = {
   ],
 
   draw: (ctx) => {
-    PF.nightSky(ctx, 14);
+    window.PF.nightSky(ctx, 14);
     ctx.fillStyle = PALETTE.lanternYel;
     ctx.beginPath();
     ctx.arc(340, 22, 14, 0, Math.PI * 2);
@@ -119,7 +119,7 @@ const PiazzeArea = {
     ctx.beginPath();
     ctx.arc(346, 18, 10, 0, Math.PI * 2);
     ctx.fill();
-    PF.mountains(ctx);
+    window.PF.mountains(ctx);
     var t = Date.now() * 0.001;
     ctx.fillStyle = PALETTE.oliveGreen;
     ctx.fillRect(0, 104, CANVAS_W, 146);
@@ -157,11 +157,11 @@ const PiazzeArea = {
     drawBarFacade(ctx, 302, 112, 70, 56, t);
     drawNoticeBoard(ctx, 82, 136, t);
     drawBench(ctx, 260, 166);
-    PF.lamp(ctx, 48, 142);
-    PF.lamp(ctx, 198, 138);
-    PF.lamp(ctx, 352, 142);
-    PF.tree(ctx, 36, 142);
-    PF.tree(ctx, 292, 150);
+    window.PF.lamp(ctx, 48, 142);
+    window.PF.lamp(ctx, 198, 138);
+    window.PF.lamp(ctx, 352, 142);
+    window.PF.tree(ctx, 36, 142);
+    window.PF.tree(ctx, 292, 150);
     drawVignette(ctx);
   },
 };

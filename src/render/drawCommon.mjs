@@ -9,7 +9,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, TextureGenerator */
+/* global PALETTE, CANVAS_W, CANVAS_H */
 
 const areaTextures = {
   brick: null,
@@ -20,7 +20,7 @@ const areaTextures = {
 
 export function getAreaTexture(type) {
   if (!areaTextures[type]) {
-    areaTextures[type] = TextureGenerator.getOrCreateTexture(type, 400, 250);
+    areaTextures[type] = window.TextureGenerator.getOrCreateTexture(type, 400, 250);
   }
   return areaTextures[type];
 }
