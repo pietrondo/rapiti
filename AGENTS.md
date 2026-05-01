@@ -18,10 +18,10 @@ Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'est
 
 ## Tech Stack
 
-- **Linguaggio**: JavaScript vanilla (ES5), nessuna dipendenza runtime
+- **Linguaggio**: TypeScript + ES Modules (`.ts`, `.mjs`), nessuna dipendenza runtime
 - **Rendering**: Canvas 2D (400×250 logico → 800×500 display, pixel-art crisp)
-- **Stile**: `"use strict"` in ogni modulo, variabili globali, `var` (non `let`/`const`)
-- **Build**: electron-builder per Windows (target portable x64)
+- **Stile**: `"use strict"` in moduli legacy, classi ES6+ in nuovi moduli; `var` in `.mjs`, `const`/`let` in `.ts`
+- **Build**: Vite + electron-builder per Windows (target portable x64)
 - **Font**: Press Start 2P + VT323 (Google Fonts)
 - **Musica**: `music/UFO Sighting Loop.mp3`, autoplay con fallback
 
@@ -81,6 +81,8 @@ src/
     spriteGenerator.js   — generatePlayerSheet(colors) (32×32, 4 dir × 4 frame, colori dinamici), generateNPCSheet (32×32, 4 dir × 2 frame), generateBackground (8 aree), generateClueIcons
     textureGenerator.js  — generateBrickWall, generateWoodFloor, generateGrassTexture, generateStonePath, cache getOrCreateTexture()
 ```
+
+**Nota**: Il progetto è in transizione da `.js` a `.mjs`/`.ts`. I moduli principali (`input.ts`, `loop.ts`, `store.ts`, `saveLoad.ts`, `render/index.ts`, `engine/index.ts`) usano classi ES6+ e tipi TypeScript. I moduli dati e rendering procedurali usano `.mjs` con `var` per compatibilità.
 
 ## Aree di Gioco
 
@@ -148,20 +150,21 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 
 ## Note per Modifiche
 
-- **Aggiungere NPC**: modificare `npcsData` + `dialogueNodes` in `src/data/npcs.js`, aggiungere a `area.npcs` in `src/data/areas.js`, colori default in `spriteGenerator.js._getDefaultNPCColors()`
-- **Aggiungere area**: creare entry in `areas` + `areaObjects` + `spriteGenerator.js.generateBackground()` + `lightingSystem.setupAreaLights()`
+- **Aggiungere NPC**: modificare `npcsData` + `dialogueNodes` in `src/data/npcs.mjs`, aggiungere a `area.npcs` in `src/data/areas.mjs`, colori default in `spriteGenerator.mjs._getDefaultNPCColors()`
+- **Aggiungere area**: creare entry in `areas` + `areaObjects` + `spriteGenerator.mjs.generateBackground()` + `lightingSystem.setupAreaLights()`
 - **Aggiungere indizio**: push in `clues` array, aggiungere `areaObject`, aggiornare `updateNPCStates()` se sblocca dialoghi
-- **Modificare ending**: `determineEndingV2()` in `src/game/scene.js:92`
-- **Modificare gameState**: `src/config.js:30` (tutti i campi inizializzati qui e in `resetGame()` in `loop.js:60`)
+- **Modificare ending**: `determineEndingV2()` in `src/game/scene.mjs:92`
+- **Modificare gameState**: `src/config.ts:30` (tutti i campi inizializzati qui e in `resetGame()` in `loop.ts:60`)
 - **CSS**: `styles.css` — overlay, panel, pulsanti; font in `index.html` head
-- **Texture/Sprite procedurali**: `textureGenerator.js` per background tile, `spriteGenerator.js` per personaggi
-- **Effetti visivi**: `effects.js` — ParticleSystem, LightingSystem, ScreenShake, Vignette
-- **Il game loop**: `requestAnimationFrame` in `loop.js:38`; tutto il rendering passa da `render()` in `render.js:38`
-- **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.js` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.js` si invalida automaticamente quando `gameState.playerColors` cambia.
-- **Minimappa**: `renderMiniMap()` in `render.js`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
-- **Marker uscite**: `renderAreaExitMarkers()` in `render.js` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
-- **Piazza**: helper dedicati in `areas.js` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.js`.
-- **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.js` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
+- **Texture/Sprite procedurali**: `textureGenerator.mjs` per background tile, `spriteGenerator.mjs` per personaggi
+- **Effetti visivi**: `effects.mjs` — ParticleSystem, LightingSystem, ScreenShake, Vignette
+- **Il game loop**: `requestAnimationFrame` in `loop.ts:38`; tutto il rendering passa da `render()` in `render/index.ts:38`
+- **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
+- **Minimappa**: `renderMiniMap()` in `render.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
+- **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
+- **Piazza**: helper dedicati in `areas.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
+- **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
+- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati (`_drawNightField`, `_drawGroundLight`, `_drawConcentricCircles`, `_drawElena`, `_drawFragment`, `_drawWhiteFlash`, `_drawTitleOnWhite`, `_drawSubtitles`); `input.ts` con collisioni estratte in `_resolveCollisions()`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 ## Issue Tracking with bd (beads)

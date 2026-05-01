@@ -79,31 +79,23 @@ const PF = {
     ctx.fill();
   },
 
+  _buildingRenderers: {
+    municipio: BuildingRenderers.drawMunicipio,
+    bar: BuildingRenderers.drawBar,
+    cascina: BuildingRenderers.drawCascina,
+    fienile: BuildingRenderers.drawFienile,
+    cabina: BuildingRenderers.drawCabina,
+    pozzo: BuildingRenderers.drawPozzo,
+  },
+
   /** Edificio dettagliato stile EarthBound - dispatcher */
   buildingDetailed: function (ctx, x, y, w, h, type, animTime) {
     animTime = animTime || 0;
-
-    switch (type) {
-      case 'municipio':
-        BuildingRenderers.drawMunicipio(ctx, x, y, w, h, animTime);
-        break;
-      case 'bar':
-        BuildingRenderers.drawBar(ctx, x, y, w, h, animTime);
-        break;
-      case 'cascina':
-        BuildingRenderers.drawCascina(ctx, x, y, w, h, animTime);
-        break;
-      case 'fienile':
-        BuildingRenderers.drawFienile(ctx, x, y, w, h, animTime);
-        break;
-      case 'cabina':
-        BuildingRenderers.drawCabina(ctx, x, y, w, h, animTime);
-        break;
-      case 'pozzo':
-        BuildingRenderers.drawPozzo(ctx, x, y, w, h, animTime);
-        break;
-      default:
-        this.building(ctx, x, y, w, h, 2);
+    var renderer = this._buildingRenderers[type];
+    if (renderer) {
+      renderer(ctx, x, y, w, h, animTime);
+    } else {
+      this.building(ctx, x, y, w, h, 2);
     }
   },
 };
