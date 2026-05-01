@@ -129,6 +129,23 @@ describe('Tauri Migration Sanity Checks', () => {
     });
   });
 
+  describe('src/engine/proceduralRenderer.mjs safety', () => {
+    let procRenderer;
+    beforeEach(() => {
+      procRenderer = readFile('src/engine/proceduralRenderer.mjs');
+    });
+
+    it('should NOT access BuildingRenderers without typeof check', () => {
+      // Must not have bare "BuildingRenderers.drawSomething" without guard
+      expect(procRenderer).not.toMatch(/[^\w]BuildingRenderers\.draw\w+/);
+    });
+
+    it('should import side-effect modules to init window.BuildingRenderers', () => {
+      expect(procRenderer).toContain("import './buildingRenderers.mjs'");
+      expect(procRenderer).toContain("import './civicBuildings.mjs'");
+    });
+  });
+
   describe('AGENTS.md documentation', () => {
     let agentsMd;
     beforeEach(() => {

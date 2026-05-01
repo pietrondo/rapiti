@@ -3,6 +3,12 @@
    Helper di disegno procedurale quando i PNG non sono disponibili
    ═══════════════════════════════════════════════════════════════════════════════ */
 
+// Import side-effect modules that populate window.BuildingRenderers
+import './buildingRenderers.mjs';
+import './civicBuildings.mjs';
+import './industrialBuildings.mjs';
+import './buildingDecorations.mjs';
+
 const PF = {
   /** Sfondo cielo notturno con stelle + luna */
   nightSky: (ctx, stars) => {
@@ -79,14 +85,17 @@ const PF = {
     ctx.fill();
   },
 
-  _buildingRenderers: {
-    municipio: BuildingRenderers.drawMunicipio,
-    bar: BuildingRenderers.drawBar,
-    cascina: BuildingRenderers.drawCascina,
-    fienile: BuildingRenderers.drawFienile,
-    cabina: BuildingRenderers.drawCabina,
-    pozzo: BuildingRenderers.drawPozzo,
-  },
+  _buildingRenderers: (function () {
+    var BR = typeof BuildingRenderers !== 'undefined' ? BuildingRenderers : {};
+    return {
+      municipio: BR.drawMunicipio || null,
+      bar: BR.drawBar || null,
+      cascina: BR.drawCascina || null,
+      fienile: BR.drawFienile || null,
+      cabina: BR.drawCabina || null,
+      pozzo: BR.drawPozzo || null,
+    };
+  })(),
 
   /** Edificio dettagliato stile EarthBound - dispatcher */
   buildingDetailed: function (ctx, x, y, w, h, type, animTime) {
