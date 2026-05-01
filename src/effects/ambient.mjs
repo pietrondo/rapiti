@@ -234,7 +234,7 @@ var ScreenShake = {
 
 /* ── VIGNETTE ── */
 var Vignette = {
-  draw: function (ctx) {
+  draw: (ctx) => {
     var grad = ctx.createRadialGradient(
       CANVAS_W / 2,
       CANVAS_H / 2,

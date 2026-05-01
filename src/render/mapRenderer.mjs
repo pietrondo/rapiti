@@ -1,0 +1,144 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MAP RENDERER
+   Minimappa, indicatori uscite, nomi aree
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+export function getAreaShortName(areaId) {
+  var names = {
+    piazze: 'Piazza',
+    chiesa: 'Chiesa',
+    cimitero: 'Cimitero',
+    giardini: 'Giardini',
+    bar_exterior: 'Bar',
+    residenziale: 'Case',
+    industriale: 'Industria',
+    polizia: 'Polizia',
+  };
+  return names[areaId] || areaId;
+}
+
+export function drawArrow(ctx, dir, x, y) {
+  ctx.beginPath();
+  if (dir === 'up') {
+    ctx.moveTo(x, y - 5);
+    ctx.lineTo(x - 6, y + 4);
+    ctx.lineTo(x + 6, y + 4);
+  } else if (dir === 'down') {
+    ctx.moveTo(x, y + 5);
+    ctx.lineTo(x - 6, y - 4);
+    ctx.lineTo(x + 6, y - 4);
+  } else if (dir === 'left') {
+    ctx.moveTo(x - 5, y);
+    ctx.lineTo(x + 4, y - 6);
+    ctx.lineTo(x + 4, y + 6);
+  } else {
+    ctx.moveTo(x + 5, y);
+    ctx.lineTo(x - 4, y - 6);
+    ctx.lineTo(x - 4, y + 6);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+export function renderAreaExitMarkers(ctx, area) {
+  if (!area?.exits) return;
+  var tick = Date.now() * 0.006;
+  for (var i = 0; i < area.exits.length; i++) {
+    var ex = area.exits[i];
+    var mid = Math.round((ex.xRange[0] + ex.xRange[1]) / 2);
+    var label = getAreaShortName(ex.to);
+    var x = mid;
+    var y = Math.max(area.walkableTop + 10, 112);
+    var boxW = Math.max(44, label.length * 7 + 25);
+    var alpha = 0.2 + Math.sin(tick + i) * 0.08;
+
+    if (ex.dir === 'up') {
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillRect(ex.xRange[0], area.walkableTop - 2, ex.xRange[1] - ex.xRange[0], 8);
+      y = area.walkableTop + 62;
+    } else if (ex.dir === 'down') {
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillRect(ex.xRange[0], CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
+      y = CANVAS_H - 18;
+    } else if (ex.dir === 'left') {
+      x = 36;
+      y = mid;
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillRect(0, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
+    } else {
+      x = CANVAS_W - 36;
+      y = mid;
+      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillRect(CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
+    }
+
+    ctx.fillStyle = 'rgba(8,9,14,0.84)';
+    ctx.fillRect(x - boxW / 2, y - 9, boxW, 18);
+    ctx.strokeStyle = 'rgba(212,168,67,0.82)';
+    ctx.strokeRect(x - boxW / 2 + 1, y - 8, boxW - 2, 16);
+    ctx.fillStyle = PALETTE.lanternYel;
+    drawArrow(ctx, ex.dir, x - boxW / 2 + 11, y);
+    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.font = '7px "Courier New",monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x + 7, y + 3);
+    ctx.textAlign = 'start';
+  }
+}
+
+export function renderMiniMap(ctx) {
+  var nodes = {
+    cimitero: { x: 45, y: 9 },
+    chiesa: { x: 45, y: 24 },
+    piazze: { x: 45, y: 44 },
+    giardini: { x: 17, y: 44 },
+    bar_exterior: { x: 73, y: 44 },
+    residenziale: { x: 45, y: 64 },
+    industriale: { x: 45, y: 84 },
+    polizia: { x: 45, y: 101 },
+  };
+  var x = 8;
+  var y = 8;
+  var w = 90;
+  var h = 116;
+  var current = gameState.currentArea;
+  drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
+  ctx.strokeStyle = 'rgba(160,168,176,0.36)';
+  ctx.lineWidth = 1;
+  drawMapLink(ctx, nodes, x, y, 'cimitero', 'chiesa');
+  drawMapLink(ctx, nodes, x, y, 'chiesa', 'piazze');
+  drawMapLink(ctx, nodes, x, y, 'piazze', 'giardini');
+  drawMapLink(ctx, nodes, x, y, 'piazze', 'bar_exterior');
+  drawMapLink(ctx, nodes, x, y, 'piazze', 'residenziale');
+  drawMapLink(ctx, nodes, x, y, 'residenziale', 'industriale');
+  drawMapLink(ctx, nodes, x, y, 'industriale', 'polizia');
+  for (var id in nodes) {
+    var n = nodes[id];
+    var active = id === current;
+    ctx.fillStyle = active ? PALETTE.lanternYel : 'rgba(232,220,200,0.82)';
+    ctx.fillRect(x + n.x - 3, y + n.y - 3, 6, 6);
+    if (active) {
+      ctx.strokeStyle = 'rgba(212,168,67,0.9)';
+      ctx.strokeRect(x + n.x - 5, y + n.y - 5, 10, 10);
+    }
+  }
+  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.font = '7px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(getAreaShortName(current), x + w / 2, y + h - 8);
+  ctx.textAlign = 'start';
+}
+
+export function drawMapLink(ctx, nodes, ox, oy, a, b) {
+  ctx.beginPath();
+  ctx.moveTo(ox + nodes[a].x, oy + nodes[a].y);
+  ctx.lineTo(ox + nodes[b].x, oy + nodes[b].y);
+  ctx.stroke();
+}
+
+window.UIRenderer = window.UIRenderer || {};
+window.UIRenderer.getAreaShortName = getAreaShortName;
+window.UIRenderer.drawArrow = drawArrow;
+window.UIRenderer.renderAreaExitMarkers = renderAreaExitMarkers;
+window.UIRenderer.renderMiniMap = renderMiniMap;
+window.UIRenderer.drawMapLink = drawMapLink;

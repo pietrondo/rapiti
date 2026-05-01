@@ -1,25 +1,30 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                    STORY ENGINE MODULE
+ *                    STORY ENGINE MODULE (Facade)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
- * Core story engine handling conditions, events, endings, and dialogue triggers.
- * Part of the modular StoryManager system.
+ * Core story engine — ora facade che orchestra sotto-moduli specializzati:
+ * FlagManager, StatsManager, DialogueSystem, ConditionSystem, EventSystem,
+ * EndingSystem, AchievementSystem.
  *
+ * Mantiene API retrocompatibile al 100%.
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/**
- * StoryEngine - Core narrative system
- */
 const StoryEngine = {
-  /** Dynamic state flags */
+  /* ── DELEGATION HELPERS ── */
+
+  _fm: () => (typeof FlagManager !== 'undefined' ? FlagManager : null),
+  _sm: () => (typeof StatsManager !== 'undefined' ? StatsManager : null),
+  _ds: () => (typeof DialogueSystem !== 'undefined' ? DialogueSystem : null),
+  _cs: () => (typeof ConditionSystem !== 'undefined' ? ConditionSystem : null),
+  _es: () => (typeof EventSystem !== 'undefined' ? EventSystem : null),
+  _ens: () => (typeof EndingSystem !== 'undefined' ? EndingSystem : null),
+  _as: () => (typeof AchievementSystem !== 'undefined' ? AchievementSystem : null),
+
+  /** Legacy state mirrors (for direct access compatibility) */
   flags: {},
-
-  /** Triggered event IDs */
   triggeredEvents: [],
-
-  /** Statistics tracking */
   stats: {
     talkedTo: {},
     visitedAreas: {},
@@ -27,13 +32,10 @@ const StoryEngine = {
     puzzlesSolved: {},
     totalPlayTime: 0,
   },
-
-  /** Unlocked achievements */
   unlockedAchievements: [],
 
-  /**
-   * Initialize story engine
-   */
+  /* ── INITIALIZATION ── */
+
   init: function () {
     this.flags = {};
     this.triggeredEvents = [];
@@ -45,394 +47,290 @@ const StoryEngine = {
       totalPlayTime: 0,
     };
     this.unlockedAchievements = [];
+
+    var fm = this._fm();
+    if (fm && fm.init) fm.init();
+    var sm = this._sm();
+    if (sm && sm.init) sm.init();
+    var es = this._es();
+    if (es && es.init) es.init();
+    var as = this._as();
+    if (as && as.init) as.init();
   },
 
-  /**
-   * Reset to initial state
-   */
   reset: function () {
     this.init();
   },
 
   /* ── FLAG MANAGEMENT ── */
 
-  /**
-   * Set a flag
-   * @param {string} flagName - Flag name
-   * @param {*} value - Flag value
-   * @returns {boolean}
-   */
   setFlag: function (flagName, value) {
     value = value !== undefined ? value : true;
     this.flags[flagName] = value;
-    console.log('[StoryEngine] Flag set:', flagName, value);
+    var fm = this._fm();
+    if (fm && fm.setFlag) fm.setFlag(flagName, value);
+    else console.log('[StoryEngine] Flag set:', flagName, value);
     return true;
   },
 
-  /**
-   * Get a flag value
-   * @param {string} flagName - Flag name
-   * @returns {*}
-   */
   getFlag: function (flagName) {
+    var fm = this._fm();
+    if (fm && fm.getFlag) return fm.getFlag(flagName);
     return this.flags[flagName];
   },
 
-  /**
-   * Check if flag exists and is truthy
-   * @param {string} flagName - Flag name
-   * @returns {boolean}
-   */
   hasFlag: function (flagName) {
+    var fm = this._fm();
+    if (fm && fm.hasFlag) return fm.hasFlag(flagName);
     return !!this.flags[flagName];
   },
 
-  /**
-   * Clear/remove a flag
-   * @param {string} flagName - Flag name
-   * @returns {boolean}
-   */
   clearFlag: function (flagName) {
     delete this.flags[flagName];
+    var fm = this._fm();
+    if (fm && fm.clearFlag) fm.clearFlag(flagName);
     return true;
   },
 
-  /**
-   * Get all flags
-   * @returns {Object}
-   */
   getAllFlags: function () {
+    var fm = this._fm();
+    if (fm && fm.flags) return Object.assign({}, fm.flags);
     return Object.assign({}, this.flags);
   },
 
   /* ── DIALOGUE SYSTEM ── */
 
-  /**
-   * Get dialogue node for NPC based on current state
-   * @param {string} npcId - NPC identifier
-   * @returns {string} Dialogue node ID
-   */
   getDialogueNodeForNPC: function (npcId) {
-    var trigger = storyDialogueTriggers ? storyDialogueTriggers[npcId] : null;
-    if (!trigger) {
-      console.warn('[StoryEngine] No dialogue trigger for NPC:', npcId);
-      return `${npcId}_s0`;
-    }
+    var ds = this._ds();
+    if (ds && ds.getDialogueNodeForNPC) return ds.getDialogueNodeForNPC(npcId);
 
-    // Find matching state
+    // Fallback legacy
+    var trigger =
+      typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
+    if (!trigger) return npcId + '_s0';
     if (trigger.states) {
       for (var i = 0; i < trigger.states.length; i++) {
-        var state = trigger.states[i];
-        if (this.checkCondition(state.condition)) {
-          return state.node;
+        if (this.checkCondition(trigger.states[i].condition)) {
+          return trigger.states[i].node;
         }
       }
     }
-
-    return trigger.defaultNode || `${npcId}_s0`;
+    return trigger.defaultNode || npcId + '_s0';
   },
 
-  /**
-   * Register dialogue started
-   * @param {string} npcId - NPC identifier
-   */
   onDialogueStarted: function (npcId) {
     this.stats.talkedTo[npcId] = true;
+    var sm = this._sm();
+    if (sm && sm.onTalkedTo) sm.onTalkedTo(npcId);
   },
 
-  /**
-   * Check if talked to NPC
-   * @param {string} npcId - NPC identifier
-   * @returns {boolean}
-   */
   hasTalkedTo: function (npcId) {
+    var sm = this._sm();
+    if (sm && sm.hasTalkedTo) return sm.hasTalkedTo(npcId);
     return !!this.stats.talkedTo[npcId];
   },
 
-  /**
-   * Get talk count
-   * @returns {number}
-   */
   getTalkedToCount: function () {
+    var sm = this._sm();
+    if (sm && sm.getTalkedToCount) return sm.getTalkedToCount();
     return Object.keys(this.stats.talkedTo).length;
   },
 
   /* ── CONDITION SYSTEM ── */
 
-  /**
-   * Check a condition object
-   * @param {Object} condition - Condition to check
-   * @returns {boolean}
-   */
   checkCondition: function (condition) {
+    var cs = this._cs();
+    if (cs && cs.checkCondition) return cs.checkCondition(condition);
+
+    // Minimal inline fallback (preserves behaviour if subsystems missing)
     if (!condition) return true;
 
-    var currentChapter =
-      typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentChapterId() : null;
-
-    // Chapter conditions
-    if (condition.chapter && currentChapter !== condition.chapter) {
-      return false;
+    if (condition.chapter) {
+      var cc = typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentChapterId() : null;
+      if (cc !== condition.chapter) return false;
     }
 
-    if (condition.chapterAtMost && storyChapters) {
-      var maxOrder = storyChapters[condition.chapterAtMost].order;
-      var currentOrder = storyChapters[currentChapter].order;
-      if (currentOrder > maxOrder) return false;
-    }
+    if (condition.hasFlag && !this.hasFlag(condition.hasFlag)) return false;
+    if (condition.missingFlag && this.hasFlag(condition.missingFlag)) return false;
 
-    if (condition.chapterAtLeast && storyChapters) {
-      var minOrder = storyChapters[condition.chapterAtLeast].order;
-      var currentOrd = storyChapters[currentChapter].order;
-      if (currentOrd < minOrder) return false;
-    }
-
-    // Flag conditions
-    if (condition.hasFlag && !this.hasFlag(condition.hasFlag)) {
-      return false;
-    }
-
-    if (condition.missingFlag && this.hasFlag(condition.missingFlag)) {
-      return false;
-    }
-
-    // Clue conditions
     if (condition.hasClue && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.indexOf(condition.hasClue) === -1) {
-        return false;
-      }
+      if (gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
     }
-
     if (condition.missingClue && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.indexOf(condition.missingClue) !== -1) {
-        return false;
-      }
+      if (gameState.cluesFound.indexOf(condition.missingClue) !== -1) return false;
     }
-
     if (condition.hasClues && typeof gameState !== 'undefined') {
       for (var i = 0; i < condition.hasClues.length; i++) {
-        if (gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) {
-          return false;
-        }
+        if (gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
       }
     }
-
     if (condition.cluesMin && typeof gameState !== 'undefined') {
       if (gameState.cluesFound.length < condition.cluesMin) return false;
     }
-
     if (condition.cluesMax && typeof gameState !== 'undefined') {
       if (gameState.cluesFound.length > condition.cluesMax) return false;
     }
-
     if (condition.cluesFound === 'all' && typeof gameState !== 'undefined') {
       var totalClues = typeof clues !== 'undefined' ? clues.length : 9;
       if (gameState.cluesFound.length < totalClues) return false;
     }
-
     if (typeof condition.cluesFound === 'number' && typeof gameState !== 'undefined') {
       if (gameState.cluesFound.length < condition.cluesFound) return false;
     }
 
-    // Talk conditions
-    if (condition.talkedTo && !this.stats.talkedTo[condition.talkedTo]) {
-      return false;
-    }
-
+    if (condition.talkedTo && !this.hasTalkedTo(condition.talkedTo)) return false;
     if (condition.talkedToCount) {
-      var count = Object.keys(this.stats.talkedTo).length;
-      if (count < condition.talkedToCount) return false;
+      if (this.getTalkedToCount() < condition.talkedToCount) return false;
     }
-
     if (condition.talkedToAll) {
       for (var j = 0; j < condition.talkedToAll.length; j++) {
-        if (!this.stats.talkedTo[condition.talkedToAll[j]]) {
-          return false;
-        }
+        if (!this.hasTalkedTo(condition.talkedToAll[j])) return false;
       }
     }
 
-    // Puzzle conditions
-    if (condition.puzzleSolved && !this.stats.puzzlesSolved[condition.puzzleSolved]) {
-      return false;
-    }
-
+    if (condition.puzzleSolved && !this.stats.puzzlesSolved[condition.puzzleSolved]) return false;
     if (condition.puzzlesSolved) {
       for (var k = 0; k < condition.puzzlesSolved.length; k++) {
-        if (!this.stats.puzzlesSolved[condition.puzzlesSolved[k]]) {
-          return false;
-        }
+        if (!this.stats.puzzlesSolved[condition.puzzlesSolved[k]]) return false;
       }
     }
 
-    // Area conditions
-    if (condition.visitedArea && !this.stats.visitedAreas[condition.visitedArea]) {
-      return false;
-    }
+    if (condition.visitedArea && !this.stats.visitedAreas[condition.visitedArea]) return false;
 
     return true;
   },
 
   /* ── EVENT SYSTEM ── */
 
-  /**
-   * Check and trigger events
-   */
   checkEvents: function () {
-    if (!storyEvents) return;
+    var es = this._es();
+    if (es && es.checkEvents) {
+      es.checkEvents();
+      this.triggeredEvents = es.triggeredEvents || this.triggeredEvents;
+      return;
+    }
 
+    if (typeof storyEvents === 'undefined') return;
     for (var eventId in storyEvents) {
       var event = storyEvents[eventId];
-
-      // Skip if already triggered and event is once-only
-      if (event.once && this.triggeredEvents.indexOf(eventId) !== -1) {
-        continue;
-      }
-
-      // Check trigger condition
+      if (event.once && this.triggeredEvents.indexOf(eventId) !== -1) continue;
       if (this.checkCondition(event.trigger)) {
         this.triggeredEvents.push(eventId);
-
-        if (typeof event.action === 'function') {
-          event.action();
-        }
-
+        if (typeof event.action === 'function') event.action();
         console.log('[StoryEngine] Event triggered:', eventId);
       }
     }
   },
 
-  /**
-   * Check if event was triggered
-   * @param {string} eventId - Event ID
-   * @returns {boolean}
-   */
   wasEventTriggered: function (eventId) {
+    var es = this._es();
+    if (es && es.wasEventTriggered) return es.wasEventTriggered(eventId);
     return this.triggeredEvents.indexOf(eventId) !== -1;
   },
 
-  /**
-   * Manually trigger an event
-   * @param {string} eventId - Event ID
-   */
   triggerEvent: function (eventId) {
+    var es = this._es();
+    if (es && es.triggerEvent) {
+      es.triggerEvent(eventId);
+      this.triggeredEvents = es.triggeredEvents || this.triggeredEvents;
+      return;
+    }
+
     if (this.triggeredEvents.indexOf(eventId) === -1) {
       this.triggeredEvents.push(eventId);
     }
-
-    var event = storyEvents ? storyEvents[eventId] : null;
-    if (event && typeof event.action === 'function') {
-      event.action();
-    }
+    if (typeof storyEvents === 'undefined') return;
+    var event = storyEvents[eventId];
+    if (event && typeof event.action === 'function') event.action();
   },
 
   /* ── ENDING SYSTEM ── */
 
-  /**
-   * Determine which ending to show
-   * @returns {Object} Ending data
-   */
   determineEnding: function () {
-    if (!storyEndingConditions) {
+    var ens = this._ens();
+    if (ens && ens.determineEnding) return ens.determineEnding();
+
+    if (typeof storyEndingConditions === 'undefined') {
       return {
         id: 'psychological',
         title: 'Fine Ambigua',
         description: 'La verità rimane nascosta.',
       };
     }
-
-    // Sort by priority (highest first)
     var sortedEndings = [];
     for (var endingId in storyEndingConditions) {
       sortedEndings.push(storyEndingConditions[endingId]);
     }
     sortedEndings.sort((a, b) => b.priority - a.priority);
-
-    // Find first matching condition
     for (var i = 0; i < sortedEndings.length; i++) {
-      var ending = sortedEndings[i];
-      if (this.checkCondition(ending.conditions)) {
-        return ending;
+      if (this.checkCondition(sortedEndings[i].conditions)) {
+        return sortedEndings[i];
       }
     }
-
-    // Fallback to psychological ending
     return storyEndingConditions.psychological || sortedEndings[0];
   },
 
-  /**
-   * Get available endings
-   * @returns {Array}
-   */
-  getAvailableEndings: () => {
-    if (!storyEndingConditions) return [];
+  getAvailableEndings: function () {
+    var ens = this._ens();
+    if (ens && ens.getAvailableEndings) return ens.getAvailableEndings();
 
+    if (typeof storyEndingConditions === 'undefined') return [];
     var endings = [];
     for (var id in storyEndingConditions) {
-      endings.push({
-        id: id,
-        data: storyEndingConditions[id],
-      });
+      endings.push({ id: id, data: storyEndingConditions[id] });
     }
     return endings;
   },
 
   /* ── STATISTICS TRACKING ── */
 
-  /**
-   * Register area visit
-   * @param {string} areaId - Area identifier
-   */
   onAreaVisited: function (areaId) {
     this.stats.visitedAreas[areaId] = true;
+    var sm = this._sm();
+    if (sm && sm.onAreaVisited) sm.onAreaVisited(areaId);
   },
 
-  /**
-   * Register clue found
-   * @param {string} clueId - Clue identifier
-   */
   onClueFound: function (_clueId) {
     this.stats.cluesFound++;
+    var sm = this._sm();
+    if (sm && sm.onClueFound) sm.onClueFound();
   },
 
-  /**
-   * Register puzzle solved
-   * @param {string} puzzleId - Puzzle identifier
-   */
   onPuzzleSolved: function (puzzleId) {
     this.stats.puzzlesSolved[puzzleId] = true;
+    var sm = this._sm();
+    if (sm && sm.onPuzzleSolved) sm.onPuzzleSolved(puzzleId);
 
-    // Update gameState for compatibility
     if (typeof gameState !== 'undefined') {
       if (puzzleId === 'deduction') gameState.puzzleSolved = true;
       if (puzzleId === 'radio') gameState.radioSolved = true;
     }
   },
 
-  /**
-   * Get statistics
-   * @returns {Object}
-   */
   getStats: function () {
+    var sm = this._sm();
+    if (sm && sm.stats) {
+      return Object.assign({}, sm.stats);
+    }
     return Object.assign({}, this.stats);
   },
 
-  /**
-   * Update play time
-   * @param {number} seconds - Seconds to add
-   */
   addPlayTime: function (seconds) {
     this.stats.totalPlayTime += seconds;
+    var sm = this._sm();
+    if (sm && sm.stats) sm.stats.totalPlayTime += seconds;
   },
 
   /* ── ACHIEVEMENTS ── */
 
-  /**
-   * Unlock an achievement
-   * @param {string} achievementId - Achievement ID
-   * @returns {boolean} Whether it was newly unlocked
-   */
   unlockAchievement: function (achievementId) {
+    var as = this._as();
+    if (as && as.unlockAchievement) {
+      var result = as.unlockAchievement(achievementId);
+      if (result) this.unlockedAchievements = as.unlockedAchievements.slice();
+      return result;
+    }
+
     if (this.unlockedAchievements.indexOf(achievementId) === -1) {
       this.unlockedAchievements.push(achievementId);
       console.log('[StoryEngine] Achievement unlocked:', achievementId);
@@ -441,43 +339,32 @@ const StoryEngine = {
     return false;
   },
 
-  /**
-   * Check if achievement is unlocked
-   * @param {string} achievementId - Achievement ID
-   * @returns {boolean}
-   */
   hasAchievement: function (achievementId) {
+    var as = this._as();
+    if (as && as.hasAchievement) return as.hasAchievement(achievementId);
     return this.unlockedAchievements.indexOf(achievementId) !== -1;
   },
 
-  /**
-   * Get unlocked achievements
-   * @returns {Array}
-   */
   getUnlockedAchievements: function () {
+    var as = this._as();
+    if (as && as.getUnlockedAchievements) {
+      this.unlockedAchievements = as.getUnlockedAchievements();
+      return this.unlockedAchievements.slice();
+    }
     return this.unlockedAchievements.slice();
   },
 
   /* ── SERIALIZATION ── */
 
-  /**
-   * Serialize engine state
-   * @returns {Object}
-   */
   serialize: function () {
     return {
-      flags: this.flags,
-      triggeredEvents: this.triggeredEvents,
-      stats: this.stats,
-      unlockedAchievements: this.unlockedAchievements,
+      flags: this.getAllFlags(),
+      triggeredEvents: this.triggeredEvents.slice(),
+      stats: this.getStats(),
+      unlockedAchievements: this.getUnlockedAchievements(),
     };
   },
 
-  /**
-   * Deserialize engine state
-   * @param {Object} data - Serialized state
-   * @returns {boolean}
-   */
   deserialize: function (data) {
     if (!data) return false;
 
@@ -492,11 +379,19 @@ const StoryEngine = {
     };
     this.unlockedAchievements = data.unlockedAchievements || [];
 
+    var fm = this._fm();
+    if (fm && fm.deserialize) fm.deserialize(this.flags);
+    var sm = this._sm();
+    if (sm && sm.deserialize) sm.deserialize(this.stats);
+    var es = this._es();
+    if (es && es.deserialize) es.deserialize(this.triggeredEvents);
+    var as = this._as();
+    if (as && as.deserialize) as.deserialize(this.unlockedAchievements);
+
     return true;
   },
 };
 
-// Global export
 if (typeof window !== 'undefined') {
   window.StoryEngine = StoryEngine;
 }

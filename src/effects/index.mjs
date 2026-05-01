@@ -24,7 +24,8 @@ class EffectsManager {
 
     // Weather Systems
     this.WeatherSystem = typeof WeatherSystem !== 'undefined' ? WeatherSystem : null;
-    this.FallingLeavesSystem = typeof FallingLeavesSystem !== 'undefined' ? FallingLeavesSystem : null;
+    this.FallingLeavesSystem =
+      typeof FallingLeavesSystem !== 'undefined' ? FallingLeavesSystem : null;
 
     // Animation Systems
     this.DoorSystem = typeof DoorSystem !== 'undefined' ? DoorSystem : null;

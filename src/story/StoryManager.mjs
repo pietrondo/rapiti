@@ -14,7 +14,7 @@
 const StoryManager = {
   /* ── INIZIALIZZAZIONE ── */
 
-  init: function () {
+  init: () => {
     if (typeof ChapterManager !== 'undefined') ChapterManager.init();
     if (typeof QuestManager !== 'undefined') QuestManager.init();
     if (typeof FlagManager !== 'undefined') FlagManager.init();
@@ -37,70 +37,64 @@ const StoryManager = {
     return true;
   },
 
-  getFlag: function (flagName) {
-    return typeof FlagManager !== 'undefined' ? FlagManager.getFlag(flagName) : false;
-  },
+  getFlag: (flagName) =>
+    typeof FlagManager !== 'undefined' ? FlagManager.getFlag(flagName) : false,
 
-  hasFlag: function (flagName) {
-    return typeof FlagManager !== 'undefined' ? FlagManager.hasFlag(flagName) : false;
-  },
+  hasFlag: (flagName) =>
+    typeof FlagManager !== 'undefined' ? FlagManager.hasFlag(flagName) : false,
 
   /* ── FACADE CAPITOLI (delega a ChapterManager) ── */
 
-  startChapter: function (chapterId) {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.startChapter(chapterId) : false;
-  },
+  startChapter: (chapterId) =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.startChapter(chapterId) : false,
 
-  completeCurrentChapter: function () {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.completeCurrentChapter() : false;
-  },
+  completeCurrentChapter: () =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.completeCurrentChapter() : false,
 
-  isChapterCompleted: function (chapterId) {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.isChapterCompleted(chapterId) : false;
-  },
+  isChapterCompleted: (chapterId) =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.isChapterCompleted(chapterId) : false,
 
-  getCurrentChapter: function () {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentChapter() : null;
-  },
+  getCurrentChapter: () =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentChapter() : null,
 
   getChapterData: function () {
     return this.getCurrentChapter();
   },
 
-  completeObjective: function (objectiveId) {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.completeObjective(objectiveId) : false;
-  },
+  completeObjective: (objectiveId) =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.completeObjective(objectiveId) : false,
 
-  isObjectiveCompleted: function (chapterId, objectiveId) {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.isObjectiveCompleted(chapterId, objectiveId) : false;
-  },
+  isObjectiveCompleted: (chapterId, objectiveId) =>
+    typeof ChapterManager !== 'undefined'
+      ? ChapterManager.isObjectiveCompleted(chapterId, objectiveId)
+      : false,
 
-  getCurrentObjectives: function () {
-    return typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentObjectives() : [];
-  },
+  getCurrentObjectives: () =>
+    typeof ChapterManager !== 'undefined' ? ChapterManager.getCurrentObjectives() : [],
 
   /* ── FACADE QUEST (delega a QuestManager) ── */
 
-  activateQuestsForChapter: function (chapterId) {
+  activateQuestsForChapter: (chapterId) => {
     if (typeof QuestManager !== 'undefined') QuestManager.activateQuestsForChapter(chapterId);
   },
 
   checkQuestProgress: function () {
-    if (typeof QuestManager !== 'undefined') QuestManager.checkQuestProgress(this.checkCondition.bind(this));
+    if (typeof QuestManager !== 'undefined')
+      QuestManager.checkQuestProgress(this.checkCondition.bind(this));
   },
 
-  completeQuest: function (questId) {
+  completeQuest: (questId) => {
     if (typeof QuestManager !== 'undefined') QuestManager.completeQuest(questId);
   },
 
-  getActiveQuests: function () {
-    return typeof QuestManager !== 'undefined' ? QuestManager.getActiveQuests() : [];
-  },
+  getActiveQuests: () =>
+    typeof QuestManager !== 'undefined' ? QuestManager.getActiveQuests() : [],
 
   /* ── SISTEMA DIALOGHI ── */
 
   getDialogueNodeForNPC: function (npcId) {
-    var trigger = typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
+    var trigger =
+      typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
     if (!trigger) {
       console.warn('[StoryManager] Nessun trigger per NPC:', npcId);
       return npcId + '_s0';
@@ -138,17 +132,19 @@ const StoryManager = {
 
     if (condition.chapterAtMost) {
       var maxOrder = storyChapters[condition.chapterAtMost].order;
-      var currentOrder = chapterMgr && chapterMgr.getCurrentChapterId()
-        ? storyChapters[chapterMgr.getCurrentChapterId()].order
-        : 0;
+      var currentOrder =
+        chapterMgr && chapterMgr.getCurrentChapterId()
+          ? storyChapters[chapterMgr.getCurrentChapterId()].order
+          : 0;
       if (currentOrder > maxOrder) return false;
     }
 
     if (condition.chapterAtLeast) {
       var minOrder = storyChapters[condition.chapterAtLeast].order;
-      var currentOrder = chapterMgr && chapterMgr.getCurrentChapterId()
-        ? storyChapters[chapterMgr.getCurrentChapterId()].order
-        : 0;
+      var currentOrder =
+        chapterMgr && chapterMgr.getCurrentChapterId()
+          ? storyChapters[chapterMgr.getCurrentChapterId()].order
+          : 0;
       if (currentOrder < minOrder) return false;
     }
 
@@ -227,9 +223,10 @@ const StoryManager = {
   checkEvents: function () {
     if (typeof storyEvents === 'undefined') return;
 
-    var triggered = (typeof ChapterManager !== 'undefined' && ChapterManager.triggeredEvents)
-      ? ChapterManager.triggeredEvents
-      : [];
+    var triggered =
+      typeof ChapterManager !== 'undefined' && ChapterManager.triggeredEvents
+        ? ChapterManager.triggeredEvents
+        : [];
 
     for (var eventId in storyEvents) {
       var event = storyEvents[eventId];
@@ -242,7 +239,7 @@ const StoryManager = {
     }
   },
 
-  checkObjectivesForEvent: function (eventType, target) {
+  checkObjectivesForEvent: (eventType, target) => {
     var chapterMgr = typeof ChapterManager !== 'undefined' ? ChapterManager : null;
     if (!chapterMgr || !chapterMgr.currentChapter) return;
 
@@ -301,7 +298,7 @@ const StoryManager = {
     for (var endingId in storyEndingConditions) {
       sortedEndings.push(storyEndingConditions[endingId]);
     }
-    sortedEndings.sort(function (a, b) { return b.priority - a.priority; });
+    sortedEndings.sort((a, b) => b.priority - a.priority);
 
     for (var i = 0; i < sortedEndings.length; i++) {
       if (this.checkCondition(sortedEndings[i].conditions)) {
@@ -340,21 +337,25 @@ const StoryManager = {
 
   /* ── SERIALIZZAZIONE ── */
 
-  serialize: function () {
-    return {
-      currentChapter: typeof ChapterManager !== 'undefined' ? ChapterManager.currentChapter : null,
-      completedChapters: typeof ChapterManager !== 'undefined' ? ChapterManager.completedChapters : [],
-      flags: typeof FlagManager !== 'undefined' ? FlagManager.serialize() : {},
-      activeQuests: typeof QuestManager !== 'undefined' ? QuestManager.serialize().activeQuests : {},
-      completedQuests: typeof QuestManager !== 'undefined' ? QuestManager.serialize().completedQuests : [],
-      completedObjectives: typeof ChapterManager !== 'undefined' ? ChapterManager.completedObjectives : {},
-      stats: typeof StatsManager !== 'undefined' ? StatsManager.serialize() : {},
-      triggeredEvents: typeof ChapterManager !== 'undefined' && ChapterManager.triggeredEvents ? ChapterManager.triggeredEvents : [],
-      unlockedAchievements: [],
-    };
-  },
+  serialize: () => ({
+    currentChapter: typeof ChapterManager !== 'undefined' ? ChapterManager.currentChapter : null,
+    completedChapters:
+      typeof ChapterManager !== 'undefined' ? ChapterManager.completedChapters : [],
+    flags: typeof FlagManager !== 'undefined' ? FlagManager.serialize() : {},
+    activeQuests: typeof QuestManager !== 'undefined' ? QuestManager.serialize().activeQuests : {},
+    completedQuests:
+      typeof QuestManager !== 'undefined' ? QuestManager.serialize().completedQuests : [],
+    completedObjectives:
+      typeof ChapterManager !== 'undefined' ? ChapterManager.completedObjectives : {},
+    stats: typeof StatsManager !== 'undefined' ? StatsManager.serialize() : {},
+    triggeredEvents:
+      typeof ChapterManager !== 'undefined' && ChapterManager.triggeredEvents
+        ? ChapterManager.triggeredEvents
+        : [],
+    unlockedAchievements: [],
+  }),
 
-  deserialize: function (data) {
+  deserialize: (data) => {
     if (!data) return false;
 
     if (typeof ChapterManager !== 'undefined') {
@@ -365,10 +366,11 @@ const StoryManager = {
       });
     }
     if (typeof FlagManager !== 'undefined') FlagManager.deserialize(data.flags);
-    if (typeof QuestManager !== 'undefined') QuestManager.deserialize({
-      activeQuests: data.activeQuests,
-      completedQuests: data.completedQuests,
-    });
+    if (typeof QuestManager !== 'undefined')
+      QuestManager.deserialize({
+        activeQuests: data.activeQuests,
+        completedQuests: data.completedQuests,
+      });
     if (typeof StatsManager !== 'undefined') StatsManager.deserialize(data.stats);
 
     return true;

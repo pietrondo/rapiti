@@ -61,6 +61,51 @@ src/
     npcs.js              — npcsData (7 NPC con id/name/colors), dialogueNodes (albero dialoghi), dialogueEffects
     areas.js             — Aree (8) con name/walkableTop/colliders/npcs/draw(), helper PF (engine.js), TextureGenerator
     puzzles.js           — registryData (4 sparizioni con anno/dettaglio)
+  engine/
+    spriteEngine.mjs     — Caricamento PNG, generazione procedurale sprite
+    proceduralRenderer.mjs — Dispatcher rendering aree e edifici procedurali
+    buildingRenderers.mjs — Edificio generico (facade), aggrega sotto-moduli
+    civicBuildings.mjs   — Chiese, case residenziali, negozi
+    industrialBuildings.mjs — Fabbriche, stazioni di polizia
+    buildingDecorations.mjs — Fontane, lampioni
+    index.ts             — Engine hub: SpriteEngine, ProceduralRenderer, BuildingRenderers
+  story/
+    storyChapters.mjs    — Capitoli della storia e obiettivi
+    storyQuests.mjs      — Quest parallele e ricompense
+    storyDialogues.mjs   — Trigger dialoghi NPC per stato
+    storyEndings.mjs     — Condizioni per i finali
+    storyEvents.mjs      — Eventi speciali one-shot
+    storyAchievements.mjs — Obiettivi globali (achievements)
+    chapterManager.mjs   — Gestione progressione capitoli
+    questManager.mjs     — Gestione progressione quest
+    storyEngine.mjs      — Facade che orchestra i sotto-moduli del motore narrativo
+    dialogueSystem.mjs   — Determina nodi dialogo NPC per stato
+    conditionSystem.mjs  — Valuta condizioni narrative (flag, indizi, capitoli, puzzle)
+    eventSystem.mjs      — Eventi speciali one-shot
+    endingSystem.mjs     — Determina il finale in base alle prove raccolte
+    achievementSystem.mjs — Obiettivi globali
+    flagManager.mjs      — Manager flag booleani
+    statsManager.mjs     — Manager statistiche di gioco
+    StoryManager.mjs     — Facade legacy che delega a ChapterManager, QuestManager, StoryEngine
+    index.ts             — StoryManager ES6+ class e singleton
+  data/
+    clues.mjs            — Array clues, areaObjects, cluesMap
+    npcData.mjs          — Dati visivi NPC (nome, colori)
+    dialogueNodes.mjs    — Albero dialoghi NPC
+    dialogueEffects.mjs  — Effetti applicati dopo scelte di dialogo
+    areas.mjs            — Helper disegno aree condivisi
+    puzzles.mjs          — Dati puzzle
+  render/
+    spriteManager.mjs    — Gestione sprite e cache
+    uiRenderer.mjs       — Primitive UI, pannelli, effetti visivi, title landscape, fade
+    objectRenderer.mjs   — Icone oggetti interattivi
+    mapRenderer.mjs      — Minimappa, indicatori uscite, nomi aree
+    sceneRenderer.mjs    — Facade scene (aggrega sotto-moduli)
+    prologueRenderer.mjs — Cutscene prologo scomparsa Elena
+    introRenderer.mjs    — Titolo, slide intro, tutorial
+    endingRenderer.mjs   — Schermata finale
+    gameRenderer.mjs     — Rendering gameplay: area, player, hint
+    index.ts             — RenderManager ES6+ class e dispatcher
   game/
     engine.js            — SpriteEngine (caricamento PNG, generazione procedurale), PF (helper disegno: nightSky, mountains, building, lamp, tree, buildingDetailed)
     init.js              — initCanvas(), initEventListeners(), setupColorSwatches(), setupDragDrop(), setupRadio(), setupRegistry()
@@ -164,7 +209,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
 - **Piazza**: helper dedicati in `areas.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
-- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati (`_drawNightField`, `_drawGroundLight`, `_drawConcentricCircles`, `_drawElena`, `_drawFragment`, `_drawWhiteFlash`, `_drawTitleOnWhite`, `_drawSubtitles`); `input.ts` con collisioni estratte in `_resolveCollisions()`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`.
+- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati (`_drawNightField`, `_drawGroundLight`, `_drawConcentricCircles`, `_drawElena`, `_drawFragment`, `_drawWhiteFlash`, `_drawTitleOnWhite`, `_drawSubtitles`) e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `_resolveCollisions()`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`.
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->

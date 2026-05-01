@@ -22,8 +22,12 @@ Il gioco ora utilizza un **StoryManager centralizzato** per gestire la narrazion
         ┌─────────────────────┼─────────────────────┐
         ▼                     ▼                     ▼
 ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
-│ storyData.js  │    │  dialogue.js  │    │   scene.js    │
-│ (Dati puri)   │    │ (Usa StoryMgr)│    │ (Ending v2)   │
+│ storyChapters.mjs│ │  dialogue.js  │    │   scene.js    │
+│ storyQuests.mjs  │ │ (Usa StoryMgr)│    │ (Ending v2)   │
+│ storyDialogues.mjs│
+│ storyEndings.mjs │
+│ storyEvents.mjs  │
+│ storyAchievements.mjs│
 └───────────────┘    └───────────────┘    └───────────────┘
 ```
 
@@ -31,7 +35,12 @@ Il gioco ora utilizza un **StoryManager centralizzato** per gestire la narrazion
 
 | File | Scopo |
 |------|-------|
-| `src/story/storyData.js` | Dati narrativi: capitoli, quest, trigger dialoghi, condizioni ending |
+| `src/story/storyChapters.mjs` | Capitoli della storia e obiettivi |
+| `src/story/storyQuests.mjs` | Quest parallele e ricompense |
+| `src/story/storyDialogues.mjs` | Trigger dialoghi NPC per stato |
+| `src/story/storyEndings.mjs` | Condizioni per i finali |
+| `src/story/storyEvents.mjs` | Eventi speciali one-shot |
+| `src/story/storyAchievements.mjs` | Obiettivi globali (achievements) |
 | `src/story/StoryManager.js` | Logica di gestione: progressione, flag, eventi |
 
 ### Capitoli della Storia
@@ -66,7 +75,7 @@ I flag sono **dinamici** — nuovi episodi possono aggiungerne senza modificare 
 
 ### Trigger Dialoghi
 
-In `storyData.js`, ogni NPC ha uno schema di stati:
+In `storyDialogues.mjs`, ogni NPC ha uno schema di stati:
 
 ```javascript
 storyDialogueTriggers = {
@@ -86,7 +95,7 @@ Il `dialogue.js` chiama `StoryManager.getDialogueNodeForNPC(npcId)` per determin
 ### Condizioni Supportate
 
 ```javascript
-// Esempi di condizioni in storyData.js
+// Esempi di condizioni nei dati story
 { chapter: 'investigation' }           // Capitolo esatto
 { chapterAtLeast: 'deepening' }        // Capitolo o successivo
 { hasFlag: 'intro_complete' }          // Flag attivo
@@ -99,12 +108,12 @@ Il `dialogue.js` chiama `StoryManager.getDialogueNodeForNPC(npcId)` per determin
 
 ### Aggiungere un Nuovo Episodio
 
-1. **Aggiungi capitoli** in `storyData.js` → `storyChapters`
-2. **Aggiungi quest** in `storyData.js` → `storyQuests`
-3. **Aggiungi trigger** in `storyData.js` → `storyDialogueTriggers`
-4. **Aggiungi nodi dialogo** in `npcs.js` → `dialogueNodes`
+1. **Aggiungi capitoli** in `storyChapters.mjs` → `storyChapters`
+2. **Aggiungi quest** in `storyQuests.mjs` → `storyQuests`
+3. **Aggiungi trigger** in `storyDialogues.mjs` → `storyDialogueTriggers`
+4. **Aggiungi nodi dialogo** in `dialogueNodes.mjs` → `dialogueNodes`
 5. **Aggiungi indizi** in `clues.js` → `clues` e `areaObjects`
-6. **Aggiungi aree** in `areas.js` → `areas`
+6. **Aggiungi aree** in `areas.mjs` → `areas`
 
 Non è necessario modificare `StoryManager.js` — tutta la logica è data-driven!
 
@@ -215,7 +224,7 @@ handleInteract()
 
 ## Sistema Dialoghi
 
-Albero dei dialoghi basato su chiavi `npcId_s{state}` in `dialogueNodes` (npcs.js):
+Albero dei dialoghi basato su chiavi `npcId_s{state}` in `dialogueNodes` (dialogueNodes.mjs):
 - **Stato 0**: dialogo iniziale
 - **Stato 1**: dopo che l'indizio trigger è stato trovato
 - **Stato 2**: dopo che il puzzle deduzione è risolto (per Teresa: dialogo corrotto `teresa_s2_memory` con `memoryCorrupt: true`)
@@ -257,7 +266,7 @@ Due implementazioni coesistono (scene.js ha la V2 più recente):
 - NPC, player e hint interazione usano ombre più morbide, targhette bordate e glow coerenti con la palette notturna.
 
 **Piazza hub**:
-- `areas.js` usa helper dedicati (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`) per rendere la piazza più leggibile come snodo centrale.
+- `areas.mjs` usa helper dedicati (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`) per rendere la piazza più leggibile come snodo centrale.
 - Gli oggetti `mappa_campi`, `lanterna_rotta` e `gatto_piazze` sono posizionati rispettivamente su bacheca, fontana e panchina.
 
 **Scene area v2**:
