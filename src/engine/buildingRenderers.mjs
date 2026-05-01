@@ -11,6 +11,64 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+/* ── COSTANTI COLORI ARCHITETTONICI ── */
+var C = {
+  // Muri
+  wallBrick: '#8B4513',
+  wallTan: '#D2B48C',
+  wallWheat: '#F5DEB3',
+  wallShop: '#DEB887',
+  wallIndustrial: '#708090',
+  wallPolice: '#4682B4',
+
+  // Tetti
+  roofBrown: '#654321',
+  roofSienna: '#A0522D',
+  roofDarkSlate: '#2F4F4F',
+  roofSaddle: '#8B4513',
+
+  // Vetri
+  glassSky: '#87CEEB',
+  glassLight: '#ADD8E6',
+
+  // Porte e legno
+  doorWood: '#4A3728',
+  doorDark: '#2C1810',
+  doorBrown: '#654321',
+
+  // Metalli e oro
+  gold: '#FFD700',
+  goldMetallic: '#D4AF37',
+
+  // Pietra e cemento
+  stoneDim: '#696969',
+  stoneDark: '#4A4A4A',
+  stoneGray: '#808080',
+  concrete: '#A9A9A9',
+  concreteLight: '#D3D3D3',
+
+  // Colori speciali
+  navy: '#000080',
+  royalBlue: '#4169E1',
+  slate: '#708090',
+
+  // Vegetazione
+  grass: '#228B22',
+  flowerPink: '#FF69B4',
+  flowerYellow: '#FFD700',
+  flowerTomato: '#FF6347',
+  flowerOrchid: '#DA70D6',
+
+  // Luce
+  lampOn: '#FFD700',
+  lampOff: '#F5F5DC',
+
+  // Riflessi e trasparenze
+  reflection: 'rgba(255, 255, 255, 0.3)',
+  smoke: 'rgba(200, 200, 200, 0.5)',
+  waterSpout: 'rgba(135, 206, 235, 0.6)',
+};
+
 /**
  * Draw a detailed building facade with architectural elements
  * @param {CanvasRenderingContext2D} ctx - Canvas context
@@ -22,10 +80,10 @@
  */
 export function drawBuildingDetailed(ctx, x, y, width, height, options) {
   options = options || {};
-  var wallColor = options.wallColor || '#8B4513';
-  var roofColor = options.roofColor || '#654321';
-  var windowColor = options.windowColor || '#87CEEB';
-  var doorColor = options.doorColor || '#4A3728';
+  var wallColor = options.wallColor || C.wallBrick;
+  var roofColor = options.roofColor || C.roofBrown;
+  var windowColor = options.windowColor || C.glassSky;
+  var doorColor = options.doorColor || C.doorWood;
   var style = options.style || 'classic'; // classic, modern, rustic
 
   // Building body
@@ -57,7 +115,7 @@ export function drawBuildingDetailed(ctx, x, y, width, height, options) {
       if (wx + windowW < x + width - 10 && wy + windowH < y + height - 30) {
         ctx.fillRect(wx, wy, windowW, windowH);
         // Window frame
-        ctx.strokeStyle = '#4A3728';
+        ctx.strokeStyle = C.doorWood;
         ctx.lineWidth = 2;
         ctx.strokeRect(wx, wy, windowW, windowH);
       }
@@ -73,17 +131,17 @@ export function drawBuildingDetailed(ctx, x, y, width, height, options) {
   ctx.fillRect(doorX, doorY, doorW, doorH);
 
   // Door details
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = C.gold;
   ctx.fillRect(doorX + doorW - 5, doorY + doorH / 2, 3, 3); // Handle
 
   // Architectural details based on style
   if (style === 'classic') {
     // Cornice
-    ctx.fillStyle = '#D4AF37';
+    ctx.fillStyle = C.goldMetallic;
     ctx.fillRect(x - 2, y + height * 0.15, width + 4, 5);
   } else if (style === 'rustic') {
     // Stone accents
-    ctx.fillStyle = '#696969';
+    ctx.fillStyle = C.stoneDim;
     for (var i = 0; i < 5; i++) {
       ctx.fillRect(x + i * (width / 5), y + height - 15, 10, 10);
     }
@@ -100,11 +158,11 @@ export function drawBuildingDetailed(ctx, x, y, width, height, options) {
  */
 export function drawChurch(ctx, x, y, width, height) {
   // Main church body
-  ctx.fillStyle = '#D2B48C';
+  ctx.fillStyle = C.wallTan;
   ctx.fillRect(x, y + height * 0.3, width * 0.7, height * 0.7);
 
   // Church roof (triangular)
-  ctx.fillStyle = '#8B4513';
+  ctx.fillStyle = C.roofSaddle;
   ctx.beginPath();
   ctx.moveTo(x - 5, y + height * 0.3);
   ctx.lineTo(x + width * 0.35, y);
@@ -117,11 +175,11 @@ export function drawChurch(ctx, x, y, width, height) {
   var towerH = height * 0.8;
   var towerX = x + width * 0.7;
   var towerY = y + height * 0.2;
-  ctx.fillStyle = '#D2B48C';
+  ctx.fillStyle = C.wallTan;
   ctx.fillRect(towerX, towerY, towerW, towerH);
 
   // Tower roof
-  ctx.fillStyle = '#8B4513';
+  ctx.fillStyle = C.roofSaddle;
   ctx.beginPath();
   ctx.moveTo(towerX - 3, towerY);
   ctx.lineTo(towerX + towerW / 2, towerY - height * 0.15);
@@ -130,11 +188,11 @@ export function drawChurch(ctx, x, y, width, height) {
   ctx.fill();
 
   // Bell opening
-  ctx.fillStyle = '#2C1810';
+  ctx.fillStyle = C.doorDark;
   ctx.fillRect(towerX + towerW * 0.25, towerY + height * 0.15, towerW * 0.5, height * 0.2);
 
   // Cross on top
-  ctx.strokeStyle = '#FFD700';
+  ctx.strokeStyle = C.gold;
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(towerX + towerW / 2, towerY - height * 0.15);
@@ -144,13 +202,13 @@ export function drawChurch(ctx, x, y, width, height) {
   ctx.stroke();
 
   // Rose window
-  ctx.fillStyle = '#4169E1';
+  ctx.fillStyle = C.royalBlue;
   ctx.beginPath();
   ctx.arc(x + width * 0.35, y + height * 0.5, 15, 0, Math.PI * 2);
   ctx.fill();
 
   // Main door
-  ctx.fillStyle = '#4A3728';
+  ctx.fillStyle = C.doorWood;
   ctx.fillRect(x + width * 0.25, y + height * 0.7, width * 0.2, height * 0.3);
 }
 
@@ -166,14 +224,14 @@ export function drawChurch(ctx, x, y, width, height) {
 export function drawResidentialHouse(ctx, x, y, width, height, options) {
   options = options || {};
   var hasGarden = options.hasGarden !== false;
-  var color = options.color || '#F5DEB3';
+  var color = options.color || C.wallWheat;
 
   // House body
   ctx.fillStyle = color;
   ctx.fillRect(x + 10, y + 20, width - 20, height - 20);
 
   // Roof
-  ctx.fillStyle = '#A0522D';
+  ctx.fillStyle = C.roofSienna;
   ctx.beginPath();
   ctx.moveTo(x + 5, y + 20);
   ctx.lineTo(x + width / 2, y);
@@ -182,27 +240,27 @@ export function drawResidentialHouse(ctx, x, y, width, height, options) {
   ctx.fill();
 
   // Windows
-  ctx.fillStyle = '#87CEEB';
+  ctx.fillStyle = C.glassSky;
   ctx.fillRect(x + 20, y + 40, 20, 25);
   ctx.fillRect(x + width - 40, y + 40, 20, 25);
 
   // Window frames
-  ctx.strokeStyle = '#8B4513';
+  ctx.strokeStyle = C.wallBrick;
   ctx.lineWidth = 2;
   ctx.strokeRect(x + 20, y + 40, 20, 25);
   ctx.strokeRect(x + width - 40, y + 40, 20, 25);
 
   // Door
-  ctx.fillStyle = '#654321';
+  ctx.fillStyle = C.doorBrown;
   ctx.fillRect(x + width / 2 - 12, y + height - 35, 24, 35);
 
   // Garden
   if (hasGarden) {
-    ctx.fillStyle = '#228B22';
+    ctx.fillStyle = C.grass;
     ctx.fillRect(x, y + height - 10, width, 15);
 
     // Flowers
-    var flowerColors = ['#FF69B4', '#FFD700', '#FF6347', '#DA70D6'];
+    var flowerColors = [C.flowerPink, C.flowerYellow, C.flowerTomato, C.flowerOrchid];
     for (var i = 0; i < 4; i++) {
       ctx.fillStyle = flowerColors[i % flowerColors.length];
       ctx.beginPath();
@@ -227,15 +285,15 @@ export function drawShopFront(ctx, x, y, width, height, options) {
   var signText = options.signText || '';
 
   // Shop body
-  ctx.fillStyle = '#DEB887';
+  ctx.fillStyle = C.wallShop;
   ctx.fillRect(x, y + 15, width, height - 15);
 
   // Large display window
-  ctx.fillStyle = '#ADD8E6';
+  ctx.fillStyle = C.glassLight;
   ctx.fillRect(x + 10, y + 30, width - 20, height * 0.5);
 
   // Window reflection
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fillStyle = C.reflection;
   ctx.beginPath();
   ctx.moveTo(x + 15, y + 35);
   ctx.lineTo(x + 40, y + 35);
@@ -247,8 +305,8 @@ export function drawShopFront(ctx, x, y, width, height, options) {
   // Awning
   var awningColors = {
     general: ['#FF6B6B', '#FFFFFF'],
-    cafe: ['#8B4513', '#F5DEB3'],
-    bookstore: ['#4169E1', '#FFD700'],
+    cafe: [C.wallBrick, C.wallWheat],
+    bookstore: [C.royalBlue, C.gold],
   };
   var colors = awningColors[shopType] || awningColors.general;
   var stripeW = 15;
@@ -258,14 +316,14 @@ export function drawShopFront(ctx, x, y, width, height, options) {
   }
 
   // Door
-  ctx.fillStyle = '#4A3728';
+  ctx.fillStyle = C.doorWood;
   ctx.fillRect(x + width / 2 - 15, y + height - 45, 30, 45);
 
   // Sign
   if (signText) {
-    ctx.fillStyle = '#2C1810';
+    ctx.fillStyle = C.doorDark;
     ctx.fillRect(x + width / 2 - 40, y - 5, 80, 20);
-    ctx.fillStyle = '#FFD700';
+    ctx.fillStyle = C.gold;
     ctx.font = "10px 'Press Start 2P', monospace";
     ctx.textAlign = 'center';
     ctx.fillText(signText.substring(0, 8), x + width / 2, y + 10);
@@ -282,19 +340,19 @@ export function drawShopFront(ctx, x, y, width, height, options) {
  */
 export function drawIndustrialBuilding(ctx, x, y, width, height) {
   // Main factory building
-  ctx.fillStyle = '#708090';
+  ctx.fillStyle = C.wallIndustrial;
   ctx.fillRect(x, y + 30, width, height - 30);
 
   // Roof
-  ctx.fillStyle = '#2F4F4F';
+  ctx.fillStyle = C.roofDarkSlate;
   ctx.fillRect(x - 5, y + 20, width + 10, 15);
 
   // Large industrial door
-  ctx.fillStyle = '#2C1810';
+  ctx.fillStyle = C.doorDark;
   ctx.fillRect(x + 20, y + height - 50, 60, 50);
 
   // Door details (panels)
-  ctx.strokeStyle = '#4A4A4A';
+  ctx.strokeStyle = C.stoneDark;
   ctx.lineWidth = 2;
   for (var i = 1; i < 4; i++) {
     ctx.beginPath();
@@ -304,7 +362,7 @@ export function drawIndustrialBuilding(ctx, x, y, width, height) {
   }
 
   // Windows (industrial style - horizontal bands)
-  ctx.fillStyle = '#87CEEB';
+  ctx.fillStyle = C.glassSky;
   for (var row = 0; row < 3; row++) {
     ctx.fillRect(x + width - 50, y + 50 + row * 30, 35, 15);
   }
@@ -312,13 +370,13 @@ export function drawIndustrialBuilding(ctx, x, y, width, height) {
   // Smokestack
   var stackX = x + width - 30;
   var stackY = y - 20;
-  ctx.fillStyle = '#8B4513';
+  ctx.fillStyle = C.wallBrick;
   ctx.fillRect(stackX, stackY, 20, 50);
-  ctx.fillStyle = '#696969';
+  ctx.fillStyle = C.stoneDim;
   ctx.fillRect(stackX - 3, stackY, 26, 10);
 
   // Smoke
-  ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+  ctx.fillStyle = C.smoke;
   for (var s = 0; s < 3; s++) {
     ctx.beginPath();
     ctx.arc(stackX + 10, stackY - 10 - s * 15, 8 + s * 3, 0, Math.PI * 2);
@@ -336,39 +394,39 @@ export function drawIndustrialBuilding(ctx, x, y, width, height) {
  */
 export function drawPoliceStation(ctx, x, y, width, height) {
   // Main building
-  ctx.fillStyle = '#4682B4';
+  ctx.fillStyle = C.wallPolice;
   ctx.fillRect(x, y + 20, width, height - 20);
 
   // Roof
-  ctx.fillStyle = '#2F4F4F';
+  ctx.fillStyle = C.roofDarkSlate;
   ctx.fillRect(x - 3, y + 15, width + 6, 10);
 
   // Steps
-  ctx.fillStyle = '#A9A9A9';
+  ctx.fillStyle = C.concrete;
   for (var i = 0; i < 3; i++) {
     ctx.fillRect(x + 20 - i * 3, y + height - 15 + i * 5, width - 40 + i * 6, 5);
   }
 
   // Columns
-  ctx.fillStyle = '#D3D3D3';
+  ctx.fillStyle = C.concreteLight;
   for (var c = 0; c < 2; c++) {
     ctx.fillRect(x + 25 + c * (width - 60), y + 35, 15, height - 55);
   }
 
   // Main door
-  ctx.fillStyle = '#2C1810';
+  ctx.fillStyle = C.doorDark;
   ctx.fillRect(x + width / 2 - 20, y + height - 45, 40, 40);
 
   // Police sign
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = C.gold;
   ctx.fillRect(x + width / 2 - 30, y + 25, 60, 20);
-  ctx.fillStyle = '#000080';
+  ctx.fillStyle = C.navy;
   ctx.font = "bold 10px 'Press Start 2P', monospace";
   ctx.textAlign = 'center';
   ctx.fillText('POLIZIA', x + width / 2, y + 38);
 
   // Shield emblem
-  ctx.fillStyle = '#000080';
+  ctx.fillStyle = C.navy;
   ctx.beginPath();
   ctx.moveTo(x + width / 2, y + 50);
   ctx.lineTo(x + width / 2 - 8, y + 55);
@@ -388,39 +446,39 @@ export function drawPoliceStation(ctx, x, y, width, height) {
  */
 export function drawFountain(ctx, x, y, size) {
   // Base
-  ctx.fillStyle = '#A9A9A9';
+  ctx.fillStyle = C.concrete;
   ctx.beginPath();
   ctx.ellipse(x, y + size * 0.8, size, size * 0.3, 0, 0, Math.PI * 2);
   ctx.fill();
 
   // Water basin
-  ctx.fillStyle = '#4682B4';
+  ctx.fillStyle = C.wallPolice;
   ctx.beginPath();
   ctx.ellipse(x, y + size * 0.75, size * 0.85, size * 0.25, 0, 0, Math.PI * 2);
   ctx.fill();
 
   // Central pillar
-  ctx.fillStyle = '#808080';
+  ctx.fillStyle = C.stoneGray;
   ctx.fillRect(x - size * 0.1, y + size * 0.3, size * 0.2, size * 0.5);
 
   // Top basin
-  ctx.fillStyle = '#A9A9A9';
+  ctx.fillStyle = C.concrete;
   ctx.beginPath();
   ctx.ellipse(x, y + size * 0.35, size * 0.4, size * 0.15, 0, 0, Math.PI * 2);
   ctx.fill();
 
   // Water in top basin
-  ctx.fillStyle = '#87CEEB';
+  ctx.fillStyle = C.glassSky;
   ctx.beginPath();
   ctx.ellipse(x, y + size * 0.33, size * 0.35, size * 0.12, 0, 0, Math.PI * 2);
   ctx.fill();
 
   // Water spout
-  ctx.fillStyle = 'rgba(135, 206, 235, 0.6)';
+  ctx.fillStyle = C.waterSpout;
   ctx.fillRect(x - 2, y, 4, size * 0.35);
 
   // Water droplets
-  ctx.fillStyle = '#ADD8E6';
+  ctx.fillStyle = C.glassLight;
   for (var i = 0; i < 5; i++) {
     ctx.beginPath();
     ctx.arc(x + (Math.random() - 0.5) * 20, y + size * 0.2 + i * 8, 2, 0, Math.PI * 2);
@@ -437,11 +495,11 @@ export function drawFountain(ctx, x, y, size) {
  */
 export function drawStreetLamp(ctx, x, y, isOn) {
   // Pole
-  ctx.fillStyle = '#2C1810';
+  ctx.fillStyle = C.doorDark;
   ctx.fillRect(x - 2, y, 4, 50);
 
   // Lamp head
-  ctx.fillStyle = '#2C1810';
+  ctx.fillStyle = C.doorDark;
   ctx.beginPath();
   ctx.moveTo(x - 8, y);
   ctx.lineTo(x + 8, y);
@@ -452,11 +510,11 @@ export function drawStreetLamp(ctx, x, y, isOn) {
 
   // Light bulb
   if (isOn) {
-    ctx.fillStyle = '#FFD700';
-    ctx.shadowColor = '#FFD700';
+    ctx.fillStyle = C.lampOn;
+    ctx.shadowColor = C.lampOn;
     ctx.shadowBlur = 15;
   } else {
-    ctx.fillStyle = '#F5F5DC';
+    ctx.fillStyle = C.lampOff;
     ctx.shadowBlur = 0;
   }
   ctx.beginPath();
