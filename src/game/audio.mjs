@@ -34,3 +34,11 @@ export function updateMuteButton() {
   if (!gameState.musicEnabled) btn.classList.add('muted');
   else btn.classList.remove('muted');
 }
+
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.initAudio = initAudio;
+  window.startMusic = startMusic;
+  window.toggleMusic = toggleMusic;
+  window.updateMuteButton = updateMuteButton;
+}

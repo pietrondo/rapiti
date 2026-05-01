@@ -186,8 +186,9 @@ async function initializeGame() {
     console.log('[Main] All modules loaded successfully');
 
     // Initialize game systems
+    var ctx = null;
     if (typeof initCanvas === 'function') {
-      initCanvas();
+      ctx = initCanvas();
     }
     if (typeof initAudio === 'function') {
       initAudio();
@@ -199,9 +200,19 @@ async function initializeGame() {
       initStoryManager();
     }
 
+    // Initialize render manager and game loop with canvas context
+    if (ctx && typeof window !== 'undefined') {
+      if (window.renderManager && typeof window.renderManager.init === 'function') {
+        window.renderManager.init(ctx);
+      }
+      if (window.gameLoop && typeof window.gameLoop.init === 'function') {
+        window.gameLoop.init(ctx);
+      }
+    }
+
     // Start game loop
-    if (typeof gameLoop === 'function') {
-      requestAnimationFrame(gameLoop);
+    if (typeof window !== 'undefined' && window.gameLoop && typeof window.gameLoop.start === 'function') {
+      window.gameLoop.start();
       console.log('[Main] Game loop started');
     }
   } catch (error) {

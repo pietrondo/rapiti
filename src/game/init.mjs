@@ -25,6 +25,16 @@ export function initEventListeners() {
   setupRegistry();
 }
 
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.initCanvas = initCanvas;
+  window.initEventListeners = initEventListeners;
+  window.setupColorSwatches = setupColorSwatches;
+  window.setupDragDrop = setupDragDrop;
+  window.setupRadio = setupRadio;
+  window.setupRegistry = setupRegistry;
+}
+
 /** Collega i click dei color-swatch al gameState.playerColors */
 export function setupColorSwatches(containerId, colorKey) {
   var container = document.getElementById(containerId);

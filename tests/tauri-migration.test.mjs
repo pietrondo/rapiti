@@ -59,6 +59,32 @@ describe('Tauri Migration Sanity Checks', () => {
     });
   });
 
+  describe('Global exports for dynamic module loading', () => {
+    it('init.mjs should expose functions on window', () => {
+      var content = readFile('src/game/init.mjs');
+      expect(content).toContain('window.initCanvas = initCanvas');
+      expect(content).toContain('window.initEventListeners = initEventListeners');
+    });
+
+    it('audio.mjs should expose functions on window', () => {
+      var content = readFile('src/game/audio.mjs');
+      expect(content).toContain('window.initAudio = initAudio');
+      expect(content).toContain('window.startMusic = startMusic');
+    });
+
+    it('customize.mjs should expose functions on window', () => {
+      var content = readFile('src/game/customize.mjs');
+      expect(content).toContain('window.applyCustomization = applyCustomization');
+      expect(content).toContain('window.renderCustomizePreview = renderCustomizePreview');
+    });
+
+    it('main.js should start gameLoop via window.gameLoop.start()', () => {
+      var content = readFile('src/main.js');
+      expect(content).toContain('window.gameLoop.start()');
+      expect(content).toContain('window.renderManager.init(ctx)');
+    });
+  });
+
   describe('Tauri configuration', () => {
     let config;
     beforeEach(() => {

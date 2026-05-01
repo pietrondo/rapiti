@@ -30,8 +30,7 @@ export function applyCustomization() {
   if (!name) name = 'Detective Maurizio';
   gameState.playerName = name;
   document.getElementById('customize-overlay').classList.remove('active');
-  gameState.gamePhase = 'intro';
-  gameState.introSlide = 3; // ultima slide narrativa
+  gameState.gamePhase = 'tutorial';
   startMusic();
 }
 
@@ -183,4 +182,14 @@ export function _darken(hex, amount) {
     g.toString(16).padStart(2, '0') +
     b.toString(16).padStart(2, '0')
   );
+}
+
+// Global exports for dynamic module loading compatibility
+if (typeof window !== 'undefined') {
+  window.openCustomize = openCustomize;
+  window.updateCustomizeSwatches = updateCustomizeSwatches;
+  window.applyCustomization = applyCustomization;
+  window.renderCustomizePreview = renderCustomizePreview;
+  window._lighten = _lighten;
+  window._darken = _darken;
 }
