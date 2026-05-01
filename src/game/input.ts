@@ -133,15 +133,15 @@ class InputManager {
           gameState.gamePhase = 'tutorial';
         } else {
           gameState.introSlide++;
-          if (gameState.introSlide >= 2) openCustomize();
+          if (gameState.introSlide >= 2) (window as any).openCustomize();
         }
       },
       prologue: () => { gameState.gamePhase = 'tutorial'; },
       tutorial: () => {
         gameState.gamePhase = 'playing';
-        updateHUD();
+        (window as any).updateHUD();
       },
-      ending: () => { resetGame(); }
+      ending: () => { (window as any).resetGame(); }
     };
 
     if (transitions[ph]) {
@@ -159,18 +159,18 @@ class InputManager {
     gameState.keys[key] = true;
 
     const actions: Record<string, () => void> = {
-      'e': () => { handleInteract(); e.preventDefault(); },
-      'E': () => { handleInteract(); e.preventDefault(); },
-      'j': () => { openJournal(); e.preventDefault(); },
-      'J': () => { openJournal(); e.preventDefault(); },
-      'i': () => { openInventory(); e.preventDefault(); },
-      'I': () => { openInventory(); e.preventDefault(); },
-      't': () => { if (canOpenDeduction()) { openDeduction(); e.preventDefault(); } },
-      'T': () => { if (canOpenDeduction()) { openDeduction(); e.preventDefault(); } },
+      'e': () => { (window as any).handleInteract(); e.preventDefault(); },
+      'E': () => { (window as any).handleInteract(); e.preventDefault(); },
+      'j': () => { (window as any).openJournal(); e.preventDefault(); },
+      'J': () => { (window as any).openJournal(); e.preventDefault(); },
+      'i': () => { (window as any).openInventory(); e.preventDefault(); },
+      'I': () => { (window as any).openInventory(); e.preventDefault(); },
+      't': () => { if ((window as any).canOpenDeduction()) { (window as any).openDeduction(); e.preventDefault(); } },
+      'T': () => { if ((window as any).canOpenDeduction()) { (window as any).openDeduction(); e.preventDefault(); } },
       'n': () => { this._toggleMiniMap(e); },
       'N': () => { this._toggleMiniMap(e); },
-      'm': () => { toggleMusic(); e.preventDefault(); },
-      'M': () => { toggleMusic(); e.preventDefault(); }
+      'm': () => { (window as any).toggleMusic(); e.preventDefault(); },
+      'M': () => { (window as any).toggleMusic(); e.preventDefault(); }
     };
 
     if (actions[key]) {
@@ -183,7 +183,7 @@ class InputManager {
    */
   private _toggleMiniMap(e: KeyboardEvent): void {
     gameState.showMiniMap = !gameState.showMiniMap;
-    showToast(gameState.showMiniMap ? 'Minimappa visibile' : 'Minimappa nascosta');
+    (window as any).showToast(gameState.showMiniMap ? 'Minimappa visibile' : 'Minimappa nascosta');
     e.preventDefault();
   }
 
@@ -194,13 +194,13 @@ class InputManager {
     if (key !== 'Escape') return;
 
     const closeActions: Record<string, () => void> = {
-      dialogue: () => closeDialogue(),
-      journal: () => closePanels(),
-      inventory: () => closePanels(),
-      deduction: () => closeDeduction(),
-      radio: () => closeRadioPuzzle(),
-      scene: () => closeScenePuzzle(),
-      recorder: () => closeRecorderPuzzle()
+      dialogue: () => (window as any).closeDialogue(),
+      journal: () => (window as any).closePanels(),
+      inventory: () => (window as any).closePanels(),
+      deduction: () => (window as any).closeDeduction(),
+      radio: () => (window as any).closeRadioPuzzle(),
+      scene: () => (window as any).closeScenePuzzle(),
+      recorder: () => (window as any).closeRecorderPuzzle()
     };
 
     if (closeActions[ph]) {

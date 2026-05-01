@@ -166,6 +166,39 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- DEBUG LOG OVERLAY -->
+<div id="debug-log" style="position:fixed;bottom:0;right:0;width:420px;height:220px;background:rgba(0,0,0,0.88);color:#0f0;font:10px 'Courier New',monospace;overflow:auto;z-index:9999;padding:8px;border-top:2px solid #d4a843;border-left:2px solid #d4a843;opacity:0.95;">
+  <div style="color:#d4a843;font-weight:bold;margin-bottom:4px;cursor:pointer;" onclick="document.getElementById('debug-log').style.display='none'">DEBUG LOG (clicca per chiudere)</div>
+</div>
+<script>
+(function(){
+  var logDiv = document.getElementById('debug-log');
+  function append(type, args) {
+    var line = document.createElement('div');
+    line.style.color = type === 'error' ? '#f44' : type === 'warn' ? '#ff4' : '#0f0';
+    line.style.marginBottom = '2px';
+    line.style.wordBreak = 'break-all';
+    line.style.whiteSpace = 'pre-wrap';
+    var msg = Array.from(args).map(function(a){
+      if (typeof a === 'object') try { return JSON.stringify(a); } catch(e) { return String(a); }
+      return String(a);
+    }).join(' ');
+    line.textContent = '[' + type.toUpperCase() + '] ' + msg;
+    logDiv.appendChild(line);
+    logDiv.scrollTop = logDiv.scrollHeight;
+    while (logDiv.children.length > 100) logDiv.removeChild(logDiv.children[1]);
+  }
+  var origLog = console.log, origErr = console.error, origWarn = console.warn;
+  console.log = function(){ append('log', arguments); origLog.apply(console, arguments); };
+  console.error = function(){ append('error', arguments); origErr.apply(console, arguments); };
+  console.warn = function(){ append('warn', arguments); origWarn.apply(console, arguments); };
+  window.addEventListener('error', function(e){
+    console.error('UNCAUGHT:', e.message, 'at', e.filename + ':' + e.lineno);
+  });
+  console.log('[Debug] Log overlay initialized');
+})();
+</script>
+
 <!-- ES6+ MODULE ENTRY POINT -->
 <script type="module" src="src/main.js"></script>
 

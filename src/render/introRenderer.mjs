@@ -119,6 +119,8 @@ export function renderIntroSlide(ctx) {
   var lines = slideData.getLines(name);
   ctx.font = '10px "Courier New",monospace';
   var textX = 44; // margine sinistro allineato col bordo pannello + 20px padding
+  var startY = 100; // spostato piu' in alto
+  var lineSpacing = 11; // 11 righe max
   for (var i = 0; i < lines.length; i++) {
     var ln = lines[i];
     if (ln.indexOf('"') === 0 || ln === name.toUpperCase() || ln.indexOf(name) === 0) {
@@ -128,11 +130,14 @@ export function renderIntroSlide(ctx) {
     }
     if (ln === name.toUpperCase()) ctx.font = 'bold 10px "Courier New",monospace';
     else ctx.font = '10px "Courier New",monospace';
-    ctx.fillText(ln, textX, 114 + i * 13);
+    ctx.fillText(ln, textX, startY + i * lineSpacing);
   }
 
+  // Prompt fuori dal pannello per evitare overlap con l'ultima riga
+  // drawPrompt disegna un rettangolo sfondo di 16px centrato su y
+  // Il pannello finisce a y=232, quindi y=238 mette il rettangolo da 228 a 244
   ctx.font = '10px "Courier New",monospace';
-  UIRenderer.drawPrompt(ctx, _introPrompts[slide] || '', 200, 222);
+  UIRenderer.drawPrompt(ctx, _introPrompts[slide] || '', 200, 238);
   ctx.textAlign = 'start';
 }
 

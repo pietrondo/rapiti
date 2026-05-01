@@ -15,7 +15,6 @@ declare const gameState: GameState;
 declare const PLAYER_SPEED: number;
 declare const CANVAS_W: number;
 declare const CANVAS_H: number;
-declare const areas: Record<string, any>;
 declare function rectCollision(
   x1: number, y1: number, w1: number, h1: number,
   x2: number, y2: number, w2: number, h2: number
@@ -66,7 +65,7 @@ export function updatePlayerPosition(): void {
   nx = Math.max(2, Math.min(CANVAS_W - p.w - 2, nx));
   ny = Math.max(2, Math.min(CANVAS_H - p.h - 2, ny));
 
-  const area = areas[gameState.currentArea];
+  const area = (window as any).areas[gameState.currentArea];
   if (area?.walkableTop && ny < area.walkableTop) ny = area.walkableTop;
 
   const resolved = resolveCollisions(area, nx, ny, p);
