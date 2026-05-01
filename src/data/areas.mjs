@@ -19,18 +19,18 @@ export {
   drawNoticeBoard,
   drawPiazzaFountain,
   drawStripedAwning,
-} from './civicDraw.mjs';
+} from '../render/civicDraw.mjs';
 export {
   drawLitWindow,
   drawTileRoof,
   drawVignette,
   drawWallTexture,
   getAreaTexture,
-} from './drawCommon.mjs';
+} from '../render/drawCommon.mjs';
 
-import * as civicDraw from './civicDraw.mjs';
+import * as civicDraw from '../render/civicDraw.mjs';
 // Global re-exports for backward compatibility
-import * as drawCommon from './drawCommon.mjs';
+import * as drawCommon from '../render/drawCommon.mjs';
 
 if (typeof window !== 'undefined') {
   Object.assign(window, drawCommon, civicDraw);

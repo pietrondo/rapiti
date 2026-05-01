@@ -39,17 +39,31 @@ window.VERSION = VERSION;
 console.log(`[Main] Le Luci di San Celeste v${VERSION} - ES6+ Module System`);
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// DYNAMIC MODULE LOADING
+// DYNAMIC MODULE LOADING (Vite import.meta.glob)
 // ═══════════════════════════════════════════════════════════════════════════════
 
+const moduleMap = import.meta.glob([
+  './data/*.mjs',
+  './engine/*.{mjs,ts}',
+  './game/*.{mjs,ts}',
+  './effects/*.mjs',
+  './areas/*.mjs',
+  './render/*.{mjs,ts}',
+  './story/*.{mjs,ts}',
+]);
+
 /**
- * Carica un modulo ES6 dinamicamente
- * @param {string} src - Percorso del modulo
+ * Carica un modulo ES6 dinamicamente tramite Vite glob
+ * @param {string} src - Percorso del modulo (relativo a src/)
  * @returns {Promise<*>}
  */
 async function loadModule(src) {
   try {
-    const module = await import(src);
+    const loader = moduleMap[src];
+    if (!loader) {
+      throw new Error(`Module ${src} not found in glob map`);
+    }
+    const module = await loader();
     console.log(`[Main] Module loaded: ${src}`);
     return module;
   } catch (error) {
