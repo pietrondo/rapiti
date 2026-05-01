@@ -19,7 +19,7 @@ const DialogueSystem = {
       typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
     if (!trigger) {
       console.warn('[DialogueSystem] No dialogue trigger for NPC:', npcId);
-      return npcId + '_s0';
+      return `${npcId}_s0`;
     }
 
     if (trigger.states) {
@@ -31,7 +31,7 @@ const DialogueSystem = {
       }
     }
 
-    return trigger.defaultNode || npcId + '_s0';
+    return trigger.defaultNode || `${npcId}_s0`;
   },
 
   /**

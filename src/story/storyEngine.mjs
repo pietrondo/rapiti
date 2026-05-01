@@ -49,13 +49,13 @@ const StoryEngine = {
     this.unlockedAchievements = [];
 
     var fm = this._fm();
-    if (fm && fm.init) fm.init();
+    if (fm?.init) fm.init();
     var sm = this._sm();
-    if (sm && sm.init) sm.init();
+    if (sm?.init) sm.init();
     var es = this._es();
-    if (es && es.init) es.init();
+    if (es?.init) es.init();
     var as = this._as();
-    if (as && as.init) as.init();
+    if (as?.init) as.init();
   },
 
   reset: function () {
@@ -68,33 +68,33 @@ const StoryEngine = {
     value = value !== undefined ? value : true;
     this.flags[flagName] = value;
     var fm = this._fm();
-    if (fm && fm.setFlag) fm.setFlag(flagName, value);
+    if (fm?.setFlag) fm.setFlag(flagName, value);
     else console.log('[StoryEngine] Flag set:', flagName, value);
     return true;
   },
 
   getFlag: function (flagName) {
     var fm = this._fm();
-    if (fm && fm.getFlag) return fm.getFlag(flagName);
+    if (fm?.getFlag) return fm.getFlag(flagName);
     return this.flags[flagName];
   },
 
   hasFlag: function (flagName) {
     var fm = this._fm();
-    if (fm && fm.hasFlag) return fm.hasFlag(flagName);
+    if (fm?.hasFlag) return fm.hasFlag(flagName);
     return !!this.flags[flagName];
   },
 
   clearFlag: function (flagName) {
     delete this.flags[flagName];
     var fm = this._fm();
-    if (fm && fm.clearFlag) fm.clearFlag(flagName);
+    if (fm?.clearFlag) fm.clearFlag(flagName);
     return true;
   },
 
   getAllFlags: function () {
     var fm = this._fm();
-    if (fm && fm.flags) return Object.assign({}, fm.flags);
+    if (fm?.flags) return Object.assign({}, fm.flags);
     return Object.assign({}, this.flags);
   },
 
@@ -102,12 +102,12 @@ const StoryEngine = {
 
   getDialogueNodeForNPC: function (npcId) {
     var ds = this._ds();
-    if (ds && ds.getDialogueNodeForNPC) return ds.getDialogueNodeForNPC(npcId);
+    if (ds?.getDialogueNodeForNPC) return ds.getDialogueNodeForNPC(npcId);
 
     // Fallback legacy
     var trigger =
       typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
-    if (!trigger) return npcId + '_s0';
+    if (!trigger) return `${npcId}_s0`;
     if (trigger.states) {
       for (var i = 0; i < trigger.states.length; i++) {
         if (this.checkCondition(trigger.states[i].condition)) {
@@ -115,24 +115,24 @@ const StoryEngine = {
         }
       }
     }
-    return trigger.defaultNode || npcId + '_s0';
+    return trigger.defaultNode || `${npcId}_s0`;
   },
 
   onDialogueStarted: function (npcId) {
     this.stats.talkedTo[npcId] = true;
     var sm = this._sm();
-    if (sm && sm.onTalkedTo) sm.onTalkedTo(npcId);
+    if (sm?.onTalkedTo) sm.onTalkedTo(npcId);
   },
 
   hasTalkedTo: function (npcId) {
     var sm = this._sm();
-    if (sm && sm.hasTalkedTo) return sm.hasTalkedTo(npcId);
+    if (sm?.hasTalkedTo) return sm.hasTalkedTo(npcId);
     return !!this.stats.talkedTo[npcId];
   },
 
   getTalkedToCount: function () {
     var sm = this._sm();
-    if (sm && sm.getTalkedToCount) return sm.getTalkedToCount();
+    if (sm?.getTalkedToCount) return sm.getTalkedToCount();
     return Object.keys(this.stats.talkedTo).length;
   },
 
@@ -140,7 +140,7 @@ const StoryEngine = {
 
   checkCondition: function (condition) {
     var cs = this._cs();
-    if (cs && cs.checkCondition) return cs.checkCondition(condition);
+    if (cs?.checkCondition) return cs.checkCondition(condition);
 
     // Minimal inline fallback (preserves behaviour if subsystems missing)
     if (!condition) return true;
@@ -204,7 +204,7 @@ const StoryEngine = {
 
   checkEvents: function () {
     var es = this._es();
-    if (es && es.checkEvents) {
+    if (es?.checkEvents) {
       es.checkEvents();
       this.triggeredEvents = es.triggeredEvents || this.triggeredEvents;
       return;
@@ -224,13 +224,13 @@ const StoryEngine = {
 
   wasEventTriggered: function (eventId) {
     var es = this._es();
-    if (es && es.wasEventTriggered) return es.wasEventTriggered(eventId);
+    if (es?.wasEventTriggered) return es.wasEventTriggered(eventId);
     return this.triggeredEvents.indexOf(eventId) !== -1;
   },
 
   triggerEvent: function (eventId) {
     var es = this._es();
-    if (es && es.triggerEvent) {
+    if (es?.triggerEvent) {
       es.triggerEvent(eventId);
       this.triggeredEvents = es.triggeredEvents || this.triggeredEvents;
       return;
@@ -248,7 +248,7 @@ const StoryEngine = {
 
   determineEnding: function () {
     var ens = this._ens();
-    if (ens && ens.determineEnding) return ens.determineEnding();
+    if (ens?.determineEnding) return ens.determineEnding();
 
     if (typeof storyEndingConditions === 'undefined') {
       return {
@@ -272,7 +272,7 @@ const StoryEngine = {
 
   getAvailableEndings: function () {
     var ens = this._ens();
-    if (ens && ens.getAvailableEndings) return ens.getAvailableEndings();
+    if (ens?.getAvailableEndings) return ens.getAvailableEndings();
 
     if (typeof storyEndingConditions === 'undefined') return [];
     var endings = [];
@@ -287,19 +287,19 @@ const StoryEngine = {
   onAreaVisited: function (areaId) {
     this.stats.visitedAreas[areaId] = true;
     var sm = this._sm();
-    if (sm && sm.onAreaVisited) sm.onAreaVisited(areaId);
+    if (sm?.onAreaVisited) sm.onAreaVisited(areaId);
   },
 
   onClueFound: function (_clueId) {
     this.stats.cluesFound++;
     var sm = this._sm();
-    if (sm && sm.onClueFound) sm.onClueFound();
+    if (sm?.onClueFound) sm.onClueFound();
   },
 
   onPuzzleSolved: function (puzzleId) {
     this.stats.puzzlesSolved[puzzleId] = true;
     var sm = this._sm();
-    if (sm && sm.onPuzzleSolved) sm.onPuzzleSolved(puzzleId);
+    if (sm?.onPuzzleSolved) sm.onPuzzleSolved(puzzleId);
 
     if (typeof gameState !== 'undefined') {
       if (puzzleId === 'deduction') gameState.puzzleSolved = true;
@@ -309,7 +309,7 @@ const StoryEngine = {
 
   getStats: function () {
     var sm = this._sm();
-    if (sm && sm.stats) {
+    if (sm?.stats) {
       return Object.assign({}, sm.stats);
     }
     return Object.assign({}, this.stats);
@@ -318,14 +318,14 @@ const StoryEngine = {
   addPlayTime: function (seconds) {
     this.stats.totalPlayTime += seconds;
     var sm = this._sm();
-    if (sm && sm.stats) sm.stats.totalPlayTime += seconds;
+    if (sm?.stats) sm.stats.totalPlayTime += seconds;
   },
 
   /* ── ACHIEVEMENTS ── */
 
   unlockAchievement: function (achievementId) {
     var as = this._as();
-    if (as && as.unlockAchievement) {
+    if (as?.unlockAchievement) {
       var result = as.unlockAchievement(achievementId);
       if (result) this.unlockedAchievements = as.unlockedAchievements.slice();
       return result;
@@ -341,13 +341,13 @@ const StoryEngine = {
 
   hasAchievement: function (achievementId) {
     var as = this._as();
-    if (as && as.hasAchievement) return as.hasAchievement(achievementId);
+    if (as?.hasAchievement) return as.hasAchievement(achievementId);
     return this.unlockedAchievements.indexOf(achievementId) !== -1;
   },
 
   getUnlockedAchievements: function () {
     var as = this._as();
-    if (as && as.getUnlockedAchievements) {
+    if (as?.getUnlockedAchievements) {
       this.unlockedAchievements = as.getUnlockedAchievements();
       return this.unlockedAchievements.slice();
     }
@@ -380,13 +380,13 @@ const StoryEngine = {
     this.unlockedAchievements = data.unlockedAchievements || [];
 
     var fm = this._fm();
-    if (fm && fm.deserialize) fm.deserialize(this.flags);
+    if (fm?.deserialize) fm.deserialize(this.flags);
     var sm = this._sm();
-    if (sm && sm.deserialize) sm.deserialize(this.stats);
+    if (sm?.deserialize) sm.deserialize(this.stats);
     var es = this._es();
-    if (es && es.deserialize) es.deserialize(this.triggeredEvents);
+    if (es?.deserialize) es.deserialize(this.triggeredEvents);
     var as = this._as();
-    if (as && as.deserialize) as.deserialize(this.unlockedAchievements);
+    if (as?.deserialize) as.deserialize(this.unlockedAchievements);
 
     return true;
   },

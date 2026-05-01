@@ -56,6 +56,7 @@ global.handleInteract = jest.fn();
 
 // Import functions to test
 import { handleKeyDown, handleKeyUp, updatePlayerPosition, InputManager } from '../src/game/input.ts';
+import { resolveCollisions } from '../src/game/movement.js';
 
 describe('Input Handling', () => {
   beforeEach(() => {
@@ -281,6 +282,29 @@ describe('Input Handling', () => {
       updatePlayerPosition();
       expect(gameState.player.y).toBeGreaterThan(100);
       expect(gameState.player.dir).toBe('down');
+    });
+  });
+
+  describe('resolveCollisions', () => {
+    it('should return original position when colliding with collider', () => {
+      const area = { colliders: [{ x: 90, y: 90, w: 30, h: 30 }] };
+      const p = { x: 80, y: 100, w: 10, h: 14 };
+      const result = resolveCollisions(area, 85, 100, p);
+      expect(result).toEqual({ x: 80, y: 100 });
+    });
+
+    it('should return new position when no collision', () => {
+      const area = { colliders: [] };
+      const p = { x: 80, y: 100, w: 10, h: 14 };
+      const result = resolveCollisions(area, 85, 100, p);
+      expect(result).toEqual({ x: 85, y: 100 });
+    });
+
+    it('should return original position when colliding with NPC', () => {
+      const area = { npcs: [{ x: 110, y: 107 }] };
+      const p = { x: 100, y: 100, w: 10, h: 14 };
+      const result = resolveCollisions(area, 105, 100, p);
+      expect(result).toEqual({ x: 100, y: 100 });
     });
   });
 });

@@ -59,7 +59,7 @@ var _introSlides = [
     getLines: (name) => [
       '',
       "Quell'uomo sei tu,",
-      name + '.',
+      `${name}.`,
       '',
       'Un detective pragmatico, razionale,',
       "con un debole per il caffe'",
@@ -75,7 +75,7 @@ var _introSlides = [
     title: "L'INCARICO",
     getLines: (name) => [
       '',
-      '"Detective ' + name + ',',
+      `"Detective ${name},`,
       'vada a San Celeste.',
       'Scopra cosa sta succedendo.',
       'E torni con delle risposte."',

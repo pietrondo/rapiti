@@ -62,23 +62,23 @@ export function buildRecorderOverlay() {
   document.getElementById('recorder-play').addEventListener('click', playRecorder);
 
   // Cable buttons
-  ['r', 'b', 'g'].forEach((color) => {
+  for (const color of ['r', 'b', 'g']) {
     var btn = document.getElementById(`rec-cable-${color}`);
     btn.addEventListener('click', () => {
       var ci = color === 'r' ? 0 : color === 'b' ? 1 : 2;
       recorderState.cables[ci] = !recorderState.cables[ci];
       refreshRecorderUI();
     });
-  });
+  }
 
   // Bobin buttons
-  [].forEach.call(document.querySelectorAll('.rec-bobin-btn'), (btn) => {
+  for (const btn of document.querySelectorAll('.rec-bobin-btn')) {
     btn.addEventListener('click', function () {
       var bi = parseInt(this.getAttribute('data-bobin'), 10);
       recorderState.bobin = recorderState.bobin === bi ? -1 : bi;
       refreshRecorderUI();
     });
-  });
+  }
 
   // Power button
   document.getElementById('rec-power').addEventListener('click', () => {

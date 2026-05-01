@@ -39,15 +39,15 @@ function _drawNightField(ctx, t) {
 function _drawGroundLight(ctx, step, t) {
   var pulse = Math.sin(t * 4) * 0.3 + 0.7;
   var glowIntensity = Math.min(1, (step - 2) * 0.5 + pulse * 0.3);
-  ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.6).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(200,220,255,${(glowIntensity * 0.6).toFixed(2)})`;
   ctx.beginPath();
   ctx.arc(200, 130, 50 + Math.sin(t * 3) * 15, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,' + (glowIntensity * 0.8).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(255,255,255,${(glowIntensity * 0.8).toFixed(2)})`;
   ctx.beginPath();
   ctx.arc(200, 130, 20 + Math.sin(t * 2) * 8, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = 'rgba(200,220,255,' + (glowIntensity * 0.3).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(200,220,255,${(glowIntensity * 0.3).toFixed(2)})`;
   for (var r = 0; r < 8; r++) {
     ctx.fillRect(198 + r * 2, 70 + Math.sin(r + t * 2) * 5, 2, 60);
   }
@@ -55,7 +55,7 @@ function _drawGroundLight(ctx, step, t) {
 
 function _drawConcentricCircles(ctx, step, t) {
   var circleAlpha = Math.min(1, (step - 4) * 0.4 + Math.sin(t * 2) * 0.1);
-  ctx.strokeStyle = 'rgba(212,168,67,' + circleAlpha.toFixed(2) + ')';
+  ctx.strokeStyle = `rgba(212,168,67,${circleAlpha.toFixed(2)})`;
   ctx.lineWidth = 2;
   for (var c = 0; c < 3; c++) {
     var radius = 15 + c * 18 + Math.sin(t * 3 + c) * 3;
@@ -64,7 +64,7 @@ function _drawConcentricCircles(ctx, step, t) {
     ctx.stroke();
   }
   ctx.lineWidth = 1;
-  ctx.fillStyle = PALETTE.oliveGreen + 'AA';
+  ctx.fillStyle = `${PALETTE.oliveGreen}AA`;
   for (var a = 0; a < 24; a++) {
     var rad = (a * Math.PI) / 12;
     for (var r2 = 0; r2 < 3; r2++) {
@@ -100,13 +100,13 @@ function _drawElena(ctx, step, t) {
 function _drawFragment(ctx) {
   ctx.fillStyle = PALETTE.alumGrey;
   ctx.fillRect(196, 132, 6, 4);
-  ctx.fillStyle = PALETTE.creamPaper + '88';
+  ctx.fillStyle = `${PALETTE.creamPaper}88`;
   ctx.fillRect(197, 131, 4, 2);
 }
 
 function _drawWhiteFlash(ctx, step, timer) {
   var flash = Math.min(1, (step - 7) * 0.4 + (timer - (step === 7 ? 60 : 0)) * 0.02);
-  ctx.fillStyle = 'rgba(255,255,255,' + Math.min(0.9, flash).toFixed(2) + ')';
+  ctx.fillStyle = `rgba(255,255,255,${Math.min(0.9, flash).toFixed(2)})`;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 }
 
@@ -148,7 +148,7 @@ function _drawSubtitles(ctx, step) {
 
 function _drawWaitPrompt(ctx) {
   var alpha = 0.4 + Math.sin(Date.now() * 0.003) * 0.4;
-  ctx.fillStyle = 'rgba(212,168,67,' + alpha.toFixed(2) + ')';
+  ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
   ctx.font = '9px "Courier New",monospace';
   ctx.textAlign = 'center';
   ctx.fillText('Attendi...', 200, 230);

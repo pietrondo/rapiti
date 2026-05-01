@@ -97,7 +97,7 @@ const StoryManager = {
       typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
     if (!trigger) {
       console.warn('[StoryManager] Nessun trigger per NPC:', npcId);
-      return npcId + '_s0';
+      return `${npcId}_s0`;
     }
 
     for (var i = 0; i < trigger.states.length; i++) {
@@ -132,19 +132,17 @@ const StoryManager = {
 
     if (condition.chapterAtMost) {
       var maxOrder = storyChapters[condition.chapterAtMost].order;
-      var currentOrder =
-        chapterMgr && chapterMgr.getCurrentChapterId()
-          ? storyChapters[chapterMgr.getCurrentChapterId()].order
-          : 0;
+      var currentOrder = chapterMgr?.getCurrentChapterId()
+        ? storyChapters[chapterMgr.getCurrentChapterId()].order
+        : 0;
       if (currentOrder > maxOrder) return false;
     }
 
     if (condition.chapterAtLeast) {
       var minOrder = storyChapters[condition.chapterAtLeast].order;
-      var currentOrder =
-        chapterMgr && chapterMgr.getCurrentChapterId()
-          ? storyChapters[chapterMgr.getCurrentChapterId()].order
-          : 0;
+      var currentOrder = chapterMgr?.getCurrentChapterId()
+        ? storyChapters[chapterMgr.getCurrentChapterId()].order
+        : 0;
       if (currentOrder < minOrder) return false;
     }
 
@@ -188,7 +186,7 @@ const StoryManager = {
     }
 
     if (condition.talkedTo) {
-      if (!statsMgr || !statsMgr.hasTalkedTo(condition.talkedTo)) return false;
+      if (!statsMgr?.hasTalkedTo(condition.talkedTo)) return false;
     }
 
     if (condition.talkedToCount) {
@@ -197,22 +195,22 @@ const StoryManager = {
 
     if (condition.talkedToAll) {
       for (var j = 0; j < condition.talkedToAll.length; j++) {
-        if (!statsMgr || !statsMgr.hasTalkedTo(condition.talkedToAll[j])) return false;
+        if (!statsMgr?.hasTalkedTo(condition.talkedToAll[j])) return false;
       }
     }
 
     if (condition.puzzleSolved) {
-      if (!statsMgr || !statsMgr.hasSolvedPuzzle(condition.puzzleSolved)) return false;
+      if (!statsMgr?.hasSolvedPuzzle(condition.puzzleSolved)) return false;
     }
 
     if (condition.puzzlesSolved) {
       for (var k = 0; k < condition.puzzlesSolved.length; k++) {
-        if (!statsMgr || !statsMgr.hasSolvedPuzzle(condition.puzzlesSolved[k])) return false;
+        if (!statsMgr?.hasSolvedPuzzle(condition.puzzlesSolved[k])) return false;
       }
     }
 
     if (condition.visitedArea) {
-      if (!statsMgr || !statsMgr.hasVisitedArea(condition.visitedArea)) return false;
+      if (!statsMgr?.hasVisitedArea(condition.visitedArea)) return false;
     }
 
     return true;
@@ -241,10 +239,10 @@ const StoryManager = {
 
   checkObjectivesForEvent: (eventType, target) => {
     var chapterMgr = typeof ChapterManager !== 'undefined' ? ChapterManager : null;
-    if (!chapterMgr || !chapterMgr.currentChapter) return;
+    if (!chapterMgr?.currentChapter) return;
 
     var chapter = storyChapters ? storyChapters[chapterMgr.currentChapter] : null;
-    if (!chapter || !chapter.objectives) return;
+    if (!chapter?.objectives) return;
 
     for (var i = 0; i < chapter.objectives.length; i++) {
       var obj = chapter.objectives[i];
@@ -270,7 +268,7 @@ const StoryManager = {
 
     if (reward.setFlag) this.setFlag(reward.setFlag);
 
-    if (reward.updateNPCState && gameState && gameState.npcStates) {
+    if (reward.updateNPCState && gameState?.npcStates) {
       for (var npcId in reward.updateNPCState) {
         gameState.npcStates[npcId] = reward.updateNPCState[npcId];
       }

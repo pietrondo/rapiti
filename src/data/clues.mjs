@@ -68,9 +68,9 @@ const clues = [
 
 /** Costruisce dizionario indizi per lookup */
 const cluesMap = {};
-clues.forEach((c) => {
+for (const c of clues) {
   cluesMap[c.id] = c;
-});
+}
 
 /** Oggetti interattivi nelle aree — posizione su canvas 400×250 */
 const _areaObjects = {
