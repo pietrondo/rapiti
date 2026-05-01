@@ -1,7 +1,7 @@
 export function checkAreaExits() {
   if (gameState.fadeDir !== 0) return;
   var p = gameState.player;
-  var area = areas[gameState.currentArea];
+  var area = window.areas[gameState.currentArea];
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
     if (ex.requiresPuzzle) continue;

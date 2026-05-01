@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 export function renderArea(ctx) {
-  var area = areas[gameState.currentArea];
+  var area = window.areas[gameState.currentArea];
   area.draw(ctx);
   UIRenderer.renderAreaExitMarkers(ctx, area);
 

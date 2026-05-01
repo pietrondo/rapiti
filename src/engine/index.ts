@@ -303,6 +303,16 @@ const Engine = {
 // Make available globally for browser environment
 if (typeof window !== 'undefined') {
   window.Engine = Engine;
+  // Legacy rectCollision wrapper (8 args) for movement.ts compatibility
+  window.rectCollision = function(
+    x1: number, y1: number, w1: number, h1: number,
+    x2: number, y2: number, w2: number, h2: number
+  ): boolean {
+    return Engine.rectCollision(
+      { x: x1, y: y1, width: w1, height: h1 },
+      { x: x2, y: y2, width: w2, height: h2 }
+    );
+  };
 }
 
 // Singleton instance for convenience

@@ -15,10 +15,7 @@ declare const gameState: GameState;
 declare const PLAYER_SPEED: number;
 declare const CANVAS_W: number;
 declare const CANVAS_H: number;
-declare function rectCollision(
-  x1: number, y1: number, w1: number, h1: number,
-  x2: number, y2: number, w2: number, h2: number
-): boolean;
+// rectCollision è esposto su window da engine/index.ts
 
 /**
  * Resolve collisions against area colliders and NPCs
@@ -26,14 +23,14 @@ declare function rectCollision(
 export function resolveCollisions(area: any, nx: number, ny: number, p: any): { x: number; y: number } {
   if (area?.colliders) {
     for (const col of area.colliders) {
-      if (rectCollision(nx, ny, p.w, p.h, col.x, col.y, col.w, col.h)) {
+      if ((window as any).rectCollision(nx, ny, p.w, p.h, col.x, col.y, col.w, col.h)) {
         return { x: p.x, y: p.y };
       }
     }
   }
   if (area?.npcs) {
     for (const npc of area.npcs) {
-      if (rectCollision(nx, ny, p.w, p.h, npc.x - 6, npc.y - 6, 12, 18)) {
+      if ((window as any).rectCollision(nx, ny, p.w, p.h, npc.x - 6, npc.y - 6, 12, 18)) {
         return { x: p.x, y: p.y };
       }
     }

@@ -127,6 +127,12 @@ if (typeof window !== 'undefined') {
   window.AreaManager = AreaManager;
   window.areaManager = areaManager;
   window.Areas = areaManager; // backward compatibility
+  // Legacy object-style access: areas['piazze'] -> areaManager.get('piazze')
+  window.areas = new Proxy({}, {
+    get: function(target, prop) { return areaManager.get(prop); },
+    has: function(target, prop) { return areaManager.has(prop); },
+    ownKeys: function(target) { return areaManager.getIds(); }
+  });
 }
 
 if (typeof module !== 'undefined' && module.exports) {
