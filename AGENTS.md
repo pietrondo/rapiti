@@ -165,6 +165,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Piazza**: helper dedicati in `areas.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
 - **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati (`_drawNightField`, `_drawGroundLight`, `_drawConcentricCircles`, `_drawElena`, `_drawFragment`, `_drawWhiteFlash`, `_drawTitleOnWhite`, `_drawSubtitles`); `input.ts` con collisioni estratte in `_resolveCollisions()`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`.
+- **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 ## Issue Tracking with bd (beads)
