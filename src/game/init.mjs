@@ -1,8 +1,23 @@
+import { handleKeyDown, handleKeyUp } from './input.ts';
+import { closeDeduction, checkDeduction, setupDragDrop } from './deduction.mjs';
+import { closeRadioPuzzle, setupRadio } from './radio.mjs';
+import { closeRegistryPuzzle, checkRegistry, setupRegistry } from './registry.mjs';
+import { closeScenePuzzle, checkScene } from './scene.mjs';
+import { applyCustomization } from './customize.mjs';
+
 export function initCanvas() {
   var c = document.getElementById('gameCanvas');
   c.width = CANVAS_W * 2;
   c.height = CANVAS_H * 2;
   return c.getContext('2d');
+}
+
+function closeJournal() {
+  document.getElementById('journal-overlay').classList.remove('active');
+}
+
+function closeInventory() {
+  document.getElementById('inventory-overlay').classList.remove('active');
 }
 
 export function initEventListeners() {

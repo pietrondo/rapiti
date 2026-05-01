@@ -83,6 +83,16 @@ describe('Tauri Migration Sanity Checks', () => {
       expect(content).toContain('window.gameLoop.start()');
       expect(content).toContain('window.renderManager.init(ctx)');
     });
+
+    it('init.mjs should import dependencies instead of relying on globals', () => {
+      var content = readFile('src/game/init.mjs');
+      expect(content).toContain("import { handleKeyDown, handleKeyUp } from './input.ts'");
+      expect(content).toContain("import { closeDeduction, checkDeduction, setupDragDrop } from './deduction.mjs'");
+      expect(content).toContain("import { closeRadioPuzzle, setupRadio } from './radio.mjs'");
+      expect(content).toContain("import { closeRegistryPuzzle, checkRegistry, setupRegistry } from './registry.mjs'");
+      expect(content).toContain("import { closeScenePuzzle, checkScene } from './scene.mjs'");
+      expect(content).toContain("import { applyCustomization } from './customize.mjs'");
+    });
   });
 
   describe('Tauri configuration', () => {
