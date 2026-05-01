@@ -187,17 +187,19 @@ async function initializeGame() {
 
     // Initialize game systems
     var ctx = null;
-    if (typeof initCanvas === 'function') {
-      ctx = initCanvas();
-    }
-    if (typeof initAudio === 'function') {
-      initAudio();
-    }
-    if (typeof initEventListeners === 'function') {
-      initEventListeners();
-    }
-    if (typeof initStoryManager === 'function') {
-      initStoryManager();
+    if (typeof window !== 'undefined') {
+      if (typeof window.initCanvas === 'function') {
+        ctx = window.initCanvas();
+      }
+      if (typeof window.initAudio === 'function') {
+        window.initAudio();
+      }
+      if (typeof window.initEventListeners === 'function') {
+        window.initEventListeners();
+      }
+      if (typeof window.initStoryManager === 'function') {
+        window.initStoryManager();
+      }
     }
 
     // Initialize render manager and game loop with canvas context

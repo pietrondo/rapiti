@@ -220,6 +220,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Test**: `tests/renderer.test.mjs` copre `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs` con canvas mock (23 test).
 - **Icona**: `icon.ico` (256x256, lanterna pixel-art) per build Tauri. Le icone in `src-tauri/icons/` vengono generate da `icon.ico` tramite `npx tauri icon`.
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
+- **Inizializzazione in `main.js`**: le funzioni esposte globalmente dai moduli caricati dinamicamente (`initCanvas`, `initAudio`, `initEventListeners`, `initStoryManager`) devono essere accedute tramite `window.xxx`, non come variabili libere. In un modulo ES strict mode `typeof variabileNonDichiarata` restituisce `"undefined"` senza errore, causando il silenzioso skip dell'inizializzazione (bug bd `rapito-dagli-alieni-akg`). Test regressione in `tests/main.test.mjs`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 ## Issue Tracking with bd (beads)
