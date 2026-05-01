@@ -72,7 +72,7 @@ export function drawPrompt(ctx, text, x, y) {
   ctx.fillText(text, x, y + 2);
 }
 
-export function drawTitleLandscape(ctx, t) {
+function _drawNightSky(ctx, t) {
   fillGradientRect(ctx, 0, 0, CANVAS_W, CANVAS_H, '#060714', '#1A1C20');
   ctx.fillStyle = PALETTE.creamPaper;
   for (var i = 0; i < 70; i++) {
@@ -83,7 +83,9 @@ export function drawTitleLandscape(ctx, t) {
     ctx.fillRect(sx, sy, size, size);
   }
   ctx.globalAlpha = 1;
+}
 
+function _drawMoon(ctx, t) {
   ctx.fillStyle = 'rgba(120,150,255,0.12)';
   ctx.beginPath();
   ctx.arc(210 + Math.sin(t * 0.7) * 12, 48, 34 + Math.sin(t * 1.7) * 7, 0, Math.PI * 2);
@@ -99,7 +101,9 @@ export function drawTitleLandscape(ctx, t) {
   ctx.lineTo(246 + Math.sin(t * 1.2) * 8, 168);
   ctx.lineTo(222, 62);
   ctx.fill();
+}
 
+function _drawMountains(ctx) {
   ctx.fillStyle = '#111824';
   ctx.beginPath();
   ctx.moveTo(0, 134);
@@ -114,7 +118,9 @@ export function drawTitleLandscape(ctx, t) {
   ctx.fill();
   ctx.fillStyle = '#17251E';
   ctx.fillRect(0, 150, CANVAS_W, 100);
+}
 
+function _drawBuildingSilhouette(ctx) {
   ctx.fillStyle = '#202735';
   ctx.fillRect(130, 110, 140, 54);
   ctx.fillStyle = '#4F3428';
@@ -129,11 +135,21 @@ export function drawTitleLandscape(ctx, t) {
   ctx.fillStyle = 'rgba(212,168,67,0.18)';
   ctx.fillRect(144, 120, 20, 22);
   ctx.fillRect(234, 120, 20, 22);
+}
 
+function _drawGrassField(ctx) {
   for (var g = 0; g < 32; g++) {
     ctx.fillStyle = g % 2 === 0 ? '#21351F' : '#2B4426';
     ctx.fillRect(g * 13, 170 + (g % 3) * 4, 9, 80);
   }
+}
+
+export function drawTitleLandscape(ctx, t) {
+  _drawNightSky(ctx, t);
+  _drawMoon(ctx, t);
+  _drawMountains(ctx);
+  _drawBuildingSilhouette(ctx);
+  _drawGrassField(ctx);
   drawFilmGrain(ctx);
 }
 

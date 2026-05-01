@@ -140,7 +140,6 @@ async function initializeGame() {
     await loadScript('src/game/audio.js');
     await loadScript('src/game/customize.js');
     await loadScript('src/game/input.js');
-    await loadScript('src/game/render.js');
     await loadScript('src/game/dialogue.js');
     await loadScript('src/game/radio.js');
     await loadScript('src/game/registry.js');
