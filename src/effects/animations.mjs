@@ -5,6 +5,22 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+/* ── COSTANTI COLORI ── */
+var C = {
+  doorWood: '#4a3728',
+  doorMetal: '#3a3a3a',
+  doorDefault: '#5a4a3a',
+  goldHandle: '#d4af37',
+  windowWarm: '#fff8e1',
+  windowLight: '#ffe4b5',
+  butterflyRed: '#ff6b6b',
+  butterflyTeal: '#4ecdc4',
+  butterflyYellow: '#ffe66d',
+  birdDark: '#333',
+  catFur: '#d4a574',
+  catEye: '#333',
+};
+
 /**
  * Door System - Porte animate
  */
@@ -57,11 +73,11 @@ DoorSystem.prototype.draw = function (ctx) {
     ctx.translate(door.x + door.w / 2, door.y + door.h / 2);
 
     if (door.type === 'wood') {
-      ctx.fillStyle = '#4a3728';
+      ctx.fillStyle = C.doorWood;
     } else if (door.type === 'metal') {
-      ctx.fillStyle = '#3a3a3a';
+      ctx.fillStyle = C.doorMetal;
     } else {
-      ctx.fillStyle = '#5a4a3a';
+      ctx.fillStyle = C.doorDefault;
     }
 
     var width = door.w * (1 - openAmount * 0.7);
@@ -76,7 +92,7 @@ DoorSystem.prototype.draw = function (ctx) {
     ctx.fill();
 
     // Maniglia
-    ctx.fillStyle = '#d4af37';
+    ctx.fillStyle = C.goldHandle;
     ctx.fillRect(width / 2 - 8, -5, 6, 10);
 
     ctx.restore();
@@ -123,7 +139,7 @@ WindowSystem.prototype.addWindow = function (x, y, w, h) {
     h: h,
     lit: Math.random() > 0.5,
     flickerTimer: 0,
-    color: Math.random() > 0.7 ? '#fff8e1' : '#ffe4b5',
+    color: Math.random() > 0.7 ? C.windowWarm : C.windowLight,
   });
 };
 
@@ -213,7 +229,7 @@ WildlifeSystem.prototype.addButterfly = function (x, y) {
     vx: (Math.random() - 0.5) * 0.5,
     vy: (Math.random() - 0.5) * 0.5,
     wingPhase: Math.random() * Math.PI * 2,
-    color: ['#ff6b6b', '#4ecdc4', '#ffe66d'][Math.floor(Math.random() * 3)],
+    color: [C.butterflyRed, C.butterflyTeal, C.butterflyYellow][Math.floor(Math.random() * 3)],
     life: 600,
   });
 };
@@ -278,7 +294,7 @@ WildlifeSystem.prototype.draw = function (ctx) {
 
     if (c.type === 'bird') {
       var wingY = Math.sin(c.wingPhase) * 5;
-      ctx.fillStyle = '#333';
+      ctx.fillStyle = C.birdDark;
       ctx.beginPath();
       ctx.moveTo(-6, -wingY);
       ctx.lineTo(0, 2);
@@ -296,11 +312,11 @@ WildlifeSystem.prototype.draw = function (ctx) {
       ctx.restore();
     } else if (c.type === 'cat') {
       ctx.scale(c.facing, 1);
-      ctx.fillStyle = '#d4a574';
+      ctx.fillStyle = C.catFur;
       ctx.fillRect(-8, -6, 16, 10);
       ctx.fillRect(-10, -8, 4, 6);
       ctx.fillRect(6, -8, 4, 6);
-      ctx.fillStyle = '#333';
+      ctx.fillStyle = C.catEye;
       ctx.fillRect(4, -4, 2, 2);
     }
 
