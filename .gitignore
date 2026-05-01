@@ -6,7 +6,6 @@ node_modules/
 *.ogg
 dist/
 electron-main.js
-package.json
 package-lock.json
 installer.nsi
 img_req.json
