@@ -93,7 +93,9 @@ src/
     npcData.mjs          — Dati visivi NPC (nome, colori)
     dialogueNodes.mjs    — Albero dialoghi NPC
     dialogueEffects.mjs  — Effetti applicati dopo scelte di dialogo
-    areas.mjs            — Helper disegno aree condivisi
+    areas.mjs            — Facade: re-export drawCommon.mjs + civicDraw.mjs
+    drawCommon.mjs       — Primitive disegno condivise: getAreaTexture, drawLitWindow, drawTileRoof, drawWallTexture, drawVignette
+    civicDraw.mjs        — Facciate edifici civili: drawMunicipioFacade, drawChurchFacade, drawBarFacade, drawPiazzaFountain, drawNoticeBoard, drawBench
     puzzles.mjs          — Dati puzzle
   render/
     spriteManager.mjs    — Gestione sprite e cache
@@ -104,14 +106,18 @@ src/
     prologueRenderer.mjs — Cutscene prologo scomparsa Elena
     introRenderer.mjs    — Titolo, slide intro, tutorial
     endingRenderer.mjs   — Schermata finale
-    gameRenderer.mjs     — Rendering gameplay: area, player, hint
+    gameRenderer.mjs     — Facade: re-export areaRenderer + playerRenderer + hintRenderer
+    areaRenderer.mjs     — Rendering area: NPCs, oggetti interattivi, exit markers
+    playerRenderer.mjs   — Rendering player: sprite sheet, animazione, shadow
+    hintRenderer.mjs     — Rendering hint interazione sopra target
     index.ts             — RenderManager ES6+ class e dispatcher
   game/
     engine.js            — SpriteEngine (caricamento PNG, generazione procedurale), PF (helper disegno: nightSky, mountains, building, lamp, tree, buildingDetailed)
     init.js              — initCanvas(), initEventListeners(), setupColorSwatches(), setupDragDrop(), setupRadio(), setupRegistry()
     audio.js             — initAudio(), startMusic(), toggleMusic(), updateMuteButton()
     customize.js         — openCustomize(), applyCustomization(), renderCustomizePreview() (EarthBound style), _lighten/_darken helpers (EarthBound style), _lighten/_darken helpers
-    input.js             — handleKeyDown() (macchina a stati tasti), updatePlayerPosition() (WASD + collider + NPC collision), checkInteractions(), collectClue(), openJournal/Inventory, closePanels
+    input.ts             — InputManager class: handleKeyDown/KeyUp (macchina a stati tasti), touch controls
+    movement.ts          — updatePlayerPosition() (WASD + collider + NPC collision), resolveCollisions()
     render.js            — render() (dispatcher per gamePhase), renderTitle/IntroSlide/Tutorial, renderArea (NPC + oggetti + hint), renderPlayer (da sprite sheet), drawSprite (fallback), renderInteractionHint, renderEndingScreen, getOrCreatePlayerSheet() (cache con invalidazione colori), _lighten/_darken
     dialogue.js          — startDialogue() (state-based: npcId_s0/s1/s2), renderDialogueHTML(), selectDialogueChoice(), applyDialogueEffect(), closeDialogue()
     radio.js             — openRadioPuzzle(), setupRadio() (drag knob), updateRadioKnob() (static/interference/clear a 72 MHz)
@@ -207,9 +213,9 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
 - **Minimappa**: `renderMiniMap()` in `render.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
 - **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
-- **Piazza**: helper dedicati in `areas.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
+- **Piazza**: helper dedicati in `civicDraw.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
-- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati (`_drawNightField`, `_drawGroundLight`, `_drawConcentricCircles`, `_drawElena`, `_drawFragment`, `_drawWhiteFlash`, `_drawTitleOnWhite`, `_drawSubtitles`) e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `_resolveCollisions()`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`.
+- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `movement.ts`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`; `areas.mjs` spezzato in `drawCommon.mjs` e `civicDraw.mjs`; `gameRenderer.mjs` spezzato in `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs`.
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
