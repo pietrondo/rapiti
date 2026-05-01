@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { GameStore, gameStore } from '../src/game/store.mjs';
-import { SaveLoadSystem, saveLoad } from '../src/game/saveLoad.mjs';
+import { GameStore, gameStore } from '../src/game/store.ts';
+import { SaveLoadSystem, saveLoad } from '../src/game/saveLoad.ts';
 
 describe('GameStore (Reactive State)', () => {
   let store;

@@ -9,18 +9,27 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import type { Chapter, Quest, Condition, Reward, StoryEvent, Ending, SerializedChapters, SerializedQuests, SerializedEngine } from '../types.js';
+
 class StoryManager {
+  /** Chapter management submodule */
+  chapters: any;
+
+  /** Quest management submodule */
+  quests: any;
+
+  /** Core story engine submodule */
+  engine: any;
+
+  /** Version info */
+  version: string;
+  buildDate: string;
+
   constructor() {
-    /** Chapter management submodule */
     this.chapters = typeof ChapterManager !== 'undefined' ? ChapterManager : null;
-
-    /** Quest management submodule */
     this.quests = typeof QuestManager !== 'undefined' ? QuestManager : null;
-
-    /** Core story engine submodule */
     this.engine = typeof StoryEngine !== 'undefined' ? StoryEngine : null;
 
-    /** Version info */
     this.version = '3.0.0-es6';
     this.buildDate = new Date().toISOString();
   }
@@ -32,7 +41,7 @@ class StoryManager {
   /**
    * Initialize all story subsystems
    */
-  init() {
+  init(): void {
     this.chapters?.init();
     this.quests?.init();
     this.engine?.init();
@@ -46,7 +55,7 @@ class StoryManager {
   /**
    * Reset all story state
    */
-  reset() {
+  reset(): void {
     this.chapters?.reset();
     this.quests?.reset();
     this.engine?.reset();
@@ -59,39 +68,39 @@ class StoryManager {
   // CHAPTER MANAGEMENT
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  startChapter(chapterId) {
+  startChapter(chapterId: string): boolean {
     return this.chapters?.startChapter(chapterId) ?? false;
   }
 
-  completeCurrentChapter() {
+  completeCurrentChapter(): boolean {
     return this.chapters?.completeCurrentChapter() ?? false;
   }
 
-  isChapterCompleted(chapterId) {
+  isChapterCompleted(chapterId: string): boolean {
     return this.chapters?.isChapterCompleted(chapterId) ?? false;
   }
 
-  getCurrentChapter() {
+  getCurrentChapter(): unknown {
     return this.chapters?.getCurrentChapter() ?? null;
   }
 
-  getChapterData() {
+  getChapterData(): unknown {
     return this.chapters?.getChapterData() ?? null;
   }
 
-  completeObjective(objectiveId) {
+  completeObjective(objectiveId: string): boolean {
     return this.chapters?.completeObjective(objectiveId) ?? false;
   }
 
-  isObjectiveCompleted(chapterId, objectiveId) {
+  isObjectiveCompleted(chapterId: string, objectiveId: string): boolean {
     return this.chapters?.isObjectiveCompleted(chapterId, objectiveId) ?? false;
   }
 
-  getCurrentObjectives() {
+  getCurrentObjectives(): unknown[] {
     return this.chapters?.getCurrentObjectives() ?? [];
   }
 
-  checkChapterCompletion() {
+  checkChapterCompletion(): boolean {
     return this.chapters?.checkChapterCompletion() ?? false;
   }
 
@@ -99,25 +108,25 @@ class StoryManager {
   // QUEST MANAGEMENT
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  activateQuestsForChapter(chapterId) {
+  activateQuestsForChapter(chapterId: string): void {
     this.quests?.activateQuestsForChapter(chapterId);
   }
 
-  checkQuestProgress() {
+  checkQuestProgress(): void {
     if (this.quests && this.engine) {
-      this.quests.checkQuestProgress((condition) => this.engine.checkCondition(condition));
+      this.quests.checkQuestProgress((condition: Condition) => this.engine.checkCondition(condition));
     }
   }
 
-  completeQuest(questId) {
+  completeQuest(questId: string): boolean {
     return this.quests?.completeQuest(questId) ?? false;
   }
 
-  getActiveQuests() {
+  getActiveQuests(): unknown[] {
     return this.quests?.getActiveQuests() ?? [];
   }
 
-  applyReward(reward) {
+  applyReward(reward: Reward): void {
     this.quests?.applyReward(reward);
   }
 
@@ -125,20 +134,20 @@ class StoryManager {
   // FLAG MANAGEMENT
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  setFlag(flagName, value) {
+  setFlag(flagName: string, value: unknown): void {
     this.engine?.setFlag(flagName, value);
     this.checkEvents();
   }
 
-  getFlag(flagName) {
+  getFlag(flagName: string): unknown {
     return this.engine?.getFlag(flagName);
   }
 
-  hasFlag(flagName) {
+  hasFlag(flagName: string): boolean {
     return this.engine?.hasFlag(flagName) ?? false;
   }
 
-  clearFlag(flagName) {
+  clearFlag(flagName: string): boolean {
     return this.engine?.clearFlag(flagName) ?? false;
   }
 
@@ -146,11 +155,11 @@ class StoryManager {
   // DIALOGUE SYSTEM
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  getDialogueNodeForNPC(npcId) {
+  getDialogueNodeForNPC(npcId: string): string {
     return this.engine?.getDialogueNodeForNPC(npcId) ?? `${npcId}_s0`;
   }
 
-  onDialogueStarted(npcId) {
+  onDialogueStarted(npcId: string): void {
     this.engine?.onDialogueStarted(npcId);
     this.checkObjectivesForEvent('talkedTo', npcId);
     this.checkQuestProgress();
@@ -161,7 +170,7 @@ class StoryManager {
   // CONDITION SYSTEM
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  checkCondition(condition) {
+  checkCondition(condition: Condition): boolean {
     return this.engine?.checkCondition(condition) ?? true;
   }
 
@@ -169,15 +178,15 @@ class StoryManager {
   // EVENT SYSTEM
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  checkEvents() {
+  checkEvents(): void {
     this.engine?.checkEvents();
   }
 
-  triggerEvent(eventId) {
+  triggerEvent(eventId: string): void {
     this.engine?.triggerEvent(eventId);
   }
 
-  wasEventTriggered(eventId) {
+  wasEventTriggered(eventId: string): boolean {
     return this.engine?.wasEventTriggered(eventId) ?? false;
   }
 
@@ -185,7 +194,7 @@ class StoryManager {
   // ENDING SYSTEM
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  determineEnding() {
+  determineEnding(): unknown {
     return this.engine?.determineEnding() ?? null;
   }
 
@@ -193,27 +202,27 @@ class StoryManager {
   // STATISTICS TRACKING
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  onAreaVisited(areaId) {
+  onAreaVisited(areaId: string): void {
     this.engine?.onAreaVisited(areaId);
     this.checkObjectivesForEvent('visitedArea', areaId);
     this.checkQuestProgress();
     this.checkEvents();
   }
 
-  onClueFound(clueId) {
+  onClueFound(clueId: string): void {
     this.engine?.onClueFound(clueId);
     this.checkObjectivesForEvent('cluesFound', clueId);
     this.checkQuestProgress();
     this.checkEvents();
   }
 
-  onPuzzleSolved(puzzleId) {
+  onPuzzleSolved(puzzleId: string): void {
     this.engine?.onPuzzleSolved(puzzleId);
     this.checkQuestProgress();
     this.checkEvents();
   }
 
-  getStats() {
+  getStats(): unknown {
     return this.engine?.getStats() ?? {};
   }
 
@@ -221,7 +230,7 @@ class StoryManager {
   // OBJECTIVE CHECKING HELPER
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  checkObjectivesForEvent(eventType, target) {
+  checkObjectivesForEvent(eventType: string, target: string): void {
     if (!this.chapters?.currentChapter) return;
 
     const chapter = storyChapters?.[this.chapters.currentChapter];
@@ -246,15 +255,15 @@ class StoryManager {
   // ACHIEVEMENTS
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  unlockAchievement(achievementId) {
+  unlockAchievement(achievementId: string): boolean {
     return this.engine?.unlockAchievement(achievementId) ?? false;
   }
 
-  hasAchievement(achievementId) {
+  hasAchievement(achievementId: string): boolean {
     return this.engine?.hasAchievement(achievementId) ?? false;
   }
 
-  getUnlockedAchievements() {
+  getUnlockedAchievements(): string[] {
     return this.engine?.getUnlockedAchievements() ?? [];
   }
 
@@ -262,7 +271,7 @@ class StoryManager {
   // SERIALIZATION
   // ═══════════════════════════════════════════════════════════════════════════════
 
-  serialize() {
+  serialize(): { chapters: SerializedChapters; quests: SerializedQuests; engine: SerializedEngine } {
     return {
       chapters: this.chapters?.serialize() ?? {},
       quests: this.quests?.serialize() ?? {},
@@ -270,7 +279,7 @@ class StoryManager {
     };
   }
 
-  deserialize(data) {
+  deserialize(data: { chapters?: SerializedChapters; quests?: SerializedQuests; engine?: SerializedEngine }): boolean {
     if (!data) return false;
 
     this.chapters?.deserialize(data.chapters);
@@ -286,9 +295,8 @@ class StoryManager {
 
   /**
    * Get complete story status summary
-   * @returns {Object} Status summary
    */
-  getStatus() {
+  getStatus(): Record<string, unknown> {
     return {
       currentChapter: this.chapters?.getCurrentChapterId() ?? null,
       chapterProgress: this.chapters?.getChapterProgress() ?? 0,
@@ -312,11 +320,11 @@ const storyManager = new StoryManager();
 // GLOBAL UTILITY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export function initStoryManager() {
+export function initStoryManager(): void {
   storyManager.init();
 }
 
-export function resetStoryManager() {
+export function resetStoryManager(): void {
   storyManager.reset();
 }
 

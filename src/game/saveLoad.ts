@@ -9,43 +9,56 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import type { GameState, SaveData, StorySaveData, GameStats } from '../types.js';
+
+interface SaveMeta {
+  timestamp?: number;
+}
+
+interface SaveSlotInfo {
+  slot: string;
+  timestamp: number | null;
+  exists: boolean;
+}
+
 class SaveLoadSystem {
+  /** Storage key prefix */
+  prefix: string;
+
+  /** Current save slot */
+  currentSlot: string;
+
+  /** Auto-save interval in ms */
+  autoSaveInterval: number;
+
+  /** Auto-save timer ID */
+  autoSaveTimer: ReturnType<typeof setInterval> | null;
+
   constructor() {
-    /** @type {string} Storage key prefix */
     this.prefix = 'sanceleste_';
-
-    /** @type {string} Current save slot */
     this.currentSlot = 'slot1';
-
-    /** @type {number} Auto-save interval in ms */
     this.autoSaveInterval = 60000; // 1 minute
-
-    /** @type {number|null} Auto-save timer ID */
     this.autoSaveTimer = null;
   }
 
   /**
    * Initialize save/load system
    */
-  init() {
+  init(): void {
     console.log('[SaveLoadSystem] Initialized');
   }
 
   /**
    * Get full storage key for slot
-   * @param {string} [slot]
-   * @returns {string}
    */
-  _getKey(slot) {
+  private _getKey(slot?: string): string {
     return `${this.prefix}save_${slot || this.currentSlot}`;
   }
 
   /**
    * Save current game state
-   * @param {string} [slot] - Save slot name
-   * @returns {boolean}
    */
-  save(slot) {
+  save(slot?: string): boolean {
     try {
       const saveData = this._createSaveData();
       const key = this._getKey(slot);
@@ -65,10 +78,8 @@ class SaveLoadSystem {
 
   /**
    * Load game from slot
-   * @param {string} [slot]
-   * @returns {boolean}
    */
-  load(slot) {
+  load(slot?: string): boolean {
     try {
       const key = this._getKey(slot);
       const data = localStorage.getItem(key);
@@ -78,7 +89,7 @@ class SaveLoadSystem {
         return false;
       }
 
-      const saveData = JSON.parse(data);
+      const saveData: SaveData = JSON.parse(data);
       this._applySaveData(saveData);
 
       showToast?.('Gioco caricato');
@@ -92,10 +103,8 @@ class SaveLoadSystem {
 
   /**
    * Create save data object
-   * @returns {Object}
-   * @private
    */
-  _createSaveData() {
+  private _createSaveData(): SaveData {
     return {
       version: '2.0.0',
       timestamp: Date.now(),
@@ -111,33 +120,31 @@ class SaveLoadSystem {
         radioSolved: gameState.radioSolved,
         npcTrust: { ...gameState.npcTrust },
       },
-      story: StoryManager?.serialize?.() ?? {},
-      stats: StoryManager?.getStats?.() ?? {},
+      story: (StoryManager?.serialize?.() ?? {}) as StorySaveData,
+      stats: (StoryManager?.getStats?.() ?? {}) as GameStats,
       playTime: StoryManager?.stats?.totalPlayTime ?? 0,
     };
   }
 
   /**
    * Apply save data to game
-   * @param {Object} saveData
-   * @private
    */
-  _applySaveData(saveData) {
+  private _applySaveData(saveData: SaveData): void {
     if (!saveData.gameState) return;
 
     const gs = saveData.gameState;
 
     // Apply game state
-    gameState.currentArea = gs.currentArea;
-    gameState.player = { ...gs.player };
-    gameState.cluesFound = [...gs.cluesFound];
-    gameState.npcStates = { ...gs.npcStates };
-    gameState.playerName = gs.playerName;
-    gameState.playerColors = { ...gs.playerColors };
-    gameState.puzzleSolved = gs.puzzleSolved;
-    gameState.puzzleAttempts = gs.puzzleAttempts;
-    gameState.radioSolved = gs.radioSolved;
-    gameState.npcTrust = { ...gs.npcTrust };
+    gameState.currentArea = gs.currentArea ?? gameState.currentArea;
+    gameState.player = { ...gs.player } as GameState['player'];
+    gameState.cluesFound = [...(gs.cluesFound ?? [])];
+    gameState.npcStates = { ...(gs.npcStates ?? {}) } as GameState['npcStates'];
+    gameState.playerName = gs.playerName ?? gameState.playerName;
+    gameState.playerColors = { ...(gs.playerColors ?? {}) } as GameState['playerColors'];
+    gameState.puzzleSolved = gs.puzzleSolved ?? gameState.puzzleSolved;
+    gameState.puzzleAttempts = gs.puzzleAttempts ?? gameState.puzzleAttempts;
+    gameState.radioSolved = gs.radioSolved ?? gameState.radioSolved;
+    gameState.npcTrust = { ...(gs.npcTrust ?? {}) } as GameState['npcTrust'];
 
     // Apply story state
     if (saveData.story) {
@@ -147,20 +154,16 @@ class SaveLoadSystem {
 
   /**
    * Check if save exists
-   * @param {string} [slot]
-   * @returns {boolean}
    */
-  hasSave(slot) {
+  hasSave(slot?: string): boolean {
     const key = this._getKey(slot);
     return localStorage.getItem(key) !== null;
   }
 
   /**
    * Delete save slot
-   * @param {string} [slot]
-   * @returns {boolean}
    */
-  deleteSave(slot) {
+  deleteSave(slot?: string): boolean {
     try {
       const key = this._getKey(slot);
       localStorage.removeItem(key);
@@ -174,25 +177,22 @@ class SaveLoadSystem {
 
   /**
    * Get all save slots info
-   * @returns {Array<{slot: string, timestamp: number|null, exists: boolean}>}
    */
-  getAllSaves() {
+  getAllSaves(): SaveSlotInfo[] {
     const meta = this._getMeta();
     const slots = ['slot1', 'slot2', 'slot3'];
 
     return slots.map((slot) => ({
       slot,
       timestamp: meta[slot]?.timestamp || null,
-      exists: this.hasSave(slot)
+      exists: this.hasSave(slot),
     }));
   }
 
   /**
    * Get save metadata
-   * @returns {Object}
-   * @private
    */
-  _getMeta() {
+  private _getMeta(): Record<string, SaveMeta> {
     try {
       const meta = localStorage.getItem(`${this.prefix}meta`);
       return meta ? JSON.parse(meta) : {};
@@ -203,18 +203,15 @@ class SaveLoadSystem {
 
   /**
    * Update save metadata
-   * @param {string} slot
-   * @param {number|null} timestamp
-   * @param {boolean} [remove]
-   * @private
    */
-  _updateMeta(slot, timestamp, remove = false) {
+  private _updateMeta(slot: string | undefined, timestamp: number | null, remove = false): void {
     const meta = this._getMeta();
+    const slotKey = slot || this.currentSlot;
 
     if (remove) {
-      delete meta[slot];
+      delete meta[slotKey];
     } else {
-      meta[slot] = { timestamp };
+      meta[slotKey] = { timestamp: timestamp ?? undefined };
     }
 
     localStorage.setItem(`${this.prefix}meta`, JSON.stringify(meta));
@@ -223,7 +220,7 @@ class SaveLoadSystem {
   /**
    * Start auto-save
    */
-  startAutoSave() {
+  startAutoSave(): void {
     this.stopAutoSave();
     this.autoSaveTimer = setInterval(() => {
       this.save();
@@ -233,7 +230,7 @@ class SaveLoadSystem {
   /**
    * Stop auto-save
    */
-  stopAutoSave() {
+  stopAutoSave(): void {
     if (this.autoSaveTimer) {
       clearInterval(this.autoSaveTimer);
       this.autoSaveTimer = null;
@@ -242,24 +239,19 @@ class SaveLoadSystem {
 
   /**
    * Export save as JSON string (for sharing)
-   * @param {string} [slot]
-   * @returns {string|null}
    */
-  exportSave(slot) {
+  exportSave(slot?: string): string | null {
     const key = this._getKey(slot);
     return localStorage.getItem(key);
   }
 
   /**
    * Import save from JSON string
-   * @param {string} jsonString
-   * @param {string} [slot]
-   * @returns {boolean}
    */
-  importSave(jsonString, slot) {
+  importSave(jsonString: string, slot?: string): boolean {
     try {
       // Validate JSON
-      const data = JSON.parse(jsonString);
+      const data = JSON.parse(jsonString) as SaveData;
       if (!data.version || !data.gameState) {
         throw new Error('Invalid save data');
       }
@@ -277,7 +269,7 @@ class SaveLoadSystem {
   /**
    * Clear all saves
    */
-  clearAll() {
+  clearAll(): void {
     const keys = Object.keys(localStorage);
     for (const key of keys) {
       if (key.startsWith(this.prefix)) {

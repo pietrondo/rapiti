@@ -9,7 +9,27 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import type { GameState } from '../types.js';
+
+declare const gameState: GameState;
+declare const CANVAS_W: number;
+declare const CANVAS_H: number;
+declare const ScreenShake: any;
+declare const SceneRenderer: any;
+declare const GameRenderer: any;
+declare const UIRenderer: any;
+declare const LightingSystem: any;
+declare const ParticleSystem: any;
+declare const Vignette: any;
+
 class RenderManager {
+  ctx: CanvasRenderingContext2D | null;
+  scale: number;
+  debug: boolean;
+  frameCount: number;
+  lastFpsTime: number;
+  fps: number;
+
   constructor() {
     this.ctx = null;
     this.scale = 2;
@@ -21,18 +41,16 @@ class RenderManager {
 
   /**
    * Initialize renderer with canvas context
-   * @param {CanvasRenderingContext2D} ctx
    */
-  init(ctx) {
+  init(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
     console.log('[RenderManager] Initialized');
   }
 
   /**
    * Main render dispatch
-   * @param {CanvasRenderingContext2D} [ctx] - Optional context override
    */
-  render(ctx) {
+  render(ctx?: CanvasRenderingContext2D): void {
     const renderCtx = ctx || this.ctx;
     if (!renderCtx) return;
 
@@ -101,10 +119,8 @@ class RenderManager {
 
   /**
    * Render gameplay scene
-   * @param {CanvasRenderingContext2D} ctx
-   * @private
    */
-  _renderGameplay(ctx) {
+  private _renderGameplay(ctx: CanvasRenderingContext2D): void {
     GameRenderer?.renderArea?.(ctx);
     GameRenderer?.renderPlayer?.(ctx);
     GameRenderer?.renderInteractionHint?.(ctx);
@@ -121,10 +137,8 @@ class RenderManager {
 
   /**
    * Render debug info
-   * @param {CanvasRenderingContext2D} ctx
-   * @private
    */
-  _renderDebugInfo(ctx) {
+  private _renderDebugInfo(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#00ff00';
     ctx.font = '10px monospace';
     ctx.fillText(`FPS: ${this.fps}`, 5, 10);
@@ -135,23 +149,21 @@ class RenderManager {
   /**
    * Toggle debug mode
    */
-  toggleDebug() {
+  toggleDebug(): void {
     this.debug = !this.debug;
   }
 
   /**
    * Set render scale
-   * @param {number} scale
    */
-  setScale(scale) {
+  setScale(scale: number): void {
     this.scale = scale;
   }
 
   /**
    * Get current FPS
-   * @returns {number}
    */
-  getFps() {
+  getFps(): number {
     return this.fps;
   }
 }
@@ -160,7 +172,7 @@ class RenderManager {
 const renderManager = new RenderManager();
 
 // Convenience function for backward compatibility
-export function render(ctx) {
+export function render(ctx?: CanvasRenderingContext2D): void {
   renderManager.render(ctx);
 }
 
@@ -168,7 +180,7 @@ export function render(ctx) {
 if (typeof window !== 'undefined') {
   window.RenderManager = RenderManager;
   window.renderManager = renderManager;
-  window.RenderModule = { render: (ctx) => renderManager.render(ctx) };
+  window.RenderModule = { render: (ctx: CanvasRenderingContext2D) => renderManager.render(ctx) };
 }
 
 export { RenderManager, renderManager };

@@ -55,7 +55,7 @@ global.closeRecorderPuzzle = jest.fn();
 global.handleInteract = jest.fn();
 
 // Import functions to test
-import { handleKeyDown, handleKeyUp, updatePlayerPosition, InputManager } from '../src/game/input.mjs';
+import { handleKeyDown, handleKeyUp, updatePlayerPosition, InputManager } from '../src/game/input.ts';
 
 describe('Input Handling', () => {
   beforeEach(() => {

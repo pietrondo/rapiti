@@ -9,7 +9,26 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import type { GameState } from '../types.js';
+
+declare const gameState: GameState;
+declare function updateFade(): void;
+declare function updatePlayerPosition(): void;
+declare function checkAreaExits(): void;
+declare function checkInteractions(): void;
+declare const ParticleSystem: any;
+declare const LightingSystem: any;
+declare const ScreenShake: any;
+declare function render(ctx: CanvasRenderingContext2D): void;
+
 class GameLoop {
+  ctx: CanvasRenderingContext2D | null;
+  isRunning: boolean;
+  animationId: number | null;
+  lastTime: number;
+  deltaTime: number;
+  prologueTimings: number[];
+
   constructor() {
     this.ctx = null;
     this.isRunning = false;
@@ -21,9 +40,8 @@ class GameLoop {
 
   /**
    * Initialize game loop
-   * @param {CanvasRenderingContext2D} ctx - Canvas context
    */
-  init(ctx) {
+  init(ctx: CanvasRenderingContext2D): void {
     this.ctx = ctx;
     console.log('[GameLoop] Initialized');
   }
@@ -31,7 +49,7 @@ class GameLoop {
   /**
    * Start the game loop
    */
-  start() {
+  start(): void {
     if (this.isRunning) return;
     this.isRunning = true;
     this.lastTime = performance.now();
@@ -41,7 +59,7 @@ class GameLoop {
   /**
    * Stop the game loop
    */
-  stop() {
+  stop(): void {
     this.isRunning = false;
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
@@ -52,7 +70,7 @@ class GameLoop {
   /**
    * Main tick - called every frame
    */
-  tick() {
+  tick(): void {
     if (!this.isRunning) return;
 
     const now = performance.now();
@@ -68,7 +86,7 @@ class GameLoop {
   /**
    * Update game state
    */
-  update() {
+  update(): void {
     const ph = gameState.gamePhase;
 
     // Prologue auto-advance
@@ -86,9 +104,8 @@ class GameLoop {
 
   /**
    * Update prologue cutscene
-   * @private
    */
-  _updatePrologue() {
+  private _updatePrologue(): void {
     gameState.prologueTimer++;
     const step = gameState.prologueStep;
 
@@ -106,9 +123,8 @@ class GameLoop {
 
   /**
    * Update playing state
-   * @private
    */
-  _updatePlaying() {
+  private _updatePlaying(): void {
     updatePlayerPosition();
     checkAreaExits();
     checkInteractions();
@@ -121,9 +137,8 @@ class GameLoop {
 
   /**
    * Update toast timer
-   * @private
    */
-  _updateToast() {
+  private _updateToast(): void {
     if (gameState.messageTimer > 0) {
       gameState.messageTimer--;
       if (gameState.messageTimer <= 0) {
@@ -135,7 +150,7 @@ class GameLoop {
   /**
    * Render frame
    */
-  render() {
+  render(): void {
     if (this.ctx) {
       render(this.ctx);
     }
@@ -143,17 +158,15 @@ class GameLoop {
 
   /**
    * Get delta time
-   * @returns {number}
    */
-  getDeltaTime() {
+  getDeltaTime(): number {
     return this.deltaTime;
   }
 
   /**
    * Check if loop is running
-   * @returns {boolean}
    */
-  isActive() {
+  isActive(): boolean {
     return this.isRunning;
   }
 }
@@ -162,7 +175,7 @@ class GameLoop {
 const gameLoop = new GameLoop();
 
 // Backward compatibility functions
-export function gameLoopFn() {
+export function gameLoopFn(): void {
   gameLoop.tick();
 }
 

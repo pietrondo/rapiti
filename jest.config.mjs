@@ -4,44 +4,55 @@
 
 export default {
   testEnvironment: 'jsdom',
-  
-  // Supporto per ES6 modules
-  transform: {},
-  
-  // Module name mapper per alias
+
+  // Supporto per ES6 + TypeScript
+  transform: {
+    '^.+\\.m?tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: {
+          module: 'ESNext',
+          target: 'ES2020',
+          moduleResolution: 'bundler',
+          rootDir: '.',
+        },
+      },
+    ],
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+
+  // Module name mapper per alias e risoluzione .js → .ts
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@effects/(.*)$': '<rootDir>/src/effects/$1',
-    '^@areas/(.*)$': '<rootDir>/src/areas/$1',
-    '^@render/(.*)$': '<rootDir>/src/render/$1',
-    '^@engine/(.*)$': '<rootDir>/src/engine/$1',
-    '^@story/(.*)$': '<rootDir>/src/story/$1',
-    '^@data/(.*)$': '<rootDir>/src/data/$1',
-    '^@game/(.*)$': '<rootDir>/src/game/$1',
+    '^@types/(.*)$': '<rootDir>/src/types/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  
+
   // File patterns
   testMatch: [
     '**/tests/**/*.test.mjs',
-    '**/tests/**/*.test.js',
+    '**/tests/**/*.test.ts',
     '**/__tests__/**/*.test.mjs',
-    '**/__tests__/**/*.test.js',
+    '**/__tests__/**/*.test.ts',
   ],
-  
+
+  moduleFileExtensions: ['ts', 'tsx', 'mjs', 'js', 'jsx', 'json'],
+
   // Collect coverage from
   collectCoverageFrom: [
+    'src/**/*.ts',
     'src/**/*.mjs',
-    'src/**/*.js',
+    '!src/**/*.test.ts',
     '!src/**/*.test.mjs',
-    '!src/**/*.test.js',
   ],
-  
+
   // Coverage directory
   coverageDirectory: 'coverage',
-  
+
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.mjs'],
-  
+
   // Verbose output
   verbose: true,
 };

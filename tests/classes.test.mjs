@@ -47,9 +47,9 @@ global.Vignette = { draw: () => {} };
 global.UIRenderer = { renderMiniMap: () => {}, renderFade: () => {} };
 
 import { AreaManager, areaManager } from '../src/areas/index.mjs';
-import { RenderManager, renderManager } from '../src/render/index.mjs';
-import { GameLoop, gameLoop } from '../src/game/loop.mjs';
-import { InputManager, inputManager } from '../src/game/input.mjs';
+import { RenderManager, renderManager } from '../src/render/index.ts';
+import { GameLoop, gameLoop } from '../src/game/loop.ts';
+import { InputManager, inputManager } from '../src/game/input.ts';
 
 describe('ES6+ Classes', () => {
   describe('AreaManager', () => {

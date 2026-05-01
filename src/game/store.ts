@@ -9,59 +9,63 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+type ListenerCallback = (newValue: unknown, oldValue: unknown, key: string) => void;
+type GlobalListenerCallback = (key: string, newValue: unknown, oldValue: unknown) => void;
+
+interface HistoryEntry {
+  timestamp: number;
+  key: string;
+  oldValue: unknown;
+  newValue: unknown;
+}
+
 class GameStore {
+  private _state: Record<string, unknown>;
+  private _listeners: Map<string, Set<ListenerCallback>>;
+  private _globalListeners: Set<GlobalListenerCallback>;
+  private _history: HistoryEntry[];
+
+  /** Enable history tracking */
+  trackHistory: boolean;
+
+  /** Max history entries */
+  maxHistory: number;
+
   constructor() {
-    /** @type {Object} Internal state */
     this._state = {};
-
-    /** @type {Map<string, Set<Function>>} Change listeners by key */
     this._listeners = new Map();
-
-    /** @type {Set<Function>} Global change listeners */
     this._globalListeners = new Set();
-
-    /** @type {boolean} Enable history tracking */
     this.trackHistory = false;
-
-    /** @type {Array<{timestamp: number, key: string, oldValue: *, newValue: *}>} */
     this._history = [];
-
-    /** @type {number} Max history entries */
     this.maxHistory = 100;
   }
 
   /**
    * Initialize store with default state
-   * @param {Object} initialState
    */
-  init(initialState) {
+  init(initialState: Record<string, unknown>): void {
     this._state = { ...initialState };
     console.log('[GameStore] Initialized');
   }
 
   /**
    * Get state value
-   * @param {string} key
-   * @returns {*}
    */
-  get(key) {
+  get(key: string): unknown {
     return this._state[key];
   }
 
   /**
    * Get entire state (shallow copy)
-   * @returns {Object}
    */
-  getState() {
+  getState(): Record<string, unknown> {
     return { ...this._state };
   }
 
   /**
    * Set state value (reactive)
-   * @param {string} key
-   * @param {*} value
    */
-  set(key, value) {
+  set(key: string, value: unknown): void {
     const oldValue = this._state[key];
     if (oldValue === value) return;
 
@@ -72,9 +76,8 @@ class GameStore {
 
   /**
    * Set multiple values at once
-   * @param {Object} updates
    */
-  setMultiple(updates) {
+  setMultiple(updates: Record<string, unknown>): void {
     for (const [key, value] of Object.entries(updates)) {
       this.set(key, value);
     }
@@ -82,10 +85,8 @@ class GameStore {
 
   /**
    * Update nested property using dot notation
-   * @param {string} path - Dot notation path (e.g., 'player.x')
-   * @param {*} value
    */
-  setPath(path, value) {
+  setPath(path: string, value: unknown): void {
     const keys = path.split('.');
     let current = this._state;
 
@@ -93,7 +94,7 @@ class GameStore {
       if (!(keys[i] in current)) {
         current[keys[i]] = {};
       }
-      current = current[keys[i]];
+      current = current[keys[i]] as Record<string, unknown>;
     }
 
     const lastKey = keys[keys.length - 1];
@@ -104,15 +105,13 @@ class GameStore {
 
   /**
    * Subscribe to specific key changes
-   * @param {string} key
-   * @param {Function} callback
-   * @returns {Function} Unsubscribe function
+   * @returns Unsubscribe function
    */
-  subscribe(key, callback) {
+  subscribe(key: string, callback: ListenerCallback): () => void {
     if (!this._listeners.has(key)) {
       this._listeners.set(key, new Set());
     }
-    this._listeners.get(key).add(callback);
+    this._listeners.get(key)!.add(callback);
 
     return () => {
       this._listeners.get(key)?.delete(callback);
@@ -121,10 +120,9 @@ class GameStore {
 
   /**
    * Subscribe to all changes
-   * @param {Function} callback
-   * @returns {Function} Unsubscribe function
+   * @returns Unsubscribe function
    */
-  subscribeGlobal(callback) {
+  subscribeGlobal(callback: GlobalListenerCallback): () => void {
     this._globalListeners.add(callback);
     return () => {
       this._globalListeners.delete(callback);
@@ -133,12 +131,8 @@ class GameStore {
 
   /**
    * Notify listeners of change
-   * @param {string} key
-   * @param {*} oldValue
-   * @param {*} newValue
-   * @private
    */
-  _notify(key, oldValue, newValue) {
+  private _notify(key: string, oldValue: unknown, newValue: unknown): void {
     // Key-specific listeners
     this._listeners.get(key)?.forEach((cb) => {
       try {
@@ -160,19 +154,15 @@ class GameStore {
 
   /**
    * Track history
-   * @param {string} key
-   * @param {*} oldValue
-   * @param {*} newValue
-   * @private
    */
-  _trackHistory(key, oldValue, newValue) {
+  private _trackHistory(key: string, oldValue: unknown, newValue: unknown): void {
     if (!this.trackHistory) return;
 
     this._history.push({
       timestamp: Date.now(),
       key,
       oldValue,
-      newValue
+      newValue,
     });
 
     if (this._history.length > this.maxHistory) {
@@ -182,24 +172,22 @@ class GameStore {
 
   /**
    * Get change history
-   * @returns {Array}
    */
-  getHistory() {
+  getHistory(): HistoryEntry[] {
     return [...this._history];
   }
 
   /**
    * Clear history
    */
-  clearHistory() {
+  clearHistory(): void {
     this._history = [];
   }
 
   /**
    * Reset store to initial values
-   * @param {Object} initialState
    */
-  reset(initialState) {
+  reset(initialState: Record<string, unknown>): void {
     const oldState = { ...this._state };
     this._state = { ...initialState };
 
@@ -211,11 +199,8 @@ class GameStore {
 
   /**
    * Create a computed property
-   * @param {string} name
-   * @param {Function} computeFn
-   * @param {Array<string>} deps - Dependencies
    */
-  computed(name, computeFn, deps) {
+  computed(name: string, computeFn: (...args: unknown[]) => unknown, deps: string[]): void {
     const update = () => {
       const values = deps.map((d) => this.get(d));
       this.set(name, computeFn(...values));

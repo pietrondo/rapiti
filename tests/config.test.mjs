@@ -13,7 +13,7 @@ import {
   PLAYER_W,
   resetGameState,
   VERSION,
-} from '../src/config.mjs';
+} from '../src/config.ts';
 
 describe('Configuration Module', () => {
   describe('PALETTE', () => {
@@ -55,7 +55,7 @@ describe('Configuration Module', () => {
 
     it('should have version string', () => {
       expect(typeof VERSION).toBe('string');
-      expect(VERSION).toContain('es6');
+      expect(VERSION).toContain('typescript');
     });
   });
 

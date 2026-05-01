@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import { Engine, engine } from '../src/engine/index.mjs';
+import { Engine, engine } from '../src/engine/index.ts';
 
 describe('Engine Module', () => {
   describe('Engine object', () => {
