@@ -81,3 +81,11 @@ export function updateFade() {
     }
   }
 }
+
+/** Stub — HUD update is handled by individual game state changes */
+export function updateHUD() {
+  var areaEl = document.getElementById('hud-area');
+  if (areaEl) areaEl.textContent = gameState.currentArea;
+  var cluesEl = document.getElementById('hud-clues');
+  if (cluesEl) cluesEl.textContent = gameState.cluesFound.length + '/9';
+}

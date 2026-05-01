@@ -93,6 +93,27 @@ describe('Tauri Migration Sanity Checks', () => {
       expect(content).toContain("import { closeScenePuzzle, checkScene } from './scene.mjs'");
       expect(content).toContain("import { applyCustomization } from './customize.mjs'");
     });
+
+    it('loop.ts should import real functions instead of declare', () => {
+      var content = readFile('src/game/loop.ts');
+      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.mjs'");
+      expect(content).toContain("import { updatePlayerPosition } from './movement.ts'");
+      expect(content).toContain("import { render as renderFrame } from '../render/index.ts'");
+      expect(content).toContain("import '../effects/ambient.mjs'");
+      expect(content).not.toContain('declare function updateFade');
+      expect(content).not.toContain('declare function updatePlayerPosition');
+      expect(content).not.toContain('declare function checkAreaExits');
+    });
+
+    it('transition.mjs should define updateHUD', () => {
+      var content = readFile('src/game/transition.mjs');
+      expect(content).toContain('export function updateHUD');
+    });
+
+    it('render/index.ts should expose render globally', () => {
+      var content = readFile('src/render/index.ts');
+      expect(content).toContain('(window as any).render = render');
+    });
   });
 
   describe('Tauri configuration', () => {
@@ -204,6 +225,63 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('should list tauri dev command', () => {
       expect(agentsMd).toContain('tauri dev');
+    });
+  });
+
+  describe('Global exports for dynamic module loading', () => {
+    it('init.mjs should expose functions on window', () => {
+      var content = readFile('src/game/init.mjs');
+      expect(content).toContain('window.initCanvas = initCanvas');
+      expect(content).toContain('window.initEventListeners = initEventListeners');
+    });
+
+    it('audio.mjs should expose functions on window', () => {
+      var content = readFile('src/game/audio.mjs');
+      expect(content).toContain('window.initAudio = initAudio');
+      expect(content).toContain('window.startMusic = startMusic');
+    });
+
+    it('customize.mjs should expose functions on window', () => {
+      var content = readFile('src/game/customize.mjs');
+      expect(content).toContain('window.applyCustomization = applyCustomization');
+      expect(content).toContain('window.renderCustomizePreview = renderCustomizePreview');
+    });
+
+    it('main.js should start gameLoop via window.gameLoop.start()', () => {
+      var content = readFile('src/main.js');
+      expect(content).toContain('window.gameLoop.start()');
+      expect(content).toContain('window.renderManager.init(ctx)');
+    });
+
+    it('init.mjs should import dependencies instead of relying on globals', () => {
+      var content = readFile('src/game/init.mjs');
+      expect(content).toContain("import { handleKeyDown, handleKeyUp } from './input.ts'");
+      expect(content).toContain("import { closeDeduction, checkDeduction, setupDragDrop } from './deduction.mjs'");
+      expect(content).toContain("import { closeRadioPuzzle, setupRadio } from './radio.mjs'");
+      expect(content).toContain("import { closeRegistryPuzzle, checkRegistry, setupRegistry } from './registry.mjs'");
+      expect(content).toContain("import { closeScenePuzzle, checkScene } from './scene.mjs'");
+      expect(content).toContain("import { applyCustomization } from './customize.mjs'");
+    });
+
+    it('loop.ts should import real functions instead of declare', () => {
+      var content = readFile('src/game/loop.ts');
+      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.mjs'");
+      expect(content).toContain("import { updatePlayerPosition } from './movement.ts'");
+      expect(content).toContain("import { render as renderFrame } from '../render/index.ts'");
+      expect(content).toContain("import '../effects/ambient.mjs'");
+      expect(content).not.toContain('declare function updateFade');
+      expect(content).not.toContain('declare function updatePlayerPosition');
+      expect(content).not.toContain('declare function checkAreaExits');
+    });
+
+    it('transition.mjs should define updateHUD', () => {
+      var content = readFile('src/game/transition.mjs');
+      expect(content).toContain('export function updateHUD');
+    });
+
+    it('render/index.ts should expose render globally', () => {
+      var content = readFile('src/render/index.ts');
+      expect(content).toContain('(window as any).render = render');
     });
   });
 });

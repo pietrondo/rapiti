@@ -181,6 +181,7 @@ if (typeof window !== 'undefined') {
   window.RenderManager = RenderManager;
   window.renderManager = renderManager;
   window.RenderModule = { render: (ctx: CanvasRenderingContext2D) => renderManager.render(ctx) };
+  (window as any).render = render;
 }
 
 export { RenderManager, renderManager };

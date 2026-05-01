@@ -11,16 +11,19 @@
 
 import type { GameState } from '../types.js';
 import { updatePrologue } from './prologueUpdater.js';
+import { updateFade, checkAreaExits } from './transition.mjs';
+import { updatePlayerPosition } from './movement.ts';
+import { render as renderFrame } from '../render/index.ts';
+
+// Side-effect imports to ensure window globals are initialized
+import '../effects/ambient.mjs';
+
+/** Stub — interaction checking is handled by input handlers */
+function checkInteractions(): void {
+  /* no-op: interactions triggered by keypress, not per-frame polling */
+}
 
 declare const gameState: GameState;
-declare function updateFade(): void;
-declare function updatePlayerPosition(): void;
-declare function checkAreaExits(): void;
-declare function checkInteractions(): void;
-declare const ParticleSystem: any;
-declare const LightingSystem: any;
-declare const ScreenShake: any;
-declare function render(ctx: CanvasRenderingContext2D): void;
 
 class GameLoop {
   ctx: CanvasRenderingContext2D | null;
@@ -115,10 +118,10 @@ class GameLoop {
     checkAreaExits();
     checkInteractions();
 
-    // Update effect systems
-    ParticleSystem?.update?.();
-    LightingSystem?.update?.();
-    ScreenShake?.update?.();
+    // Update effect systems (window globals initialized by ambient.mjs)
+    (window as any).ParticleSystem?.update?.();
+    (window as any).LightingSystem?.update?.();
+    (window as any).ScreenShake?.update?.();
   }
 
   /**
@@ -138,7 +141,7 @@ class GameLoop {
    */
   render(): void {
     if (this.ctx) {
-      render(this.ctx);
+      renderFrame(this.ctx);
     }
   }
 
