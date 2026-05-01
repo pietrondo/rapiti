@@ -53,6 +53,12 @@ describe('Tauri Migration Sanity Checks', () => {
     });
   });
 
+  describe('Required game modules exist', () => {
+    it('should have spriteGenerator.mjs', () => {
+      expect(fileExists('src/game/spriteGenerator.mjs')).toBe(true);
+    });
+  });
+
   describe('Tauri configuration', () => {
     let config;
     beforeEach(() => {
