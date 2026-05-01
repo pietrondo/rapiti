@@ -5,8 +5,11 @@ node_modules/
 *.wav
 *.ogg
 dist/
-electron-main.js
 package-lock.json
+
+# Rust / Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
 installer.nsi
 img_req.json
 img_result.json
