@@ -10,6 +10,7 @@
  */
 
 import type { GameState } from '../types.js';
+import { updatePrologue } from './prologueUpdater.js';
 
 declare const gameState: GameState;
 declare function updateFade(): void;
@@ -27,15 +28,12 @@ class GameLoop {
   animationId: number | null;
   lastTime: number;
   deltaTime: number;
-  prologueTimings: number[];
-
   constructor() {
     this.ctx = null;
     this.isRunning = false;
     this.animationId = null;
     this.lastTime = 0;
     this.deltaTime = 0;
-    this.prologueTimings = [150, 250, 150, 180, 200, 180, 150, 200, 120];
   }
 
   /**
@@ -106,19 +104,7 @@ class GameLoop {
    * Update prologue cutscene
    */
   private _updatePrologue(): void {
-    gameState.prologueTimer++;
-    const step = gameState.prologueStep;
-
-    if (step < this.prologueTimings.length &&
-        gameState.prologueTimer >= this.prologueTimings[step]) {
-      gameState.prologueTimer = 0;
-      gameState.prologueStep++;
-
-      if (gameState.prologueStep >= 9) {
-        gameState.gamePhase = 'intro';
-        gameState.introSlide = 0;
-      }
-    }
+    updatePrologue();
   }
 
   /**

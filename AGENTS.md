@@ -127,7 +127,8 @@ src/
     deduction.js         — canOpenDeduction() (3 indizi richiesti), openDeduction() (drag clue to slots), checkDeduction() (posizione=mappa, data=registro, prova=tracce)
     transition.js        — checkAreaExits(), changeArea() (fade 100→0), updateFade()
     endings.js           — determineEnding() (v1: alien/human/ambiguous), showEndingOverlay()
-    loop.js              — gameLoop() (update + render + prologo auto-advance), rectCollision(), showToast(), updateHUD(), resetGame(), window.onload (bootstrap + ending trigger)
+    loop.ts              — GameLoop class (update + render + prologo auto-advance)
+    prologueUpdater.ts   — updatePrologue() auto-advance cutscene scomparsa Elena
     effects.js           — ParticleSystem (fireflies, dust, sparkles), LightingSystem (area lights con flicker), ScreenShake, Vignette
     spriteGenerator.js   — generatePlayerSheet(colors) (32×32, 4 dir × 4 frame, colori dinamici), generateNPCSheet (32×32, 4 dir × 2 frame), generateBackground (8 aree), generateClueIcons
     textureGenerator.js  — generateBrickWall, generateWoodFloor, generateGrassTexture, generateStonePath, cache getOrCreateTexture()
@@ -215,7 +216,9 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
 - **Piazza**: helper dedicati in `civicDraw.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
-- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `movement.ts`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`; `areas.mjs` spezzato in `drawCommon.mjs` e `civicDraw.mjs`; `gameRenderer.mjs` spezzato in `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs`.
+- **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `movement.ts`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`; `areas.mjs` spezzato in `drawCommon.mjs` e `civicDraw.mjs`; `gameRenderer.mjs` spezzato in `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs`; `loop.ts` spezzato con `prologueUpdater.ts`.
+- **Test**: `tests/renderer.test.mjs` copre `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs` con canvas mock (23 test).
+- **Icona**: `scripts/generate-icon.cjs` genera `icon.ico` (256x256, lanterna pixel-art) per build Electron.
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->

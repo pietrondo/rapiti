@@ -49,6 +49,7 @@ global.UIRenderer = { renderMiniMap: () => {}, renderFade: () => {} };
 import { AreaManager, areaManager } from '../src/areas/index.mjs';
 import { RenderManager, renderManager } from '../src/render/index.ts';
 import { GameLoop, gameLoop } from '../src/game/loop.ts';
+import { getPrologueTimings } from '../src/game/prologueUpdater.js';
 import { InputManager, inputManager } from '../src/game/input.ts';
 
 describe('ES6+ Classes', () => {
@@ -159,8 +160,7 @@ describe('ES6+ Classes', () => {
     });
 
     it('should have prologue timings', () => {
-      const gl = new GameLoop();
-      expect(gl.prologueTimings.length).toBe(9);
+      expect(getPrologueTimings().length).toBe(9);
     });
 
     it('should calculate delta time', () => {
