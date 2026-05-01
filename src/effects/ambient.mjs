@@ -1,25 +1,19 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- * EFFECTS - Legacy Compatibility Layer
- * Mantiene compatibilità con codice esistente usando nuovi moduli
+ *                    AMBIENT EFFECTS SYSTEM
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * Singleton effetti ambientali usati dal game loop e dalle aree.
+ * Include: ParticleSystem (particelle), LightingSystem (luci dinamiche),
+ * ScreenShake (scuotimento schermo), Vignette (oscuratura bordi).
+ *
+ * NOTA: Questo modulo definisce i globali su window.* usati da loop.ts,
+ * render/index.ts, transition.mjs e storyData.mjs.
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/*
- * NOTA: Questo file è un layer di compatibilità.
- * I nuovi sistemi sono in src/effects/ come moduli separati.
- *
- * Per nuovo codice, usa direttamente:
- *   var particles = new ParticleSystem();
- *   var lighting = new LightingSystem();
- *   etc.
- */
-
-/**
- * Particle System - Legacy wrapper
- * Usa il nuovo sistema modulare
- */
-const ParticleSystem = {
+/* ── PARTICLE SYSTEM ── */
+var ParticleSystem = {
   particles: [],
   maxParticles: 200,
 
@@ -121,10 +115,8 @@ const ParticleSystem = {
   },
 };
 
-/**
- * Lighting System - Legacy wrapper
- */
-const LightingSystem = {
+/* ── LIGHTING SYSTEM ── */
+var LightingSystem = {
   lights: [],
   ambientLight: 0.3,
 
@@ -169,12 +161,45 @@ const LightingSystem = {
   clear: function () {
     this.lights = [];
   },
+
+  setupAreaLights: function (areaId) {
+    this.clear();
+    if (!areaId) return;
+
+    switch (areaId) {
+      case 'piazze':
+        this.addLight(100, 80, 60, '#ffaa44', 0.3);
+        this.addLight(300, 80, 60, '#ffaa44', 0.3);
+        this.addLight(200, 150, 50, '#ffdd88', 0.2);
+        break;
+      case 'cimitero':
+        this.addLight(350, 100, 40, '#88aaff', 0.5);
+        break;
+      case 'giardini':
+        this.addLight(150, 100, 70, '#ffdd66', 0.2);
+        break;
+      case 'bar_exterior':
+        this.addLight(280, 90, 50, '#ff8844', 0.4);
+        break;
+      case 'residenziale':
+        this.addLight(120, 80, 45, '#ffcc88', 0.3);
+        this.addLight(280, 80, 45, '#ffcc88', 0.3);
+        break;
+      case 'chiesa':
+        this.addLight(200, 100, 60, '#ffdd88', 0.25);
+        break;
+      case 'industriale':
+        this.addLight(320, 90, 50, '#ffaa44', 0.35);
+        break;
+      case 'polizia':
+        this.addLight(200, 100, 55, '#88bbff', 0.3);
+        break;
+    }
+  },
 };
 
-/**
- * Screen Shake - Legacy wrapper
- */
-const ScreenShake = {
+/* ── SCREEN SHAKE ── */
+var ScreenShake = {
   intensity: 0,
   duration: 0,
 
@@ -192,6 +217,12 @@ const ScreenShake = {
     }
   },
 
+  apply: function (ctx) {
+    if (this.intensity <= 0) return;
+    var offset = this.getOffset();
+    ctx.translate(offset.x, offset.y);
+  },
+
   getOffset: function () {
     if (this.intensity <= 0) return { x: 0, y: 0 };
     return {
@@ -201,11 +232,9 @@ const ScreenShake = {
   },
 };
 
-/**
- * Vignette - Legacy wrapper
- */
-const Vignette = {
-  draw: (ctx) => {
+/* ── VIGNETTE ── */
+var Vignette = {
+  draw: function (ctx) {
     var grad = ctx.createRadialGradient(
       CANVAS_W / 2,
       CANVAS_H / 2,
@@ -222,7 +251,7 @@ const Vignette = {
   },
 };
 
-// Esporta
+/* ── ESPORTAZIONI ── */
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     ParticleSystem: ParticleSystem,

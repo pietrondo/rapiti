@@ -157,7 +157,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Modificare gameState**: `src/config.ts:30` (tutti i campi inizializzati qui e in `resetGame()` in `loop.ts:60`)
 - **CSS**: `styles.css` — overlay, panel, pulsanti; font in `index.html` head
 - **Texture/Sprite procedurali**: `textureGenerator.mjs` per background tile, `spriteGenerator.mjs` per personaggi
-- **Effetti visivi**: `effects.mjs` — ParticleSystem, LightingSystem, ScreenShake, Vignette
+- **Effetti visivi**: `src/effects/ambient.mjs` — ParticleSystem, LightingSystem, ScreenShake, Vignette (singleton usati dal game loop); `src/effects/particles.mjs` — FireflySystem, DustSystem, SparkleSystem; `src/effects/lighting.mjs` — LightingSystem, TorchSystem, ShadowSystem
 - **Il game loop**: `requestAnimationFrame` in `loop.ts:38`; tutto il rendering passa da `render()` in `render/index.ts:38`
 - **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
 - **Minimappa**: `renderMiniMap()` in `render.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).

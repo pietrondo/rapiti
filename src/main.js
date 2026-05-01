@@ -102,6 +102,7 @@ async function initializeGame() {
     await loadScript('src/game/spriteGenerator.js');
 
     // Phase 4: Load effects modules
+    await loadScript('src/effects/ambient.js');
     await loadScript('src/effects/particles.js');
     await loadScript('src/effects/lighting.js');
     await loadScript('src/effects/weather.js');
