@@ -1,6 +1,6 @@
 # Le Luci di San Celeste — Guida per Agenti
 
-Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'estate 1978 in un borgo immaginario tra Parma e Piacenza. Packaged con Electron per Windows desktop.
+Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'estate 1978 in un borgo immaginario tra Parma e Piacenza. Packaged con Tauri per Windows e Linux desktop.
 
 ## Regole Fondamentali
 
@@ -12,8 +12,8 @@ Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'est
 
 | Comando | Descrizione |
 |---------|-------------|
-| `npm start` | Avvia il gioco in Electron (finestra 900×620) |
-| `npm run build` | Build installer NSIS via electron-builder |
+| `npm run tauri dev` | Avvia il gioco in Tauri (finestra 900×620) |
+| `npx tauri build` | Build installer NSIS/MSI (Windows) e AppImage/deb (Linux) |
 | Apri `index.html` nel browser | Modalità sviluppo rapida |
 
 ## Tech Stack
@@ -21,7 +21,7 @@ Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'est
 - **Linguaggio**: TypeScript + ES Modules (`.ts`, `.mjs`), nessuna dipendenza runtime
 - **Rendering**: Canvas 2D (400×250 logico → 800×500 display, pixel-art crisp)
 - **Stile**: `"use strict"` in moduli legacy, classi ES6+ in nuovi moduli; `var` in `.mjs`, `const`/`let` in `.ts`
-- **Build**: Vite + electron-builder per Windows (target portable x64)
+- **Build**: Vite + Tauri v2 per Windows (NSIS, MSI) e Linux (AppImage, deb)
 - **Font**: Press Start 2P + VT323 (Google Fonts)
 - **Musica**: `music/UFO Sighting Loop.mp3`, autoplay con fallback
 
@@ -218,7 +218,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
 - **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `movement.ts`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`; `areas.mjs` spezzato in `drawCommon.mjs` e `civicDraw.mjs`; `gameRenderer.mjs` spezzato in `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs`; `loop.ts` spezzato con `prologueUpdater.ts`.
 - **Test**: `tests/renderer.test.mjs` copre `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs` con canvas mock (23 test).
-- **Icona**: `scripts/generate-icon.cjs` genera `icon.ico` (256x256, lanterna pixel-art) per build Electron.
+- **Icona**: `icon.ico` (256x256, lanterna pixel-art) per build Tauri. Le icone in `src-tauri/icons/` vengono generate da `icon.ico` tramite `npx tauri icon`.
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
