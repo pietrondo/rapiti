@@ -10,17 +10,18 @@
  */
 
 import type { GameState } from '../types.js';
+import { CANVAS_H, CANVAS_W, gameState } from '../config.mjs';
 
-declare const gameState: GameState;
-declare const CANVAS_W: number;
-declare const CANVAS_H: number;
-declare const ScreenShake: any;
-declare const SceneRenderer: any;
-declare const GameRenderer: any;
-declare const UIRenderer: any;
-declare const LightingSystem: any;
-declare const ParticleSystem: any;
-declare const Vignette: any;
+// Side-effect imports to ensure window globals are initialized
+import '../effects/ambient.mjs';
+import './gameRenderer.mjs';
+import './introRenderer.mjs';
+import './prologueRenderer.mjs';
+import './endingRenderer.mjs';
+import './sceneRenderer.mjs';
+import './uiRenderer.mjs';
+import './mapRenderer.mjs';
+import './objectRenderer.mjs';
 
 class RenderManager {
   ctx: CanvasRenderingContext2D | null;
@@ -59,9 +60,11 @@ class RenderManager {
     renderCtx.imageSmoothingEnabled = false;
 
     // Apply screen shake
-    ScreenShake?.apply?.(renderCtx);
+    (window as any).ScreenShake?.apply?.(renderCtx);
 
     const ph = gameState.gamePhase;
+    const SceneRenderer = (window as any).SceneRenderer;
+    const UIRenderer = (window as any).UIRenderer;
 
     // Phase-based rendering
     switch (ph) {
@@ -121,14 +124,17 @@ class RenderManager {
    * Render gameplay scene
    */
   private _renderGameplay(ctx: CanvasRenderingContext2D): void {
+    const GameRenderer = (window as any).GameRenderer;
+    const UIRenderer = (window as any).UIRenderer;
+
     GameRenderer?.renderArea?.(ctx);
     GameRenderer?.renderPlayer?.(ctx);
     GameRenderer?.renderInteractionHint?.(ctx);
 
     // Visual effects
-    LightingSystem?.draw?.(ctx, gameState.player.x, gameState.player.y);
-    ParticleSystem?.draw?.(ctx);
-    Vignette?.draw?.(ctx, CANVAS_W, CANVAS_H);
+    (window as any).LightingSystem?.draw?.(ctx, gameState.player.x, gameState.player.y);
+    (window as any).ParticleSystem?.draw?.(ctx);
+    (window as any).Vignette?.draw?.(ctx, CANVAS_W, CANVAS_H);
 
     if (gameState.showMiniMap) {
       UIRenderer?.renderMiniMap?.(ctx);
