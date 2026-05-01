@@ -82,92 +82,92 @@ async function initializeGame() {
 
   try {
     // Phase 1: Load data modules
-    await loadModule('src/data/clues.mjs');
-    await loadModule('src/data/npcData.mjs');
-    await loadModule('src/data/dialogueNodes.mjs');
-    await loadModule('src/data/dialogueEffects.mjs');
-    await loadModule('src/data/areas.mjs');
-    await loadModule('src/data/puzzles.mjs');
+    await loadModule('./data/clues.mjs');
+    await loadModule('./data/npcData.mjs');
+    await loadModule('./data/dialogueNodes.mjs');
+    await loadModule('./data/dialogueEffects.mjs');
+    await loadModule('./data/areas.mjs');
+    await loadModule('./data/puzzles.mjs');
 
     // Phase 2: Load engine modules
-    await loadModule('src/engine/spriteEngine.mjs');
-    await loadModule('src/engine/proceduralRenderer.mjs');
-    await loadModule('src/engine/civicBuildings.mjs');
-    await loadModule('src/engine/industrialBuildings.mjs');
-    await loadModule('src/engine/buildingDecorations.mjs');
-    await loadModule('src/engine/buildingRenderers.mjs');
-    await loadModule('src/engine/index.ts');
+    await loadModule('./engine/spriteEngine.mjs');
+    await loadModule('./engine/proceduralRenderer.mjs');
+    await loadModule('./engine/civicBuildings.mjs');
+    await loadModule('./engine/industrialBuildings.mjs');
+    await loadModule('./engine/buildingDecorations.mjs');
+    await loadModule('./engine/buildingRenderers.mjs');
+    await loadModule('./engine/index.ts');
 
     // Phase 3: Load texture & sprite generators
-    await loadModule('src/game/textureGenerator.mjs');
-    await loadModule('src/game/spriteGenerator.mjs');
+    await loadModule('./game/textureGenerator.mjs');
+    await loadModule('./game/spriteGenerator.mjs');
 
     // Phase 4: Load effects modules
-    await loadModule('src/effects/ambient.mjs');
-    await loadModule('src/effects/particles.mjs');
-    await loadModule('src/effects/lighting.mjs');
-    await loadModule('src/effects/weather.mjs');
-    await loadModule('src/effects/animations.mjs');
-    await loadModule('src/effects/uiEffects.mjs');
-    await loadModule('src/effects/index.mjs');
+    await loadModule('./effects/ambient.mjs');
+    await loadModule('./effects/particles.mjs');
+    await loadModule('./effects/lighting.mjs');
+    await loadModule('./effects/weather.mjs');
+    await loadModule('./effects/animations.mjs');
+    await loadModule('./effects/uiEffects.mjs');
+    await loadModule('./effects/index.mjs');
 
     // Phase 5: Load area modules
-    await loadModule('src/areas/piazze.mjs');
-    await loadModule('src/areas/chiesa.mjs');
-    await loadModule('src/areas/cimitero.mjs');
-    await loadModule('src/areas/giardini.mjs');
-    await loadModule('src/areas/barExterior.mjs');
-    await loadModule('src/areas/residenziale.mjs');
-    await loadModule('src/areas/industriale.mjs');
-    await loadModule('src/areas/polizia.mjs');
-    await loadModule('src/areas/index.mjs');
+    await loadModule('./areas/piazze.mjs');
+    await loadModule('./areas/chiesa.mjs');
+    await loadModule('./areas/cimitero.mjs');
+    await loadModule('./areas/giardini.mjs');
+    await loadModule('./areas/barExterior.mjs');
+    await loadModule('./areas/residenziale.mjs');
+    await loadModule('./areas/industriale.mjs');
+    await loadModule('./areas/polizia.mjs');
+    await loadModule('./areas/index.mjs');
 
     // Phase 6: Load render modules
-    await loadModule('src/render/spriteManager.mjs');
-    await loadModule('src/render/uiRenderer.mjs');
-    await loadModule('src/render/objectRenderer.mjs');
-    await loadModule('src/render/mapRenderer.mjs');
-    await loadModule('src/render/prologueRenderer.mjs');
-    await loadModule('src/render/introRenderer.mjs');
-    await loadModule('src/render/endingRenderer.mjs');
-    await loadModule('src/render/sceneRenderer.mjs');
-    await loadModule('src/render/gameRenderer.mjs');
-    await loadModule('src/render/index.ts');
+    await loadModule('./render/spriteManager.mjs');
+    await loadModule('./render/uiRenderer.mjs');
+    await loadModule('./render/objectRenderer.mjs');
+    await loadModule('./render/mapRenderer.mjs');
+    await loadModule('./render/prologueRenderer.mjs');
+    await loadModule('./render/introRenderer.mjs');
+    await loadModule('./render/endingRenderer.mjs');
+    await loadModule('./render/sceneRenderer.mjs');
+    await loadModule('./render/gameRenderer.mjs');
+    await loadModule('./render/index.ts');
 
     // Phase 7: Load story modules
-    await loadModule('src/story/storyChapters.mjs');
-    await loadModule('src/story/storyQuests.mjs');
-    await loadModule('src/story/storyDialogues.mjs');
-    await loadModule('src/story/storyEndings.mjs');
-    await loadModule('src/story/storyEvents.mjs');
-    await loadModule('src/story/storyAchievements.mjs');
-    await loadModule('src/story/flagManager.mjs');
-    await loadModule('src/story/statsManager.mjs');
-    await loadModule('src/story/dialogueSystem.mjs');
-    await loadModule('src/story/conditionSystem.mjs');
-    await loadModule('src/story/eventSystem.mjs');
-    await loadModule('src/story/endingSystem.mjs');
-    await loadModule('src/story/achievementSystem.mjs');
-    await loadModule('src/story/chapterManager.mjs');
-    await loadModule('src/story/questManager.mjs');
-    await loadModule('src/story/storyEngine.mjs');
-    await loadModule('src/story/index.ts');
+    await loadModule('./story/storyChapters.mjs');
+    await loadModule('./story/storyQuests.mjs');
+    await loadModule('./story/storyDialogues.mjs');
+    await loadModule('./story/storyEndings.mjs');
+    await loadModule('./story/storyEvents.mjs');
+    await loadModule('./story/storyAchievements.mjs');
+    await loadModule('./story/flagManager.mjs');
+    await loadModule('./story/statsManager.mjs');
+    await loadModule('./story/dialogueSystem.mjs');
+    await loadModule('./story/conditionSystem.mjs');
+    await loadModule('./story/eventSystem.mjs');
+    await loadModule('./story/endingSystem.mjs');
+    await loadModule('./story/achievementSystem.mjs');
+    await loadModule('./story/chapterManager.mjs');
+    await loadModule('./story/questManager.mjs');
+    await loadModule('./story/storyEngine.mjs');
+    await loadModule('./story/index.ts');
 
     // Phase 8: Load game modules
-    await loadModule('src/game/engine.mjs');
-    await loadModule('src/game/init.mjs');
-    await loadModule('src/game/audio.mjs');
-    await loadModule('src/game/customize.mjs');
-    await loadModule('src/game/input.ts');
-    await loadModule('src/game/dialogue.mjs');
-    await loadModule('src/game/radio.mjs');
-    await loadModule('src/game/registry.mjs');
-    await loadModule('src/game/scene.mjs');
-    await loadModule('src/game/recorder.mjs');
-    await loadModule('src/game/deduction.mjs');
-    await loadModule('src/game/transition.mjs');
-    await loadModule('src/game/endings.mjs');
-    await loadModule('src/game/loop.ts');
+    await loadModule('./game/engine.mjs');
+    await loadModule('./game/init.mjs');
+    await loadModule('./game/audio.mjs');
+    await loadModule('./game/customize.mjs');
+    await loadModule('./game/input.ts');
+    await loadModule('./game/dialogue.mjs');
+    await loadModule('./game/radio.mjs');
+    await loadModule('./game/registry.mjs');
+    await loadModule('./game/scene.mjs');
+    await loadModule('./game/recorder.mjs');
+    await loadModule('./game/deduction.mjs');
+    await loadModule('./game/transition.mjs');
+    await loadModule('./game/endings.mjs');
+    await loadModule('./game/loop.ts');
 
     console.log('[Main] All modules loaded successfully');
 
