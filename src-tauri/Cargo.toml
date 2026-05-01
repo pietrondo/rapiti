@@ -1,0 +1,16 @@
+[package]
+name = "le-luci-di-san-celeste"
+version = "1.0.0"
+description = "Le Luci di San Celeste"
+authors = ["Pietro"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-beta", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-beta", features = [] }
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
