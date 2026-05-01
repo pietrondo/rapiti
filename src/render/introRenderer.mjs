@@ -118,6 +118,7 @@ export function renderIntroSlide(ctx) {
 
   var lines = slideData.getLines(name);
   ctx.font = '10px "Courier New",monospace';
+  var textX = 44; // margine sinistro allineato col bordo pannello + 20px padding
   for (var i = 0; i < lines.length; i++) {
     var ln = lines[i];
     if (ln.indexOf('"') === 0 || ln === name.toUpperCase() || ln.indexOf(name) === 0) {
@@ -127,7 +128,7 @@ export function renderIntroSlide(ctx) {
     }
     if (ln === name.toUpperCase()) ctx.font = 'bold 10px "Courier New",monospace';
     else ctx.font = '10px "Courier New",monospace';
-    ctx.fillText(ln, 200, 114 + i * 13);
+    ctx.fillText(ln, textX, 114 + i * 13);
   }
 
   ctx.font = '10px "Courier New",monospace';
@@ -162,15 +163,17 @@ export function renderTutorial(ctx) {
     ['Obiettivo:', "Scopri la verita' dietro"],
     ['', 'le luci misteriose di San Celeste.'],
   ];
+  var tutY = 70;
+  var tutSpacing = 14;
   for (var i = 0; i < lines.length; i++) {
     if (lines[i][0] !== '') {
       ctx.fillStyle = 'rgba(212,168,67,0.18)';
-      ctx.fillRect(54, 66 + i * 15, 86, 12);
+      ctx.fillRect(54, tutY - 9 + i * tutSpacing, 86, 12);
     }
     ctx.fillStyle = PALETTE.lanternYel;
-    ctx.fillText(lines[i][0], 60, 75 + i * 15);
+    ctx.fillText(lines[i][0], 60, tutY + i * tutSpacing);
     ctx.fillStyle = PALETTE.creamPaper;
-    ctx.fillText(lines[i][1], 60 + ctx.measureText(lines[i][0]).width + 8, 75 + i * 15);
+    ctx.fillText(lines[i][1], 60 + ctx.measureText(lines[i][0]).width + 8, tutY + i * tutSpacing);
   }
   ctx.textAlign = 'center';
   UIRenderer.drawPrompt(ctx, "Premi ENTER per iniziare l'indagine", 200, 230);

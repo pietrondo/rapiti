@@ -5,6 +5,21 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import { CANVAS_H, CANVAS_W } from '../config.mjs';
+
+/* ── CONSTANTS ── */
+var DEFAULT_GOLD = '#d4af37';
+var DEFAULT_BG = '#1a1a2e';
+var DEFAULT_TEXT = '#e0e0e0';
+var DEFAULT_BLACK = '#000';
+var DEFAULT_GREEN = '#0f0';
+var DEFAULT_RED = '#f00';
+
+/** Helper: resolve color from palette or fallback */
+function _c(palette, key, fallback) {
+  return palette && palette[key] ? palette[key] : fallback;
+}
+
 /**
  * UI Transitions - Transizioni tra schermate
  */
@@ -54,17 +69,17 @@ UITransitions.prototype.draw = function (ctx) {
   var alpha = this.type === 'fade' ? this.progress : 0;
 
   if (this.type === 'wipe') {
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, window.CANVAS_W * this.progress, window.CANVAS_H);
+    ctx.fillStyle = DEFAULT_BLACK;
+    ctx.fillRect(0, 0, CANVAS_W * this.progress, CANVAS_H);
   } else if (this.type === 'circle') {
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = DEFAULT_BLACK;
     ctx.beginPath();
-    var radius = Math.max(window.CANVAS_W, window.CANVAS_H) * this.progress;
-    ctx.arc(window.CANVAS_W / 2, window.CANVAS_H / 2, radius, 0, Math.PI * 2);
+    var radius = Math.max(CANVAS_W, CANVAS_H) * this.progress;
+    ctx.arc(CANVAS_W / 2, CANVAS_H / 2, radius, 0, Math.PI * 2);
     ctx.fill();
   } else {
     ctx.fillStyle = `rgba(0,0,0,${alpha})`;
-    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
   }
   ctx.restore();
 };
@@ -125,20 +140,16 @@ MenuAnimations.prototype.draw = function (ctx, palette) {
     ctx.scale(btn.scale, btn.scale);
 
     if (btn.glow > 0) {
-      ctx.shadowColor = palette ? palette.accent : '#d4af37';
+      ctx.shadowColor = _c(palette, 'accent', DEFAULT_GOLD);
       ctx.shadowBlur = btn.glow * 15;
     }
 
     ctx.fillStyle = btn.hover
-      ? palette
-        ? palette.accent
-        : '#d4af37'
-      : palette
-        ? palette.uiBg
-        : '#1a1a2e';
+      ? _c(palette, 'accent', DEFAULT_GOLD)
+      : _c(palette, 'uiBg', DEFAULT_BG);
     ctx.fillRect(-btn.w / 2, -btn.h / 2, btn.w, btn.h);
 
-    ctx.fillStyle = btn.hover ? '#000' : palette ? palette.textLight : '#e0e0e0';
+    ctx.fillStyle = btn.hover ? DEFAULT_BLACK : _c(palette, 'textLight', DEFAULT_TEXT);
     ctx.font = '12px "Press Start 2P"';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -214,10 +225,10 @@ PuzzleAnimations.prototype.draw = function (ctx, palette) {
     ctx.scale(piece.scale, piece.scale);
 
     if (piece.selected) {
-      ctx.shadowColor = palette ? palette.accent : '#d4af37';
+      ctx.shadowColor = _c(palette, 'accent', DEFAULT_GOLD);
       ctx.shadowBlur = 15;
     } else if (piece.solved) {
-      ctx.shadowColor = '#0f0';
+      ctx.shadowColor = DEFAULT_GREEN;
       ctx.shadowBlur = 10;
     }
 
@@ -233,16 +244,12 @@ PuzzleAnimations.prototype.draw = function (ctx, palette) {
     } else if (piece.type === 'switch') {
       ctx.fillStyle = '#555';
       ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
-      ctx.fillStyle = piece.solved ? '#0f0' : '#f00';
+      ctx.fillStyle = piece.solved ? DEFAULT_GREEN : DEFAULT_RED;
       ctx.fillRect(-piece.w / 4, -piece.h / 4, piece.w / 2, piece.h / 2);
     } else {
       ctx.fillStyle = piece.solved
-        ? palette
-          ? palette.accent
-          : '#d4af37'
-        : palette
-          ? palette.uiBg
-          : '#1a1a2e';
+        ? _c(palette, 'accent', DEFAULT_GOLD)
+        : _c(palette, 'uiBg', DEFAULT_BG);
       ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
     }
 
