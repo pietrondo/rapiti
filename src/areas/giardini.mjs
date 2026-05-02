@@ -63,8 +63,6 @@ const GiardiniArea = {
   name: 'Giardini Pubblici',
   walkableTop: 90,
   colliders: [
-    { x: 0, y: 90, w: 25, h: 160 },
-    { x: 375, y: 90, w: 25, h: 160 },
     { x: 170, y: 155, w: 60, h: 18 },
   ],
   npcs: [{ id: 'anselmo', x: 120, y: 170 }],

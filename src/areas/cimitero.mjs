@@ -57,10 +57,7 @@ export function drawCemeteryArea(ctx, t) {
 const CimiteroArea = {
   name: 'Cimitero Comunale',
   walkableTop: 80,
-  colliders: [
-    { x: 0, y: 80, w: 30, h: 170 },
-    { x: 370, y: 80, w: 30, h: 170 },
-  ],
+  colliders: [],
   npcs: [],
   exits: [{ dir: 'down', xRange: [170, 230], to: 'chiesa', spawnX: 200, spawnY: 210 }],
 
