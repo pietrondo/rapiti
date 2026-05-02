@@ -2,7 +2,7 @@
     INDIZI E OGGETTI D'AREA
     ══════════════════════════════════════════════════════════════ */
 
-/** Indizi — 12 totali (incluse missioni) */
+/** Indizi — 13 totali (incluse missioni) */
 const clues = [
   {
     id: 'registro_1861',
@@ -41,10 +41,16 @@ const clues = [
     desc: 'Il diario del nipote di Teresa. Parla del ritorno delle luci.',
   },
   {
-    id: 'tracce_circolari',
-    name: 'Tracce circolari nel terreno',
+    id: 'testim_tracce',
+    name: 'Testimonianza sulle Tracce',
     area: 'giardini',
-    desc: 'Cerchi perfetti nel terreno, erba piegata in senso orario.',
+    desc: 'Resoconto di un agricoltore: cerchi perfetti nel terreno, erba piegata.',
+  },
+  {
+    id: 'tracce_circolari',
+    name: 'Campione di Terreno (Tracce)',
+    area: 'giardini_tracce',
+    desc: 'Terreno vetrificato prelevato dal centro di un cerchio nel grano.',
   },
   {
     id: 'lettera_censurata',
@@ -96,7 +102,7 @@ const hypotheses = [
   {
     id: 'tecnologia_aliena',
     name: 'Relitto Extraterrestre',
-    clues: ['frammento', 'tracce_circolari'],
+    clues: ['frammento', 'testim_tracce'],
     desc: 'Il metallo e i cerchi nel grano indicano una presenza non umana.'
   }
 ];
@@ -125,7 +131,7 @@ const _areaObjects = {
   ],
   giardini: [
     { id: 'diario_enzo', x: 60, y: 180, w: 14, h: 12, type: 'clue', drawHint: true },
-    { id: 'tracce_circolari', x: 200, y: 170, w: 40, h: 30, type: 'clue', drawHint: true, requires: 'diario_enzo' },
+    { id: 'testim_tracce', x: 200, y: 170, w: 40, h: 30, type: 'clue', drawHint: true, requires: 'diario_enzo' },
     { id: 'menta', x: 280, y: 190, w: 12, h: 10, type: 'clue', drawHint: true },
   ],
   bar_interno: [{ id: 'radio_bar', x: 60, y: 100, w: 34, h: 25, type: 'radio', drawHint: true }],

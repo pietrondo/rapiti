@@ -7,6 +7,11 @@ const storyDialogueTriggers = {
     npcId: 'ruggeri',
     states: [
       {
+        id: 's4_corruzione',
+        condition: { hasHypothesis: 'esperimento_militare', trustAtMost: { ruggeri: 0 } },
+        node: 'ruggeri_s4_corruzione',
+      },
+      {
         id: 's3_esperimento',
         condition: { hasHypothesis: 'esperimento_militare' },
         node: 'ruggeri_s3_esperimento',
@@ -164,7 +169,14 @@ const storyDialogueTriggers = {
 
   don_pietro: {
     npcId: 'don_pietro',
-    states: [{ id: 's0_always', condition: null, node: 'don_pietro_s0' }],
+    states: [
+      {
+        id: 's1_religione',
+        condition: { hasHypothesis: 'rapimento_ciclico' },
+        node: 'don_pietro_s1',
+      },
+      { id: 's0_always', condition: null, node: 'don_pietro_s0' }
+    ],
     defaultNode: 'don_pietro_s0',
   },
 };

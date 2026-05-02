@@ -74,14 +74,28 @@ var dialogueNodes = {
   ruggeri_s3_spariti: { text: "Il radar... a volte apriva delle... falle. Non so dove siano finiti, ma non sono su questo pianeta, Maurizio. O almeno non in questa dimensione." },
   ruggeri_s3_segreto: { text: "È la scelta migliore. Per lei, e per San Celeste." },
 
+  /* -- CORRUPTION BRANCH -- */
+  ruggeri_s4_corruzione: {
+    text: "Maurizio, lei è un uomo intelligente. Troppo intelligente per il suo bene. Questa storia del radar... se finisce sui giornali, San Celeste morirà. Ma se lei chiude il dossier ora... diciamo per 'mancanza di prove'... la Prefettura riceverà un ottimo rapporto su di lei. E io le darò 5 milioni di lire per le sue 'spese di trasferta'.",
+    choices: [
+       { text: "Accetto il patto. Il caso è chiuso.", next: 'ruggeri_s4_accetta', effect: { setFlag: 'ending_corruzione', triggerEnding: true } },
+       { text: "La mia integrità non ha prezzo, sindaco.", next: 'ruggeri_s4_rifiuta', effect: { subTrust: { ruggeri: 50 } } }
+    ]
+  },
+  ruggeri_s4_accetta: { text: "Sapevo che avremmo trovato un accordo. Vada pure a Parma. Le manderò i documenti necessari." },
+  ruggeri_s4_rifiuta: { text: "Peggio per lei. Da questo momento, lei è un estraneo in questo paese. E gli estranei tendono a sparire quando le luci tornano." },
+
   /* ── TERESA BELLANDI ── */
   teresa_s0: {
-    text: "Sant'Antonio ci protegga! Ha visto anche lei le luci? Erano sopra i campi, silenziose... Mio nipote Enzo è uscito a guardare e non è più tornato!",
+    text: "Sant'Antonio ci protegga! Ha visto anche lei le luci? Erano sopra i campi, silenziose... Mio nipote Enzo è uscito a guardare e non è più tornato! Proprio come accadde a mia sorella Elena molti anni fa...",
     choices: [
+      { text: 'Sua sorella Elena? Quando è successo?', next: 'teresa_s0_elena' },
       { text: 'Cosa ha visto esattamente quella notte?', next: 'teresa_s0_visto' },
-      { text: "Suo nipote: quand'è successo?", next: 'teresa_s0_enzo' },
       { text: 'Si calmi, signora. Mi racconti con calma.', next: 'teresa_s0_calma', effect: { addTrust: { teresa: 10 } } },
     ],
+  },
+  teresa_s0_elena: {
+    text: "Era il 1961. Elena aveva solo otto anni. Uscì nel campo durante un temporale... ma non pioveva. C'era solo questo ronzio elettrico. Non la rivedemmo mai più. Il sindaco disse che era caduta nel fiume, ma io so che le luci se l'hanno presa.",
   },
   teresa_s0_visto: {
     text: 'Sfere di luce, grosse come automobili, fluttuavano sopra il campo a nord. Mio nonno diceva che nel 1861 fue uguale. Le stesse luci. Lo stesso silenzio.',
@@ -219,7 +233,28 @@ var dialogueNodes = {
     ]
   },
   anselmo_s3_fare: { text: "Niente. Solo guardare le stelle e sperare che si dimentichino di noi. Come fecero nel 1861." },
-  anselmo_s3_prefet: { text: "I burocrati di Parma rideranno di lei. E poi... loro sono già ovunque. Anche in Prefettura." }
+  anselmo_s3_prefet: { text: "I burocrati di Parma rideranno di lei. E poi... loro sono già ovunque. Anche in Prefettura." },
+
+  /* ── DON PIETRO ── */
+  don_pietro_s0: {
+    text: "Pace a te, figliolo. Sei qui per le luci? Preghiamo che non siano segni dell'Apocalisse. Il mondo è cambiato molto dal 1970, troppa superbia.",
+    choices: [
+       { text: "Lei cosa pensa delle sparizioni?", next: 'don_pietro_s0_spariti' },
+       { text: "Don Pietro, ha visto qualcosa di strano in chiesa?", next: 'don_pietro_s0_chiesa' }
+    ]
+  },
+  don_pietro_s0_spariti: { text: "Le anime che vagano senza guida si perdono facilmente. Enzo era un buon ragazzo, ma cercava risposte dove non avrebbe dovuto." },
+  don_pietro_s0_chiesa: { text: "Solo il silenzio di Dio. Ma a volte, nel silenzio, si sentono rumori che non appartengono a questa terra." },
+
+  don_pietro_s1: {
+    text: "I cicli di cui parli... 1861, 1961... sono scritti nelle cronache parrocchiali non ufficiali. I miei predecessori li chiamavano 'I Visitatori della Mietitura'. Ogni secolo circa, il gregge viene sfoltito.",
+    choices: [
+       { text: "È un castigo divino?", next: 'don_pietro_s1_castigo' },
+       { text: "Posso vedere queste cronache?", next: 'don_pietro_s1_cronache', effect: { giveClue: 'cronaca_parrocchiale' } }
+    ]
+  },
+  don_pietro_s1_castigo: { text: "Dio permette il male per metterci alla prova. Ma questi non sono demoni, Maurizio. Sono... collezionisti." },
+  don_pietro_s1_cronache: { text: "Tieni. Ma fai attenzione. La verità è un peso che non tutti riescono a sopportare." }
 };
 
 if (typeof window !== 'undefined') {
