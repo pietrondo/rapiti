@@ -49,12 +49,16 @@ export function changeArea(areaId, spawnX, spawnY) {
     }
 
     // Inizializza effetti per la nuova area
-    window.ParticleSystem.clear();
-    window.LightingSystem.setupAreaLights(areaId);
-    if (areaId === 'giardini' || areaId === 'piazze' || areaId === 'residenziale') {
-      window.ParticleSystem.createFireflies(spawnX, spawnY);
-    } else if (areaId === 'chiesa' || areaId === 'cimitero' || areaId === 'polizia') {
-      window.ParticleSystem.createDust(spawnX, spawnY);
+    if (window.ParticleSystem) {
+      window.ParticleSystem.clear();
+      if (areaId === 'giardini' || areaId === 'piazze' || areaId === 'residenziale') {
+        window.ParticleSystem.createFireflies(spawnX, spawnY);
+      } else if (areaId === 'chiesa' || areaId === 'cimitero' || areaId === 'polizia') {
+        window.ParticleSystem.createDust(spawnX, spawnY);
+      }
+    }
+    if (window.LightingSystem) {
+      window.LightingSystem.setupAreaLights(areaId);
     }
     window.updateHUD();
     window.gameState.fadeDir = -1;
