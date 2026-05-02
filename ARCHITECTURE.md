@@ -9,26 +9,26 @@ Gioco investigativo 2D ambientato nel 1978. L'architettura è passata da un sist
 
 ## Sistema di Rendering Ibrido (Stacked Canvas)
 
-Il gioco utilizza due motori di rendering simultaneamente per massimizzare performance e compatibilità:
+Il gioco utilizza due motori di rendering simultaneamente, con una progressiva migrazione verso **PixiJS v8**:
 
-1.  **Mondo di Gioco (PixiJS v8)**: Gestisce il rendering accelerato in WebGL di background, sprite (player/NPC), effetti particellari e filtri post-processing (CRT, Noise).
-2.  **Interfaccia Utente (Canvas 2D legacy)**: Un overlay trasparente posizionato sopra PixiJS che gestisce HUD, finestre di dialogo, mini-mappa e indicatori di interazione.
+1.  **Mondo di Gioco e UI Core (PixiJS v8)**: Gestisce il rendering accelerato in WebGL di background, sprite (player/NPC), effetti particellari e filtri post-processing. **Novità**: Anche le schermate di **Titolo**, **Introduzione** e **Tutorial** sono ora renderizzate nativamente in Pixi per coerenza visiva e performance.
+2.  **Interfaccia Utente Dinamica (Canvas 2D legacy)**: Un overlay trasparente posizionato sopra PixiJS che gestisce HUD, mini-mappa e indicatori di interazione contestuali.
 
 ### Stack di Canvas (z-index)
 
 ```
 ┌───────────────────────────────────────────────┐
-│ #gameCanvas (Z-Index: 10) - UI / Overlay      │ ◀── Canvas 2D (Trasparente)
+│ #gameCanvas (Z-Index: 10) - HUD / Mini-mappa  │ ◀── Canvas 2D (Trasparente)
 ├───────────────────────────────────────────────┤
-│ #pixi-canvas (Z-Index: 5) - Mondo / WebGL     │ ◀── PixiJS v8
+│ #pixi-canvas (Z-Index: 5) - Mondo / Menu      │ ◀── PixiJS v8
 └───────────────────────────────────────────────┘
 ```
 
 ### Orchestrazione (`RenderManager`)
 
 Il `RenderManager` (`src/render/index.ts`) decide quale motore attivare in base alla `gamePhase`:
-- **Pixi Attivo**: Pulisce il Canvas 2D ad ogni frame (`clearRect`) rendendolo trasparente, permettendo alla grafica WebGL di brillare attraverso l'interfaccia.
-- **Pixi Disattivato**: Fallback automatico al rendering Canvas 2D completo (es. menu iniziali o aree non ancora migrate).
+- **Pixi Attivo**: Pulisce il Canvas 2D ad ogni frame (`clearRect`) rendendolo trasparente, permettendo alla grafica WebGL di gestire il mondo e le interfacce principali.
+- **Pixi Disattivato**: Fallback automatico al rendering Canvas 2D completo per componenti legacy.
 
 ## Story System
 
@@ -44,14 +44,14 @@ intro ──▶ investigation ──▶ deepening ──▶ deduction_phase ─�
 |------|-------|
 | `src/story/storyChapters.mjs` | Capitoli della storia e obiettivi |
 | `src/story/storyQuests.mjs` | Quest parallele e ricompense (Trust System) |
-| `src/story/storyDialogues.mjs` | Trigger dialoghi NPC per stato |
+| `src/story/storyDialogues.mjs` | Trigger dialoghi NPC e bivi di fiducia |
 | `src/story/StoryManager.ts` | Orchestrazione core: flag, quest, capitoli |
 
 ## Trust System (Sistema di Fiducia)
 
 Implementato per gestire le relazioni con gli NPC. Le scelte nei dialoghi influenzano il valore `gameState.npcTrust`.
-- **Condizioni**: `trustMin`, `trustMax` nelle quest e nei dialoghi.
-- **Premi**: `addTrust`, `subTrust`, `setTrust` come ricompense.
+- **Bivi Narrativi**: I dialoghi cambiano drasticamente se la fiducia è alta (`trustAtLeast`) o bassa (`trustAtMost`).
+- **Premi**: `addTrust`, `subTrust`, `setTrust` come ricompense per le azioni del giocatore.
 
 ## State Machine
 
@@ -84,9 +84,10 @@ title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENT
 1.  **Uscite Interattive**: Porte che richiedono il tasto **'E'** (Municipio, Bar).
 2.  **NPC**: Avvio dialoghi basati su stato e fiducia.
 3.  **Oggetti**: Raccolta indizi e trigger di puzzle (Radio, Registratore).
+4.  **Point & Click**: Il giocatore può cliccare su target per muoversi e interagire automaticamente.
 
 ## Pipeline di Rendering (Dettaglio)
 
-1.  **Pixi Sync**: `pixiRenderer.render()` sincronizza gli sprite con le coordinate del `gameState`.
+1.  **Pixi Sync**: `pixiRenderer.render()` sincronizza gli sprite con le coordinate del `gameState`. Se la fase è `title` o `intro`, disegna i pannelli e i testi utilizzando oggetti `PIXI.Text` e `PIXI.Graphics`.
 2.  **Shader**: Applicazione di filtri `Noise` e `ColorMatrix` (Alien Glitch) via WebGL.
-3.  **Legacy Draw**: `RenderManager` disegna su `gameCanvas` elementi UI che richiedono precisione vettoriale o che non sono ancora stati migrati a sprite Pixi.
+3.  **Legacy Draw**: `RenderManager` disegna su `gameCanvas` l'HUD e la mini-mappa.
