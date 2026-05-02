@@ -113,8 +113,8 @@ const ResidenzialeArea = {
   ],
   npcs: [{ id: 'valli', x: 200, y: 180 }],
   exits: [
-    { dir: 'up', xRange: [160, 240], to: 'piazze', spawnX: 200, spawnY: 220 },
-    { dir: 'down', xRange: [160, 240], to: 'industriale', spawnX: 200, spawnY: 130 },
+    { dir: 'up', xRange: [0, 400], to: 'piazze', spawnX: 200, spawnY: 220 },
+    { dir: 'down', xRange: [0, 400], to: 'industriale', spawnX: 200, spawnY: 100 },
   ],
 
   draw: (ctx) => {

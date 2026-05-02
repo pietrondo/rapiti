@@ -184,11 +184,11 @@ const PiazzeArea = {
     { x: 240, y: 155, w: 42, h: 28 }, // Fontana (Spostata a DX della porta)
   ],
   exits: [
-    { dir: 'up', xRange: [160, 240], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true }, // Porta Municipio
+    { dir: 'up', xRange: [120, 280], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true }, // Porta Municipio (Range allargato)
     { dir: 'up', xRange: [240, 300], to: 'chiesa', spawnX: 200, spawnY: 220 }, // Uscita Chiesa
-    { dir: 'up', xRange: [320, 355], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true }, // Porta Bar (Spawn centrato su uscita BarExterior)
-    { dir: 'down', xRange: [160, 240], to: 'residenziale', spawnX: 200, spawnY: 140 }, // Spawn Y corretto per residenziale
-    { dir: 'left', xRange: [100, 200], to: 'giardini', spawnX: 340, spawnY: 125 }, // Spawn X centrato su Giardini
+    { dir: 'up', xRange: [300, 380], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true }, // Porta Bar (Range allargato)
+    { dir: 'down', xRange: [0, 400], to: 'residenziale', spawnX: 200, spawnY: 140 }, // Spawn Y corretto per residenziale
+    { dir: 'left', xRange: [0, 400], to: 'giardini', spawnX: 340, spawnY: 175 }, // Spawn X centrato su Giardini
   ],
 
 

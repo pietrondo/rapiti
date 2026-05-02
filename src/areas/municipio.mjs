@@ -62,13 +62,13 @@ export function drawMunicipioInternoArea(ctx, t) {
 
 const MunicipioArea = {
   name: 'Municipio — Interno',
-  walkableTop: 160,
+  walkableTop: 140, // Abbassato per permettere di avvicinarsi alla scrivania
   colliders: [
     { x: 120, y: 60, w: 160, h: 45 }, // Scrivania
   ],
-  npcs: [{ id: 'ruggeri', x: 200, y: 150 }],
+  npcs: [{ id: 'ruggeri', x: 200, y: 135 }], // Alzato leggermente (dietro scrivania)
   exits: [
-    { dir: 'down', xRange: [150, 250], to: 'piazze', spawnX: 200, spawnY: 150 }
+    { dir: 'down', xRange: [0, 400], to: 'piazze', spawnX: 200, spawnY: 150 }
   ],
 
   draw: (ctx) => {
@@ -78,6 +78,9 @@ const MunicipioArea = {
   },
 };
 
-if (typeof window !== 'undefined') {
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MunicipioArea;
+} else if (typeof window !== 'undefined') {
   window.MunicipioArea = MunicipioArea;
 }
+

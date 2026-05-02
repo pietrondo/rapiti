@@ -370,9 +370,14 @@ class PixiRenderer {
       if (area?.draw) {
         const tex = this.generateTexture(bgKey, (ctx) => area.draw(ctx, 0), CANVAS_W, CANVAS_H);
         const bg = new PIXI.Sprite(tex);
-        this.layers.bg.addChild(bg);
         this.sprites[bgKey] = bg;
       }
+    }
+
+    // Assicurati che sia nel layer corretto
+    const bg = this.sprites[bgKey];
+    if (bg && !this.layers.bg.children.includes(bg)) {
+       this.layers.bg.addChild(bg);
     }
 
     for (let k in this.sprites) {
