@@ -169,26 +169,39 @@
 <div class="toast" id="toast"></div>
 
 <!-- DEBUG LOG OVERLAY -->
-<div id="debug-log" style="position:fixed;bottom:0;right:0;width:420px;height:220px;background:rgba(0,0,0,0.88);color:#0f0;font:10px 'Courier New',monospace;overflow:auto;z-index:9999;padding:8px;border-top:2px solid #d4a843;border-left:2px solid #d4a843;opacity:0.95;">
-  <div style="color:#d4a843;font-weight:bold;margin-bottom:4px;cursor:pointer;" onclick="document.getElementById('debug-log').style.display='none'">DEBUG LOG (clicca per chiudere)</div>
+<div id="debug-log" style="position:fixed;bottom:0;right:0;width:450px;height:250px;background:rgba(5,7,10,0.95);color:#0f0;font:11px 'Courier New',monospace;overflow:auto;z-index:9999;padding:10px;border-top:2px solid #d4a843;border-left:2px solid #d4a843;box-shadow: -5px -5px 20px rgba(0,0,0,0.5);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid #333;padding-bottom:4px;">
+    <div style="color:#d4a843;font-weight:bold;">📟 SYSTEM CONSOLE</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('debug-log-content').innerHTML=''" style="background:#333;color:#eee;border:1px solid #555;cursor:pointer;font-size:9px;padding:2px 6px;">CLEAR</button>
+      <button onclick="document.getElementById('debug-log').style.display='none'" style="background:#822;color:#eee;border:1px solid #a44;cursor:pointer;font-size:9px;padding:2px 6px;">HIDE</button>
+    </div>
+  </div>
+  <div id="debug-log-content"></div>
 </div>
 <script>
 (function(){
-  var logDiv = document.getElementById('debug-log');
+  var logContent = document.getElementById('debug-log-content');
+  var logContainer = document.getElementById('debug-log');
   function append(type, args) {
     var line = document.createElement('div');
-    line.style.color = type === 'error' ? '#f44' : type === 'warn' ? '#ff4' : '#0f0';
-    line.style.marginBottom = '2px';
+    line.style.color = type === 'error' ? '#ff5555' : type === 'warn' ? '#ffff55' : type === 'info' ? '#55ccff' : '#55ff55';
+    line.style.marginBottom = '3px';
+    line.style.paddingLeft = '5px';
+    line.style.borderLeft = '2px solid ' + (type === 'error' ? '#f00' : type === 'warn' ? '#ff0' : '#0f0');
     line.style.wordBreak = 'break-all';
     line.style.whiteSpace = 'pre-wrap';
+    
+    var timestamp = new Date().toLocaleTimeString().split(' ')[0];
     var msg = Array.from(args).map(function(a){
       if (typeof a === 'object') try { return JSON.stringify(a); } catch(e) { return String(a); }
       return String(a);
     }).join(' ');
-    line.textContent = '[' + type.toUpperCase() + '] ' + msg;
-    logDiv.appendChild(line);
-    logDiv.scrollTop = logDiv.scrollHeight;
-    while (logDiv.children.length > 100) logDiv.removeChild(logDiv.children[1]);
+    
+    line.innerHTML = '<span style="color:#666">[' + timestamp + ']</span> ' + msg;
+    logContent.appendChild(line);
+    logContainer.scrollTop = logContainer.scrollHeight;
+    while (logContent.children.length > 150) logContent.removeChild(logContent.children[0]);
   }
   var origLog = console.log, origErr = console.error, origWarn = console.warn;
   console.log = function(){ append('log', arguments); origLog.apply(console, arguments); };
@@ -197,7 +210,7 @@
   window.addEventListener('error', function(e){
     console.error('UNCAUGHT:', e.message, 'at', e.filename + ':' + e.lineno);
   });
-  console.log('[Debug] Log overlay initialized');
+  console.log('[System] Debug console active');
 })();
 </script>
 

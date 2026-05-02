@@ -41,6 +41,8 @@ class PixiRenderer {
       antialias: false,
     });
 
+    console.log(`[PixiRenderer] App initialized: ${this.app.renderer.type} renderer`);
+
     PIXI.AbstractRenderer.defaultOptions.roundPixels = true;
     
     const stack = document.getElementById('canvas-stack');
@@ -81,6 +83,7 @@ class PixiRenderer {
   }
 
   _cleanupArea() {
+    console.log('[PixiRenderer] Cleaning up area sprites');
     for (let key in this.sprites) {
       if (key.startsWith('npc_')) {
         this.layers.mid.removeChild(this.sprites[key]);
@@ -90,6 +93,7 @@ class PixiRenderer {
   }
 
   _cleanupUI() {
+    console.log('[PixiRenderer] Cleaning up UI layers');
     this.layers.ui.removeChildren();
     this.layers.mid.removeChildren();
     this.layers.fg.removeChildren();
@@ -120,6 +124,7 @@ class PixiRenderer {
     const ph = gameState.gamePhase;
 
     if (this.lastPhase !== ph) {
+      console.log(`[PixiRenderer] Phase transition: ${this.lastPhase} -> ${ph}`);
       this._cleanupUI();
       this.layers.bg.removeChildren();
       this.lastPhase = ph;
@@ -306,7 +311,7 @@ class PixiRenderer {
         this.layers.ui.addChild(panel);
         
         const helpText = new PIXI.Text({
-           text: 'WASD: Muovi\nE: Interagisci\nJ: Diario\nI: Inventario\nESC: Chiudi',
+           text: 'WASD: Muovi\\nE: Interagisci\\nJ: Diario\\nI: Inventario\\nESC: Chiudi',
            style: { fontFamily: 'monospace', fontSize: 12, fill: 0xE8DCC8, lineHeight: 20 }
         });
         helpText.x = 60; helpText.y = 70;
@@ -317,6 +322,7 @@ class PixiRenderer {
 
   private _renderGameplay() {
     if (this.lastArea !== gameState.currentArea) {
+      console.log(`[PixiRenderer] Area transition: ${this.lastArea} -> ${gameState.currentArea}`);
       this._cleanupArea();
       this.layers.bg.removeChildren(); // FIX: Forza pulizia BG al cambio area
       this.lastArea = gameState.currentArea;
@@ -368,15 +374,19 @@ class PixiRenderer {
     if (!this.sprites[bgKey]) {
       const area = (window as any).areas[areaId];
       if (area?.draw) {
+        console.log(`[PixiRenderer] Generating background for ${areaId}`);
         const tex = this.generateTexture(bgKey, (ctx) => area.draw(ctx, 0), CANVAS_W, CANVAS_H);
         const bg = new PIXI.Sprite(tex);
         this.sprites[bgKey] = bg;
+      } else {
+        console.warn(`[PixiRenderer] Area ${areaId} has no draw function!`);
       }
     }
 
     // Assicurati che sia nel layer corretto
     const bg = this.sprites[bgKey];
     if (bg && !this.layers.bg.children.includes(bg)) {
+       console.log(`[PixiRenderer] Re-attaching background: ${bgKey}`);
        this.layers.bg.addChild(bg);
     }
 
@@ -393,6 +403,7 @@ class PixiRenderer {
     const sheet = sm.getOrCreatePlayerSheet();
     
     if (!this.sprites.player || this.textureCache.playerSheet !== sheet) {
+       console.log('[PixiRenderer] Updating player sprite textures');
        this.textureCache.playerSheet = sheet;
        this.playerTextures = [];
        const baseSource = PIXI.Texture.from({ resource: sheet }).source;
@@ -433,6 +444,7 @@ class PixiRenderer {
       const key = `npc_${n.id}`;
       const sheet = sm.getOrCreateNPCSheet(n.id);
       if (!this.sprites[key] || this.textureCache[`npc_${n.id}`] !== sheet) {
+        console.log(`[PixiRenderer] Creating/Updating NPC sprite: ${n.id}`);
         this.textureCache[`npc_${n.id}`] = sheet;
         const baseSource = PIXI.Texture.from({ resource: sheet }).source;
         const npcTex = new PIXI.Texture({

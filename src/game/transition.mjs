@@ -16,6 +16,7 @@ export function checkAreaExits() {
     if (ex.dir === 'right' && p.x >= window.CANVAS_W - p.w - 2 && p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) triggered = true;
     
     if (triggered) {
+      console.log(`[Transition] Auto-exit triggered to ${ex.to} at pos ${p.x},${p.y}`);
       if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
       else changeArea(ex.to, ex.spawnX, ex.spawnY);
       return;
@@ -29,6 +30,8 @@ export function triggerInteractExit() {
   var area = window.areas[window.gameState.currentArea];
   if (!area || !area.exits) return false;
 
+  console.log(`[Transition] Manual interaction check at ${p.x},${p.y} in ${window.gameState.currentArea}`);
+
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
     if (!ex.requiresInteract) continue;
@@ -37,11 +40,13 @@ export function triggerInteractExit() {
     if (ex.dir === 'up' || ex.dir === 'down') {
        if (p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) {
           if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 15) {
+             console.log(`[Transition] Manual exit UP to ${ex.to}`);
              if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
              else changeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
           if (ex.dir === 'down' && p.y >= window.CANVAS_H - p.h - 15) {
+             console.log(`[Transition] Manual exit DOWN to ${ex.to}`);
              if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
              else changeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
@@ -50,11 +55,13 @@ export function triggerInteractExit() {
     } else { // left o right
        if (p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) {
           if (ex.dir === 'right' && p.x >= window.CANVAS_W - p.w - 80) {
+             console.log(`[Transition] Manual exit RIGHT to ${ex.to}`);
              if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
              else changeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
           if (ex.dir === 'left' && p.x <= 40) {
+             console.log(`[Transition] Manual exit LEFT to ${ex.to}`);
              if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
              else changeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
@@ -66,6 +73,7 @@ export function triggerInteractExit() {
 }
 
 export function changeArea(areaId, spawnX, spawnY) {
+  console.log(`[Transition] Changing area to ${areaId} (spawn: ${spawnX},${spawnY})`);
   window.gameState.fadeDir = 1;
   window.gameState.fadeCallback = () => {
     window.gameState.currentArea = areaId;
