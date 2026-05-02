@@ -8,7 +8,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { gameState, CANVAS_W, CANVAS_H } from './config.ts';
+import { gameState, CANVAS_W, CANVAS_H } from '../config.ts';
 import { saveLoad } from './saveLoad.ts';
 
 /** Controlla se il player tocca un'uscita automatica */
