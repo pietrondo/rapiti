@@ -50,6 +50,7 @@ Durante `playing`, fasi sovrapposte: `dialogue`, `journal`, `inventory`, `deduct
 - **Commenti**: box art ASCII `/* ═══ ... ═══ */` nei file dati
 - **Canvas API**: `fillRect` per pixel art, `fillText` con `"Courier New"` monospace
 - **Texture/Sprite**: generatori procedurali (SpriteGenerator, TextureGenerator) come fallback quando i PNG non sono disponibili
+- **Variabili globali nei moduli `.mjs`**: tutti i riferimenti a variabili globali (`gameState`, `PALETTE`, `CANVAS_W/H`, `UIRenderer`, `SpriteManager`, `showToast`, `updateHUD`, `areas`, `npcsData`, `areaObjects`, `PF`, `drawVignette`, ecc.) devono usare il prefisso `window.`. I moduli `.mjs` caricati dinamicamente da Vite vengono code-splittati in chunk separati; senza `window.` generano `ReferenceError` a runtime.
 
 ## Struttura File
 
