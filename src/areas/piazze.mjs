@@ -263,6 +263,32 @@ const PiazzeArea = {
     drawNoticeBoard(ctx, 82, 136, t);
     drawBench(ctx, 260, 166);
 
+    // INDICATORI DI PASSAGGIO (FRECCE)
+    function drawArrow(x, y, dir, color) {
+       ctx.save();
+       ctx.translate(x, y);
+       ctx.fillStyle = color || 'rgba(212,168,67,0.6)';
+       ctx.beginPath();
+       if (dir === 'up') {
+          ctx.moveTo(0, 0); ctx.lineTo(5, 5); ctx.lineTo(-5, 5);
+       } else if (dir === 'down') {
+          ctx.moveTo(0, 5); ctx.lineTo(5, 0); ctx.lineTo(-5, 0);
+       } else if (dir === 'left') {
+          ctx.moveTo(-5, 0); ctx.lineTo(0, 5); ctx.lineTo(0, -5);
+       } else if (dir === 'right') {
+          ctx.moveTo(5, 0); ctx.lineTo(0, 5); ctx.lineTo(0, -5);
+       }
+       ctx.fill();
+       ctx.restore();
+    }
+
+    // Frecce per uscite
+    drawArrow(200, 145, 'up'); // Municipio
+    drawArrow(45, 145, 'up');  // Chiesa
+    drawArrow(337, 172, 'up'); // Bar
+    drawArrow(200, 240, 'down'); // Residenziale
+    drawArrow(10, 150, 'left');  // Giardini
+
     // CARTELLI / INSEGNE TESTUALI PER CHIAREZZA
     ctx.font = 'bold 9px "Courier New", monospace';
     ctx.textAlign = 'center';

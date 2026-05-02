@@ -81,6 +81,17 @@ const GiardiniArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawGardensArea(ctx, t);
+    
+    // Freccia verso Piazza
+    ctx.fillStyle = 'rgba(212,168,67,0.6)';
+    ctx.beginPath();
+    ctx.moveTo(395, 175); ctx.lineTo(390, 180); ctx.lineTo(390, 170);
+    ctx.fill();
+    ctx.font = 'bold 8px "Courier New", monospace';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'right';
+    ctx.fillText('PIAZZA →', 385, 178);
+
     window.drawVignette(ctx);
   },
 };

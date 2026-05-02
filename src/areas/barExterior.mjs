@@ -102,6 +102,17 @@ const BarExteriorArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawBarExteriorArea(ctx, t);
+    
+    // Freccia verso Piazza
+    ctx.fillStyle = 'rgba(212,168,67,0.6)';
+    ctx.beginPath();
+    ctx.moveTo(200, 245); ctx.lineTo(205, 240); ctx.lineTo(195, 240);
+    ctx.fill();
+    ctx.font = 'bold 8px "Courier New", monospace';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.fillText('↓ PIAZZA', 200, 235);
+
     window.drawVignette(ctx);
   },
 };
