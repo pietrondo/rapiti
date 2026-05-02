@@ -54,7 +54,7 @@ var dialogueNodes = {
 
   /* -- MISTRUST BRANCH -- */
   ruggeri_s1_mistrust: {
-    text: "Ancora lei? Le ho detto che quella lettera è un falso, o robaccia burocratica senza valore. Se continua a importunare le autorità cittadine, sarò costretto a chiamare Parma per farla rimuovere dall'incarico.",
+    text: "Ancor lei? Le ho detto che quella lettera è un falso, o robaccia burocratica senza valore. Se continua a importunare le autorità cittadine, sarò costretto a chiamare Parma per farla rimuovere dall'incarico.",
     choices: [
        { text: "Non mi minacci, sindaco.", next: 'ruggeri_s1_mistrust_threat', effect: { subTrust: { ruggeri: 10 } } },
        { text: "Mi scusi. Proseguirò altrove.", next: 'ruggeri_s1_mistrust_exit' }
@@ -62,6 +62,17 @@ var dialogueNodes = {
   },
   ruggeri_s1_mistrust_threat: { text: "Non è una minaccia, Maurizio. È una promessa. Lei sta sprecando soldi pubblici dietro a fantasmi. Vada a dormire." },
   ruggeri_s1_mistrust_exit: { text: "Saggia decisione. Se vuole un caffè, vada da Osvaldo. Ma non torni qui a parlare di lettere segrete." },
+
+  /* -- HYPOTHESIS BRANCH -- */
+  ruggeri_s3_esperimento: {
+    text: "Quindi ha collegato i punti... Monte Ferro e la lettera del '61. Sì, Maurizio. Non erano alieni. Era un progetto chiamato 'Occhio di Perseo'. Un radar a impulsi che... beh, ha avuto effetti collaterali sulla popolazione locale. Ma se lo dice in giro, non l'ha saputo da me.",
+    choices: [
+       { text: "E Elena? E Enzo?", next: 'ruggeri_s3_spariti' },
+       { text: "Capisco. Manterrò il segreto.", next: 'ruggeri_s3_segreto', effect: { addTrust: { ruggeri: 30 } } }
+    ]
+  },
+  ruggeri_s3_spariti: { text: "Il radar... a volte apriva delle... falle. Non so dove siano finiti, ma non sono su questo pianeta, Maurizio. O almeno non in questa dimensione." },
+  ruggeri_s3_segreto: { text: "È la scelta migliore. Per lei, e per San Celeste." },
 
   /* ── TERESA BELLANDI ── */
   teresa_s0: {
@@ -197,7 +208,18 @@ var dialogueNodes = {
     ]
   },
   anselmo_s2_patto: { text: "Un patto di silenzio in cambio di prosperità. Ma stavolta qualcosa è andato storto. Le luci sono troppo vicine. Troppo affamate." },
-  anselmo_s2_chi: { text: "Valli sa. Quel vecchio militare ha visto le stesse cose che ho visto io. Ma lui ha un fucile, e io solo una panchina." }
+  anselmo_s2_chi: { text: "Valli sa. Quel vecchio militare ha visto le stesse cose che ho visto io. Ma lui ha un fucile, e io solo una panchina." },
+
+  /* -- HYPOTHESIS BRANCH -- */
+  anselmo_s3_tecnologia: {
+    text: "*Anselmo tocca il frammento metallico con dita tremanti.* Questo... questo viene da lassù. E i cerchi nel Campo... Maurizio, stanno preparando un atterraggio in grande stile. Non è più un rapimento isolato. È un'invasione silenziosa.",
+    choices: [
+       { text: "Cosa possiamo fare?", next: 'anselmo_s3_fare' },
+       { text: "Devo avvertire la Prefettura.", next: 'anselmo_s3_prefet', effect: { subTrust: { anselmo: 15 } } }
+    ]
+  },
+  anselmo_s3_fare: { text: "Niente. Solo guardare le stelle e sperare che si dimentichino di noi. Come fecero nel 1861." },
+  anselmo_s3_prefet: { text: "I burocrati di Parma rideranno di lei. E poi... loro sono già ovunque. Anche in Prefettura." }
 };
 
 if (typeof window !== 'undefined') {

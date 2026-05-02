@@ -76,21 +76,39 @@
   <div class="panel"><button class="pnl-close" id="inventory-close">✕</button><h2>🎒 Inventario</h2><div id="inventory-content"></div></div>
 </div>
 
+<!-- DEDUCTION BOARD OVERLAY -->
 <div id="deduction-overlay" class="overlay">
-  <div class="panel" style="max-width:700px">
+  <div class="panel" style="max-width:850px; background:#1a1c20;">
     <button class="pnl-close" id="deduction-close">✕</button>
-    <h2>🔬 Pannello di Deduzione</h2>
-    <p style="text-align:center;color:#6b7b6b;font-size:12px;margin-bottom:12px">Trascina ogni indizio nello slot corretto</p>
-    <div class="deduction-layout">
-      <div class="deduction-column" id="deduction-clues"><h3>Indizi</h3></div>
-      <div class="deduction-column" id="deduction-slots">
-        <h3>Ipotesi</h3>
-        <div class="deduction-slot" data-slot="posizione">Posizione</div>
-        <div class="deduction-slot" data-slot="data">Data / Cronologia</div>
-        <div class="deduction-slot" data-slot="prova">Prova fisica</div>
+    <h2 style="color:#d4a843; text-shadow: 1px 1px #000;">🕵️ Lavagna Investigativa</h2>
+    <p style="text-align:center;color:#6b7b6b;font-size:11px;margin-bottom:12px">Collega gli indizi per formulare nuove ipotesi di indagine</p>
+    
+    <div class="board-container" style="display:flex; gap:15px; height:420px;">
+      <!-- Sidebar Indizi -->
+      <div class="clue-sidebar" style="width:220px; background:rgba(0,0,0,0.3); padding:10px; border:1px solid #333; overflow-y:auto; border-radius:4px;">
+        <h3 style="font-size:11px; color:#d4a843; border-bottom:1px solid #444; padding-bottom:5px; margin-bottom:10px; letter-spacing:1px;">INDIZI DISPONIBILI</h3>
+        <div id="deduction-clues" class="clue-stack"></div>
+      </div>
+
+      <!-- Area di Lavoro -->
+      <div class="work-area" style="flex:1; position:relative; background:rgba(255,255,255,0.02); border:1px dashed #555; border-radius:8px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:25px;">
+        <div style="text-align:center; color:#666; font-size:10px; position:absolute; top:15px; text-transform:uppercase;">Trascina 2 indizi negli slot per trovare un collegamento logico</div>
+        
+        <div style="display:flex; gap:40px; align-items:center;">
+           <div class="deduction-slot" data-slot="clue1" style="width:130px; height:160px; border:2px dashed #d4a843; background:rgba(0,0,0,0.2); border-radius:4px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:10px; color:#888; padding:10px; cursor:default; transition:all 0.2s;">SLOT A</div>
+           <div style="font-size:24px; color:#d4a843; font-weight:bold; font-family:serif;">&</div>
+           <div class="deduction-slot" data-slot="clue2" style="width:130px; height:160px; border:2px dashed #d4a843; background:rgba(0,0,0,0.2); border-radius:4px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:10px; color:#888; padding:10px; cursor:default; transition:all 0.2s;">SLOT B</div>
+        </div>
+
+        <button class="btn-primary" id="deduction-confirm" style="width:220px; padding:12px; font-weight:bold; letter-spacing:1px;" disabled>FORMULA IPOTESI</button>
+      </div>
+
+      <!-- Log Ipotesi -->
+      <div class="hypothesis-log" style="width:240px; background:rgba(212,168,67,0.03); padding:10px; border:1px solid rgba(212,168,67,0.2); border-radius:4px; overflow-y:auto;">
+        <h3 style="font-size:11px; color:#d4a843; border-bottom:1px solid rgba(212,168,67,0.2); padding-bottom:5px; margin-bottom:10px;">DOSSIER IPOTESI</h3>
+        <div id="hypothesis-list" style="font-size:10px; color:#bbb; line-height:1.5;"></div>
       </div>
     </div>
-    <button class="btn-primary" id="deduction-confirm" disabled>Conferma Ipotesi</button>
   </div>
 </div>
 

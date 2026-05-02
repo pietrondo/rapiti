@@ -7,6 +7,11 @@ const storyDialogueTriggers = {
     npcId: 'ruggeri',
     states: [
       {
+        id: 's3_esperimento',
+        condition: { hasHypothesis: 'esperimento_militare' },
+        node: 'ruggeri_s3_esperimento',
+      },
+      {
         id: 's1_lettera_trust',
         condition: { hasClue: 'lettera_censurata', trustAtLeast: { ruggeri: 10 } },
         node: 'ruggeri_s1_trust',
@@ -115,6 +120,11 @@ const storyDialogueTriggers = {
   anselmo: {
     npcId: 'anselmo',
     states: [
+      {
+        id: 's3_tecnologia',
+        condition: { hasHypothesis: 'tecnologia_aliena' },
+        node: 'anselmo_s3_tecnologia',
+      },
       {
         id: 's2_lore',
         condition: { hasFlag: 'anselmo_quest_complete', trustAtLeast: { anselmo: 20 } },

@@ -79,6 +79,28 @@ const clues = [
   },
 ];
 
+/** Ipotesi — Combinazioni di indizi che sbloccano nuove deduzioni */
+const hypotheses = [
+  {
+    id: 'esperimento_militare',
+    name: 'Operazione Radar 1961',
+    clues: ['lettera_censurata', 'registro_monte_ferro'],
+    desc: 'Le luci del 1961 erano parte di un esperimento radar coperto dal Ministero.'
+  },
+  {
+    id: 'rapimento_ciclico',
+    name: 'Il Patto del Silenzio',
+    clues: ['registro_1861', 'diario_enzo'],
+    desc: 'Le sparizioni avvengono ogni 60 anni circa. Enzo non è il primo.'
+  },
+  {
+    id: 'tecnologia_aliena',
+    name: 'Relitto Extraterrestre',
+    clues: ['frammento', 'tracce_circolari'],
+    desc: 'Il metallo e i cerchi nel grano indicano una presenza non umana.'
+  }
+];
+
 /** Costruisce dizionario indizi per lookup */
 const cluesMap = {};
 for (const c of clues) {
@@ -117,5 +139,6 @@ const _areaObjects = {
 if (typeof window !== 'undefined') {
   window.clues = clues;
   window.cluesMap = cluesMap;
+  window.hypotheses = hypotheses;
   window.areaObjects = _areaObjects;
 }

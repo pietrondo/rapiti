@@ -112,7 +112,17 @@ export class StoryEngine {
     if (condition.talkedTo && !statsManager.hasTalkedTo(condition.talkedTo)) return false;
     if (condition.visitedArea && !statsManager.hasVisitedArea(condition.visitedArea)) return false;
 
-    // Trust Levels (Modern & Legacy support)
+    // Check Hypotheses
+    if (condition.hasHypothesis && gs) {
+       if (gs.confirmedHypotheses.indexOf(condition.hasHypothesis) === -1) return false;
+    }
+    if (condition.hasHypotheses && gs) {
+       for (const h of condition.hasHypotheses) {
+          if (gs.confirmedHypotheses.indexOf(h) === -1) return false;
+       }
+    }
+
+    // Check Trust Levels (Modern & Legacy support)
     const trustAtLeast = condition.trustAtLeast || condition.trustMin;
     if (trustAtLeast) {
        for (const nid in trustAtLeast) {

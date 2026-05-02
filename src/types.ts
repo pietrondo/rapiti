@@ -108,6 +108,7 @@ export interface GameState {
   titleAnim: number;
   gameTime: number; // In minuti dall'inizio
   gameDate: string; // Es. "Venerdì, 21 Luglio 1978"
+  confirmedHypotheses: string[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -201,6 +202,8 @@ export interface Condition {
   trustAtMost?: Record<string, number>;
   trustMin?: Record<string, number>; // Legacy support
   trustMax?: Record<string, number>; // Legacy support
+  hasHypothesis?: string;
+  hasHypotheses?: string[];
 }
 
 /** Quest definition */

@@ -117,6 +117,7 @@ export const gameState = {
   titleAnim: 0,
   gameTime: 1200, // Inizio alle 20:00 (20 * 60)
   gameDate: "Venerdì, 21 Luglio 1978",
+  confirmedHypotheses: [],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -157,6 +158,7 @@ export function resetGameState() {
   gameState.titleAnim = 0;
   gameState.gameTime = 1200;
   gameState.gameDate = "Venerdì, 21 Luglio 1978";
+  gameState.confirmedHypotheses = [];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

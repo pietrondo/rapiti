@@ -1,43 +1,30 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *                    DEDUCTION BOARD SYSTEM (Investigation Board)
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * Sistema di lavagna investigativa interattiva.
+ * Permette di combinare indizi per sbloccare ipotesi narrative.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+/* global window.gameState, window.cluesMap, window.hypotheses, window.StoryManager, window.showToast */
+
 export function canOpenDeduction() {
-  var needed = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
-  for (var i = 0; i < needed.length; i++) {
-    if (window.gameState.cluesFound.indexOf(needed[i]) < 0) return false;
-  }
-  return !window.gameState.puzzleSolved;
+  return window.gameState.cluesFound.length >= 2;
 }
 
 export function openDeduction() {
   window.gameState.previousPhase = 'playing';
   window.gameState.gamePhase = 'deduction';
-  var cluesDiv = document.getElementById('deduction-clues');
-  cluesDiv.innerHTML = '';
-  var keyClues = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
-  for (var i = 0; i < keyClues.length; i++) {
-    var c = window.cluesMap[keyClues[i]];
-    var el = document.createElement('div');
-    el.className = 'draggable-clue';
-    el.textContent = c.name;
-    el.draggable = true;
-    el.setAttribute('data-clue-id', c.id);
-    el.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.getAttribute('data-clue-id'));
-    });
-    cluesDiv.appendChild(el);
-  }
-  var slots = document.querySelectorAll('.deduction-slot');
-  for (var s = 0; s < slots.length; s++) {
-    var label =
-      slots[s].getAttribute('data-slot') === 'posizione'
-        ? 'Posizione'
-        : slots[s].getAttribute('data-slot') === 'data'
-          ? 'Data / Cronologia'
-          : 'Prova fisica';
-    slots[s].innerHTML = label;
-    slots[s].classList.remove('filled');
-    slots[s].removeAttribute('data-placed-clue');
-  }
-  document.getElementById('deduction-confirm').disabled = true;
+  
+  renderDeductionClues();
+  renderHypothesisLog();
+  resetDeductionSlots();
+  
   document.getElementById('deduction-overlay').classList.add('active');
+  console.log('[Deduction] Board opened');
 }
 
 export function closeDeduction() {
@@ -45,101 +32,168 @@ export function closeDeduction() {
   window.gameState.gamePhase = 'playing';
 }
 
+/** Rende la lista degli indizi trascinabili */
+function renderDeductionClues() {
+  const cluesDiv = document.getElementById('deduction-clues');
+  if (!cluesDiv) return;
+  cluesDiv.innerHTML = '';
+
+  const found = window.gameState.cluesFound;
+  found.forEach(clueId => {
+    const c = window.cluesMap[clueId];
+    if (!c) return;
+
+    const el = document.createElement('div');
+    el.className = 'draggable-clue';
+    el.innerHTML = `<div style="font-weight:bold;margin-bottom:4px">${c.name}</div><div style="font-size:9px;opacity:0.7">${c.desc.substring(0, 40)}...</div>`;
+    el.style.cssText = 'background:rgba(212,168,67,0.1); border:1px solid #d4a843; padding:8px; margin-bottom:8px; border-radius:3px; cursor:grab; font-size:10px; color:#e8dcc8; transition:transform 0.1s;';
+    el.draggable = true;
+    el.setAttribute('data-clue-id', c.id);
+    
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', e.target.closest('.draggable-clue').getAttribute('data-clue-id'));
+      el.style.opacity = '0.5';
+    });
+    el.addEventListener('dragend', () => { el.style.opacity = '1'; });
+    
+    cluesDiv.appendChild(el);
+  });
+}
+
+/** Rende il log delle ipotesi confermate */
+function renderHypothesisLog() {
+  const logDiv = document.getElementById('hypothesis-list');
+  if (!logDiv) return;
+  logDiv.innerHTML = '';
+
+  const confirmed = window.gameState.confirmedHypotheses || [];
+  if (confirmed.length === 0) {
+    logDiv.innerHTML = '<div style="font-style:italic;color:#666;text-align:center;margin-top:20px;">Nessun collegamento trovato</div>';
+    return;
+  }
+
+  confirmed.forEach(hypoId => {
+    const h = window.hypotheses.find(item => item.id === hypoId);
+    if (!h) return;
+
+    const el = document.createElement('div');
+    el.style.cssText = 'background:rgba(76,175,80,0.1); border-left:3px solid #4CAF50; padding:8px; margin-bottom:10px; border-radius:2px;';
+    el.innerHTML = `<div style="color:#4CAF50;font-weight:bold;margin-bottom:3px;">✓ ${h.name}</div>
+                    <div style="font-size:9px;color:#aaa;">${h.desc}</div>`;
+    logDiv.appendChild(el);
+  });
+}
+
+/** Reset degli slot di lavoro */
+function resetDeductionSlots() {
+  const slots = document.querySelectorAll('.deduction-slot');
+  slots.forEach(slot => {
+    slot.innerHTML = '<span style="opacity:0.3;text-transform:uppercase;letter-spacing:1px;">Trascina Indizio</span>';
+    slot.style.background = 'rgba(0,0,0,0.2)';
+    slot.classList.remove('filled');
+    slot.removeAttribute('data-placed-clue');
+  });
+  document.getElementById('deduction-confirm').disabled = true;
+}
+
+/** Setup Drag & Drop */
 export function setupDragDrop() {
-  var slots = document.querySelectorAll('.deduction-slot');
-  for (var i = 0; i < slots.length; i++) {
-    var slot = slots[i];
+  const slots = document.querySelectorAll('.deduction-slot');
+  const confirmBtn = document.getElementById('deduction-confirm');
+
+  slots.forEach(slot => {
     slot.addEventListener('dragover', (e) => {
       e.preventDefault();
-      var s = e.target.closest('.deduction-slot');
-      if (s) s.classList.add('drag-over');
+      slot.style.background = 'rgba(212,168,67,0.15)';
+      slot.style.borderColor = '#fff';
     });
+
     slot.addEventListener('dragleave', (e) => {
-      var s = e.target.closest('.deduction-slot');
-      if (s) s.classList.remove('drag-over');
+      slot.style.background = slot.classList.contains('filled') ? 'rgba(212,168,67,0.1)' : 'rgba(0,0,0,0.2)';
+      slot.style.borderColor = '#d4a843';
     });
+
     slot.addEventListener('drop', (e) => {
       e.preventDefault();
-      var s = e.target.closest('.deduction-slot');
-      if (!s) return;
-      s.classList.remove('drag-over');
-      var clueId = e.dataTransfer.getData('text/plain');
-      if (!clueId) return;
-      var allSlots = document.querySelectorAll('.deduction-slot');
-      for (var j = 0; j < allSlots.length; j++) {
-        if (allSlots[j].getAttribute('data-placed-clue') === clueId) {
-          allSlots[j].removeAttribute('data-placed-clue');
-          allSlots[j].classList.remove('filled');
-          var lbl =
-            allSlots[j].getAttribute('data-slot') === 'posizione'
-              ? 'Posizione'
-              : allSlots[j].getAttribute('data-slot') === 'data'
-                ? 'Data / Cronologia'
-                : 'Prova fisica';
-          allSlots[j].innerHTML = lbl;
+      const clueId = e.dataTransfer.getData('text/plain');
+      const clue = window.cluesMap[clueId];
+      if (!clue) return;
+
+      // Se l'indizio è già in un altro slot, puliscilo
+      slots.forEach(s => {
+        if (s.getAttribute('data-placed-clue') === clueId) {
+          s.innerHTML = '<span style="opacity:0.3;">Trascina Indizio</span>';
+          s.classList.remove('filled');
+          s.removeAttribute('data-placed-clue');
+          s.style.background = 'rgba(0,0,0,0.2)';
         }
-      }
-      if (s.getAttribute('data-placed-clue')) {
-        var _oldId = s.getAttribute('data-placed-clue');
-        s.removeAttribute('data-placed-clue');
-      }
-      var c = window.cluesMap[clueId];
-      s.setAttribute('data-placed-clue', clueId);
-      s.classList.add('filled');
-      s.innerHTML = `✓ ${c.name}`;
+      });
+
+      slot.innerHTML = `<div style="font-weight:bold;color:#d4a843">${clue.name}</div>`;
+      slot.setAttribute('data-placed-clue', clueId);
+      slot.classList.add('filled');
+      slot.style.background = 'rgba(212,168,67,0.1)';
+      
       updateDeductionConfirmButton();
+    });
+  });
+
+  confirmBtn.addEventListener('click', checkDeduction);
+}
+
+function updateDeductionConfirmButton() {
+  const slots = document.querySelectorAll('.deduction-slot.filled');
+  document.getElementById('deduction-confirm').disabled = (slots.length < 2);
+}
+
+/** Verifica se la combinazione di indizi forma un'ipotesi */
+export function checkDeduction() {
+  const slots = document.querySelectorAll('.deduction-slot');
+  const clueIds = Array.from(slots).map(s => s.getAttribute('data-placed-clue')).filter(id => id !== null);
+  
+  if (clueIds.length < 2) return;
+
+  // Cerca un'ipotesi che contenga ENTRAMBI gli indizi
+  const foundHypo = window.hypotheses.find(h => {
+    return h.clues.includes(clueIds[0]) && h.clues.includes(clueIds[1]);
+  });
+
+  window.gameState.puzzleAttempts++;
+
+  if (foundHypo) {
+    if (window.gameState.confirmedHypotheses.indexOf(foundHypo.id) === -1) {
+       window.gameState.confirmedHypotheses.push(foundHypo.id);
+       window.showToast(`Nuova Ipotesi: ${foundHypo.name}`);
+       console.log(`[Deduction] Hypothesis confirmed: ${foundHypo.id}`);
+       
+       // Sblocca flag o eventi
+       window.gameState.npcTrust.anselmo += 10;
+       if (window.gameState.confirmedHypotheses.length >= 3) {
+          window.gameState.puzzleSolved = true;
+          window.StoryManager.onPuzzleSolved('deduction');
+          window.showToast('Tutti i pezzi del puzzle combaciano. La verità è vicina.');
+       }
+    } else {
+       window.showToast('Hai già formulato questa ipotesi.');
+    }
+    
+    renderHypothesisLog();
+    resetDeductionSlots();
+  } else {
+    window.showToast('Nessun collegamento logico evidente tra questi indizi.');
+    // Visivamente resetta gli slot con un flash rosso
+    slots.forEach(s => {
+       s.style.borderColor = '#f44';
+       setTimeout(() => { s.style.borderColor = '#d4a843'; }, 500);
     });
   }
 }
 
-export function updateDeductionConfirmButton() {
-  var slots = document.querySelectorAll('.deduction-slot');
-  var allFilled = true;
-  for (var i = 0; i < slots.length; i++) {
-    if (!slots[i].getAttribute('data-placed-clue')) {
-      allFilled = false;
-      break;
-    }
-  }
-  document.getElementById('deduction-confirm').disabled = !allFilled;
-}
-
-export function checkDeduction() {
-  var solution = { posizione: 'mappa_campi', data: 'registro_1861', prova: 'tracce_circolari' };
-  var slots = document.querySelectorAll('.deduction-slot');
-  var correct = true;
-  for (var i = 0; i < slots.length; i++) {
-    var slotType = slots[i].getAttribute('data-slot');
-    var placed = slots[i].getAttribute('data-placed-clue');
-    if (placed !== solution[slotType]) {
-      correct = false;
-      break;
-    }
-  }
-  window.gameState.puzzleAttempts++;
-  if (correct) {
-    window.gameState.puzzleSolved = true;
-
-    // Notifica StoryManager
-    StoryManager.onPuzzleSolved('deduction');
-
-    document.getElementById('deduction-overlay').classList.remove('active');
-    window.gameState.gamePhase = 'playing';
-    window.updateNPCStates();
-    window.showToast('Ipotesi confermata! Torna al Campo delle Luci per la verifica finale.');
-    window.updateHUD();
-  } else {
-    window.showToast('Ipotesi errata. Riprova a collegare gli indizi.');
-    if (window.gameState.puzzleAttempts >= 3) {
-      window.showToast("Suggerimento: parlane con l'Archivista Neri.");
-    }
-  }
-}
-
-// Global exports for dynamic module loading compatibility
+// Global exports
 if (typeof window !== 'undefined') {
   window.canOpenDeduction = canOpenDeduction;
   window.openDeduction = openDeduction;
   window.closeDeduction = closeDeduction;
   window.checkDeduction = checkDeduction;
+  window.setupDragDrop = setupDragDrop;
 }
