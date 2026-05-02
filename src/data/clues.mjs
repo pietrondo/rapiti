@@ -137,4 +137,5 @@ const _areaObjects = {
 if (typeof window !== 'undefined') {
   window.clues = clues;
   window.cluesMap = cluesMap;
+  window.areaObjects = _areaObjects;
 }

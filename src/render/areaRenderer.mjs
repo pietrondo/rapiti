@@ -62,7 +62,7 @@ export function renderArea(ctx) {
   }
 
   // Render interactable objects
-  var objs = areaObjects[gameState.currentArea] || [];
+  var objs = window.areaObjects[gameState.currentArea] || [];
   for (var k = 0; k < objs.length; k++) {
     var o = objs[k];
     if (o.type === 'gatto') {

@@ -4,29 +4,29 @@
 
 var dialogueEffects = {
   hint_chiesa: () => {
-    showToast('Il Sindaco ha parlato della Chiesa.');
+    window.showToast('Il Sindaco ha parlato della Chiesa.');
   },
   give_frammento: () => {
-    if (gameState.cluesFound.indexOf('frammento') === -1) {
-      gameState.cluesFound.push('frammento');
-      updateHUD();
-      showToast('Hai raccolto: Frammento metallico freddo');
+    if (window.gameState.cluesFound.indexOf('frammento') === -1) {
+      window.gameState.cluesFound.push('frammento');
+      window.updateHUD();
+      window.showToast('Hai raccolto: Frammento metallico freddo');
     }
   },
   hint_diario_enzo: () => {
-    var obj = areaObjects.giardini.find((o) => o.id === 'diario_enzo');
+    var obj = window.areaObjects.giardini.find((o) => o.id === 'diario_enzo');
     if (obj) obj.requires = null;
-    showToast('Teresa ha detto che il diario è nella stanza di Enzo.');
+    window.showToast('Teresa ha detto che il diario è nella stanza di Enzo.');
   },
   give_lettera: () => {
-    if (gameState.cluesFound.indexOf('lettera_censurata') === -1) {
-      gameState.cluesFound.push('lettera_censurata');
-      updateHUD();
-      showToast('Hai raccolto: Lettera militare censurata');
+    if (window.gameState.cluesFound.indexOf('lettera_censurata') === -1) {
+      window.gameState.cluesFound.push('lettera_censurata');
+      window.updateHUD();
+      window.showToast('Hai raccolto: Lettera militare censurata');
     }
   },
   hint_mappa: () => {
-    showToast('Neri ha una mappa. Forse è al Campo delle Luci?');
+    window.showToast('Neri ha una mappa. Forse è al Campo delle Luci?');
   },
 };
 
