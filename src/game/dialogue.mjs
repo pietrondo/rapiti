@@ -100,7 +100,7 @@ export function selectDialogueChoice(index) {
 
 export function applyDialogueEffect(effect) {
   if (effect.hint && effect.hint === 'chiesa') {
-    dialogueEffects.hint_chiesa();
+    window.dialogueEffects.hint_chiesa();
   }
   if (effect.giveClue) {
     var cid = effect.giveClue;
@@ -116,7 +116,7 @@ export function applyDialogueEffect(effect) {
           : cid === 'lettera_censurata'
             ? 'give_lettera'
             : null;
-      if (action && dialogueEffects[action]) dialogueEffects[action]();
+      if (action && window.dialogueEffects[action]) window.dialogueEffects[action]();
       else {
         window.updateHUD();
         window.showToast(`Hai raccolto: ${window.cluesMap[cid].name}`);
@@ -124,8 +124,8 @@ export function applyDialogueEffect(effect) {
     }
   }
   if (effect.giveClueHint) {
-    if (effect.giveClueHint === 'diario_enzo') dialogueEffects.hint_diario_enzo();
-    if (effect.giveClueHint === 'mappa_campi') dialogueEffects.hint_mappa();
+    if (effect.giveClueHint === 'diario_enzo') window.dialogueEffects.hint_diario_enzo();
+    if (effect.giveClueHint === 'mappa_campi') window.dialogueEffects.hint_mappa();
   }
 
   // Aggiorna stati NPC tramite StoryManager

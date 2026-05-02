@@ -49,12 +49,12 @@ export function changeArea(areaId, spawnX, spawnY) {
     }
 
     // Inizializza effetti per la nuova area
-    ParticleSystem.clear();
-    LightingSystem.setupAreaLights(areaId);
+    window.ParticleSystem.clear();
+    window.LightingSystem.setupAreaLights(areaId);
     if (areaId === 'giardini' || areaId === 'piazze' || areaId === 'residenziale') {
-      ParticleSystem.createFireflies(spawnX, spawnY);
+      window.ParticleSystem.createFireflies(spawnX, spawnY);
     } else if (areaId === 'chiesa' || areaId === 'cimitero' || areaId === 'polizia') {
-      ParticleSystem.createDust(spawnX, spawnY);
+      window.ParticleSystem.createDust(spawnX, spawnY);
     }
     window.updateHUD();
     window.gameState.fadeDir = -1;
