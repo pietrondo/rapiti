@@ -1,61 +1,57 @@
 /* ══════════════════════════════════════════════════════════════
-   STORY ENDINGS — Condizioni per il Finale
+   STORY ENDINGS — Condizioni per i finali
    ══════════════════════════════════════════════════════════════ */
 
 const storyEndingConditions = {
-  secret: {
-    id: 'secret',
-    title: 'NON È ARRIVATO. È STATO APERTO.',
-    priority: 100,
-    conditions: {
-      cluesMin: 6,
-      hasClues: [
-        'lettera_censurata',
-        'radio_audio',
-        'registro_1861',
-        'frammento',
-        'tracce_circolari',
-        'simboli_portone',
-      ],
-      puzzleSolved: ['deduction', 'radio', 'registry'],
-    },
-    description: 'Il finale vero - hai scoperto tutta la verità',
-  },
-
-  alien: {
-    id: 'alien',
-    title: 'NON SONO SOLI',
-    priority: 80,
-    conditions: {
-      cluesMin: 4,
-      hasClues: ['frammento', 'tracce_circolari', 'simboli_portone'],
-      missingClues: ['lettera_censurata'],
-    },
-    description: 'Finale extraterrestre - prove di visita aliena',
-  },
-
+  /* ── FINALE 1: Verità Militare ── */
   military: {
     id: 'military',
-    title: 'ESPERIMENTO FUORI CONTROLLO',
-    priority: 60,
-    conditions: {
-      cluesMin: 3,
-      hasClues: ['lettera_censurata', 'radio_audio', 'registro_1861'],
-    },
-    description: 'Finale militare - copertura governativa',
-  },
-
-  psychological: {
-    id: 'psychological',
-    title: 'ISTERIA COLLETTIVA',
+    title: 'Dossier "Occhio di Perseo"',
+    description: "Hai dimostrato che le luci sono esperimenti radar illegali. Il Sindaco e i militari vengono indagati, ma le sparizioni restano 'danni collaterali' senza risposta.",
     priority: 10,
     conditions: {
-      cluesMax: 2,
-    },
-    description: 'Finale psicologico - mancanza di prove',
+      hasHypothesis: 'esperimento_militare',
+      cluesMin: 5
+    }
   },
+
+  /* ── FINALE 2: Verità Aliena ── */
+  alien: {
+    id: 'alien',
+    title: 'Incontro del Terzo Tipo',
+    description: "Le prove sono inconfutabili: San Celeste è una stazione di raccolta aliena. Hai prelevato il campione di terreno vetrificato e il mondo non sarà più lo stesso.",
+    priority: 15,
+    conditions: {
+      hasHypothesis: 'tecnologia_aliena',
+      hasClue: 'tracce_circolari'
+    }
+  },
+
+  /* ── FINALE 3: Corruzione ── */
+  corruption: {
+    id: 'corruption',
+    title: 'Silenzio Assordante',
+    description: "Hai accettato i soldi del Sindaco Ruggeri. Il dossier è stato bruciato. San Celeste continua a prosperare, ma a quale prezzo? Nuove luci appaiono all'orizzonte.",
+    priority: 20,
+    conditions: {
+      hasFlag: 'ending_corruzione'
+    }
+  },
+
+  /* ── FINALE 4: Fine Ambigua ── */
+  psychological: {
+    id: 'psychological',
+    title: 'Nebbia Padana',
+    description: "Non hai raccolto abbastanza prove. La Prefettura ti richiama a Parma. Le luci di San Celeste restano un racconto per spaventare i bambini nelle notti d'estate.",
+    priority: 0,
+    conditions: {}
+  }
 };
 
 if (typeof window !== 'undefined') {
   window.storyEndingConditions = storyEndingConditions;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = storyEndingConditions;
 }

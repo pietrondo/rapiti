@@ -82,20 +82,24 @@ class PixiRenderer {
     const crt = new PIXI.Container();
     crt.zIndex = 1000;
     
-    // Scanlines
+    // Advanced Scanlines (Every 3rd pixel for subgrid feel)
     const scanlines = new PIXI.Graphics();
-    for (let i = 0; i < CANVAS_H; i += 2) {
-      scanlines.rect(0, i, CANVAS_W, 1).fill({ color: 0x000000, alpha: 0.1 });
+    for (let i = 0; i < CANVAS_H; i += 3) {
+      scanlines.rect(0, i, CANVAS_W, 1.5).fill({ color: 0x000000, alpha: 0.15 });
     }
     crt.addChild(scanlines);
 
-    // Vignette / Shadow
-    const grad = new PIXI.Graphics();
-    grad.rect(0, 0, CANVAS_W, CANVAS_H).fill({
-      color: 0x000000,
-      alpha: 0.05
-    });
-    crt.addChild(grad);
+    // Vignette (Elliptical shadow)
+    const vignette = new PIXI.Graphics();
+    vignette.rect(0, 0, CANVAS_W, CANVAS_H).fill({ color: 0x000000, alpha: 0.02 });
+    // Soft corners
+    const corners = new PIXI.Graphics();
+    corners.rect(0, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
+    corners.rect(CANVAS_W-40, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
+    corners.rect(0, CANVAS_H-40, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
+    corners.rect(CANVAS_W-40, CANVAS_H-40, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
+    crt.addChild(vignette);
+    crt.addChild(corners);
 
     this.world?.addChild(crt);
     this.sprites.ui_crt = crt;
@@ -595,7 +599,7 @@ class PixiRenderer {
     if (this.sprites.ui_crt) {
       const t = Date.now() * 0.001;
       this.sprites.ui_crt.alpha = 0.7 + Math.sin(t * 10) * 0.1;
-      this.sprites.ui_crt.children[0].y = (t * 20) % 2; // Subtle scanline movement
+      this.sprites.ui_crt.children[0].y = (t * 20) % 3; // Refined scanline movement
     }
   }
 }
