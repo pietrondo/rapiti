@@ -10,7 +10,7 @@
  */
 
 import type { GameState } from '../types.js';
-import { updatePrologue } from './prologueUpdater.js';
+import { updatePrologue } from './prologueUpdater.ts';
 import { updateFade, checkAreaExits } from './transition.mjs';
 import { updatePlayerPosition } from './movement.ts';
 import { render as renderFrame } from '../render/index.ts';
@@ -117,6 +117,12 @@ class GameLoop {
     updatePlayerPosition();
     checkAreaExits();
     checkInteractions();
+
+    // Advance game time (1 minute game = 10 seconds real)
+    gameState.gameTime += this.deltaTime / 10000;
+    if (Math.floor(gameState.gameTime / 1) % 60 === 0) {
+       (window as any).updateHUD();
+    }
 
     // Update effect systems (window globals initialized by ambient.mjs)
     (window as any).ParticleSystem?.update?.();

@@ -25,36 +25,110 @@ export function getAreaTexture(type) {
   return areaTextures[type];
 }
 
+/**
+ * Disegna una finestra illuminata con effetto bagliore e dettagli
+ */
 export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
+  phase = phase || 0;
   var pulse = 0.5 + Math.sin(t * 2 + phase) * 0.18;
+  
+  // Sfondo finestra (vetro scuro)
   ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = warm
+  
+  // Bagliore interno
+  var glowColor = warm
     ? `rgba(212,168,67,${pulse.toFixed(2)})`
     : `rgba(130,160,220,${pulse.toFixed(2)})`;
-  ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
-  ctx.fillStyle = window.PALETTE.earthBrown;
-  ctx.fillRect(x, y, w, 2);
-  ctx.fillRect(x, y + h - 2, w, 2);
-  ctx.fillRect(x, y, 2, h);
-  ctx.fillRect(x + w - 2, y, 2, h);
+    
+  ctx.fillStyle = glowColor;
+  ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
+
+  // Riflesso diagonale
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.beginPath();
+  ctx.moveTo(x + 1, y + 1);
+  ctx.lineTo(x + w * 0.4, y + 1);
+  ctx.lineTo(x + 1, y + h * 0.4);
+  ctx.closePath();
+  ctx.fill();
+
+  // Cornice e infissi
+  ctx.fillStyle = '#2A1A0A'; // Legno scuro per infissi
+  ctx.fillRect(x, y, w, 2); // Top
+  ctx.fillRect(x, y + h - 2, w, 2); // Bottom
+  ctx.fillRect(x, y, 2, h); // Left
+  ctx.fillRect(x + w - 2, y, 2, h); // Right
+  
+  // Croce infissi
   ctx.fillRect(x + Math.floor(w / 2) - 1, y, 2, h);
   ctx.fillRect(x, y + Math.floor(h / 2) - 1, w, 2);
 }
 
+/**
+ * Disegna un tetto a tegole con pattern dettagliato
+ */
 export function drawTileRoof(ctx, x, y, w, color) {
-  ctx.fillStyle = '#35241D';
-  ctx.fillRect(x - 5, y - 3, w + 10, 4);
-  ctx.fillStyle = color || window.PALETTE.burntOrange;
+  // Ombra sottotetto
+  ctx.fillStyle = '#1A120A';
+  ctx.fillRect(x - 6, y - 2, w + 12, 4);
+  
+  // Base tetto
+  var roofColor = color || window.PALETTE.burntOrange;
+  ctx.fillStyle = roofColor;
   ctx.beginPath();
   ctx.moveTo(x - 8, y);
-  ctx.lineTo(x + w / 2, y - 24);
+  ctx.lineTo(x + w / 2, y - 30);
   ctx.lineTo(x + w + 8, y);
   ctx.closePath();
   ctx.fill();
-  ctx.fillStyle = 'rgba(0,0,0,0.18)';
-  for (var i = 0; i < w + 12; i += 8) {
-    ctx.fillRect(x - 6 + i, y - 4 - (i % 16 === 0 ? 2 : 0), 6, 2);
+
+  // Pattern tegole (linee orizzontali scure)
+  ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+  ctx.lineWidth = 1;
+  for (var h = 0; h < 30; h += 5) {
+    var rowW = w + 16 - (h / 30) * (w + 16);
+    var rowX = x - 8 + (w + 16 - rowW) / 2;
+    ctx.beginPath();
+    ctx.moveTo(rowX, y - h);
+    ctx.lineTo(rowX + rowW, y - h);
+    ctx.stroke();
+  }
+  
+  // Tegole verticali (sfalsate)
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  for (var i = 0; i < w + 16; i += 8) {
+    ctx.fillRect(x - 6 + i, y - 4 - (i % 16 === 0 ? 2 : 0), 2, 4);
+  }
+}
+
+/**
+ * Disegna un pattern di mattoni su un'area
+ */
+export function drawBrickPattern(ctx, x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, w, h);
+  
+  ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+  ctx.lineWidth = 1;
+  
+  // Linee malta orizzontali
+  for (var ry = y + 4; ry < y + h; ry += 8) {
+    ctx.beginPath();
+    ctx.moveTo(x, ry);
+    ctx.lineTo(x + w, ry);
+    ctx.stroke();
+  }
+  
+  // Mattoni verticali sfalsati
+  for (var row = 0; row < h / 8; row++) {
+    var offset = (row % 2) * 8;
+    for (var rx = x + offset; rx < x + w; rx += 16) {
+      ctx.beginPath();
+      ctx.moveTo(rx, y + row * 8);
+      ctx.lineTo(rx, y + row * 8 + 8);
+      ctx.stroke();
+    }
   }
 }
 
@@ -90,6 +164,7 @@ if (typeof window !== 'undefined') {
   window.getAreaTexture = getAreaTexture;
   window.drawLitWindow = drawLitWindow;
   window.drawTileRoof = drawTileRoof;
+  window.drawBrickPattern = drawBrickPattern;
   window.drawWallTexture = drawWallTexture;
   window.drawVignette = drawVignette;
 }

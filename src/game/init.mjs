@@ -41,35 +41,230 @@ export function initEventListeners() {
 }
 
 /** Stub — mostra un messaggio toast temporaneo */
-export function showToast(msg) {
+export function showToast(msg, params) {
   var toast = document.getElementById('toast');
   if (!toast) return;
-  toast.textContent = msg;
+  
+  // Se msg è una chiave i18n, la traduce
+  var localizedMsg = msg;
+  if (msg.indexOf('.') > 0) {
+    localizedMsg = window.t(msg, params);
+  }
+  
+  toast.textContent = localizedMsg;
   toast.classList.add('active');
+  
+  // Visual juice: small shake when toast appears
+  if (window.ScreenShake) window.ScreenShake.shake(1, 5);
+  
   setTimeout(function () {
     toast.classList.remove('active');
   }, 2500);
 }
 
-/** Stub — gestisce interazione con oggetti/NPC */
-export function handleInteract() {
-  console.log('[Interact] Interazione non ancora implementata');
+/** Implementazione reale di collectClue con Juice */
+export function collectClue(clue) {
+  var id = typeof clue === 'string' ? clue : clue.id;
+  if (window.gameState.cluesFound.indexOf(id) >= 0) return;
+  
+  window.gameState.cluesFound.push(id);
+  
+  // Juice: Screen Shake + Particles + Discovery Jump
+  if (window.ScreenShake) window.ScreenShake.shake(2.5, 12);
+  window.gameState.player.discoveryJump = 20; // Timer per l'effetto jump
+  
+  if (window.ParticleSystem) {
+    var p = window.gameState.player;
+    window.ParticleSystem.createSparkles(p.x + 16, p.y + 8, '#FFD700');
+  }
+  
+  var name = window.t('clue.' + id + '.name');
+  if (name === '[' + 'clue.' + id + '.name' + ']') {
+    name = typeof clue === 'string' ? clue : clue.name;
+  }
+  
+  showToast('toast.clue_found', { name: name });
+  
+  // Notifica StoryManager
+  if (typeof StoryManager !== 'undefined') {
+    StoryManager.onClueFound(id);
+  }
+  
+  updateHUD();
 }
 
-/** Stub — apre il diario */
+/** Gestisce interazione con oggetti/NPC con feedback migliorato */
+export function handleInteract() {
+  // 1. Controlla prima le uscite manuali (Porte)
+  if (window.triggerInteractExit && window.triggerInteractExit()) {
+     return;
+  }
+
+  var p = window.gameState.player;
+  var area = window.areas[window.gameState.currentArea];
+  if (!area) return;
+
+  // 2. Controlla NPC
+  if (area.npcs) {
+    for (var i = 0; i < area.npcs.length; i++) {
+      var n = area.npcs[i];
+      var dist = Math.sqrt(Math.pow(p.x + 16 - n.x, 2) + Math.pow(p.y - n.y, 2));
+      if (dist < 25) {
+        if (window.startDialogue) {
+          window.startDialogue(n.id);
+          return;
+        }
+      }
+    }
+  }
+
+  // 2. Controlla Oggetti/Indizi
+  if (area.objects) {
+    for (var j = 0; j < area.objects.length; j++) {
+      var o = area.objects[j];
+      if (window.gameState.cluesFound.indexOf(o.id) >= 0) continue;
+      
+      // Collisione rettangolare semplice
+      if (p.x + 24 > o.x && p.x + 8 < o.x + (o.w || 20) &&
+          p.y + 16 > o.y && p.y - 8 < o.y + (o.h || 20)) {
+        
+        if (o.type === 'scene' && window.openScenePuzzle) {
+          collectClue(o);
+          // Se ha raccolto abbastanza indizi scena, apre il puzzle
+          var sceneClues = ['scena_lanterna', 'scena_impronte', 'scena_segni'];
+          var foundCount = 0;
+          for (var k = 0; k < sceneClues.length; k++) {
+            if (window.gameState.cluesFound.indexOf(sceneClues[k]) >= 0) foundCount++;
+          }
+          if (foundCount >= 3) window.openScenePuzzle();
+        } else {
+          collectClue(o);
+        }
+        return;
+      }
+    }
+  }
+
+  // 3. Controlla Porte/Uscite interattive
+  if (area.exits) {
+    for (var k = 0; k < area.exits.length; k++) {
+       var ex = area.exits[k];
+       if (ex.requiresInteract) {
+          // Logica delegata a transition.mjs se necessario
+       }
+    }
+  }
+}
+
+/** Rende l'inventario HTML */
+export function renderInventory() {
+  var content = document.getElementById('inventory-content');
+  if (!content) return;
+  content.innerHTML = '';
+  
+  var clues = window.gameState.cluesFound;
+  if (clues.length === 0) {
+    content.innerHTML = '<p style="text-align:center;color:#6b7b6b;padding:20px">Nessun oggetto raccolto.</p>';
+    return;
+  }
+  
+  for (var i = 0; i < clues.length; i++) {
+    var id = clues[i];
+    var name = window.t('clue.' + id + '.name');
+    var desc = window.t('clue.' + id + '.desc');
+    
+    var item = document.createElement('div');
+    item.className = 'inventory-item';
+    item.style.cssText = 'background:rgba(255,255,255,0.05);margin:8px;padding:10px;border:1px solid #444;border-radius:4px';
+    item.innerHTML = `<h3 style="color:#d4a843;margin:0 0 4px 0">${name}</h3><p style="font-size:11px;margin:0;color:#aaa">${desc}</p>`;
+    content.appendChild(item);
+  }
+}
+
+/** Rende il diario HTML */
+export function renderJournal() {
+  var content = document.getElementById('journal-content');
+  if (!content) return;
+  content.innerHTML = '';
+  
+  // ... Logica per le note del diario (da implementare se presenti)
+  content.innerHTML = '<p style="text-align:center;color:#6b7b6b;padding:20px">Il diario di Maurizio contiene gli appunti dell\'indagine.</p>';
+}
+
+/** Apre il diario */
 export function openJournal() {
+  renderJournal();
   document.getElementById('journal-overlay').classList.add('active');
 }
 
-/** Stub — apre l'inventario */
+/** Apre l'inventario */
 export function openInventory() {
+  renderInventory();
   document.getElementById('inventory-overlay').classList.add('active');
 }
 
-/** Stub — chiude pannelli aperti */
+/** Rende i livelli di fiducia NPC */
+export function renderTrust() {
+  var content = document.getElementById('trust-content');
+  if (!content) return;
+  content.innerHTML = '';
+  
+  var trust = window.gameState.npcTrust;
+  var npcs = window.npcsData;
+  
+  for (var nid in trust) {
+    var npc = npcs.find(n => n.id === nid);
+    var name = npc ? npc.name : nid;
+    var value = trust[nid];
+    
+    var item = document.createElement('div');
+    item.className = 'trust-item';
+    item.style.cssText = 'margin:12px;background:rgba(0,0,0,0.2);padding:10px;border-radius:4px;border-left:4px solid ' + (value >= 0 ? '#4CAF50' : '#F44336');
+    item.innerHTML = `<div style="display:flex;justify-content:space-between">
+      <span style="color:#E8DCC8;font-weight:bold">${name}</span>
+      <span style="color:#D4A843">Fiducia: ${value}</span>
+    </div>
+    <div style="background:#222;height:4px;margin-top:6px;position:relative">
+      <div style="background:${value >= 0 ? '#4CAF50' : '#F44336'};height:100%;width:${Math.min(100, Math.abs(value) * 10)}%"></div>
+    </div>`;
+    content.appendChild(item);
+  }
+}
+
+/** Apre il pannello fiducia */
+export function openTrust() {
+  renderTrust();
+  document.getElementById('trust-overlay').classList.add('active');
+}
+
+/** Chiude pannelli aperti */
 export function closePanels() {
   document.getElementById('journal-overlay').classList.remove('active');
   document.getElementById('inventory-overlay').classList.remove('active');
+  if (document.getElementById('trust-overlay')) document.getElementById('trust-overlay').classList.remove('active');
+}
+
+/** Aggiorna HUD con i18n */
+export function updateHUD() {
+  var areaEl = document.getElementById('hud-area');
+  if (areaEl) {
+    var areaName = window.gameState.currentArea;
+    areaEl.textContent = window.t('hud.area', { area: areaName });
+  }
+  var cluesEl = document.getElementById('hud-clues');
+  if (cluesEl) {
+    cluesEl.textContent = window.t('hud.clues', { 
+      found: window.gameState.cluesFound.length, 
+      total: 9 
+    });
+  }
+  var timeEl = document.getElementById('hud-time');
+  if (timeEl) {
+    var totalMinutes = Math.floor(window.gameState.gameTime || 0);
+    var hours = Math.floor(totalMinutes / 60) % 24;
+    var minutes = totalMinutes % 60;
+    timeEl.textContent = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+  }
 }
 
 // Global exports for dynamic module loading compatibility

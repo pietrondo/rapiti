@@ -1,89 +1,88 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                    STATS MANAGER MODULE
+ *                    STATS MANAGER (ES6+ CLASS)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Traccia statistiche di gioco: NPC parlati, aree visitate, indizi, puzzle.
- * Estratto da StoryManager.mjs per ridurre il God Object.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-const StatsManager = {
-  stats: {
-    talkedTo: {},
-    visitedAreas: {},
-    cluesFound: 0,
-    puzzlesSolved: {},
-    totalPlayTime: 0,
-  },
+import type { GameStats } from '../types.js';
 
-  init: function () {
-    this.stats = {
+export class StatsManager {
+  stats: GameStats;
+
+  constructor() {
+    this.stats = this._getDefaultStats();
+  }
+
+  private _getDefaultStats(): GameStats {
+    return {
       talkedTo: {},
       visitedAreas: {},
       cluesFound: 0,
       puzzlesSolved: {},
       totalPlayTime: 0,
     };
-  },
+  }
 
-  reset: function () {
+  init(): void {
+    this.stats = this._getDefaultStats();
+  }
+
+  reset(): void {
     this.init();
-  },
+  }
 
-  onTalkedTo: function (npcId) {
+  onTalkedTo(npcId: string): void {
     this.stats.talkedTo[npcId] = true;
-  },
+  }
 
-  onAreaVisited: function (areaId) {
+  onAreaVisited(areaId: string): void {
     this.stats.visitedAreas[areaId] = true;
-  },
+  }
 
-  onClueFound: function () {
+  onClueFound(): void {
     this.stats.cluesFound++;
-  },
+  }
 
-  onPuzzleSolved: function (puzzleId) {
+  onPuzzleSolved(puzzleId: string): void {
     this.stats.puzzlesSolved[puzzleId] = true;
-  },
+  }
 
-  hasTalkedTo: function (npcId) {
+  hasTalkedTo(npcId: string): boolean {
     return !!this.stats.talkedTo[npcId];
-  },
+  }
 
-  hasVisitedArea: function (areaId) {
+  hasVisitedArea(areaId: string): boolean {
     return !!this.stats.visitedAreas[areaId];
-  },
+  }
 
-  hasSolvedPuzzle: function (puzzleId) {
+  hasSolvedPuzzle(puzzleId: string): boolean {
     return !!this.stats.puzzlesSolved[puzzleId];
-  },
+  }
 
-  getTalkedToCount: function () {
+  getTalkedToCount(): number {
     return Object.keys(this.stats.talkedTo).length;
-  },
+  }
 
-  serialize: function () {
-    return this.stats;
-  },
+  serialize(): GameStats {
+    return { ...this.stats };
+  }
 
-  deserialize: function (data) {
-    this.stats = data || {
-      talkedTo: {},
-      visitedAreas: {},
-      cluesFound: 0,
-      puzzlesSolved: {},
-      totalPlayTime: 0,
-    };
+  deserialize(data: GameStats): boolean {
+    this.stats = data || this._getDefaultStats();
     return true;
-  },
-};
+  }
+}
 
+// Singleton instance
+const statsManager = new StatsManager();
+
+// Global export for retrocompatibility
 if (typeof window !== 'undefined') {
-  window.StatsManager = StatsManager;
+  (window as any).StatsManager = statsManager;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StatsManager;
-}
+export default statsManager;

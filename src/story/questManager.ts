@@ -1,48 +1,46 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                    QUEST MANAGER MODULE
+ *                    QUEST MANAGER (ES6+ CLASS)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Manages quests, quest stages, rewards, and quest progression.
- * Part of the modular StoryManager system.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/**
- * QuestManager - Handles quest system and rewards
- */
-const QuestManager = {
+import type { Quest, Reward, Condition, SerializedQuests } from '../types.js';
+
+export class QuestManager {
   /** Active quests by ID */
-  activeQuests: {},
+  activeQuests: Record<string, { id: string; currentStage: number; stagesCompleted: string[] }>;
 
   /** Completed quest IDs */
-  completedQuests: [],
+  completedQuests: string[];
 
-  /**
-   * Initialize quest manager
-   */
-  init: function () {
+  constructor() {
     this.activeQuests = {};
     this.completedQuests = [];
-  },
+  }
 
-  /**
-   * Reset to initial state
-   */
-  reset: function () {
+  init(): void {
+    this.activeQuests = {};
+    this.completedQuests = [];
+  }
+
+  reset(): void {
     this.init();
-  },
+  }
 
   /**
    * Activate quests for a chapter
    * @param {string} chapterId - Chapter to activate quests for
    */
-  activateQuestsForChapter: function (chapterId) {
-    if (!storyQuests) return;
+  activateQuestsForChapter(chapterId: string): void {
+    const quests = (window as any).storyQuests;
+    if (!quests) return;
 
-    for (var questId in storyQuests) {
-      var quest = storyQuests[questId];
+    for (const questId in quests) {
+      const quest = quests[questId] as Quest;
       if (
         quest.chapter === chapterId &&
         !this.activeQuests[questId] &&
@@ -57,20 +55,21 @@ const QuestManager = {
         console.log('[QuestManager] Quest activated:', quest.title);
       }
     }
-  },
+  }
 
   /**
    * Check progress of active quests
    * @param {Function} checkConditionFn - Condition checker function
    */
-  checkQuestProgress: function (checkConditionFn) {
-    for (var questId in this.activeQuests) {
-      var quest = storyQuests ? storyQuests[questId] : null;
-      var progress = this.activeQuests[questId];
+  checkQuestProgress(checkConditionFn: (c: Condition) => boolean): void {
+    const quests = (window as any).storyQuests;
+    for (const questId in this.activeQuests) {
+      const quest = quests ? quests[questId] as Quest : null;
+      const progress = this.activeQuests[questId];
 
       if (!quest?.stages || !progress) continue;
 
-      var currentStage = quest.stages[progress.currentStage];
+      const currentStage = quest.stages[progress.currentStage];
       if (!currentStage) continue;
 
       // Check if stage is completed
@@ -91,20 +90,21 @@ const QuestManager = {
         }
       }
     }
-  },
+  }
 
   /**
    * Complete a quest
    * @param {string} questId - Quest to complete
    */
-  completeQuest: function (questId) {
+  completeQuest(questId: string): void {
     delete this.activeQuests[questId];
     this.completedQuests.push(questId);
 
-    var quest = storyQuests ? storyQuests[questId] : null;
+    const quests = (window as any).storyQuests;
+    const quest = quests ? quests[questId] as Quest : null;
     if (quest?.onComplete) {
-      if (quest.onComplete.message && typeof window.showToast === 'function') {
-        window.showToast(quest.onComplete.message);
+      if (quest.onComplete.message && typeof (window as any).showToast === 'function') {
+        (window as any).showToast(quest.onComplete.message);
       }
       if (quest.onComplete.reward) {
         this.applyReward(quest.onComplete.reward);
@@ -112,22 +112,23 @@ const QuestManager = {
     }
 
     console.log('[QuestManager] Quest completed:', questId);
-  },
+  }
 
   /**
    * Get list of active quests with progress
    * @returns {Array} Active quest data
    */
-  getActiveQuests: function () {
-    var result = [];
+  getActiveQuests(): any[] {
+    const result = [];
+    const quests = (window as any).storyQuests;
 
-    for (var questId in this.activeQuests) {
-      var quest = storyQuests ? storyQuests[questId] : null;
-      var progress = this.activeQuests[questId];
+    for (const questId in this.activeQuests) {
+      const quest = quests ? quests[questId] as Quest : null;
+      const progress = this.activeQuests[questId];
 
       if (!quest || !progress) continue;
 
-      var currentStageData = quest.stages[progress.currentStage];
+      const currentStageData = quest.stages[progress.currentStage];
 
       result.push({
         id: questId,
@@ -141,58 +142,47 @@ const QuestManager = {
     }
 
     return result;
-  },
+  }
 
-  /**
-   * Get completed quests
-   * @returns {Array} Completed quest IDs
-   */
-  getCompletedQuests: function () {
-    return this.completedQuests.slice();
-  },
+  getCompletedQuests(): string[] {
+    return [...this.completedQuests];
+  }
 
-  /**
-   * Check if quest is active
-   * @param {string} questId - Quest to check
-   * @returns {boolean}
-   */
-  isQuestActive: function (questId) {
+  isQuestActive(questId: string): boolean {
     return !!this.activeQuests[questId];
-  },
+  }
 
-  /**
-   * Check if quest is completed
-   * @param {string} questId - Quest to check
-   * @returns {boolean}
-   */
-  isQuestCompleted: function (questId) {
+  isQuestCompleted(questId: string): boolean {
     return this.completedQuests.indexOf(questId) !== -1;
-  },
+  }
 
   /**
    * Apply a reward
-   * @param {Object} reward - Reward configuration
+   * @param {Reward} reward - Reward configuration
    */
-  applyReward: (reward) => {
+  applyReward(reward: Reward): void {
     if (!reward) return;
 
+    const sm = (window as any).StoryManager;
+    const gs = (window as any).gameState;
+
     // Set flag
-    if (reward.setFlag && typeof StoryManager !== 'undefined') {
-      StoryManager.setFlag(reward.setFlag);
+    if (reward.setFlag && sm) {
+      sm.setFlag(reward.setFlag);
     }
 
     // Update NPC state
-    if (reward.updateNPCState && typeof window.gameState !== 'undefined') {
-      for (var npcId in reward.updateNPCState) {
-        if (window.gameState.npcStates) {
-          window.gameState.npcStates[npcId] = reward.updateNPCState[npcId];
+    if (reward.updateNPCState && gs) {
+      for (const npcId in reward.updateNPCState) {
+        if (gs.npcStates) {
+          gs.npcStates[npcId] = reward.updateNPCState[npcId];
         }
       }
     }
 
     // Give clue
-    if (reward.giveClue && typeof collectClue === 'function') {
-      collectClue(reward.giveClue);
+    if (reward.giveClue && typeof (window as any).collectClue === 'function') {
+      (window as any).collectClue(reward.giveClue);
     }
 
     // Clue hint
@@ -214,69 +204,69 @@ const QuestManager = {
     if (reward.action && typeof reward.action === 'function') {
       reward.action();
     }
-  },
 
-  /**
-   * Get quest progress percentage
-   * @param {string} questId - Quest ID
-   * @returns {number} Percentage (0-100)
-   */
-  getQuestProgress: function (questId) {
-    var progress = this.activeQuests[questId];
-    var quest = storyQuests ? storyQuests[questId] : null;
+    // Update Trust Levels
+    if (reward.addTrust && gs) {
+       for (const npcId in reward.addTrust) {
+          gs.npcTrust[npcId] = (gs.npcTrust[npcId] || 0) + reward.addTrust[npcId];
+          console.log('[QuestManager] Trust increased for', npcId, 'to', gs.npcTrust[npcId]);
+       }
+    }
+    if (reward.subTrust && gs) {
+       for (const npcId in reward.subTrust) {
+          gs.npcTrust[npcId] = (gs.npcTrust[npcId] || 0) - reward.subTrust[npcId];
+          console.log('[QuestManager] Trust decreased for', npcId, 'to', gs.npcTrust[npcId]);
+       }
+    }
+    if (reward.setTrust && gs) {
+       for (const npcId in reward.setTrust) {
+          gs.npcTrust[npcId] = reward.setTrust[npcId];
+          console.log('[QuestManager] Trust set for', npcId, 'to', gs.npcTrust[npcId]);
+       }
+    }
+  }
+
+  getQuestProgress(questId: string): number {
+    const progress = this.activeQuests[questId];
+    const quests = (window as any).storyQuests;
+    const quest = quests ? quests[questId] as Quest : null;
 
     if (!progress || !quest?.stages) return 0;
 
     return Math.round((progress.currentStage / quest.stages.length) * 100);
-  },
+  }
 
-  /**
-   * Get total active quest count
-   * @returns {number}
-   */
-  getActiveQuestCount: function () {
+  getActiveQuestCount(): number {
     return Object.keys(this.activeQuests).length;
-  },
+  }
 
-  /**
-   * Get total completed quest count
-   * @returns {number}
-   */
-  getCompletedQuestCount: function () {
+  getCompletedQuestCount(): number {
     return this.completedQuests.length;
-  },
+  }
 
-  /**
-   * Serialize quest state
-   * @returns {Object} Serialized state
-   */
-  serialize: function () {
+  serialize(): SerializedQuests {
     return {
-      activeQuests: this.activeQuests,
-      completedQuests: this.completedQuests,
+      activeQuests: { ...this.activeQuests },
+      completedQuests: [...this.completedQuests],
     };
-  },
+  }
 
-  /**
-   * Deserialize quest state
-   * @param {Object} data - Serialized state
-   * @returns {boolean} Success status
-   */
-  deserialize: function (data) {
+  deserialize(data: SerializedQuests): boolean {
     if (!data) return false;
 
     this.activeQuests = data.activeQuests || {};
     this.completedQuests = data.completedQuests || [];
 
     return true;
-  },
-};
+  }
+}
+
+// Singleton instance
+const questManager = new QuestManager();
 
 // Global export
 if (typeof window !== 'undefined') {
-  window.QuestManager = QuestManager;
+  (window as any).QuestManager = questManager;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = QuestManager;
-}
+export default questManager;

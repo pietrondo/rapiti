@@ -49,7 +49,7 @@ global.UIRenderer = { renderMiniMap: () => {}, renderFade: () => {} };
 import { AreaManager, areaManager } from '../src/areas/index.mjs';
 import { RenderManager, renderManager } from '../src/render/index.ts';
 import { GameLoop, gameLoop } from '../src/game/loop.ts';
-import { getPrologueTimings } from '../src/game/prologueUpdater.js';
+import { getPrologueTimings } from '../src/game/prologueUpdater.ts';
 import { InputManager, inputManager } from '../src/game/input.ts';
 
 describe('ES6+ Classes', () => {

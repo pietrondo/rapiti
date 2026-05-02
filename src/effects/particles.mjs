@@ -238,6 +238,116 @@ SparkleSystem.prototype.draw = function (ctx) {
   ctx.restore();
 };
 
+/**
+ * Steam System - Fumo per ciminiere industriali
+ */
+export function SteamSystem() {
+  ParticleSystem.call(this);
+  this.active = true;
+}
+
+SteamSystem.prototype = Object.create(ParticleSystem.prototype);
+SteamSystem.prototype.constructor = SteamSystem;
+
+SteamSystem.prototype.emitSteam = function (x, y) {
+  if (Math.random() > 0.15) return;
+  this.particles.push({
+    x: x,
+    y: y,
+    vx: (Math.random() - 0.2) * 5,
+    vy: -15 - Math.random() * 10,
+    life: 2.5,
+    maxLife: 2.5,
+    size: 8 + Math.random() * 8,
+    color: 'rgba(150,150,150,ALPHA)',
+  });
+};
+
+SteamSystem.prototype.update = function (dt) {
+  for (var i = this.particles.length - 1; i >= 0; i--) {
+    var p = this.particles[i];
+    p.life -= dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.size += dt * 5; // Expand as it rises
+    p.vx += Math.sin(Date.now() * 0.001 + i) * 0.1; // Slight swaying
+
+    if (p.life <= 0) {
+      this.particles.splice(i, 1);
+    }
+  }
+};
+
+SteamSystem.prototype.draw = function (ctx) {
+  ctx.save();
+  for (var i = 0; i < this.particles.length; i++) {
+    var p = this.particles[i];
+    var alpha = (p.life / p.maxLife) * 0.4;
+    ctx.fillStyle = p.color.replace('ALPHA', alpha.toFixed(2));
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+};
+
+/**
+ * Fog System - Nebbia bassa volumetrica per cimitero/campi
+ */
+export function FogSystem() {
+  ParticleSystem.call(this);
+  this.maxFog = 12;
+}
+
+FogSystem.prototype = Object.create(ParticleSystem.prototype);
+FogSystem.prototype.constructor = FogSystem;
+
+FogSystem.prototype.init = function () {
+  this.particles = [];
+  for (var i = 0; i < this.maxFog; i++) {
+    this.spawnFog();
+  }
+};
+
+FogSystem.prototype.spawnFog = function () {
+  this.particles.push({
+    x: Math.random() * window.CANVAS_W,
+    y: window.CANVAS_H - 40 - Math.random() * 40,
+    vx: (Math.random() - 0.5) * 4,
+    vy: (Math.random() - 0.5) * 1,
+    size: 40 + Math.random() * 40,
+    alpha: 0.05 + Math.random() * 0.1,
+    phase: Math.random() * Math.PI * 2,
+  });
+};
+
+FogSystem.prototype.update = function (dt) {
+  for (var i = 0; i < this.particles.length; i++) {
+    var p = this.particles[i];
+    p.phase += dt * 0.5;
+    p.x += (p.vx + Math.sin(p.phase) * 2) * dt;
+    p.y += (p.vy + Math.cos(p.phase * 0.7) * 1) * dt;
+
+    if (p.x < -100) p.x = window.CANVAS_W + 100;
+    if (p.x > window.CANVAS_W + 100) p.x = -100;
+  }
+};
+
+FogSystem.prototype.draw = function (ctx) {
+  ctx.save();
+  for (var i = 0; i < this.particles.length; i++) {
+    var p = this.particles[i];
+    var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+    grad.addColorStop(0, `rgba(180, 200, 220, ${p.alpha})`);
+    grad.addColorStop(1, 'rgba(180, 200, 220, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+};
+
 // Esporta i sistemi
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -245,5 +355,7 @@ if (typeof module !== 'undefined' && module.exports) {
     FireflySystem: FireflySystem,
     DustSystem: DustSystem,
     SparkleSystem: SparkleSystem,
+    SteamSystem: SteamSystem,
+    FogSystem: FogSystem,
   };
 }

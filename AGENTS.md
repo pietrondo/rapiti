@@ -1,45 +1,29 @@
 # Le Luci di San Celeste — Guida per Agenti
 
-Gioco investigativo 2D in HTML5 Canvas + JavaScript vanilla, ambientato nell'estate 1978 in un borgo immaginario tra Parma e Piacenza. Packaged con Tauri per Windows e Linux desktop.
+Gioco investigativo 2D ambientato nell'estate 1978. Recentemente migrato a un'architettura moderna basata su **PixiJS v8 (WebGL)** per la grafica del mondo e **Canvas 2D** per l'interfaccia utente (UI). Packaged con Tauri per desktop.
 
-## Regole Fondamentali
+## Regole Fondamentali (MANDATORIE)
 
-1. **Dopo ogni modifica al codice**, aggiornare la documentazione pertinente (AGENTS.md, ARCHITECTURE.md, e/o memorie Serena).
-2. **Usare sempre i tool Serena MCP** (`serena_find_symbol`, `serena_search_for_pattern`, `serena_get_symbols_overview`, etc.) per navigare e comprendere il codice prima di modificarlo.
-3. Seguire le convenzioni di codice della codebase (vedi sezione "Convenzioni di Codice").
-
-## Comandi
-
-| Comando | Descrizione |
-|---------|-------------|
-| `npm run tauri dev` | Avvia il gioco in Tauri (finestra 900×620) |
-| `npx tauri build` | Build installer NSIS/MSI (Windows) e AppImage/deb (Linux) |
-| Apri `index.html` nel browser | Modalità sviluppo rapida |
+1. **DOCUMENTAZIONE PRIMA DI TUTTO**: Dopo OGNI singola modifica al codice, aggiornare MANDATORIAMENTE `AGENTS.md` e `ARCHITECTURE.md` per riflettere lo stato attuale. Non rimandare.
+2. **PIXIJS V8**: Seguire sempre i pattern moderni di PixiJS v8 (`rect().fill()`, `Texture.from()`, `Asset.load()`). Evitare sintassi v7 o legacy (`beginFill`).
+3. **USO TOOL SERENA**: Usare sempre i tool Serena MCP (`serena_find_symbol`, etc.) per navigare la codebase.
+4. **TECNOLOGIE IBRIDE**: Comprendere che il rendering è diviso: PixiJS gestisce il mondo di gioco (WebGL), mentre Canvas 2D gestisce l'overlay UI e la mini-mappa.
 
 ## Tech Stack
 
-- **Linguaggio**: TypeScript + ES Modules (`.ts`, `.mjs`), nessuna dipendenza runtime
-- **Rendering**: Canvas 2D (400×250 logico → 800×500 display, pixel-art crisp)
-- **Stile**: `"use strict"` in moduli legacy, classi ES6+ in nuovi moduli; `var` in `.mjs`, `const`/`let` in `.ts`
-- **Build**: Vite + Tauri v2 per Windows (NSIS, MSI) e Linux (AppImage, deb)
-- **Font**: Press Start 2P + VT323 (Google Fonts)
-- **Musica**: `music/UFO Sighting Loop.mp3`, autoplay con fallback
+- **Linguaggio**: TypeScript + ES Modules (`.ts`, `.mjs`)
+- **Rendering Engine**: **PixiJS v8 (WebGL)** per sprite, background e filtri avanzati.
+- **UI Rendering**: **Canvas 2D legacy** (#gameCanvas) posizionato SOPRA PixiJS per HUD, dialoghi e mini-mappa (Stacked Canvas architecture).
+- **Shader & VFX**: Filtri CRT, Noise, ColorMatrix e Bloom via WebGL.
+- **Build**: Vite + Tauri v2 (Windows/Linux).
 
 ## Modello Mentale
 
-Il gioco è una **macchina a stati** (`gameState.gamePhase`) con queste fasi:
+Il gioco è una **macchina a stati** (`gameState.gamePhase`) orchestrata dal `RenderManager`:
 
-1. **title** — Schermata titolo, attende ENTER
-2. **prologue_cutscene** — Cutscene animata della scomparsa di Elena (auto-avanza)
-3. **intro** — Slide narrative (4 slide, ENTER per avanzare)
-4. **customize** — Personalizzazione detective (nome, colori cappotto/dettaglio)
-5. **tutorial** — Istruzioni comandi, attende ENTER
-6. **playing** — Gioco principale: movimento, interazione, dialoghi, puzzle
-7. **ending** — Finale, attende ENTER per restart
-
-Durante `playing`, fasi sovrapposte: `dialogue`, `journal`, `inventory`, `deduction`, `radio`, `scene`, `recorder`.
-
-**Game loop**: `requestAnimationFrame(gameLoop)` → update (movimento, collisioni, effetti) → render (canvas + sovrapposizioni HTML).
+1. **PixiRenderer** (`pixiRenderer.ts`): Carica texture, sincronizza gli sprite dei personaggi con `gameState`, applica shader e gestisce i layer (bg, mid, fg, ui, weather).
+2. **RenderManager** (`render/index.ts`): Decide se usare Pixi o Canvas 2D. Attualmente abilita Pixi per quasi tutte le fasi, pulendo il Canvas 2D per renderlo trasparente e mostrare il mondo WebGL sottostante.
+3. **Stacked Layout**: `#pixi-canvas` (Z: 5) sotto, `#gameCanvas` (Z: 10, UI) sopra.
 
 ## Convenzioni di Codice
 
@@ -176,7 +160,7 @@ Gli NPC hanno stati (0→1→2) che determinano il nodo di dialogo (`npcId_s0`/`
 - **psychological**: meno di 2 indizi
 - **secret** (vero finale): military ≥ 2 AND alien ≥ 3 AND ≥ 6 indizi totali
 
-Trigger: raccogliere `tracce_circolari` al campo DOPO aver risolto il puzzle deduzione.
+Trigger: raccogliere `tracce_circolari` al campo DOPO aver risolto le puzzle deduzione.
 
 ## Effetti Ambientali
 
@@ -223,6 +207,13 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **StoryManager refactoring**: `StoryManager.mjs` ridotto da 770 a ~250 righe come facade che delega a `ChapterManager`, `QuestManager`, `FlagManager` (nuovo in `flagManager.mjs`), `StatsManager` (nuovo in `statsManager.mjs`). Logica orchestrativa (condizioni, dialoghi, ending, eventi) rimane in `StoryManager`.
 - **Inizializzazione in `main.js`**: le funzioni esposte globalmente dai moduli caricati dinamicamente (`initCanvas`, `initAudio`, `initEventListeners`, `initStoryManager`) devono essere accedute tramite `window.xxx`, non come variabili libere. In un modulo ES strict mode `typeof variabileNonDichiarata` restituisce `"undefined"` senza errore, causando il silenzioso skip dell'inizializzazione (bug bd `rapito-dagli-alieni-akg`). Test regressione in `tests/main.test.mjs`.
 - **Funzioni globali usate da `input.ts`**: `input.ts` dichiara molte dipendenze con `declare function` senza importarle. Nel bundle Vite diventano variabili libere. Se non esistono su `window`, generano `TypeError` e bloccano l'input (bug bd `rapito-dagli-alieni-akg` — blocco tutorial). Fix: tutte le funzioni chiamate da `input.ts` devono essere esposte su `window` dai rispettivi moduli (`transition.mjs`, `dialogue.mjs`, `deduction.mjs`, `radio.mjs`, `scene.mjs`, `recorder.mjs`, `customize.mjs`, `audio.mjs`, `init.mjs`). Le funzioni mancanti (`showToast`, `handleInteract`, `openJournal`, `openInventory`, `closePanels`) hanno stub in `init.mjs`.
+
+## Sviluppo Locale
+
+Per avviare il gioco in modalità sviluppo con hot-reload (Tauri):
+```bash
+npm run tauri dev
+```
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 ## Issue Tracking with bd (beads)
@@ -346,3 +337,4 @@ For more details, see README.md and docs/QUICKSTART.md.
 - If push fails, resolve and retry until it succeeds
 
 <!-- END BEADS INTEGRATION -->
+Use 'bd' for task tracking

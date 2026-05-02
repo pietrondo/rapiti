@@ -121,13 +121,19 @@ const storyDialogueTriggers = {
 
   osvaldo: {
     npcId: 'osvaldo',
-    states: [{ id: 's0_always', condition: null, node: 'osvaldo_s0' }],
+    states: [
+      { id: 's1_menta', condition: { hasClue: 'menta' }, node: 'osvaldo_s1' },
+      { id: 's0_always', condition: null, node: 'osvaldo_s0' }
+    ],
     defaultNode: 'osvaldo_s0',
   },
 
   gino: {
     npcId: 'gino',
-    states: [{ id: 's0_always', condition: null, node: 'gino_s0' }],
+    states: [
+      { id: 's1_lettera', condition: { hasClue: 'lettera_gino' }, node: 'gino_s1' },
+      { id: 's0_always', condition: null, node: 'gino_s0' }
+    ],
     defaultNode: 'gino_s0',
   },
 

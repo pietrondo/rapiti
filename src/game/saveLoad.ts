@@ -13,12 +13,16 @@ import type { GameState, SaveData, StorySaveData, GameStats } from '../types.js'
 
 interface SaveMeta {
   timestamp?: number;
+  area?: string;
+  name?: string;
+  playTime?: number;
 }
 
 interface SaveSlotInfo {
   slot: string;
   timestamp: number | null;
   exists: boolean;
+  meta?: SaveMeta;
 }
 
 class SaveLoadSystem {
@@ -58,20 +62,25 @@ class SaveLoadSystem {
   /**
    * Save current game state
    */
-  save(slot?: string): boolean {
+  save(slot?: string, slotName?: string): boolean {
     try {
       const saveData = this._createSaveData();
       const key = this._getKey(slot);
       localStorage.setItem(key, JSON.stringify(saveData));
 
       // Update save metadata
-      this._updateMeta(slot, saveData.timestamp);
+      this._updateMeta(slot, {
+         timestamp: saveData.timestamp,
+         area: (window as any).gameState.currentArea,
+         name: slotName || `Salvataggio ${new Date().toLocaleTimeString()}`,
+         playTime: saveData.playTime
+      });
 
-      showToast?.('Gioco salvato');
+      (window as any).showToast?.('Gioco salvato');
       return true;
     } catch (err) {
       console.error('[SaveLoadSystem] Save failed:', err);
-      showToast?.('Errore nel salvataggio');
+      (window as any).showToast?.('Errore nel salvataggio');
       return false;
     }
   }
@@ -92,11 +101,11 @@ class SaveLoadSystem {
       const saveData: SaveData = JSON.parse(data);
       this._applySaveData(saveData);
 
-      showToast?.('Gioco caricato');
+      (window as any).showToast?.('Gioco caricato');
       return true;
     } catch (err) {
       console.error('[SaveLoadSystem] Load failed:', err);
-      showToast?.('Errore nel caricamento');
+      (window as any).showToast?.('Errore nel caricamento');
       return false;
     }
   }
@@ -105,24 +114,28 @@ class SaveLoadSystem {
    * Create save data object
    */
   private _createSaveData(): SaveData {
+    const gs = (window as any).gameState;
+    const sm = (window as any).StoryManager;
     return {
       version: '2.0.0',
       timestamp: Date.now(),
       gameState: {
-        currentArea: gameState.currentArea,
-        player: { ...gameState.player },
-        cluesFound: [...gameState.cluesFound],
-        npcStates: { ...gameState.npcStates },
-        playerName: gameState.playerName,
-        playerColors: { ...gameState.playerColors },
-        puzzleSolved: gameState.puzzleSolved,
-        puzzleAttempts: gameState.puzzleAttempts,
-        radioSolved: gameState.radioSolved,
-        npcTrust: { ...gameState.npcTrust },
+        currentArea: gs.currentArea,
+        player: { ...gs.player },
+        cluesFound: [...gs.cluesFound],
+        npcStates: { ...gs.npcStates },
+        playerName: gs.playerName,
+        playerColors: { ...gs.playerColors },
+        puzzleSolved: gs.puzzleSolved,
+        puzzleAttempts: gs.puzzleAttempts,
+        radioSolved: gs.radioSolved,
+        npcTrust: { ...gs.npcTrust },
+        gameTime: gs.gameTime,
+        gameDate: gs.gameDate
       },
-      story: (StoryManager?.serialize?.() ?? {}) as StorySaveData,
-      stats: (StoryManager?.getStats?.() ?? {}) as GameStats,
-      playTime: StoryManager?.stats?.totalPlayTime ?? 0,
+      story: (sm?.serialize?.() ?? {}) as StorySaveData,
+      stats: (sm?.getStats?.() ?? {}) as GameStats,
+      playTime: sm?.stats?.totalPlayTime ?? 0,
     };
   }
 
@@ -132,23 +145,26 @@ class SaveLoadSystem {
   private _applySaveData(saveData: SaveData): void {
     if (!saveData.gameState) return;
 
-    const gs = saveData.gameState;
+    const gs = (window as any).gameState;
+    const saveGs = saveData.gameState;
 
     // Apply game state
-    gameState.currentArea = gs.currentArea ?? gameState.currentArea;
-    gameState.player = { ...gs.player } as GameState['player'];
-    gameState.cluesFound = [...(gs.cluesFound ?? [])];
-    gameState.npcStates = { ...(gs.npcStates ?? {}) } as GameState['npcStates'];
-    gameState.playerName = gs.playerName ?? gameState.playerName;
-    gameState.playerColors = { ...(gs.playerColors ?? {}) } as GameState['playerColors'];
-    gameState.puzzleSolved = gs.puzzleSolved ?? gameState.puzzleSolved;
-    gameState.puzzleAttempts = gs.puzzleAttempts ?? gameState.puzzleAttempts;
-    gameState.radioSolved = gs.radioSolved ?? gameState.radioSolved;
-    gameState.npcTrust = { ...(gs.npcTrust ?? {}) } as GameState['npcTrust'];
+    gs.currentArea = saveGs.currentArea ?? gs.currentArea;
+    gs.player = { ...saveGs.player } as GameState['player'];
+    gs.cluesFound = [...(saveGs.cluesFound ?? [])];
+    gs.npcStates = { ...(saveGs.npcStates ?? {}) } as GameState['npcStates'];
+    gs.playerName = saveGs.playerName ?? gs.playerName;
+    gs.playerColors = { ...(saveGs.playerColors ?? {}) } as GameState['playerColors'];
+    gs.puzzleSolved = saveGs.puzzleSolved ?? gs.puzzleSolved;
+    gs.puzzleAttempts = saveGs.puzzleAttempts ?? gs.puzzleAttempts;
+    gs.radioSolved = saveGs.radioSolved ?? gs.radioSolved;
+    gs.npcTrust = { ...(saveGs.npcTrust ?? {}) } as GameState['npcTrust'];
+    gs.gameTime = saveGs.gameTime ?? gs.gameTime;
+    gs.gameDate = saveGs.gameDate ?? gs.gameDate;
 
     // Apply story state
     if (saveData.story) {
-      StoryManager?.deserialize?.(saveData.story);
+      (window as any).StoryManager?.deserialize?.(saveData.story);
     }
   }
 
@@ -186,6 +202,7 @@ class SaveLoadSystem {
       slot,
       timestamp: meta[slot]?.timestamp || null,
       exists: this.hasSave(slot),
+      meta: meta[slot]
     }));
   }
 
@@ -204,14 +221,14 @@ class SaveLoadSystem {
   /**
    * Update save metadata
    */
-  private _updateMeta(slot: string | undefined, timestamp: number | null, remove = false): void {
+  private _updateMeta(slot: string | undefined, data: SaveMeta | null, remove = false): void {
     const meta = this._getMeta();
     const slotKey = slot || this.currentSlot;
 
     if (remove) {
       delete meta[slotKey];
-    } else {
-      meta[slotKey] = { timestamp: timestamp ?? undefined };
+    } else if (data) {
+      meta[slotKey] = data;
     }
 
     localStorage.setItem(`${this.prefix}meta`, JSON.stringify(meta));
@@ -238,6 +255,17 @@ class SaveLoadSystem {
   }
 
   /**
+   * Simulated Cloud Sync (Tauri Stub)
+   */
+  async syncCloud(): Promise<boolean> {
+     console.log('[SaveLoadSystem] Syncing with cloud...');
+     // Simula delay di rete
+     await new Promise(resolve => setTimeout(resolve, 1500));
+     (window as any).showToast?.('Sincronizzazione cloud completata');
+     return true;
+  }
+
+  /**
    * Export save as JSON string (for sharing)
    */
   exportSave(slot?: string): string | null {
@@ -258,7 +286,11 @@ class SaveLoadSystem {
 
       const key = this._getKey(slot);
       localStorage.setItem(key, jsonString);
-      this._updateMeta(slot, data.timestamp);
+      this._updateMeta(slot, {
+         timestamp: data.timestamp,
+         area: data.gameState.currentArea,
+         name: `Importato ${new Date().toLocaleDateString()}`
+      });
       return true;
     } catch (err) {
       console.error('[SaveLoadSystem] Import failed:', err);

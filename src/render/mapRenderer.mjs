@@ -88,22 +88,27 @@ export function renderAreaExitMarkers(ctx, area) {
 
 export function renderMiniMap(ctx) {
   var nodes = {
-    cimitero: { x: 45, y: 9 },
-    chiesa: { x: 45, y: 24 },
-    piazze: { x: 45, y: 44 },
-    giardini: { x: 17, y: 44 },
-    bar_exterior: { x: 73, y: 44 },
-    residenziale: { x: 45, y: 64 },
-    industriale: { x: 45, y: 84 },
-    polizia: { x: 45, y: 101 },
+    cimitero: { x: 45, y: 15 },
+    chiesa: { x: 45, y: 30 },
+    piazze: { x: 45, y: 50 },
+    giardini: { x: 17, y: 50 },
+    bar_exterior: { x: 73, y: 50 },
+    residenziale: { x: 45, y: 70 },
+    industriale: { x: 45, y: 90 },
+    polizia: { x: 45, y: 105 },
   };
   var x = 8;
   var y = 8;
   var w = 90;
-  var h = 116;
+  var h = 125;
   var current = window.gameState.currentArea;
+  var t = Date.now() * 0.001;
+
   window.UIRenderer.drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
-  ctx.strokeStyle = 'rgba(160,168,176,0.36)';
+  
+  // Linee di collegamento migliorate
+  ctx.strokeStyle = 'rgba(160,168,176,0.25)';
+  ctx.setLineDash([2, 2]);
   ctx.lineWidth = 1;
   drawMapLink(ctx, nodes, x, y, 'cimitero', 'chiesa');
   drawMapLink(ctx, nodes, x, y, 'chiesa', 'piazze');
@@ -112,20 +117,61 @@ export function renderMiniMap(ctx) {
   drawMapLink(ctx, nodes, x, y, 'piazze', 'residenziale');
   drawMapLink(ctx, nodes, x, y, 'residenziale', 'industriale');
   drawMapLink(ctx, nodes, x, y, 'industriale', 'polizia');
+  ctx.setLineDash([]);
+
   for (var id in nodes) {
     var n = nodes[id];
     var active = id === current;
-    ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(232,220,200,0.82)';
-    ctx.fillRect(x + n.x - 3, y + n.y - 3, 6, 6);
+    var areaData = window.areas ? window.areas[id] : null;
+    
+    // Rettangolo area
+    ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(80, 80, 80, 0.8)';
+    ctx.fillRect(x + n.x - 4, y + n.y - 4, 8, 8);
+    
     if (active) {
-      ctx.strokeStyle = 'rgba(212,168,67,0.9)';
-      ctx.strokeRect(x + n.x - 5, y + n.y - 5, 10, 10);
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 1;
+      var pulse = Math.abs(Math.sin(t * 4)) * 3;
+      ctx.strokeRect(x + n.x - 5 - pulse/2, y + n.y - 5 - pulse/2, 10 + pulse, 10 + pulse);
+    }
+
+    // Indicatori dinamici
+    if (areaData) {
+      // 1. NPC presenti (puntini colorati)
+      if (areaData.npcs && areaData.npcs.length > 0) {
+        for (var i = 0; i < areaData.npcs.length; i++) {
+          ctx.fillStyle = '#6EEBFF';
+          ctx.fillRect(x + n.x + 5, y + n.y - 6 + (i * 3), 2, 2);
+        }
+      }
+      
+      // 2. Obiettivi / Quest (Stella o Punto Esclamativo)
+      var hasObjective = false;
+      if (window.StoryManager) {
+         var objectives = window.StoryManager.getCurrentObjectives();
+         // Semplificazione: se l'area e' menzionata negli obiettivi
+         for (var j = 0; j < objectives.length; j++) {
+            if (!objectives[j].completed && objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0) {
+               hasObjective = true;
+               break;
+            }
+         }
+      }
+      
+      if (hasObjective) {
+         var flash = Math.sin(t * 10) > 0;
+         ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
+         ctx.font = 'bold 8px monospace';
+         ctx.fillText('!', x + n.x - 12, y + n.y + 4);
+      }
     }
   }
+
+  // Nome area corrente in basso
   ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.font = '7px "Courier New",monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(getAreaShortName(current), x + w / 2, y + h - 8);
+  ctx.fillText(getAreaShortName(current).toUpperCase(), x + w / 2, y + h - 8);
   ctx.textAlign = 'start';
 }
 

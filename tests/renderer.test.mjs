@@ -18,6 +18,10 @@ function createMockCtx() {
     moveTo: jest.fn(),
     lineTo: jest.fn(),
     drawImage: jest.fn(),
+    save: jest.fn(),
+    restore: jest.fn(),
+    translate: jest.fn(),
+    scale: jest.fn(),
     measureText: jest.fn(() => ({ width: 50 })),
     createRadialGradient: jest.fn(() => ({
       addColorStop: jest.fn()
@@ -95,6 +99,10 @@ beforeEach(() => {
     renderAreaExitMarkers: jest.fn(),
     drawObjectIcon: jest.fn(),
   };
+  
+  if (typeof window !== 'undefined') {
+    window.t = jest.fn((key) => `[${key}]`);
+  }
 });
 
 // Import renderers after globals are set

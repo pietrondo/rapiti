@@ -19,6 +19,13 @@ global.document = {
       moveTo: jest.fn(),
       lineTo: jest.fn(),
       closePath: jest.fn(),
+      save: jest.fn(),
+      restore: jest.fn(),
+      translate: jest.fn(),
+      scale: jest.fn(),
+      ellipse: jest.fn(),
+      drawImage: jest.fn(),
+      roundRect: jest.fn(),
     })),
     width: 0,
     height: 0,
@@ -29,6 +36,7 @@ global.document = {
 global.window = {
   addEventListener: jest.fn(),
   requestAnimationFrame: jest.fn(),
+  t: jest.fn((key) => `[${key}]`),
 };
 
 // Mock per performance

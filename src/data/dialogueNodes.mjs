@@ -5,22 +5,22 @@
 var dialogueNodes = {
   /* ── SINDACO RUGGERI ── */
   ruggeri_s0: {
-    text: 'Benvenuto a San Celeste, ispettore. Sono il sindaco Ruggeri. La situazione è sotto controllo... solo superstizioni popolari.',
+    text: 'Benvenuto a San Celeste, ispettore. Sono il sindaco Ruggeri. La situazione è sotto controllo... solo superstizioni popolari. Ha sentito alla radio? "Gianna Gianna" di Rino Gaetano... quella sì che è musica, non queste storie di dischi volanti.',
     choices: [
-      { text: 'Mi parli delle luci nel cielo.', next: 'ruggeri_s0_luci' },
+      { text: 'Mi parli delle luci nel cielo.', next: 'ruggeri_s0_luci', effect: { subTrust: { ruggeri: 5 } } },
+      { text: 'Bellissimo pezzo. Lei segue il festival?', next: 'ruggeri_s0_lore', effect: { addTrust: { ruggeri: 10 } } },
       { text: 'Ci sono stati altri casi di sparizione?', next: 'ruggeri_s0_casi' },
-      { text: 'Lei cosa pensa, sindaco?', next: 'ruggeri_s0_pensa' },
     ],
   },
+  ruggeri_s0_lore: {
+    text: 'Certo! E l\'Argentina che vince i Mondiali? Una vergogna per il calcio, ma che spettacolo. Mi piace la gente che apprezza la cultura, non come quei matti che gridano all\'alieno ogni volta che vedono un riflesso.',
+  },
   ruggeri_s0_luci: {
-    text: 'Fandonie. Contadini che hanno bevuto troppo vino e scambiato un elicottero per... non so cosa. Non abbiamo tempo per queste sciocchezze.',
+    text: 'Ancora con queste fandonie. Contadini che hanno bevuto troppo vino. Non abbiamo tempo per queste sciocchezze, Maurizio.',
   },
   ruggeri_s0_casi: {
     text: "Mah... nel 1861, a sentir le storie dei vecchi, due persone sparirono. Ma furono temporali forti quell'anno. Forse annegati nel fiume. Chieda all'archivista Neri, se proprio vuole.",
     effect: { hint: 'chiesa' },
-  },
-  ruggeri_s0_pensa: {
-    text: 'Penso che lei stia perdendo tempo, ispettore. La prefettura ha di meglio da fare che inseguire leggende. Ma faccia pure il suo lavoro.',
   },
 
   ruggeri_s1: {
@@ -41,29 +41,17 @@ var dialogueNodes = {
     text: "Sapevo. Ma non potevo dire nulla. Ordini dall'alto. Era per il bene comune, almeno così ci dissero.",
   },
 
-  ruggeri_s2: {
-    text: 'Dunque ha risolto il rompicapo. Vada al campo, ispettore. E qualunque cosa trovi laggiù... si ricordi che a volte la verità fa più paura di una bugia.',
-    choices: [
-      { text: 'Cosa troverò al Campo delle Luci?', next: 'ruggeri_s2_campo' },
-      { text: 'Grazie, sindaco. Andrò a vedere.', next: 'ruggeri_s2_vai' },
-    ],
-  },
-  ruggeri_s2_campo: {
-    text: 'Non lo so con certezza. Ma so che ogni 116 anni qualcosa accade lì. Nel 1861, nel 1745... La storia si ripete.',
-  },
-  ruggeri_s2_vai: { text: "Buona fortuna, ispettore. E che Dio l'accompagni." },
-
   /* ── TERESA BELLANDI ── */
   teresa_s0: {
     text: "Sant'Antonio ci protegga! Ha visto anche lei le luci? Erano sopra i campi, silenziose... Mio nipote Enzo è uscito a guardare e non è più tornato!",
     choices: [
       { text: 'Cosa ha visto esattamente quella notte?', next: 'teresa_s0_visto' },
       { text: "Suo nipote: quand'è successo?", next: 'teresa_s0_enzo' },
-      { text: 'Si calmi, signora. Mi racconti con calma.', next: 'teresa_s0_calma' },
+      { text: 'Si calmi, signora. Mi racconti con calma.', next: 'teresa_s0_calma', effect: { addTrust: { teresa: 10 } } },
     ],
   },
   teresa_s0_visto: {
-    text: 'Sfere di luce, grosse come automobili, fluttuavano sopra il campo a nord. Mio nonno diceva che nel 1861 fu uguale. Le stesse luci. Lo stesso silenzio.',
+    text: 'Sfere di luce, grosse come automobili, fluttuavano sopra il campo a nord. Mio nonno diceva che nel 1861 fue uguale. Le stesse luci. Lo stesso silenzio.',
   },
   teresa_s0_enzo: {
     text: 'Tre notti fa. Enzo era un ragazzo curioso. Disse: "Nonna, vado a vedere". Non l\'ho più rivisto. La sua stanza è ancora come l\'ha lasciata...',
@@ -84,256 +72,99 @@ var dialogueNodes = {
       { text: 'Enzo aveva un diario?', next: 'teresa_s1_diario' },
     ],
   },
-  teresa_s1_chi: {
-    text: "Nessuno del paese sa fare cose del genere. E non sono simboli cristiani, glielo assicuro. Li ho mostrati al parroco. È impallidito e se n'è andato.",
-  },
-  teresa_s1_altro: {
-    text: 'Sì... ho trovato questo per terra, vicino al pozzo. Era freddo come il ghiaccio, anche se era piena estate. Lo prenda, magari serve alla sua indagine.',
-  },
-  teresa_s1_diario: {
-    text: 'Il diario di Enzo? Sì, lo teneva sempre con sé. È sul comodino nella sua stanza. Ma io... io non ho il coraggio di leggerlo. Lo faccia lei.',
-    effect: { giveClueHint: 'diario_enzo' },
-  },
-
-  teresa_s2: {
-    text: 'Enzo scriveva di luci e cerchi nel grano. Diceva che "loro" sarebbero tornati dopo 116 anni. Io non so se siano angeli o demoni. Ma lei lo scoprirà.',
-    choices: [
-      { text: 'Troverò la verità, glielo prometto.', next: 'teresa_s2_promessa' },
-      { text: 'Cosa intende con "loro"?', next: 'teresa_s2_loro' },
-    ],
-  },
-  teresa_s2_promessa: {
-    text: 'Grazie, ispettore. Qualunque cosa trovi... mi dica solo se Enzo è vivo. È tutto quello che chiedo.',
-  },
-  teresa_s2_loro: {
-    text: 'Quelli che vengono dal cielo. Mio nonno li chiamava "i visitatori". Diceva che non sono cattivi... ma nemmeno buoni. Sono solo... diversi.',
-  },
-
-  teresa_s2_memory: {
-    text: 'Mio n%%%ote Enzo... scriv&&&va cose strane. Dicev# che "loro" tornano%%. Ogni 116 a@@@i. Io non d%rmevo. Lo aspettavo. Sempre.',
-    memoryCorrupt: true,
-    choices: [
-      { text: 'Ha detto "nipote" e "tornano"?', next: 'teresa_mem1_a' },
-      { text: 'Ha detto "nipote" e "dormivo"?', next: 'teresa_mem1_b' },
-    ],
-  },
-  teresa_mem1_a: {
-    text: "Sì... torn@%%%. È la parola giust#. Tornano. Loro t%r%%no. Io le h% viste nel camp@. Enzo le ha viste. E poi non c'er# più.",
-    memoryCorrupt: true,
-    choices: [
-      { text: 'Dove ha visto le luci esattamente?', next: 'teresa_mem2_a' },
-      { text: 'Enzo è sparito nel campo?', next: 'teresa_mem2_b' },
-    ],
-  },
-  teresa_mem1_b: {
-    text: 'Io d&rmivo. Aspett#vo. Sempre sveglia d# notte da quand@ è succ%%so. Il sonno non arriva. E quan%% arriva... sogno le l%ci.',
-    memoryCorrupt: true,
-    choices: [
-      { text: 'Cosa sogna?', next: 'teresa_mem2_a' },
-      { text: 'Da quanto non dorme?', next: 'teresa_mem2_b' },
-    ],
-  },
-  teresa_mem2_a: {
-    text: "%l centro del camp&. Dov% l'erba è pie%ata. Enzo dicev% che lì si sente un ronzio. Come un apiario. Ma non ci son% api.",
-    choices: [{ text: 'Grazie Teresa. Ho capito.', next: null, effect: { giveClue: 'frammento' } }],
-  },
-  teresa_mem2_b: {
-    text: "Non d%rmo da quand@ Enzo... da quand# se n'è andato. Tengo il suo diario sotto il cuscino. Lo v%d%? È tutto quello che mi rimane.",
-    choices: [
-      { text: 'Posso vedere il diario?', next: null, effect: { giveClueHint: 'diario_enzo' } },
-    ],
-  },
 
   /* ── ARCHIVISTA NERI ── */
   neri_s0: {
     text: "Un investigatore della prefettura? Finalmente qualcuno di razionale in questo paese di superstiziosi. Io sono Neri, l'archivista. Come posso aiutarla?",
     choices: [
       { text: 'Cosa sa delle sparizioni del 1861?', next: 'neri_s0_1861' },
-      { text: 'Ci sono documenti militari negli archivi?', next: 'neri_s0_militari' },
-      { text: 'Lei crede alle luci nel cielo?', next: 'neri_s0_luci' },
+      { text: 'Ci sono documenti militari negli archivi?', next: 'neri_s0_militari', effect: { addTrust: { neri: 5 } } },
+      { text: 'Lei crede alle luci nel cielo?', next: 'neri_s0_luci', effect: { subTrust: { neri: 10 } } },
     ],
   },
   neri_s0_1861: {
     text: "Registrate, sì. Due persone: un uomo e una donna. Mai ritrovati. Ma guardi che quell'anno ci furono temporali violentissimi. Potrebbero essere annegati nel fiume.",
   },
-  neri_s0_militari: {
-    text: "Abbiamo solo atti comunali. Anche se... in un fondo chiuso c'è una busta gialla, mai protocollata. Con un timbro che non ho mai visto. Strana, molto strana.",
-  },
-  neri_s0_luci: {
-    text: 'Fenomeni atmosferici. Gas di palude. Inversioni termiche. Niente di soprannaturale. La scienza spiega tutto, ispettore. O quasi tutto.',
-  },
-
-  neri_s1: {
-    text: 'Forse mi sbagliavo. Ho confrontato le date: 1861 e 1977. Esattamente 116 anni di differenza. Non può essere una coincidenza.',
-    choices: [
-      { text: 'Cosa significa il ciclo di 116 anni?', next: 'neri_s1_ciclo' },
-      {
-        text: 'Ha trovato la lettera di cui parlava?',
-        next: 'neri_s1_lettera',
-        effect: { giveClue: 'lettera_censurata' },
-      },
-      {
-        text: 'Ha una mappa dei terreni a nord?',
-        next: 'neri_s1_mappa',
-        effect: { giveClueHint: 'mappa_campi' },
-      },
-    ],
-  },
-  neri_s1_ciclo: {
-    text: 'Non ne ho idea. Ma ho controllato: nel 1861 ci furono "temporali magnetici". E guarda caso, anche tre giorni fa gli aghi delle bussole impazzivano. C\'è uno schema.',
-  },
-  neri_s1_lettera: {
-    text: 'L\'ho trovata. È del Ministero della Difesa, datata 1961 — un anno strano, a metà del ciclo. Parla di "recupero materiali non terrestri". È censurata quasi tutta. La legga lei.',
-  },
-  neri_s1_mappa: {
-    text: 'Certo, la mappa catastale del 1890. Mostra tutti i terreni agricoli. Il campo a nord era chiamato "Podere Sant\'Elmo" — curioso, no? Sant\'Elmo è il patrono dei marinai... e dei fuochi fatui.',
-  },
-
-  neri_s2: {
-    text: "Vada al campo e porti prove scientifiche. Se quello che sospetto è vero... non siamo soli nell'universo. E non lo siamo mai stati.",
-    choices: [
-      { text: 'Pensa davvero che siano extraterrestri?', next: 'neri_s2_extra' },
-      { text: 'Andrò al campo. Grazie, Neri.', next: 'neri_s2_thanks' },
-    ],
-  },
-  neri_s2_extra: {
-    text: 'Non so cosa siano. Ma qualcosa torna ogni 116 anni, e lascia tracce che la nostra scienza non sa spiegare. Forse la risposta non è nei libri. Forse è là fuori.',
-  },
-  neri_s2_thanks: {
-    text: "Buona fortuna, ispettore. E mi raccomando: annoti tutto. La documentazione è l'unica arma contro l'ignoranza.",
-  },
-
-  /* ── CAPITANO VALLI ── */
-  valli_s0: {
-    text: 'Investigatore. Non ho niente da dirle. Buonasera.',
-    choices: [{ text: 'Aspetti, capitano. Ho bisogno del suo aiuto.', next: 'valli_s0_aspetta' }],
-  },
-  valli_s0_aspetta: { text: 'Ho detto che non ho niente da dire. Cerchi altrove.' },
-
-  valli_s1: {
-    text: "Quel frammento metallico... dove l'ha trovato? È identico a quello che recuperammo nel '61. Io c'ero. Ero un soldato semplice, di guardia al perimetro.",
-    choices: [
-      { text: 'Cosa accadde esattamente nel 1961?', next: 'valli_s1_accadde' },
-      { text: "Era un'astronave? Un velivolo militare?", next: 'valli_s1_cosa' },
-      { text: "Perché non ha mai parlato prima d'ora?", next: 'valli_s1_perche' },
-    ],
-  },
-  valli_s1_accadde: {
-    text: "Un oggetto precipitò nei campi. Non era un aereo. L'esercito lo recuperò in una notte. Ci dissero che era un satellite russo, ma... non lo era. Non era umano.",
-  },
-  valli_s1_cosa: {
-    text: 'Non lo so cosa fosse. Ma il metallo era freddo, leggerissimo. E la forma... non aveva giunture, non aveva rivetti. Era come se fosse stato... cresciuto, non costruito.',
-  },
-  valli_s1_perche: {
-    text: "Minacce. Dissero che se parlavo, sparivo anch'io. Come i due del 1861. Non ho mai avuto il coraggio... fino ad ora.",
-  },
-
-  valli_s2: {
-    text: "Questa volta non starò zitto. L'accompagno al campo. Deve vedere con i suoi occhi. Forse è il momento che la verità venga a galla.",
-    choices: [
-      { text: 'Andiamo, capitano.', next: 'valli_s2_andiamo' },
-      { text: 'Cosa devo aspettarmi di trovare?', next: 'valli_s2_cosa' },
-    ],
-  },
-  valli_s2_andiamo: {
-    text: 'Ci vediamo al campo. Non abbia paura. Qualunque cosa siano... sono tornati per un motivo.',
-  },
-  valli_s2_cosa: {
-    text: 'Non lo so. Spero risposte. Forse anche Enzo. Forse tutti quelli che sono spariti. O forse solo altre domande.',
-  },
 
   /* ── OSVALDO IL BARISTA ── */
   osvaldo_s0: {
-    text: "Ah, Detective Maurizio! Il famoso investigatore! Un caffè? O preferisce una grappa? Qui dentro è il terzo caffè, fuori è già l'ottavo. Io dico: sono i russi. O forse gli americani che fingono di essere russi. O forse...",
+    text: "Ah, Detective! Un caffè? O preferisce una grappa? Qui dentro è il terzo caffè, fuori è già l'ottavo. Io dico: sono i russi. O forse gli americani. Senta, se mi fa un favore, le dirò cosa ho visto davvero l'altra notte.",
     choices: [
+      { text: 'Che genere di favore?', next: 'osvaldo_mission_start' },
       { text: 'Cosa ne pensa delle luci?', next: 'osvaldo_luci' },
-      { text: 'Ha visto qualcosa di strano?', next: 'osvaldo_strano' },
-      { text: 'Un caffè, grazie.', next: 'osvaldo_caffe' },
+      { text: 'Un caffè, grazie.', next: 'osvaldo_caffe', effect: { addTrust: { osvaldo: 5 } } },
     ],
+  },
+  osvaldo_mission_start: {
+    text: 'Il mio fornitore di menta selvatica non è passato. Cresce solo vicino alle tracce nei Giardini. Se me ne porta un mazzetto, le offro il segreto del mio amaro... e un indizio che scotta.',
+    effect: { setFlag: 'osvaldo_mission_active' }
   },
   osvaldo_luci: {
     text: 'Le luci? Ma quali luci! Sarà mica la televisione che fa brutti scherzi. Mia moglie dice che sono gli extraterrestri. Io dico che sono i bergamaschi. Quelli sono capaci di tutto.',
-  },
-  osvaldo_strano: {
-    text: 'Strano? Mah... ieri ho visto Gino il postino che correva in mutande. Ma quello è normale per Gino. Ah, una cosa: la fontana in piazza perde acqua da 14 anni e nessuno la ripara. Questo sì che è strano.',
   },
   osvaldo_caffe: {
     text: 'Ecco a lei. 200 lire. Scherzo, offre la casa. Sa, con tutto questo casino delle luci, i clienti scappano. Restano solo i vecchi. E Gino. Gino non paga mai.',
   },
 
-  /* ── GINO IL POSTINO ── */
-  gino_s0: {
-    text: 'Buongiorno, Detective! Gino, postino! Ho una lettera per lei! ...Ah no, è una multa. Divieto di sosta. La Fiat 500 blu è la sua? No, è del sindaco. Allora la multa non è sua. Però poteva esserlo. Comunque! Voci di paese!',
+  osvaldo_s1: {
+    text: 'Ma questa è menta selvatica vera! Profumatissima. Grazie, Detective! Mi ha svoltato la serata. Senta, per sdebitarmi le dico una cosa: l\'altra notte, quando le luci erano forti, la radio del bar ha iniziato a emettere un ronzio strano, alla stessa frequenza di quelle sfere...',
     choices: [
-      { text: 'Che voci girano?', next: 'gino_voci' },
-      { text: 'Ha visto qualcosa la notte delle luci?', next: 'gino_luci' },
-      { text: 'Lei crede agli alieni?', next: 'gino_alieni' },
+      { text: 'Interessante. Mi parli della radio.', next: 'osvaldo_s1_radio', effect: { addTrust: { osvaldo: 15 } } },
+      { text: 'Sono felice di averla aiutata.', next: 'osvaldo_s1_grazie' },
     ],
   },
-  gino_voci: {
-    text: "La signora Iole, quella del terzo piano... no, non c'\u00e8 un terzo piano a San Celeste. Quella del piano terra! Dice di aver visto le luci mentre stendeva i panni. Dice che sembravano... come dire... grosse polpette luminose. Io non ci ho capito niente.",
+  osvaldo_s1_radio: {
+    text: 'È lì nell\'angolo. Di solito prende solo musica, ma quella notte sembrava... sintonizzata su qualcosa che non era di questo mondo. Provi a darci un\'occhiata.',
   },
-  gino_luci: {
-    text: 'Io quella notte dormivo. Ho il sonno pesante, sa? Mia moglie dice che neanche i bombardamenti mi svegliano. Però ho trovato questo per terra vicino alla cascina.',
+  osvaldo_s1_grazie: {
+    text: 'Grazie a lei! Torni quando vuole per un amaro. Offre Osvaldo!',
+  },
+
+  /* ── GINO IL POSTINO ── */
+  gino_s0: {
+    text: 'Buongiorno, Detective! Gino, postino! Sa che l\'altro giorno ho consegnato una lettera indirizzata a "I Visitatori del Cielo"? Roba da matti. Comunque, ho perso una raccomandata importante vicino al Cimitero... se la trova, le faccio vedere una cosa interessante.',
+    choices: [
+      { text: 'La aiuterò a cercarla.', next: 'gino_mission_start' },
+      { text: 'Lei crede agli alieni?', next: 'gino_alieni' },
+      { text: 'Piacere, Gino.', next: 'gino_piacere', effect: { addTrust: { gino: 5 } } },
+    ],
+  },
+  gino_mission_start: {
+    text: 'Grazie! È una busta gialla, dev\'essere caduta tra le lapidi. Io lì di notte non ci entro mica, dicono che le luci abbiano risvegliato chi dorme...',
+    effect: { setFlag: 'gino_mission_active' }
   },
   gino_alieni: {
     text: 'Alieni? Ma no! Se fossero alieni ci avrebbero già mangiato. O forse... forse sono alieni gentili. Alieni che vengono in vacanza. San Celeste è bella anche per loro, no? Cioè, se uno viene da Marte, magari apprezza il nostro lambrusco.',
+  },
+  gino_piacere: {
+    text: 'Piacere mio! Lei ha l\'aria di uno che ne ha viste tante. Mi ricordi un attore di quei polizieschi che fanno in TV... come si chiama... quello con la sigla "Discoring"? Vabbè, non importa.',
+  },
+
+  gino_s1: {
+    text: 'La mia raccomandata! L\'ha trovata! Detective, lei è un angelo. Credevo di averla persa per sempre. Per ringraziarla, ecco... ho trovato questo tra la posta smarrita mesi fa. Sembra roba dell\'esercito.',
+    choices: [
+      { text: 'Roba dell\'esercito? Mi faccia vedere.', next: 'gino_s1_esercito', effect: { giveClue: 'lettera_censurata', addTrust: { gino: 20 } } },
+      { text: 'Non si preoccupi, Gino. Buon lavoro.', next: 'gino_s1_lavoro' },
+    ],
+  },
+  gino_s1_esercito: {
+    text: 'Eccola. Era nel fango, vicino alla stazione. Parla di esperimenti... o recuperi... boh. Io non so leggere bene il linguaggio dei generali.',
+  },
+  gino_s1_lavoro: {
+    text: 'Anche a lei! E stia attento, che qui a San Celeste le ombre si allungano in fretta.',
   },
 
   /* ── ANSELMO ── */
   anselmo_s0: {
     text: '*Un vecchio seduto sulla panchina ti guarda con occhi stanchi.* Buonasera. Lei è il forestiero che tutti aspettavano. Io sono Anselmo. Vivo qui da 82 anni. Ho visto cose...',
     choices: [
-      { text: 'Che genere di cose, Anselmo?', next: 'anselmo_s0_cose' },
+      { text: 'Che genere di cose, Anselmo?', next: 'anselmo_s0_cose', effect: { addTrust: { anselmo: 10 } } },
       { text: 'Lei sa qualcosa delle luci?', next: 'anselmo_s0_luci' },
       { text: 'Piacere, Anselmo. Buonasera.', next: 'anselmo_s0_piacere' },
     ],
   },
   anselmo_s0_cose: {
     text: 'Cose che non si possono spiegare. Mia moglie, Lena... sparì nel 1952. Dissero che era scappata. Ma io so che non è vero. Era nel campo quella notte. Poi più niente. Come inghiottita dalla terra.',
-  },
-  anselmo_s0_luci: {
-    text: 'Luci... sì, le ho viste. Ma non vengono dal cielo. Vengono da sotto. Dal terreno. Come se qualcosa fosse sepolto laggiù. Mia nonna diceva che questi campi sono... speciali. Antichi.',
-  },
-  anselmo_s0_piacere: {
-    text: 'Buonasera a lei. Stia attento, forestiero. Questo paese ha un cuore gentile ma una memoria lunga. E i segreti... i segreti restano.',
-  },
-
-  anselmo_s1: {
-    text: 'Ha sentito la radio? Quella voce... "...non guardare quando si ferma..." Io quella frase la conosco. La diceva Lena. Sempre. Ogni volta che vedeva le luci. "Quando si ferma, non guardare, Anselmo. Non guardare mai."',
-    choices: [
-      { text: 'Lei sa cosa significa?', next: 'anselmo_s1_significa' },
-      { text: "C'entra col 1952?", next: 'anselmo_s1_1952' },
-      { text: 'Lena ha mai detto altro?', next: 'anselmo_s1_altro' },
-    ],
-  },
-  anselmo_s1_significa: {
-    text: "Non lo so. Ma so che ogni 5-7 anni le luci tornano. E ogni volta qualcuno sparisce. 1952, 1969, 1974... e ora il 1979. È un ciclo. Vada all'archivio. Guardi i registri. Forse lei è più bravo di me a capire.",
-  },
-  anselmo_s1_1952: {
-    text: 'Nel 1952 c\'erano già. Esattamente uguali a oggi. Io lo dissi ai carabinieri. Mi presero per matto. Chiusero il caso in 3 giorni. "Annegamento accidentale". Ma il fiume è a 15 chilometri da qui.',
-  },
-  anselmo_s1_altro: {
-    text: 'Diceva che il terreno "respirava". Che sentiva un tono, un ronzio, prima che le luci apparissero. Io non le ho mai creduto. Forse avrei dovuto.',
-  },
-
-  /* ── DON PIETRO ── */
-  don_pietro_s0: {
-    text: 'Buonasera. Sono Don Pietro. Lei è il forestiero che tutti cercano. La chiesa è aperta, ma le consiglio di non restare dopo mezzanotte. Le voci... si sentono meglio nel buio.',
-    choices: [
-      { text: 'Quali voci, Don Pietro?', next: 'don_pietro_s0_voci' },
-      { text: "C'entra qualcosa con le luci?", next: 'don_pietro_s0_luci' },
-      { text: 'Grazie, padre. Ci penserò.', next: 'don_pietro_s0_grazie' },
-    ],
-  },
-  don_pietro_s0_voci: {
-    text: "Nella cripta, sotto la chiesa. Da settimane si sente un... ronzio. Come un motore lontano. Ma non c'è nessun motore. Il parroco vecchio diceva che qui c'era un tempio, molto prima della chiesa.",
-  },
-  don_pietro_s0_luci: {
-    text: 'Le luci... non sono di questo mondo. Ma non sono nemmeno del cielo. Vengono da sotto. Come se la terra stessa... respirasse. Mio nonno raccontava la stessa storia, nel 1861.',
-  },
-  don_pietro_s0_grazie: {
-    text: 'Buona sera, figliolo. E... stia attento. Il paese ha molti segreti, e alcuni preferiscono restare sepolti.',
   },
 };
 

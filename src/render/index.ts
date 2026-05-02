@@ -27,6 +27,7 @@ class RenderManager {
   ctx: CanvasRenderingContext2D | null;
   scale: number;
   debug: boolean;
+  usePixi: boolean;
   frameCount: number;
   lastFpsTime: number;
   fps: number;
@@ -35,6 +36,7 @@ class RenderManager {
     this.ctx = null;
     this.scale = 2;
     this.debug = false;
+    this.usePixi = false;
     this.frameCount = 0;
     this.lastFpsTime = 0;
     this.fps = 0;
@@ -55,14 +57,39 @@ class RenderManager {
     const renderCtx = ctx || this.ctx;
     if (!renderCtx) return;
 
+    const ph = gameState.gamePhase;
+    
+    // PixiJS Logic: Abilitiamo Pixi per TUTTE le fasi supportate
+    const supportedPhases = ['title', 'intro', 'prologue_cutscene', 'prologue', 'tutorial', 'playing', 'dialogue', 'journal', 'inventory', 'deduction', 'ending'];
+    const isSupportedPhase = supportedPhases.indexOf(ph) !== -1;
+    
+    if (isSupportedPhase && !this.usePixi) {
+      this.setPixiEnabled(true);
+    } else if (!isSupportedPhase && this.usePixi) {
+      this.setPixiEnabled(false);
+    }
+
+    // Se Pixi è attivo, esegue il sync degli sprite e degli shader WebGL
+    if (this.usePixi) {
+      (window as any).pixiRenderer?.render();
+    }
+
     renderCtx.save();
     renderCtx.scale(this.scale, this.scale);
     renderCtx.imageSmoothingEnabled = false;
 
+    // Se Pixi è attivo, il canvas legacy deve essere pulito per mostrare Pixi sotto, 
+    // altrimenti riempiamo con il colore di sfondo
+    if (this.usePixi) {
+      renderCtx.clearRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+    } else {
+      renderCtx.fillStyle = window.PALETTE?.nightBlue || '#05070a';
+      renderCtx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+    }
+
     // Apply screen shake
     (window as any).ScreenShake?.apply?.(renderCtx);
 
-    const ph = gameState.gamePhase;
     const SceneRenderer = (window as any).SceneRenderer;
     const UIRenderer = (window as any).UIRenderer;
 
@@ -88,7 +115,16 @@ class RenderManager {
       case 'journal':
       case 'inventory':
       case 'deduction':
-        this._renderGameplay(renderCtx);
+        // Se Pixi NON è attivo, disegniamo il mondo in Canvas 2D
+        if (!this.usePixi) {
+           this._renderGameplay(renderCtx);
+        } else {
+           // In Pixi, disegniamo solo l'interfaccia/hint sopra
+           (window as any).GameRenderer?.renderInteractionHint?.(renderCtx);
+           if (gameState.showMiniMap) {
+             UIRenderer?.renderMiniMap?.(renderCtx);
+           }
+        }
         break;
       case 'ending':
         SceneRenderer?.renderEndingScreen?.(renderCtx);
@@ -164,6 +200,15 @@ class RenderManager {
    */
   setScale(scale: number): void {
     this.scale = scale;
+  }
+
+  /**
+   * Abilita/Disabilita PixiJS
+   */
+  setPixiEnabled(enabled: boolean): void {
+    this.usePixi = enabled;
+    (window as any).pixiRenderer?.setEnabled(enabled);
+    console.log(`[RenderManager] PixiJS ${enabled ? 'Enabled' : 'Disabled'}`);
   }
 
   /**

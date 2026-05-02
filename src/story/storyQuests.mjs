@@ -118,6 +118,57 @@ const storyQuests = {
       message: 'Hai ascoltato il messaggio. Qualcosa è andato storto nel 1979...',
     },
   },
+  /* ── Quest: La Ricetta di Osvaldo ── */
+  osvaldo_delivery: {
+    id: 'osvaldo_delivery',
+    title: 'La Ricetta di Osvaldo',
+    description: 'Osvaldo ha bisogno di menta selvatica dai Giardini.',
+    chapter: 'investigation',
+    stages: [
+      {
+        id: 'collect_menta',
+        description: 'Trova la menta nei Giardini',
+        condition: { hasFlag: 'menta_found' },
+        reward: { addTrust: { osvaldo: 15 } },
+      },
+      {
+        id: 'deliver_menta',
+        description: 'Consegna la menta a Osvaldo',
+        condition: { talkedTo: 'osvaldo', hasFlag: 'menta_found' },
+        reward: { giveClueHint: 'secret_ingredient', setFlag: 'osvaldo_quest_complete' },
+      },
+    ],
+    onComplete: {
+      xp: 40,
+      message: 'Osvaldo è felice. Ti ha rivelato che le luci ronzano con la stessa frequenza della radio.',
+    },
+  },
+
+  /* ── Quest: La Lettera Perduta ── */
+  gino_lost_mail: {
+    id: 'gino_lost_mail',
+    title: 'La Lettera Perduta',
+    description: 'Gino ha perso una raccomandata nel Cimitero.',
+    chapter: 'investigation',
+    stages: [
+      {
+        id: 'find_letter',
+        description: 'Cerca la busta gialla nel Cimitero',
+        condition: { hasClue: 'lettera_gino' },
+        reward: { addTrust: { gino: 10 } },
+      },
+      {
+        id: 'deliver_letter',
+        description: 'Riporta la lettera a Gino',
+        condition: { talkedTo: 'gino', hasClue: 'lettera_gino' },
+        reward: { setFlag: 'gino_quest_complete' },
+      },
+    ],
+    onComplete: {
+      xp: 30,
+      message: 'Gino ti ringrazia. "Sei un vero ispettore, mica come quelli della TV!"',
+    },
+  },
 };
 
 if (typeof window !== 'undefined') {

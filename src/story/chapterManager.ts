@@ -1,50 +1,49 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                    CHAPTER MANAGER MODULE
+ *                    CHAPTER MANAGER (ES6+ CLASS)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Manages story chapters, objectives, and chapter progression.
- * Part of the modular StoryManager system.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/**
- * ChapterManager - Handles chapter progression and objectives
- */
-const ChapterManager = {
+import type { Chapter, Objective, SerializedChapters } from '../types.js';
+
+export class ChapterManager {
   /** Current chapter ID */
-  currentChapter: null,
+  currentChapter: string | null;
 
   /** List of completed chapter IDs */
-  completedChapters: [],
+  completedChapters: string[];
 
   /** Completed objectives by chapter */
-  completedObjectives: {},
+  completedObjectives: Record<string, string[]>;
 
-  /**
-   * Initialize chapter manager
-   */
-  init: function () {
+  constructor() {
     this.currentChapter = null;
     this.completedChapters = [];
     this.completedObjectives = {};
-  },
+  }
 
-  /**
-   * Reset to initial state
-   */
-  reset: function () {
+  init(): void {
+    this.currentChapter = null;
+    this.completedChapters = [];
+    this.completedObjectives = {};
+  }
+
+  reset(): void {
     this.init();
-  },
+  }
 
   /**
    * Start a chapter by ID
    * @param {string} chapterId - Chapter identifier
    * @returns {boolean} Success status
    */
-  startChapter: function (chapterId) {
-    var chapter = storyChapters ? storyChapters[chapterId] : null;
+  startChapter(chapterId: string): boolean {
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters ? chapters[chapterId] : null;
     if (!chapter) {
       console.error('[ChapterManager] Chapter not found:', chapterId);
       return false;
@@ -56,97 +55,73 @@ const ChapterManager = {
     console.log('[ChapterManager] Chapter started:', chapter.title);
 
     // Notify via toast if available
-    if (typeof window.showToast === 'function') {
-      window.showToast(`Capitolo: ${chapter.title}`);
+    if (typeof (window as any).showToast === 'function') {
+      (window as any).showToast(`Capitolo: ${chapter.title}`);
     }
 
     return true;
-  },
+  }
 
   /**
    * Complete current chapter and advance
    * @returns {boolean} Success status
    */
-  completeCurrentChapter: function () {
+  completeCurrentChapter(): boolean {
     if (!this.currentChapter) return false;
 
-    var chapter = storyChapters[this.currentChapter];
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters[this.currentChapter] as Chapter;
     this.completedChapters.push(this.currentChapter);
 
     // Execute completion actions
     if (chapter?.onComplete) {
-      if (chapter.onComplete.setFlag && typeof StoryManager !== 'undefined') {
-        StoryManager.setFlag(chapter.onComplete.setFlag);
+      const sm = (window as any).StoryManager;
+      if (chapter.onComplete.setFlag && sm) {
+        sm.setFlag(chapter.onComplete.setFlag);
       }
       if (chapter.onComplete.unlockChapter) {
         this.startChapter(chapter.onComplete.unlockChapter);
       }
-      if (chapter.onComplete.message && typeof window.showToast === 'function') {
-        window.showToast(chapter.onComplete.message);
+      if (chapter.onComplete.message && typeof (window as any).showToast === 'function') {
+        (window as any).showToast(chapter.onComplete.message);
       }
     }
 
     console.log('[ChapterManager] Chapter completed:', this.currentChapter);
     return true;
-  },
+  }
 
-  /**
-   * Check if chapter is completed
-   * @param {string} chapterId - Chapter to check
-   * @returns {boolean}
-   */
-  isChapterCompleted: function (chapterId) {
+  isChapterCompleted(chapterId: string): boolean {
     return this.completedChapters.indexOf(chapterId) !== -1;
-  },
+  }
 
-  /**
-   * Get current chapter data
-   * @returns {Object|null} Chapter data
-   */
-  getCurrentChapter: function () {
-    return this.currentChapter && storyChapters ? storyChapters[this.currentChapter] : null;
-  },
+  getCurrentChapter(): Chapter | null {
+    const chapters = (window as any).storyChapters;
+    return this.currentChapter && chapters ? chapters[this.currentChapter] : null;
+  }
 
-  /**
-   * Alias for getCurrentChapter (compatibility)
-   * @returns {Object|null}
-   */
-  getChapterData: function () {
+  getChapterData(): Chapter | null {
     return this.getCurrentChapter();
-  },
+  }
 
-  /**
-   * Get current chapter ID
-   * @returns {string|null}
-   */
-  getCurrentChapterId: function () {
+  getCurrentChapterId(): string | null {
     return this.currentChapter;
-  },
+  }
 
-  /**
-   * Check if objective is completed
-   * @param {string} chapterId - Chapter ID
-   * @param {string} objectiveId - Objective ID
-   * @returns {boolean}
-   */
-  isObjectiveCompleted: function (chapterId, objectiveId) {
-    var completed = this.completedObjectives[chapterId];
-    return completed && completed.indexOf(objectiveId) !== -1;
-  },
+  isObjectiveCompleted(chapterId: string, objectiveId: string): boolean {
+    const completed = this.completedObjectives[chapterId];
+    return !!(completed && completed.indexOf(objectiveId) !== -1);
+  }
 
-  /**
-   * Complete an objective
-   * @param {string} objectiveId - Objective to complete
-   * @returns {boolean} Success status
-   */
-  completeObjective: function (objectiveId) {
+  completeObjective(objectiveId: string): boolean {
     if (!this.currentChapter) return false;
 
-    var chapter = storyChapters[this.currentChapter];
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters[this.currentChapter] as Chapter;
     if (!chapter?.objectives) return false;
 
-    var objective = null;
-    for (var i = 0; i < chapter.objectives.length; i++) {
+    let objective: Objective | null = null;
+    for (let i = 0; i < chapter.objectives.length; i++) {
       if (chapter.objectives[i].id === objectiveId) {
         objective = chapter.objectives[i];
         break;
@@ -170,22 +145,19 @@ const ChapterManager = {
     }
 
     return false;
-  },
+  }
 
-  /**
-   * Check if all required objectives are completed
-   * @returns {boolean} Whether chapter is complete
-   */
-  checkChapterCompletion: function () {
+  checkChapterCompletion(): boolean {
     if (!this.currentChapter) return false;
 
-    var chapter = storyChapters[this.currentChapter];
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters[this.currentChapter] as Chapter;
     if (!chapter?.requiredObjectives) return false;
 
-    var completed = this.completedObjectives[this.currentChapter] || [];
+    const completed = this.completedObjectives[this.currentChapter] || [];
 
-    var allRequiredCompleted = true;
-    for (var i = 0; i < chapter.requiredObjectives.length; i++) {
+    let allRequiredCompleted = true;
+    for (let i = 0; i < chapter.requiredObjectives.length; i++) {
       if (completed.indexOf(chapter.requiredObjectives[i]) === -1) {
         allRequiredCompleted = false;
         break;
@@ -198,20 +170,17 @@ const ChapterManager = {
     }
 
     return false;
-  },
+  }
 
-  /**
-   * Get list of current objectives with status
-   * @returns {Array} Objectives with completion status
-   */
-  getCurrentObjectives: function () {
+  getCurrentObjectives(): any[] {
     if (!this.currentChapter) return [];
 
-    var chapter = storyChapters[this.currentChapter];
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters[this.currentChapter] as Chapter;
     if (!chapter?.objectives) return [];
 
-    var completed = this.completedObjectives[this.currentChapter] || [];
-    var required = chapter.requiredObjectives || [];
+    const completed = this.completedObjectives[this.currentChapter] || [];
+    const required = chapter.requiredObjectives || [];
 
     return chapter.objectives.map((obj) => ({
       id: obj.id,
@@ -219,42 +188,30 @@ const ChapterManager = {
       completed: completed.indexOf(obj.id) !== -1,
       required: required.indexOf(obj.id) !== -1,
     }));
-  },
+  }
 
-  /**
-   * Get completion percentage for current chapter
-   * @returns {number} Percentage (0-100)
-   */
-  getChapterProgress: function () {
+  getChapterProgress(): number {
     if (!this.currentChapter) return 0;
 
-    var chapter = storyChapters[this.currentChapter];
+    const chapters = (window as any).storyChapters;
+    const chapter = chapters[this.currentChapter] as Chapter;
     if (!chapter?.objectives || chapter.objectives.length === 0) {
       return 100;
     }
 
-    var completed = this.completedObjectives[this.currentChapter] || [];
+    const completed = this.completedObjectives[this.currentChapter] || [];
     return Math.round((completed.length / chapter.objectives.length) * 100);
-  },
+  }
 
-  /**
-   * Serialize chapter state
-   * @returns {Object} Serialized state
-   */
-  serialize: function () {
+  serialize(): SerializedChapters {
     return {
       currentChapter: this.currentChapter,
-      completedChapters: this.completedChapters,
-      completedObjectives: this.completedObjectives,
+      completedChapters: [...this.completedChapters],
+      completedObjectives: { ...this.completedObjectives },
     };
-  },
+  }
 
-  /**
-   * Deserialize chapter state
-   * @param {Object} data - Serialized state
-   * @returns {boolean} Success status
-   */
-  deserialize: function (data) {
+  deserialize(data: SerializedChapters): boolean {
     if (!data) return false;
 
     this.currentChapter = data.currentChapter || null;
@@ -262,14 +219,15 @@ const ChapterManager = {
     this.completedObjectives = data.completedObjectives || {};
 
     return true;
-  },
-};
+  }
+}
+
+// Singleton instance
+const chapterManager = new ChapterManager();
 
 // Global export
 if (typeof window !== 'undefined') {
-  window.ChapterManager = ChapterManager;
+  (window as any).ChapterManager = chapterManager;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ChapterManager;
-}
+export default chapterManager;

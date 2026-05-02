@@ -4,13 +4,13 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Centralized input handling with ES6+ class syntax.
- * Manages keyboard, touch, and gamepad input.
+ * Manages keyboard, touch, and mouse movement.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import type { GameState } from '../types.js';
-import { updatePlayerPosition } from './movement.js';
+import { updatePlayerPosition } from './movement.ts';
 
 declare const gameState: GameState;
 declare function handleInteract(): void;
@@ -55,11 +55,63 @@ class InputManager {
     document.addEventListener('keydown', (e) => this.handleKeyDown(e));
     document.addEventListener('keyup', (e) => this.handleKeyUp(e));
 
+    // Mouse/Touch movement toward destination
+    const canvas = document.getElementById('gameCanvas') || document.getElementById('pixi-canvas');
+    if (canvas) {
+       canvas.addEventListener('mousedown', (e) => this.handleMouseClick(e));
+    }
+
     if (this.touchEnabled) {
       this._initTouch();
     }
 
-    console.log('[InputManager] Initialized');
+    console.log('[InputManager] Initialized with Mouse support');
+  }
+
+  /**
+   * Click to move player and interact
+   */
+  handleMouseClick(e: MouseEvent): void {
+     if (gameState.gamePhase !== 'playing') return;
+     const canvas = e.target as HTMLCanvasElement;
+     const rect = canvas.getBoundingClientRect();
+     const scale = (window as any).renderManager?.scale || 2;
+     
+     const clickX = (e.clientX - rect.left) / scale;
+     const clickY = (e.clientY - rect.top) / scale;
+     
+     const p = gameState.player;
+     const area = (window as any).areas[gameState.currentArea];
+     
+     // Check if clicked on NPC
+     if (area?.npcs) {
+        for (const n of area.npcs) {
+           if (Math.abs(clickX - n.x) < 20 && Math.abs(clickY - n.y) < 25) {
+              p.targetX = n.x - 16;
+              p.targetY = n.y;
+              (p as any).autoInteract = true;
+              return;
+           }
+        }
+     }
+     
+     // Check if clicked on Object
+     const objects = (window as any).areaObjects?.[gameState.currentArea];
+     if (objects) {
+        for (const o of objects) {
+           if (clickX > o.x && clickX < o.x + (o.w || 20) &&
+               clickY > o.y && clickY < o.y + (o.h || 20)) {
+              p.targetX = o.x + (o.w || 20) / 2 - 16;
+              p.targetY = o.y + (o.h || 20) / 2;
+              (p as any).autoInteract = true;
+              return;
+           }
+        }
+     }
+
+     p.targetX = clickX - 16;
+     p.targetY = clickY - 16;
+     (p as any).autoInteract = false;
   }
 
   /**
@@ -70,6 +122,12 @@ class InputManager {
     const key = e.key;
 
     this.keys.add(key);
+
+    // Cancel mouse movement if key is pressed
+    if (['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(key) >= 0) {
+       (gameState.player as any).targetX = null;
+       (gameState.player as any).autoInteract = false;
+    }
 
     // Phase transitions
     if (this._handlePhaseTransitions(ph, key)) return;
@@ -106,10 +164,42 @@ class InputManager {
   }
 
   /**
-   * Update previous key state (call at end of frame)
+   * Update previous key state and handle mouse pathfinding
    */
   update(): void {
+    if (gameState.gamePhase === 'playing') {
+       this._updateMouseMovement();
+    }
     this.previousKeys = new Set(this.keys);
+  }
+
+  private _updateMouseMovement(): void {
+     const p = gameState.player;
+     if (p.targetX === null || p.targetX === undefined) return;
+     
+     const distThreshold = 4;
+     let dx = 0;
+     let dy = 0;
+     
+     if (Math.abs(p.x - (p.targetX as number)) > distThreshold) {
+        dx = p.x < (p.targetX as number) ? 1 : -1;
+        p.dir = dx > 0 ? 'right' : 'left';
+     }
+     if (Math.abs(p.y - (p.targetY as number)) > distThreshold) {
+        dy = p.y < (p.targetY as number) ? 1 : -1;
+        if (Math.abs(dy) > Math.abs(dx)) p.dir = dy > 0 ? 'down' : 'up';
+     }
+     
+     if (dx === 0 && dy === 0) {
+        if ((p as any).autoInteract) {
+           (window as any).handleInteract();
+           (p as any).autoInteract = false;
+        }
+        p.targetX = null;
+        p.targetY = null;
+     } else {
+        updatePlayerPosition(dx, dy);
+     }
   }
 
   /**
@@ -246,7 +336,7 @@ const inputManager = new InputManager();
 export function handleKeyDown(e: KeyboardEvent): void { inputManager.handleKeyDown(e); }
 export function handleKeyUp(e: KeyboardEvent): void { inputManager.handleKeyUp(e); }
 // Re-export for backward compatibility
-export { updatePlayerPosition } from './movement.js';
+export { updatePlayerPosition } from './movement.ts';
 
 // Global exports
 if (typeof window !== 'undefined') {

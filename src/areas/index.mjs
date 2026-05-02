@@ -118,6 +118,8 @@ if (typeof ChiesaArea !== 'undefined') areaManager.register('chiesa', ChiesaArea
 if (typeof CimiteroArea !== 'undefined') areaManager.register('cimitero', CimiteroArea);
 if (typeof GiardiniArea !== 'undefined') areaManager.register('giardini', GiardiniArea);
 if (typeof BarExteriorArea !== 'undefined') areaManager.register('bar_exterior', BarExteriorArea);
+if (typeof BarInternoArea !== 'undefined') areaManager.register('bar_interno', BarInternoArea);
+if (typeof MunicipioArea !== 'undefined') areaManager.register('municipio', MunicipioArea);
 if (typeof ResidenzialeArea !== 'undefined') areaManager.register('residenziale', ResidenzialeArea);
 if (typeof IndustrialeArea !== 'undefined') areaManager.register('industriale', IndustrialeArea);
 if (typeof PoliziaArea !== 'undefined') areaManager.register('polizia', PoliziaArea);

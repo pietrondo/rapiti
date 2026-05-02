@@ -56,7 +56,7 @@ global.handleInteract = jest.fn();
 
 // Import functions to test
 import { handleKeyDown, handleKeyUp, updatePlayerPosition, InputManager } from '../src/game/input.ts';
-import { resolveCollisions } from '../src/game/movement.js';
+import { resolveCollisions } from '../src/game/movement.ts';
 
 describe('Input Handling', () => {
   beforeEach(() => {

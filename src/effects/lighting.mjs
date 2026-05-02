@@ -6,15 +6,66 @@
  */
 
 /**
- * Lighting System - Gestione luci dinamiche
+ * DayNight System - Ciclo giorno/notte e illuminazione globale
+ */
+export function DayNightSystem() {
+  this.time = 0; // 0.0 to 1.0 (24h)
+  this.cycleSpeed = 0.005; // Velocità ciclo
+  this.phases = {
+    DAWN: { start: 0.2, color: 'rgba(255, 150, 100, 0.2)', ambient: 0.5 },
+    DAY: { start: 0.3, color: 'rgba(255, 255, 255, 0)', ambient: 1.0 },
+    DUSK: { start: 0.7, color: 'rgba(200, 100, 150, 0.25)', ambient: 0.4 },
+    NIGHT: { start: 0.85, color: 'rgba(20, 20, 40, 0.7)', ambient: 0.15 },
+  };
+}
+
+DayNightSystem.prototype.update = function (dt) {
+  this.time = (this.time + this.cycleSpeed * dt) % 1.0;
+};
+
+DayNightSystem.prototype.getAmbient = function () {
+  if (this.time < 0.2 || this.time > 0.85) return this.phases.NIGHT.ambient;
+  if (this.time < 0.3) return this.phases.DAWN.ambient;
+  if (this.time < 0.7) return this.phases.DAY.ambient;
+  return this.phases.DUSK.ambient;
+};
+
+DayNightSystem.prototype.getOverlayColor = function () {
+  var t = this.time;
+  if (t < 0.2 || t > 0.85) return this.phases.NIGHT.color;
+  if (t < 0.3) return this.phases.DAWN.color;
+  if (t < 0.7) return this.phases.DAY.color;
+  return this.phases.DUSK.color;
+};
+
+DayNightSystem.prototype.drawOverlay = function (ctx) {
+  var color = this.getOverlayColor();
+  if (color === 'rgba(255, 255, 255, 0)') return;
+  
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+  
+  // Moltiplicazione per scurire realmente
+  if (this.time > 0.8 || this.time < 0.25) {
+     ctx.globalCompositeOperation = 'multiply';
+     ctx.fillStyle = 'rgba(10, 15, 30, 0.4)';
+     ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+  }
+  ctx.restore();
+};
+
+/**
+ * Lighting System - Gestione luci dinamiche migliorata
  */
 export function LightingSystem() {
   this.lights = [];
-  this.ambientLight = 0.3;
+  this.dayNight = new DayNightSystem();
 }
 
 LightingSystem.prototype.init = function () {
   this.lights = [];
+  this.dayNight.time = 0.9; // Inizia di notte per atmosfera
 };
 
 LightingSystem.prototype.addLight = function (x, y, radius, color, flicker) {
@@ -22,7 +73,7 @@ LightingSystem.prototype.addLight = function (x, y, radius, color, flicker) {
     x: x,
     y: y,
     radius: radius,
-    color: color || '#ffaa44',
+    color: color || 'rgba(255, 170, 68, ALPHA)',
     flicker: flicker || 0,
     flickerPhase: Math.random() * Math.PI * 2,
     intensity: 1,
@@ -30,30 +81,42 @@ LightingSystem.prototype.addLight = function (x, y, radius, color, flicker) {
 };
 
 LightingSystem.prototype.update = function (dt) {
+  this.dayNight.update(dt);
+  
   for (var i = 0; i < this.lights.length; i++) {
     var light = this.lights[i];
     if (light.flicker > 0) {
-      light.flickerPhase += dt * 10;
-      light.intensity = 0.8 + Math.sin(light.flickerPhase) * 0.2 * light.flicker;
+      light.flickerPhase += dt * 12;
+      light.intensity = 0.85 + Math.sin(light.flickerPhase) * 0.15 * light.flicker;
     }
   }
 };
 
 LightingSystem.prototype.draw = function (ctx) {
+  // Disegna overlay ambientale prima delle luci
+  this.dayNight.drawOverlay(ctx);
+
   ctx.save();
+  // Effetto "additivo" per le luci sul buio
   ctx.globalCompositeOperation = 'screen';
 
   for (var i = 0; i < this.lights.length; i++) {
     var light = this.lights[i];
-    var gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius);
+    var radius = light.radius * light.intensity;
+    var gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, radius);
 
-    var alpha = 0.4 * light.intensity;
-    gradient.addColorStop(0, light.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba'));
+    var alpha = 0.5 * light.intensity;
+    // Se è giorno, le luci sono meno visibili
+    if (this.dayNight.time > 0.3 && this.dayNight.time < 0.7) alpha *= 0.2;
+
+    var color = light.color.replace('ALPHA', alpha.toFixed(2));
+    gradient.addColorStop(0, color);
+    gradient.addColorStop(0.4, light.color.replace('ALPHA', (alpha * 0.3).toFixed(2)));
     gradient.addColorStop(1, 'transparent');
 
     ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(light.x, light.y, light.radius, 0, Math.PI * 2);
+    ctx.arc(light.x, light.y, radius, 0, Math.PI * 2);
     ctx.fill();
   }
 

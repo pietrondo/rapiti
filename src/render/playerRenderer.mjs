@@ -5,45 +5,71 @@
 
 export function renderPlayer(ctx) {
   var p = gameState.player;
+  var sm = window.SpriteManager;
 
   // Update animation state
-  if (p.x !== window.SpriteManager.animState.lastX || p.y !== window.SpriteManager.animState.lastY) {
-    window.SpriteManager.animState.isMoving = true;
-    window.SpriteManager.animState.lastX = p.x;
-    window.SpriteManager.animState.lastY = p.y;
+  if (p.x !== sm.animState.lastX || p.y !== sm.animState.lastY) {
+    sm.animState.isMoving = true;
+    sm.animState.lastX = p.x;
+    sm.animState.lastY = p.y;
   } else {
-    window.SpriteManager.animState.isMoving = false;
+    sm.animState.isMoving = false;
   }
 
-  if (window.SpriteManager.animState.isMoving) {
-    window.SpriteManager.animState.playerTimer++;
-    if (window.SpriteManager.animState.playerTimer % 8 === 0) {
-      window.SpriteManager.animState.playerFrame = (window.SpriteManager.animState.playerFrame + 1) % 4;
+  var t = Date.now() * 0.001;
+  var scaleX = 1;
+  var scaleY = 1;
+  var offsetY = 0;
+
+  if (sm.animState.isMoving) {
+    sm.animState.playerTimer++;
+    if (sm.animState.playerTimer % 8 === 0) {
+      sm.animState.playerFrame = (sm.animState.playerFrame + 1) % 4;
     }
+    // Bounce effect (Squash & Stretch)
+    scaleY = 1 + Math.sin(t * 12) * 0.05;
+    scaleX = 1 / scaleY;
+    offsetY = Math.abs(Math.sin(t * 12)) * -2;
   } else {
-    window.SpriteManager.animState.playerFrame = 0;
+    sm.animState.playerFrame = 0;
+    // Idle breathing
+    scaleY = 1 + Math.sin(t * 2) * 0.02;
+    scaleX = 1 / scaleY;
+  }
+
+  // Effect discovery "jump" (Squash & Stretch)
+  if (p.discoveryJump > 0) {
+     var jumpProgress = p.discoveryJump / 20;
+     scaleY = 1 + Math.sin(jumpProgress * Math.PI) * 0.3;
+     scaleX = 1 / scaleY;
+     offsetY = -Math.sin(jumpProgress * Math.PI) * 10;
+     p.discoveryJump--;
+  } else if (window.gameState.screenShake > 0) {
+     scaleY = 1.1;
+     scaleX = 0.9;
   }
 
   // Draw shadow
+  ctx.save();
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
   ctx.beginPath();
-  ctx.ellipse(p.x + 16, p.y + 14, 14, 4, 0, 0, Math.PI * 2);
+  ctx.ellipse(p.x + 16, p.y + 14, 14 * scaleX, 4 * scaleY, 0, 0, Math.PI * 2);
   ctx.fill();
-  // Alone sotto il player quando vicino a lampioni
-  ctx.fillStyle = 'rgba(212,168,67,0.08)';
-  ctx.beginPath();
-  ctx.ellipse(p.x + 16, p.y + 14, 20, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.restore();
 
   // Draw from sprite sheet
-  var sheet = window.SpriteManager.getOrCreatePlayerSheet();
+  var sheet = sm.getOrCreatePlayerSheet();
   if (!sheet) return;
 
   var dirIndex = { down: 0, up: 1, left: 2, right: 3 }[p.dir] || 0;
-  var srcX = window.SpriteManager.animState.playerFrame * 32;
+  var srcX = sm.animState.playerFrame * 32;
   var srcY = dirIndex * 32;
 
-  ctx.drawImage(sheet, srcX, srcY, 32, 32, Math.round(p.x), Math.round(p.y - 16), 32, 32);
+  ctx.save();
+  ctx.translate(p.x + 16, p.y + 16);
+  ctx.scale(scaleX, scaleY);
+  ctx.drawImage(sheet, srcX, srcY, 32, 32, -16, -32 + offsetY, 32, 32);
+  ctx.restore();
 }
 
 // Legacy drawSprite (kept for fallback)

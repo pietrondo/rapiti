@@ -49,6 +49,16 @@ export function drawGardensArea(ctx, t) {
     ctx.fill();
   }
 
+  // Menta Selvatica (Indizio Missione)
+  if (window.gameState.cluesFound.indexOf('menta') === -1) {
+    ctx.fillStyle = '#6fa';
+    ctx.beginPath();
+    ctx.arc(280, 190, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#2d5a27';
+    ctx.fillRect(278, 190, 4, 2);
+  }
+
   // Panchina
   ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(200, 200, 40, 8);

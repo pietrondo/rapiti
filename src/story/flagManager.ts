@@ -1,59 +1,63 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
- *                    FLAG MANAGER MODULE
+ *                    FLAG MANAGER (ES6+ CLASS)
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Gestisce flag booleani di stato della narrazione.
- * Estratto da StoryManager.mjs per ridurre il God Object.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-const FlagManager = {
-  flags: {},
+export class FlagManager {
+  flags: Record<string, any>;
 
-  init: function () {
+  constructor() {
     this.flags = {};
-  },
+  }
 
-  reset: function () {
+  init(): void {
+    this.flags = {};
+  }
+
+  reset(): void {
     this.init();
-  },
+  }
 
-  setFlag: function (flagName, value) {
-    value = value !== undefined ? value : true;
+  setFlag(flagName: string, value: any = true): boolean {
     this.flags[flagName] = value;
     console.log('[FlagManager] Flag impostato:', flagName, value);
     return true;
-  },
+  }
 
-  getFlag: function (flagName) {
+  getFlag(flagName: string): any {
     return this.flags[flagName] || false;
-  },
+  }
 
-  hasFlag: function (flagName) {
+  hasFlag(flagName: string): boolean {
     return !!this.flags[flagName];
-  },
+  }
 
-  clearFlag: function (flagName) {
+  clearFlag(flagName: string): boolean {
     delete this.flags[flagName];
     return true;
-  },
+  }
 
-  serialize: function () {
-    return this.flags;
-  },
+  serialize(): Record<string, any> {
+    return { ...this.flags };
+  }
 
-  deserialize: function (data) {
+  deserialize(data: Record<string, any>): boolean {
     this.flags = data || {};
     return true;
-  },
-};
+  }
+}
 
+// Singleton instance
+const flagManager = new FlagManager();
+
+// Global export for retrocompatibility
 if (typeof window !== 'undefined') {
-  window.FlagManager = FlagManager;
+  (window as any).FlagManager = flagManager;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FlagManager;
-}
+export default flagManager;

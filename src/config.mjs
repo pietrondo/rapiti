@@ -115,6 +115,8 @@ export const gameState = {
   fadeCallback: null,
   showMiniMap: true,
   titleAnim: 0,
+  gameTime: 1200, // Inizio alle 20:00 (20 * 60)
+  gameDate: "Venerdì, 21 Luglio 1978",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -153,6 +155,8 @@ export function resetGameState() {
   gameState.fadeCallback = null;
   gameState.showMiniMap = true;
   gameState.titleAnim = 0;
+  gameState.gameTime = 1200;
+  gameState.gameDate = "Venerdì, 21 Luglio 1978";
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -132,6 +132,8 @@ async function initializeGame() {
     await loadModule('./areas/cimitero.mjs');
     await loadModule('./areas/giardini.mjs');
     await loadModule('./areas/barExterior.mjs');
+    await loadModule('./areas/barInterno.mjs');
+    await loadModule('./areas/municipio.mjs');
     await loadModule('./areas/residenziale.mjs');
     await loadModule('./areas/industriale.mjs');
     await loadModule('./areas/polizia.mjs');
@@ -147,6 +149,7 @@ async function initializeGame() {
     await loadModule('./render/endingRenderer.mjs');
     await loadModule('./render/sceneRenderer.mjs');
     await loadModule('./render/gameRenderer.mjs');
+    await loadModule('./render/pixiRenderer.ts'); // New Pixi Prototype
     await loadModule('./render/index.ts');
 
     // Phase 7: Load story modules
@@ -156,16 +159,12 @@ async function initializeGame() {
     await loadModule('./story/storyEndings.mjs');
     await loadModule('./story/storyEvents.mjs');
     await loadModule('./story/storyAchievements.mjs');
-    await loadModule('./story/flagManager.mjs');
-    await loadModule('./story/statsManager.mjs');
     await loadModule('./story/dialogueSystem.mjs');
     await loadModule('./story/conditionSystem.mjs');
     await loadModule('./story/eventSystem.mjs');
     await loadModule('./story/endingSystem.mjs');
     await loadModule('./story/achievementSystem.mjs');
-    await loadModule('./story/chapterManager.mjs');
-    await loadModule('./story/questManager.mjs');
-    await loadModule('./story/storyEngine.mjs');
+    // ChapterManager, QuestManager, StoryEngine are now imported in index.ts
     await loadModule('./story/index.ts');
 
     // Phase 8: Load game modules
@@ -174,7 +173,7 @@ async function initializeGame() {
     await loadModule('./game/audio.mjs');
     await loadModule('./game/customize.mjs');
     await loadModule('./game/input.ts');
-    await loadModule('./game/dialogue.mjs');
+    await loadModule('./game/dialogue.ts'); // Migrated to TS
     await loadModule('./game/radio.mjs');
     await loadModule('./game/registry.mjs');
     await loadModule('./game/scene.mjs');
@@ -200,6 +199,9 @@ async function initializeGame() {
       }
       if (typeof window.initStoryManager === 'function') {
         window.initStoryManager();
+      }
+      if (window.pixiRenderer && typeof window.pixiRenderer.init === 'function') {
+        await window.pixiRenderer.init();
       }
     }
 

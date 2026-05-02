@@ -50,14 +50,17 @@ export function renderArea(ctx) {
       drawSprite(ctx, n.x, n.y, npc.colors, npc.details, 'npc', n.facing);
     }
     ctx.font = '7px "Courier New",monospace';
-    var tw = ctx.measureText(npc.name).width + 12;
+    var displayName = window.t('npc.' + npc.id);
+    if (displayName === '[' + 'npc.' + npc.id + ']') displayName = npc.name;
+    
+    var tw = ctx.measureText(displayName).width + 12;
     ctx.fillStyle = 'rgba(8,9,14,0.76)';
     ctx.fillRect(n.x - tw / 2, n.y - 42, tw, 12);
     ctx.strokeStyle = 'rgba(212,168,67,0.55)';
     ctx.strokeRect(n.x - tw / 2 + 1, n.y - 41, tw - 2, 10);
     ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.textAlign = 'center';
-    ctx.fillText(npc.name, n.x, n.y - 33);
+    ctx.fillText(displayName, n.x, n.y - 33);
     ctx.textAlign = 'start';
   }
 

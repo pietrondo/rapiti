@@ -21,6 +21,10 @@ export interface Player {
   h: number;
   dir: 'up' | 'down' | 'left' | 'right';
   frame: number;
+  targetX?: number | null;
+  targetY?: number | null;
+  targetAction?: (() => void) | null;
+  discoveryJump?: number;
 }
 
 /** Player customization colors */
@@ -102,6 +106,8 @@ export interface GameState {
   fadeCallback: (() => void) | null;
   showMiniMap: boolean;
   titleAnim: number;
+  gameTime: number; // In minuti dall'inizio
+  gameDate: string; // Es. "Venerdì, 21 Luglio 1978"
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -116,6 +122,7 @@ export interface AreaExit {
   spawnX: number;
   spawnY: number;
   requiresPuzzle?: boolean;
+  requiresInteract?: boolean;
 }
 
 /** Area collider */
@@ -140,6 +147,7 @@ export interface Area {
   colliders: Collider[];
   npcs: AreaNPC[];
   exits: AreaExit[];
+  objects?: AreaObject[];
   draw(ctx: CanvasRenderingContext2D): void;
   init?(): void;
   update?(): void;
@@ -189,6 +197,8 @@ export interface Condition {
   puzzleSolved?: string | string[];
   puzzlesSolved?: string[];
   visitedArea?: string;
+  trustMin?: Record<string, number>;
+  trustMax?: Record<string, number>;
 }
 
 /** Quest definition */
@@ -220,6 +230,9 @@ export interface Reward {
   giveClueHint?: string;
   xp?: number;
   unlockArea?: string;
+  addTrust?: Record<string, number>;
+  subTrust?: Record<string, number>;
+  setTrust?: Record<string, number>;
   action?: () => void;
 }
 
@@ -261,7 +274,9 @@ export interface AreaObject {
   w: number;
   h: number;
   label?: string;
+  type?: string;
   requires?: string[];
+  drawHint?: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

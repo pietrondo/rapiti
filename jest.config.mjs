@@ -53,6 +53,10 @@ export default {
   // Setup files
   setupFilesAfterEnv: ['<rootDir>/tests/setup.mjs'],
 
+  moduleNameMapper: {
+    '^pixi.js$': '<rootDir>/tests/mocks/pixi.js',
+  },
+
   // Verbose output
   verbose: true,
 };

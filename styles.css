@@ -31,51 +31,7 @@ body {
   font-family: 'VT323', 'Courier New', monospace;
 }
 
-/* ── CANVAS WITH CRT EFFECT ── */
-#gameCanvas {
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  width: 800px;
-  height: 500px;
-  max-width: 95vw;
-  max-height: calc(100vh - 86px);
-  display: block;
-  position: relative;
-  background: #08090f;
-  border: 8px solid #0e1017;
-  box-shadow:
-    0 0 0 2px #343946,
-    0 0 0 4px #05060a,
-    0 18px 42px rgba(0, 0, 0, 0.68),
-    0 0 72px rgba(212, 168, 67, 0.12);
-}
-
-#game-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.16) 2px,
-    rgba(0, 0, 0, 0.16) 4px
-  );
-  pointer-events: none;
-  z-index: 5;
-  mix-blend-mode: multiply;
-}
-
-#game-container::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, 0.46) 100%),
-    linear-gradient(90deg, rgba(255,0,0,0.025), rgba(0,255,120,0.015), rgba(0,80,255,0.025));
-  pointer-events: none;
-  z-index: 5;
-}
-
+/* ── CANVAS LAYOUT (STACKED) ── */
 #game-container {
   display: flex;
   flex-direction: column;
@@ -85,6 +41,33 @@ body {
   position: relative;
   padding: 12px 12px 0;
 }
+
+#canvas-stack {
+  position: relative;
+  width: 800px;
+  height: 500px;
+  max-width: 95vw;
+  max-height: calc(100vh - 86px);
+  background: #08090f;
+  border: 8px solid #0e1017;
+  box-shadow:
+    0 0 0 2px #343946,
+    0 0 0 4px #05060a,
+    0 18px 42px rgba(0, 0, 0, 0.68);
+}
+
+#gameCanvas, #pixi-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#gameCanvas { z-index: 10; pointer-events: none; } /* UI Layer */
+#pixi-canvas { z-index: 5; } /* Game World Layer */
 
 #hud {
   width: min(816px, 95vw);
@@ -227,28 +210,65 @@ body {
 .clue-item .clue-status { font-size: 12px; color: #6b7b6b; }
 .clue-item.found .clue-status { color: var(--gold); }
 
-/* ── DEDUCTION ── */
+/* ── DEDUCTION BOARD (CORKBOARD STYLE) ── */
+#deduction-overlay .panel {
+  background: #5D4037;
+  border: 12px solid #3E2723;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 20px 50px rgba(0,0,0,0.8);
+}
+
 .deduction-layout { display: flex; gap: 20px; margin: 12px 0; }
 .deduction-column { flex: 1; }
-.deduction-column h3 { font-size: 14px; color: #d4a843; margin-bottom: 8px; }
+.deduction-column h3 { font-size: 14px; color: #f0c15a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+
 .deduction-slot {
-  min-height: 64px; border: 2px dashed var(--line); margin: 8px 0;
-  padding: 10px; display: flex; align-items: center; justify-content: center;
-  color: #6b7b6b; font-size: 13px; transition: border-color 0.2s;
-  background: rgba(8,9,15,0.42);
+  min-height: 72px; border: 2px dashed rgba(255,255,255,0.15); margin: 12px 0;
+  padding: 12px; display: flex; align-items: center; justify-content: center;
+  color: #8b7355; font-size: 13px; transition: all 0.2s;
+  background: rgba(0,0,0,0.25);
+  position: relative;
 }
-.deduction-slot.filled { border-color: var(--gold); border-style: solid; color: var(--paper); background: rgba(212,168,67,0.09); }
-.deduction-slot.drag-over { border-color: var(--rust); background: rgba(196,149,106,0.15); }
+
+.deduction-slot.filled { 
+  border: 1px solid #c4956a; 
+  background: #e8dcc8; 
+  color: #1a1a1a; 
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+  transform: rotate(0.5deg);
+}
+
+.deduction-slot.drag-over { border-color: #f0c15a; background: rgba(212,168,67,0.1); scale: 1.02; }
 
 .draggable-clue {
-  background: #10131a; border: 1px solid var(--line); padding: 12px;
-  margin: 6px 0; cursor: grab; user-select: none;
-  font-size: 13px; text-align: center;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.32), inset 0 1px rgba(255,255,255,0.05);
+  background: #fff9c4; /* Post-it yellow */
+  color: #2c2119;
+  border: none;
+  padding: 12px;
+  margin: 8px 0;
+  cursor: grab;
+  user-select: none;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  transform: rotate(-1.5deg);
+  transition: transform 0.1s, scale 0.1s;
 }
-.draggable-clue:active { cursor: grabbing; }
-.draggable-clue.dragging { opacity: 0.4; }
-.draggable-clue.placed { opacity: 0.5; cursor: default; }
+
+.draggable-clue:nth-child(even) { transform: rotate(1deg); }
+.draggable-clue:active { cursor: grabbing; scale: 1.1; z-index: 100; }
+.draggable-clue.dragging { opacity: 0.5; }
+.draggable-clue.placed { opacity: 0.6; cursor: default; }
+
+/* Red Pin/String visual hint */
+.deduction-slot.filled::after {
+  content: '📌';
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+}
 
 .btn-primary {
   display: block; width: 100%; background: linear-gradient(180deg, var(--amber), var(--rust)); color: #101117;

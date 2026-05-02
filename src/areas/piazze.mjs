@@ -18,145 +18,122 @@ export function getAreaTexture(type) {
 
 // Helper functions per piazze
 export function drawMunicipioFacade(ctx, x, y, w, h, t) {
-  var windowGlow = 0.6 + Math.sin(t * 2) * 0.1;
-  // Base con texture mattoni
-  ctx.fillStyle = '#3A3028';
-  ctx.fillRect(x, y, w, h);
-  // Mattoni
-  ctx.fillStyle = '#4A3E32';
-  for (var by = 0; by < Math.floor(h / 8); by++) {
-    for (var bx = 0; bx < Math.floor(w / 12); bx++) {
-      var offset = (by % 2) * 6;
-      ctx.fillRect(x + bx * 12 + offset + 1, y + by * 8 + 1, 10, 6);
-    }
+  // Base con texture mattoni avanzata
+  if (window.drawBrickPattern) {
+    window.drawBrickPattern(ctx, x, y, w, h, '#3A3028');
+  } else {
+    ctx.fillStyle = '#3A3028';
+    ctx.fillRect(x, y, w, h);
   }
+
   // Cornice
   ctx.fillStyle = window.PALETTE.greyBrown;
-  ctx.fillRect(x - 2, y + h - 8, w + 4, 8);
-  ctx.fillRect(x - 2, y, w + 4, 4);
-  ctx.fillRect(x - 2, y, 4, h);
-  ctx.fillRect(x + w - 2, y, 4, h);
-  // Tetto
-  ctx.fillStyle = window.PALETTE.darkForest;
-  ctx.beginPath();
-  ctx.moveTo(x + w / 2, y - 12);
-  ctx.lineTo(x + w + 8, y + 28);
-  ctx.lineTo(x - 8, y + 28);
-  ctx.fill();
-  // Finestre con cornice
-  ctx.fillStyle = window.PALETTE.lanternYel;
+  ctx.fillRect(x - 4, y + h - 8, w + 8, 10);
+  ctx.fillStyle = window.PALETTE.burntOrange;
+  ctx.fillRect(x - 2, y, w + 4, 6);
+  
+  // Tetto con tegole
+  if (window.drawTileRoof) {
+    window.drawTileRoof(ctx, x, y, w, window.PALETTE.darkForest);
+  } else {
+    ctx.fillStyle = window.PALETTE.darkForest;
+    ctx.beginPath();
+    ctx.moveTo(x + w / 2, y - 20);
+    ctx.lineTo(x + w + 8, y + 5);
+    ctx.lineTo(x - 8, y + 5);
+    ctx.fill();
+  }
+
+  // Finestre illuminate
   for (var i = 0; i < 3; i++) {
     for (var j = 0; j < 2; j++) {
       var wx = x + 18 + i * 42;
-      var wy = y + 32 + j * 26;
-      // Cornice finestra
-      ctx.fillStyle = window.PALETTE.greyBrown;
-      ctx.fillRect(wx - 2, wy - 2, 19, 22);
-      // Luce
-      ctx.fillStyle = `rgba(212,168,67,${windowGlow})`;
-      ctx.fillRect(wx, wy, 15, 18);
-      // Crociera
-      ctx.fillStyle = window.PALETTE.greyBrown;
-      ctx.fillRect(wx + 7, wy, 1, 18);
-      ctx.fillRect(wx, wy + 9, 15, 1);
+      var wy = y + 25 + j * 26;
+      if (window.drawLitWindow) {
+        window.drawLitWindow(ctx, wx, wy, 16, 20, true, t, (i * 2 + j));
+      } else {
+        ctx.fillStyle = window.PALETTE.lanternYel;
+        ctx.fillRect(wx, wy, 15, 18);
+      }
     }
   }
+
   // Portone
   ctx.fillStyle = '#2A2018';
-  ctx.fillRect(x + w / 2 - 14, y + h - 38, 28, 36);
-  ctx.fillStyle = '#1A1410';
-  ctx.fillRect(x + w / 2 - 10, y + h - 34, 20, 30);
-  // Maniglia
+  ctx.beginPath();
+  ctx.roundRect(x + w / 2 - 14, y + h - 38, 28, 38, [10, 10, 0, 0]);
+  ctx.fill();
+  
+  // Maniglia oro
   ctx.fillStyle = window.PALETTE.lanternYel;
-  ctx.fillRect(x + w / 2 + 6, y + h - 22, 3, 3);
+  ctx.beginPath();
+  ctx.arc(x + w / 2 + 8, y + h - 20, 2, 0, Math.PI * 2);
+  ctx.fill();
+
   // Gradini
   ctx.fillStyle = window.PALETTE.stoneGrey;
-  ctx.fillRect(x + w / 2 - 18, y + h - 4, 36, 4);
-  ctx.fillRect(x + w / 2 - 22, y + h - 2, 44, 2);
+  ctx.fillRect(x + w / 2 - 20, y + h - 4, 40, 4);
+  ctx.fillRect(x + w / 2 - 24, y + h - 2, 48, 2);
 }
 
 export function drawPiazzaFountain(ctx, x, y, t) {
-  // Base vasca
-  ctx.fillStyle = '#5A5A5A';
-  ctx.fillRect(x - 18, y + 12, 48, 6);
-  ctx.fillRect(x - 20, y + 18, 52, 4);
-  // Acqua
-  ctx.fillStyle = '#4A7A8A';
-  ctx.globalAlpha = 0.7 + Math.sin(t * 3) * 0.1;
-  ctx.fillRect(x - 16, y + 14, 44, 4);
-  ctx.globalAlpha = 1;
-  // Riflessi acqua
-  ctx.fillStyle = '#6AAABA';
-  ctx.globalAlpha = 0.4 + Math.sin(t * 2.5) * 0.15;
-  ctx.fillRect(x - 12, y + 15, 8, 1);
-  ctx.fillRect(x + 4, y + 15, 12, 1);
-  ctx.globalAlpha = 1;
-  // Colonna centrale
-  ctx.fillStyle = '#6A6A6A';
-  ctx.fillRect(x + 2, y - 8, 8, 20);
-  ctx.fillRect(x, y - 12, 12, 6);
-  // Getto acqua
-  ctx.fillStyle = '#8ACAEA';
-  ctx.globalAlpha = 0.6;
-  ctx.beginPath();
-  ctx.moveTo(x + 4, y - 10);
-  ctx.lineTo(x + 8, y - 10);
-  ctx.lineTo(x + 6, y - 22);
-  ctx.fill();
-  ctx.globalAlpha = 1;
-  // Gocce
-  ctx.fillStyle = '#9ADAFB';
-  ctx.globalAlpha = 0.8;
-  ctx.fillRect(x + 3 + Math.sin(t * 4) * 2, y - 18 + Math.sin(t * 3) * 2, 2, 2);
-  ctx.fillRect(x + 7 + Math.cos(t * 3.5) * 2, y - 16 + Math.cos(t * 4) * 2, 2, 2);
-  ctx.globalAlpha = 1;
-  // Bordo superiore
-  ctx.fillStyle = '#7A7A7A';
-  ctx.fillRect(x - 2, y - 4, 16, 4);
+  if (window.BuildingRenderers && window.BuildingRenderers.drawFountain) {
+    window.BuildingRenderers.drawFountain(ctx, x, y, 22, t);
+  } else {
+    // Fallback base
+    ctx.fillStyle = '#5A5A5A';
+    ctx.fillRect(x - 18, y + 12, 48, 6);
+    ctx.fillStyle = '#4A7A8A';
+    ctx.fillRect(x - 16, y + 14, 44, 4);
+  }
 }
 
 export function drawBarFacade(ctx, x, y, w, h, t) {
-  // Parete legno
-  ctx.fillStyle = '#4A3528';
-  ctx.fillRect(x, y, w, h);
-  // Assi verticali
-  ctx.fillStyle = '#3A2518';
-  for (var i = 0; i < 5; i++) {
-    ctx.fillRect(x + i * 16, y, 2, h);
+  // Parete mattoni caldi
+  if (window.drawBrickPattern) {
+    window.drawBrickPattern(ctx, x, y, w, h, '#4A3528');
+  } else {
+    ctx.fillStyle = '#4A3528';
+    ctx.fillRect(x, y, w, h);
   }
-  // Tettoia
-  ctx.fillStyle = '#5A2A1A';
-  ctx.fillRect(x - 4, y - 6, w + 8, 6);
+
+  // Tettoia a strisce (Awning)
+  if (window.drawStripedAwning) {
+     window.drawStripedAwning(ctx, x - 5, y + 10, w + 10, t);
+  } else {
+     ctx.fillStyle = '#5A2A1A';
+     ctx.fillRect(x - 4, y - 6, w + 8, 6);
+  }
+
   // Insegna neon
   var neonPulse = 0.65 + Math.sin(t * 3) * 0.15;
-  ctx.fillStyle = `rgba(200,40,40,${neonPulse})`;
-  ctx.fillRect(x + 4, y - 18, w - 8, 12);
+  ctx.fillStyle = '#1A1A1A';
+  ctx.fillRect(x + 4, y - 22, w - 8, 16);
+  ctx.strokeStyle = `rgba(200,40,40,${neonPulse})`;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x + 5, y - 21, w - 10, 14);
+  
   ctx.fillStyle = `rgba(255,200,100,${neonPulse})`;
   ctx.font = 'bold 8px "Courier New",monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('BAR', x + w / 2, y - 8);
+  ctx.fillText('BAR', x + w / 2, y - 11);
   ctx.textAlign = 'start';
-  // Finestre
-  ctx.fillStyle = '#2A1D15';
-  ctx.fillRect(x + 6, y + 10, 20, 18);
-  ctx.fillRect(x + 34, y + 10, 20, 18);
-  ctx.fillStyle = `rgba(212,168,67,${0.5 + Math.sin(t * 2) * 0.1})`;
-  ctx.fillRect(x + 8, y + 12, 16, 14);
-  ctx.fillRect(x + 36, y + 12, 16, 14);
-  // Cornici finestre
-  ctx.fillStyle = '#5A3A28';
-  ctx.fillRect(x + 6, y + 10, 20, 2);
-  ctx.fillRect(x + 6, y + 26, 20, 2);
-  ctx.fillRect(x + 34, y + 10, 20, 2);
-  ctx.fillRect(x + 34, y + 26, 20, 2);
+
+  // Finestre illuminate
+  if (window.drawLitWindow) {
+    window.drawLitWindow(ctx, x + 8, y + 15, 18, 22, true, t, 0);
+    window.drawLitWindow(ctx, x + w - 26, y + 15, 18, 22, true, t, 1);
+  } else {
+    ctx.fillStyle = `rgba(212,168,67,0.6)`;
+    ctx.fillRect(x + 8, y + 15, 18, 22);
+    ctx.fillRect(x + w - 26, y + 15, 18, 22);
+  }
+
   // Porta
   ctx.fillStyle = '#2A1D15';
-  ctx.fillRect(x + 24, y + h - 30, 18, 28);
+  ctx.fillRect(x + w / 2 - 12, y + h - 35, 24, 35);
   ctx.fillStyle = '#3A2D20';
-  ctx.fillRect(x + 26, y + h - 28, 14, 24);
-  // Maniglia
-  ctx.fillStyle = window.PALETTE.lanternYel;
-  ctx.fillRect(x + 36, y + h - 18, 2, 2);
+  ctx.fillRect(x + w / 2 - 10, y + h - 33, 20, 31);
 }
 
 export function drawNoticeBoard(ctx, x, y, _t) {
@@ -198,20 +175,22 @@ export function drawBench(ctx, x, y) {
 
 const PiazzeArea = {
   name: 'Piazza del Paese',
-  walkableTop: 105,
+  walkableTop: 140,
   colliders: [
-    { x: 125, y: 48, w: 150, h: 86 },
-    { x: 182, y: 145, w: 42, h: 28 },
-    { x: 302, y: 112, w: 70, h: 56 },
-    { x: 82, y: 136, w: 36, h: 34 },
+    { x: 125, y: 0, w: 150, h: 140 }, // Municipio
+    { x: 302, y: 0, w: 23, h: 175 },  // Bar (Parte Sinistra)
+    { x: 349, y: 0, w: 51, h: 175 },  // Bar (Parte Destra)
+    { x: 82, y: 0, w: 36, h: 175 },   // Bacheca e muro SX
+    { x: 240, y: 155, w: 42, h: 28 }, // Fontana (Spostata a DX della porta)
   ],
-  npcs: [],
   exits: [
-    { dir: 'up', xRange: [168, 232], to: 'chiesa', spawnX: 200, spawnY: 210 },
-    { dir: 'down', xRange: [170, 230], to: 'residenziale', spawnX: 200, spawnY: 132 },
-    { dir: 'left', xRange: [100, 140], to: 'giardini', spawnX: 360, spawnY: 125 },
-    { dir: 'right', xRange: [122, 176], to: 'bar_exterior', spawnX: 40, spawnY: 145 },
+    { dir: 'up', xRange: [170, 230], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true }, // Porta Municipio (Range allargato)
+    { dir: 'up', xRange: [240, 300], to: 'chiesa', spawnX: 200, spawnY: 220 }, // Uscita Chiesa
+    { dir: 'up', xRange: [320, 355], to: 'bar_exterior', spawnX: 40, spawnY: 145, requiresInteract: true }, // Porta Bar (Spostata a 'up' e centrata sulla porta)
+    { dir: 'down', xRange: [160, 240], to: 'residenziale', spawnX: 200, spawnY: 140 }, // Spawn Y corretto per residenziale
+    { dir: 'left', xRange: [100, 200], to: 'giardini', spawnX: 360, spawnY: 125 },
   ],
+
 
   draw: (ctx) => {
     window.PF.nightSky(ctx, 14);
@@ -273,12 +252,12 @@ const PiazzeArea = {
     ctx.fillRect(78, 168, 32, 4);
 
     drawMunicipioFacade(ctx, 125, 48, 150, 86, t);
-    drawPiazzaFountain(ctx, 182, 145, t);
+    drawPiazzaFountain(ctx, 240, 155, t); // Spostata
     drawBarFacade(ctx, 302, 112, 70, 56, t);
     drawNoticeBoard(ctx, 82, 136, t);
     drawBench(ctx, 260, 166);
     window.PF.lamp(ctx, 48, 142);
-    window.PF.lamp(ctx, 198, 138);
+    window.PF.lamp(ctx, 160, 140); // Spostata
     window.PF.lamp(ctx, 352, 142);
     window.PF.tree(ctx, 36, 142);
     window.PF.tree(ctx, 292, 150);

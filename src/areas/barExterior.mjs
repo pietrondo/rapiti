@@ -11,12 +11,25 @@ export function drawBarExteriorArea(ctx, t) {
   window.PF.nightSky(ctx, 11);
   window.PF.mountains(ctx);
 
-  ctx.fillStyle = window.PALETTE.oliveGreen;
-  ctx.fillRect(0, 100, window.CANVAS_W, 150);
+  // Terreno: Marciapiede in cemento davanti al bar
+  ctx.fillStyle = '#454B56';
+  ctx.fillRect(0, 130, window.CANVAS_W, 120);
+  
+  // Bordi marciapiede
+  ctx.fillStyle = '#2C313B';
+  for (var i = 0; i < 8; i++) {
+    ctx.fillRect(i * 50, 130, 2, 120);
+    ctx.fillRect(0, 130 + i * 20, window.CANVAS_W, 1);
+  }
 
-  // Edificio bar
-  ctx.fillStyle = window.PALETTE.uiBg;
+  // Edificio bar (Mattone Scuro)
+  ctx.fillStyle = '#3E2723';
   ctx.fillRect(82, 34, 236, 96);
+  
+  // Dettagli mattoni
+  if (window.drawBrickPattern) {
+    window.drawBrickPattern(ctx, 82, 34, 236, 96, '#4E342E');
+  }
 
   // Tetto
   ctx.fillStyle = window.PALETTE.burntOrange;
@@ -72,15 +85,19 @@ export function drawBarExteriorArea(ctx, t) {
 
 const BarExteriorArea = {
   name: 'Bar — Esterno',
-  walkableTop: 100,
+  walkableTop: 130, // Alzato per bloccare l'accesso alla facciata
   colliders: [
-    { x: 82, y: 34, w: 236, h: 96 },
-    { x: 112, y: 150, w: 34, h: 24 },
-    { x: 226, y: 150, w: 34, h: 24 },
-    { x: 302, y: 138, w: 24, h: 34 },
+    { x: 82, y: 0, w: 103, h: 130 },  // Edificio (Parte SX)
+    { x: 215, y: 0, w: 103, h: 130 }, // Edificio (Parte DX)
+    { x: 112, y: 150, w: 34, h: 24 }, // Tavolino
+    { x: 226, y: 150, w: 34, h: 24 }, // Tavolino
+    { x: 302, y: 138, w: 24, h: 34 }, // Albero
   ],
   npcs: [{ id: 'osvaldo', x: 280, y: 175 }],
-  exits: [{ dir: 'left', xRange: [122, 176], to: 'piazze', spawnX: 360, spawnY: 145 }],
+  exits: [
+    { dir: 'left', xRange: [122, 176], to: 'piazze', spawnX: 340, spawnY: 175 },
+    { dir: 'up', xRange: [180, 220], to: 'bar_interno', spawnX: 200, spawnY: 220, requiresInteract: true }
+  ],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;

@@ -4,9 +4,13 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
+import it from './locales/it.mjs';
+
 var _currentLocale = 'it';
 var _fallbackLocale = 'it';
-var _locales = {};
+var _locales = {
+  it: it
+};
 
 function registerLocale(lang, dict) {
   _locales[lang] = dict;

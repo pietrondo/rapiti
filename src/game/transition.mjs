@@ -2,38 +2,67 @@ export function checkAreaExits() {
   if (window.gameState.fadeDir !== 0) return;
   var p = window.gameState.player;
   var area = window.areas[window.gameState.currentArea];
+  if (!area || !area.exits) return;
+
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
-    if (ex.requiresPuzzle) continue;
+    // Skip if it needs interaction (handled by handleInteract) or puzzle
+    if (ex.requiresInteract || ex.requiresPuzzle) continue;
+    
     var triggered = false;
-    if (
-      ex.dir === 'up' &&
-      p.y <= (area.walkableTop || 2) + 2 &&
-      p.x >= ex.xRange[0] &&
-      p.x <= ex.xRange[1]
-    )
-      triggered = true;
-    if (
-      ex.dir === 'down' &&
-      p.y >= window.CANVAS_H - p.h - 2 &&
-      p.x >= ex.xRange[0] &&
-      p.x <= ex.xRange[1]
-    )
-      triggered = true;
-    if (ex.dir === 'left' && p.x <= 2 && p.y >= ex.xRange[0] && p.y <= ex.xRange[1])
-      triggered = true;
-    if (
-      ex.dir === 'right' &&
-      p.x >= window.CANVAS_W - p.w - 2 &&
-      p.y >= ex.xRange[0] &&
-      p.y <= ex.xRange[1]
-    )
-      triggered = true;
+    if (ex.dir === 'up' && p.y <= (area.walkableTop || 2) + 2 && p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) triggered = true;
+    if (ex.dir === 'down' && p.y >= window.CANVAS_H - p.h - 2 && p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) triggered = true;
+    if (ex.dir === 'left' && p.x <= 2 && p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) triggered = true;
+    if (ex.dir === 'right' && p.x >= window.CANVAS_W - p.w - 2 && p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) triggered = true;
+    
     if (triggered) {
-      changeArea(ex.to, ex.spawnX, ex.spawnY);
+      if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
+      else changeArea(ex.to, ex.spawnX, ex.spawnY);
       return;
     }
   }
+}
+
+/** Triggera un'uscita manuale (es. via tasto E) */
+export function triggerInteractExit() {
+  var p = window.gameState.player;
+  var area = window.areas[window.gameState.currentArea];
+  if (!area || !area.exits) return false;
+
+  for (var i = 0; i < area.exits.length; i++) {
+    var ex = area.exits[i];
+    if (!ex.requiresInteract) continue;
+
+    // Check vicinanza in base alla direzione
+    if (ex.dir === 'up' || ex.dir === 'down') {
+       if (p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) {
+          if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 15) {
+             if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
+             else changeArea(ex.to, ex.spawnX, ex.spawnY);
+             return true;
+          }
+          if (ex.dir === 'down' && p.y >= window.CANVAS_H - p.h - 15) {
+             if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
+             else changeArea(ex.to, ex.spawnX, ex.spawnY);
+             return true;
+          }
+       }
+    } else { // left o right
+       if (p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) {
+          if (ex.dir === 'right' && p.x >= window.CANVAS_W - p.w - 80) {
+             if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
+             else changeArea(ex.to, ex.spawnX, ex.spawnY);
+             return true;
+          }
+          if (ex.dir === 'left' && p.x <= 40) {
+             if (window.changeArea) window.changeArea(ex.to, ex.spawnX, ex.spawnY);
+             else changeArea(ex.to, ex.spawnX, ex.spawnY);
+             return true;
+          }
+       }
+    }
+  }
+  return false;
 }
 
 export function changeArea(areaId, spawnX, spawnY) {

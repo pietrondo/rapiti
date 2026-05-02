@@ -159,7 +159,8 @@ export function renderFade(ctx) {
 }
 
 // Export for other modules
-window.UIRenderer = {
+window.UIRenderer = window.UIRenderer || {};
+Object.assign(window.UIRenderer, {
   VISUAL: VISUAL,
   fillGradientRect: fillGradientRect,
   drawPixelPanel: drawPixelPanel,
@@ -167,4 +168,4 @@ window.UIRenderer = {
   drawPrompt: drawPrompt,
   drawTitleLandscape: drawTitleLandscape,
   renderFade: renderFade,
-};
+});
