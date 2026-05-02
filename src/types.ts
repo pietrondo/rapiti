@@ -197,8 +197,10 @@ export interface Condition {
   puzzleSolved?: string | string[];
   puzzlesSolved?: string[];
   visitedArea?: string;
-  trustMin?: Record<string, number>;
-  trustMax?: Record<string, number>;
+  trustAtLeast?: Record<string, number>;
+  trustAtMost?: Record<string, number>;
+  trustMin?: Record<string, number>; // Legacy support
+  trustMax?: Record<string, number>; // Legacy support
 }
 
 /** Quest definition */

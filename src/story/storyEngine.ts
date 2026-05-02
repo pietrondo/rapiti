@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Core story engine — ora classe che orchestra sotto-moduli specializzati.
- * Mantiene API retrocompatibile al 100%.
+ * Gestisce la logica narrativa, le condizioni e gli eventi di gioco.
  *
  * ═══════════════════════════════════════════════════════════════════════════════
  */
@@ -65,6 +65,7 @@ export class StoryEngine {
     if (trigger.states) {
       for (let i = 0; i < trigger.states.length; i++) {
         if (this.checkCondition(trigger.states[i].condition)) {
+          console.log(`[StoryEngine] NPC ${npcId} -> State triggered: ${trigger.states[i].id}`);
           return trigger.states[i].node;
         }
       }
@@ -81,75 +82,56 @@ export class StoryEngine {
   checkCondition(condition: Condition | undefined): boolean {
     if (!condition) return true;
 
+    // Chapter checks
     if (condition.chapter) {
-      const cm = (window as any).ChapterManager;
-      if (cm && cm.getCurrentChapterId() !== condition.chapter) return false;
+      const cm = (window as any).chapterManager || (window as any).StoryManager?.chapters;
+      if (cm && cm.getCurrentChapterId?.() !== condition.chapter) return false;
+    }
+    if (condition.chapterAtLeast) {
+      const cm = (window as any).chapterManager || (window as any).StoryManager?.chapters;
+      if (cm && !cm.isChapterCompleted?.(condition.chapterAtLeast) && cm.getCurrentChapterId?.() !== condition.chapterAtLeast) return false;
     }
 
     if (condition.hasFlag && !this.hasFlag(condition.hasFlag)) return false;
     if (condition.missingFlag && this.hasFlag(condition.missingFlag)) return false;
 
     const gs = (window as any).gameState;
-    if (condition.hasClue && gs) {
-      if (gs.cluesFound.indexOf(condition.hasClue) === -1) return false;
-    }
-    if (condition.missingClue && gs) {
-      if (gs.cluesFound.indexOf(condition.missingClue) !== -1) return false;
-    }
-    if (condition.hasClues && gs) {
-      for (let i = 0; i < condition.hasClues.length; i++) {
-        if (gs.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
+    if (!gs) return true; // Safe fallback if engine not fully ready
+
+    // Clue checks
+    if (condition.hasClue && gs.cluesFound.indexOf(condition.hasClue) === -1) return false;
+    if (condition.missingClue && gs.cluesFound.indexOf(condition.missingClue) !== -1) return false;
+    if (condition.hasClues) {
+      for (const c of condition.hasClues) {
+        if (gs.cluesFound.indexOf(c) === -1) return false;
       }
     }
-    if (condition.cluesMin && gs) {
-      if (gs.cluesFound.length < condition.cluesMin) return false;
-    }
-    if (condition.cluesMax && gs) {
-      if (gs.cluesFound.length > condition.cluesMax) return false;
-    }
-    if (condition.cluesFound === 'all' && gs) {
-      const totalClues = (window as any).clues ? (window as any).clues.length : 9;
-      if (gs.cluesFound.length < totalClues) return false;
-    }
-    if (typeof condition.cluesFound === 'number' && gs) {
-      if (gs.cluesFound.length < condition.cluesFound) return false;
-    }
-
+    if (condition.cluesMin && gs.cluesFound.length < condition.cluesMin) return false;
+    
+    // Stats checks
     if (condition.talkedTo && !statsManager.hasTalkedTo(condition.talkedTo)) return false;
-    if (condition.talkedToCount) {
-      if (statsManager.getTalkedToCount() < condition.talkedToCount) return false;
+    if (condition.visitedArea && !statsManager.hasVisitedArea(condition.visitedArea)) return false;
+
+    // Trust Levels (Modern & Legacy support)
+    const trustAtLeast = condition.trustAtLeast || condition.trustMin;
+    if (trustAtLeast) {
+       for (const nid in trustAtLeast) {
+          if ((gs.npcTrust[nid] || 0) < trustAtLeast[nid]) return false;
+       }
     }
-    if (condition.talkedToAll) {
-      for (let j = 0; j < condition.talkedToAll.length; j++) {
-        if (!statsManager.hasTalkedTo(condition.talkedToAll[j])) return false;
-      }
+    const trustAtMost = condition.trustAtMost || condition.trustMax;
+    if (trustAtMost) {
+       for (const nid in trustAtMost) {
+          if ((gs.npcTrust[nid] || 0) > trustAtMost[nid]) return false;
+       }
     }
 
-    const stats = statsManager.stats;
+    // Puzzle checks
     if (condition.puzzleSolved) {
       const ps = Array.isArray(condition.puzzleSolved) ? condition.puzzleSolved : [condition.puzzleSolved];
       for (const p of ps) {
-        if (!stats.puzzlesSolved[p]) return false;
+        if (!statsManager.stats.puzzlesSolved[p]) return false;
       }
-    }
-    if (condition.puzzlesSolved) {
-      for (let k = 0; k < condition.puzzlesSolved.length; k++) {
-        if (!stats.puzzlesSolved[condition.puzzlesSolved[k]]) return false;
-      }
-    }
-
-    if (condition.visitedArea && !statsManager.hasVisitedArea(condition.visitedArea)) return false;
-
-    // Check Trust Levels
-    if (condition.trustMin && gs) {
-       for (const npcId in condition.trustMin) {
-          if ((gs.npcTrust[npcId] || 0) < condition.trustMin[npcId]) return false;
-       }
-    }
-    if (condition.trustMax && gs) {
-       for (const npcId in condition.trustMax) {
-          if ((gs.npcTrust[npcId] || 0) > condition.trustMax[npcId]) return false;
-       }
     }
 
     return true;
@@ -172,86 +154,31 @@ export class StoryEngine {
     }
   }
 
-  wasEventTriggered(eventId: string): boolean {
-    return this.triggeredEvents.indexOf(eventId) !== -1;
-  }
-
-  triggerEvent(eventId: string): void {
-    if (this.triggeredEvents.indexOf(eventId) === -1) {
-      this.triggeredEvents.push(eventId);
-    }
-    const events = (window as any).storyEvents;
-    if (!events) return;
-    const event = events[eventId] as StoryEvent;
-    if (event && typeof event.action === 'function') event.action();
-  }
-
   /* ── ENDING SYSTEM ── */
 
   determineEnding(): Ending | null {
     const endings = (window as any).storyEndingConditions;
-    if (!endings) {
-      return {
-        id: 'psychological',
-        title: 'Fine Ambigua',
-        description: 'La verità rimane nascosta.',
-        priority: 0,
-        conditions: {}
-      };
+    if (!endings) return null;
+    
+    const sortedEndings = Object.values(endings as Record<string, Ending>)
+      .sort((a, b) => b.priority - a.priority);
+      
+    for (const ending of sortedEndings) {
+      if (this.checkCondition(ending.conditions)) return ending;
     }
-    const sortedEndings: Ending[] = [];
-    for (const endingId in endings) {
-      sortedEndings.push(endings[endingId]);
-    }
-    sortedEndings.sort((a, b) => b.priority - a.priority);
-    for (let i = 0; i < sortedEndings.length; i++) {
-      if (this.checkCondition(sortedEndings[i].conditions)) {
-        return sortedEndings[i];
-      }
-    }
-    return endings.psychological || sortedEndings[0];
+    return null;
   }
 
-  /* ── STATISTICS TRACKING ── */
+  /* ── ASSET REGISTRY (Pattern Service Locator) ── */
+  
+  private _assetRegistry: Map<string, any> = new Map();
 
-  onAreaVisited(areaId: string): void {
-    statsManager.onAreaVisited(areaId);
+  registerAsset(id: string, asset: any): void {
+     this._assetRegistry.set(id, asset);
   }
 
-  onClueFound(): void {
-    statsManager.onClueFound();
-  }
-
-  onPuzzleSolved(puzzleId: string): void {
-    statsManager.onPuzzleSolved(puzzleId);
-    const gs = (window as any).gameState;
-    if (gs) {
-      if (puzzleId === 'deduction') gs.puzzleSolved = true;
-      if (puzzleId === 'radio') gs.radioSolved = true;
-    }
-  }
-
-  getStats(): GameStats {
-    return statsManager.serialize();
-  }
-
-  /* ── ACHIEVEMENTS ── */
-
-  unlockAchievement(achievementId: string): boolean {
-    if (this.unlockedAchievements.indexOf(achievementId) === -1) {
-      this.unlockedAchievements.push(achievementId);
-      console.log('[StoryEngine] Achievement unlocked:', achievementId);
-      return true;
-    }
-    return false;
-  }
-
-  hasAchievement(achievementId: string): boolean {
-    return this.unlockedAchievements.indexOf(achievementId) !== -1;
-  }
-
-  getUnlockedAchievements(): string[] {
-    return [...this.unlockedAchievements];
+  getAsset<T>(id: string): T | null {
+     return this._assetRegistry.get(id) || null;
   }
 
   /* ── SERIALIZATION ── */
@@ -278,9 +205,11 @@ export class StoryEngine {
 // Singleton instance
 const storyEngine = new StoryEngine();
 
-// Global export
+// Global export for legacy modules
 if (typeof window !== 'undefined') {
+  (window as any).storyEngine = storyEngine;
   (window as any).StoryEngine = storyEngine;
 }
 
 export default storyEngine;
+export { storyEngine };

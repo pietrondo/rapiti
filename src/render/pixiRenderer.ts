@@ -169,24 +169,84 @@ class PixiRenderer {
     this._applyFilters();
   }
 
-  private _renderTitle() {
-    if (!this.sprites.ui_title_bg) {
-       const tex = this.generateTexture('title_landscape', (ctx) => {
-          (window as any).UIRenderer.drawTitleLandscape(ctx, 0);
-       }, CANVAS_W, CANVAS_H);
-       this.sprites.ui_title_bg = new PIXI.Sprite(tex);
-       this.layers.bg.addChild(this.sprites.ui_title_bg);
+  private _renderParallaxSky(t: number) {
+    if (!this.sprites.ui_sky) {
+      const tex = this.generateTexture('cinematic_sky', (ctx) => {
+        const g = ctx.createLinearGradient(0, 0, 0, 250);
+        g.addColorStop(0, '#020408');
+        g.addColorStop(1, '#0b0e1a');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 400, 250);
+        
+        // Stars
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 100; i++) {
+          ctx.globalAlpha = Math.random() * 0.5 + 0.2;
+          ctx.fillRect(Math.random() * 400, Math.random() * 150, 1, 1);
+        }
+        ctx.globalAlpha = 1;
+      }, 400, 250);
+      this.sprites.ui_sky = new PIXI.Sprite(tex);
+      this.layers.bg.addChildAt(this.sprites.ui_sky, 0);
     }
+
+    // Alien Lights
+    if (!this.sprites.ui_alien_lights) {
+      const c = new PIXI.Container();
+      for (let i = 0; i < 3; i++) {
+        const l = new PIXI.Graphics();
+        l.circle(0, 0, 8).fill({ color: 0xc8dcff, alpha: 0.6 });
+        // Add glow
+        const glow = new PIXI.Graphics();
+        glow.circle(0, 0, 20).fill({ color: 0x88aaff, alpha: 0.2 });
+        l.addChild(glow);
+        l.x = 100 + i * 100; l.y = 50;
+        c.addChild(l);
+      }
+      this.sprites.ui_alien_lights = c;
+      this.layers.bg.addChild(c);
+    }
+
+    const lights = this.sprites.ui_alien_lights.children;
+    lights.forEach((l: any, i: number) => {
+      l.x += Math.sin(t + i) * 0.5;
+      l.y += Math.cos(t * 0.5 + i) * 0.3;
+      l.alpha = 0.4 + Math.sin(t * 2 + i) * 0.4;
+    });
+
+    // Mountains Parallax
+    if (!this.sprites.ui_mtn_back) {
+      const tex = this.generateTexture('mtn_back', (ctx) => {
+        ctx.fillStyle = '#111824'; ctx.beginPath(); ctx.moveTo(0, 150); ctx.lineTo(80, 100); ctx.lineTo(180, 140); ctx.lineTo(300, 90); ctx.lineTo(400, 150); ctx.lineTo(400, 250); ctx.lineTo(0, 250); ctx.fill();
+      }, 400, 250);
+      this.sprites.ui_mtn_back = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
+      this.layers.bg.addChild(this.sprites.ui_mtn_back);
+    }
+    if (!this.sprites.ui_mtn_front) {
+      const tex = this.generateTexture('mtn_front', (ctx) => {
+        ctx.fillStyle = '#0a0d16'; ctx.beginPath(); ctx.moveTo(0, 180); ctx.lineTo(120, 140); ctx.lineTo(250, 170); ctx.lineTo(350, 130); ctx.lineTo(400, 180); ctx.lineTo(400, 250); ctx.lineTo(0, 250); ctx.fill();
+      }, 400, 250);
+      this.sprites.ui_mtn_front = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
+      this.layers.bg.addChild(this.sprites.ui_mtn_front);
+    }
+
+    this.sprites.ui_mtn_back.tilePosition.x = -t * 5;
+    this.sprites.ui_mtn_front.tilePosition.x = -t * 12;
+  }
+
+  private _renderTitle() {
+    const t = Date.now() * 0.001;
+    this._renderParallaxSky(t);
     
     if (!this.sprites.ui_title_panel) {
-       const panel = this._createPixelPanel(332, 86, 'BENVENUTO');
-       panel.x = 34; panel.y = 148;
+       const panel = this._createPixelPanel(332, 90, 'BENVENUTO');
+       panel.x = 34; panel.y = 140;
        this.sprites.ui_title_panel = panel;
        this.layers.ui.addChild(panel);
        
        const titleText = new PIXI.Text({
           text: 'LE LUCI\\nDI SAN CELESTE',
-          style: { fontFamily: 'monospace', fontSize: 24, fill: 0xD4A843, align: 'center', fontWeight: 'bold' }
+          style: { fontFamily: 'monospace', fontSize: 26, fill: 0xD4A843, align: 'center', fontWeight: 'bold' }
        });
        titleText.anchor.set(0.5); titleText.x = 332 / 2; titleText.y = 35;
        panel.addChild(titleText);
@@ -195,9 +255,11 @@ class PixiRenderer {
           text: 'Italia Settentrionale / Estate 1978',
           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xC4956A, align: 'center' }
        });
-       subtitleText.anchor.set(0.5); subtitleText.x = 332 / 2; subtitleText.y = 65;
+       subtitleText.anchor.set(0.5); subtitleText.x = 332 / 2; subtitleText.y = 70;
        panel.addChild(subtitleText);
     }
+    
+    this.sprites.ui_title_panel.y = 140 + Math.sin(t * 2) * 2;
     this._renderPrompt('Premi ENTER per iniziare', CANVAS_W / 2, 238);
   }
 
@@ -209,6 +271,7 @@ class PixiRenderer {
         const oldPanel = this.sprites.ui_intro_panel;
         if (oldPanel) {
            oldPanel.alpha -= 0.1;
+           oldPanel.scale.set(1 + (1 - oldPanel.alpha) * 0.05);
            if (oldPanel.alpha <= 0) {
               this.layers.ui.removeChild(oldPanel);
               this.sprites.ui_intro_panel = null;
@@ -223,6 +286,7 @@ class PixiRenderer {
         const panel = this._createPixelPanel(352, 178, 'DOSSIER PREFETTURA');
         panel.x = 24; panel.y = 44;
         panel.alpha = 0; // Start faded out
+        panel.pivot.set(176, 89); panel.x = CANVAS_W/2; panel.y = 44 + 89;
         this.sprites.ui_intro_panel = panel;
         this.layers.ui.addChild(panel);
 
@@ -252,7 +316,7 @@ class PixiRenderer {
      
      if (this.sprites.ui_intro_panel.alpha < 1) {
         this.sprites.ui_intro_panel.alpha += 0.05;
-        this.sprites.ui_intro_panel.y = 44 + (1 - this.sprites.ui_intro_panel.alpha) * 10; // Slide up
+        this.sprites.ui_intro_panel.scale.set(1.05 - this.sprites.ui_intro_panel.alpha * 0.05);
      }
      
      const prompts = ['Premi ENTER per continuare', 'Premi ENTER per continuare', 'Premi ENTER per personalizzare', 'Premi ENTER per iniziare'];
@@ -269,14 +333,7 @@ class PixiRenderer {
         this.lastStep = step;
      }
 
-     if (step <= 6 && !this.sprites.ui_pro_bg) {
-        const tex = this.generateTexture('pro_bg', (ctx) => {
-           ctx.fillStyle = '#060714'; ctx.fillRect(0,0,400,250);
-           ctx.fillStyle = '#111824'; ctx.beginPath(); ctx.moveTo(0,120); ctx.lineTo(105,80); ctx.lineTo(232,110); ctx.lineTo(300,70); ctx.lineTo(400,120); ctx.lineTo(400,250); ctx.lineTo(0,250); ctx.fill();
-        }, 400, 250);
-        this.sprites.ui_pro_bg = new PIXI.Sprite(tex);
-        this.layers.bg.addChild(this.sprites.ui_pro_bg);
-     }
+     this._renderParallaxSky(t);
 
      if (step >= 2 && step <= 6) {
         if (!this.sprites.ui_pro_light) {
