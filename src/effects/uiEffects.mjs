@@ -70,16 +70,16 @@ UITransitions.prototype.draw = function (ctx) {
 
   if (this.type === 'wipe') {
     ctx.fillStyle = DEFAULT_BLACK;
-    ctx.fillRect(0, 0, CANVAS_W * this.progress, CANVAS_H);
+    ctx.fillRect(0, 0, window.CANVAS_W * this.progress, window.CANVAS_H);
   } else if (this.type === 'circle') {
     ctx.fillStyle = DEFAULT_BLACK;
     ctx.beginPath();
-    var radius = Math.max(CANVAS_W, CANVAS_H) * this.progress;
-    ctx.arc(CANVAS_W / 2, CANVAS_H / 2, radius, 0, Math.PI * 2);
+    var radius = Math.max(window.CANVAS_W, window.CANVAS_H) * this.progress;
+    ctx.arc(window.CANVAS_W / 2, window.CANVAS_H / 2, radius, 0, Math.PI * 2);
     ctx.fill();
   } else {
     ctx.fillStyle = `rgba(0,0,0,${alpha})`;
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
   }
   ctx.restore();
 };

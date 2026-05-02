@@ -1,6 +1,6 @@
 export function openCustomize() {
-  gameState.gamePhase = 'customize';
-  document.getElementById('custom-name').value = gameState.playerName;
+  window.gameState.gamePhase = 'customize';
+  document.getElementById('custom-name').value = window.gameState.playerName;
   updateCustomizeSwatches();
   renderCustomizePreview();
   document.getElementById('customize-overlay').classList.add('active');
@@ -15,7 +15,7 @@ export function updateCustomizeSwatches() {
     var swatches = container.querySelectorAll('.color-swatch');
     for (var i = 0; i < swatches.length; i++) {
       var s = swatches[i];
-      if (s.getAttribute('data-color') === gameState.playerColors[key]) {
+      if (s.getAttribute('data-color') === window.gameState.playerColors[key]) {
         s.classList.add('selected');
       } else {
         s.classList.remove('selected');
@@ -28,9 +28,9 @@ export function applyCustomization() {
   var nameInput = document.getElementById('custom-name');
   var name = nameInput.value.trim();
   if (!name) name = 'Detective Maurizio';
-  gameState.playerName = name;
+  window.gameState.playerName = name;
   document.getElementById('customize-overlay').classList.remove('active');
-  gameState.gamePhase = 'tutorial';
+  window.gameState.gamePhase = 'tutorial';
   startMusic();
 }
 
@@ -40,7 +40,7 @@ export function renderCustomizePreview() {
   var pctx = pv.getContext('2d');
   pctx.clearRect(0, 0, 48, 56);
   pctx.imageSmoothingEnabled = false;
-  var colors = gameState.playerColors;
+  var colors = window.gameState.playerColors;
 
   // Derive light/dark variants
   var coat = colors.body;

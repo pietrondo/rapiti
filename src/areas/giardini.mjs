@@ -5,22 +5,22 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, drawVignette */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawGardensArea(ctx, t) {
-  PF.nightSky(ctx, 10);
-  PF.mountains(ctx);
+  window.PF.nightSky(ctx, 10);
+  window.PF.mountains(ctx);
 
-  ctx.fillStyle = PALETTE.oliveGreen;
-  ctx.fillRect(0, 90, CANVAS_W, 160);
+  ctx.fillStyle = window.PALETTE.oliveGreen;
+  ctx.fillRect(0, 90, window.CANVAS_W, 160);
 
   // Aiuole
-  ctx.fillStyle = PALETTE.darkForest;
+  ctx.fillStyle = window.PALETTE.darkForest;
   ctx.fillRect(25, 90, 25, 160);
   ctx.fillRect(375, 90, 25, 160);
 
   // Fontana centrale
-  ctx.fillStyle = PALETTE.stoneGrey;
+  ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(170, 155, 60, 18);
   ctx.fillStyle = '#6fa';
   ctx.globalAlpha = 0.6 + Math.sin(t * 3) * 0.2;
@@ -28,10 +28,10 @@ export function drawGardensArea(ctx, t) {
   ctx.globalAlpha = 1;
 
   // Alberi e arbusti
-  PF.tree(ctx, 50, 130);
-  PF.tree(ctx, 100, 180);
-  PF.tree(ctx, 300, 140);
-  PF.tree(ctx, 350, 190);
+  window.PF.tree(ctx, 50, 130);
+  window.PF.tree(ctx, 100, 180);
+  window.PF.tree(ctx, 300, 140);
+  window.PF.tree(ctx, 350, 190);
 
   // Fiori
   var flowers = [
@@ -50,13 +50,13 @@ export function drawGardensArea(ctx, t) {
   }
 
   // Panchina
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(200, 200, 40, 8);
   ctx.fillRect(205, 208, 4, 10);
   ctx.fillRect(231, 208, 4, 10);
 
-  PF.lamp(ctx, 80, 120);
-  PF.lamp(ctx, 320, 120);
+  window.PF.lamp(ctx, 80, 120);
+  window.PF.lamp(ctx, 320, 120);
 }
 
 const GiardiniArea = {
@@ -73,7 +73,7 @@ const GiardiniArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawGardensArea(ctx, t);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

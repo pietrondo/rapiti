@@ -5,14 +5,14 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, drawVignette */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawIndustrialArea(ctx, t) {
-  PF.nightSky(ctx, 18);
-  PF.mountains(ctx);
+  window.PF.nightSky(ctx, 18);
+  window.PF.mountains(ctx);
 
   ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(0, 85, CANVAS_W, 165);
+  ctx.fillRect(0, 85, window.CANVAS_W, 165);
 
   // Fabbrica
   ctx.fillStyle = '#3a3a3a';
@@ -54,8 +54,8 @@ export function drawIndustrialArea(ctx, t) {
   ctx.fillRect(375, 85, 25, 165);
 
   // Lampade industriali
-  PF.lamp(ctx, 60, 100);
-  PF.lamp(ctx, 340, 100);
+  window.PF.lamp(ctx, 60, 100);
+  window.PF.lamp(ctx, 340, 100);
 }
 
 const IndustrialeArea = {
@@ -77,7 +77,7 @@ const IndustrialeArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawIndustrialArea(ctx, t);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

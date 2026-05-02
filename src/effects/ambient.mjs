@@ -236,18 +236,18 @@ var ScreenShake = {
 var Vignette = {
   draw: (ctx) => {
     var grad = ctx.createRadialGradient(
-      CANVAS_W / 2,
-      CANVAS_H / 2,
+      window.CANVAS_W / 2,
+      window.CANVAS_H / 2,
       80,
-      CANVAS_W / 2,
-      CANVAS_H / 2,
-      Math.max(CANVAS_W, CANVAS_H)
+      window.CANVAS_W / 2,
+      window.CANVAS_H / 2,
+      Math.max(window.CANVAS_W, window.CANVAS_H)
     );
     grad.addColorStop(0, 'rgba(0,0,0,0)');
     grad.addColorStop(0.6, 'rgba(10,12,18,0.35)');
     grad.addColorStop(1, 'rgba(10,12,18,0.72)');
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
   },
 };
 

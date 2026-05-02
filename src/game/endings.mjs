@@ -1,5 +1,5 @@
 export function determineEnding() {
-  var cf = gameState.cluesFound;
+  var cf = window.gameState.cluesFound;
   var alienScore = 0,
     humanScore = 0;
   var alienClues = [
@@ -23,15 +23,15 @@ export function determineEnding() {
 }
 
 export function triggerEnding() {
-  gameState.endingType = determineEnding();
-  gameState.previousPhase = gameState.gamePhase;
-  gameState.gamePhase = 'ending';
+  window.gameState.endingType = determineEnding();
+  window.gameState.previousPhase = window.gameState.gamePhase;
+  window.gameState.gamePhase = 'ending';
   showEndingOverlay();
 }
 
 export function showEndingOverlay() {
-  var et = gameState.endingType;
-  var name = gameState.playerName || 'Maurizio';
+  var et = window.gameState.endingType;
+  var name = window.gameState.playerName || 'Maurizio';
   var endings = {
     alien: {
       title: 'Finale: Loro Sono Tornati',

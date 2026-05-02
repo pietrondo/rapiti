@@ -5,21 +5,21 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, drawVignette */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawPoliceArea(ctx, t) {
-  PF.nightSky(ctx, 12);
-  PF.mountains(ctx);
+  window.PF.nightSky(ctx, 12);
+  window.PF.mountains(ctx);
 
-  ctx.fillStyle = PALETTE.oliveGreen;
-  ctx.fillRect(0, 95, CANVAS_W, 155);
+  ctx.fillStyle = window.PALETTE.oliveGreen;
+  ctx.fillRect(0, 95, window.CANVAS_W, 155);
 
   // Edificio polizia
-  ctx.fillStyle = PALETTE.uiBg;
+  ctx.fillStyle = window.PALETTE.uiBg;
   ctx.fillRect(100, 25, 200, 95);
 
   // Tetto
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.beginPath();
   ctx.moveTo(95, 25);
   ctx.lineTo(200, 5);
@@ -43,7 +43,7 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillRect(240, 65, 40, 30);
 
   // Porta
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(185, 90, 30, 30);
 
   // Auto polizia
@@ -68,12 +68,12 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillRect(340, 140, 60, 35);
 
   // Alberi
-  PF.tree(ctx, 50, 130);
-  PF.tree(ctx, 350, 130);
+  window.PF.tree(ctx, 50, 130);
+  window.PF.tree(ctx, 350, 130);
 
   // Lampioni
-  PF.lamp(ctx, 80, 180);
-  PF.lamp(ctx, 320, 180);
+  window.PF.lamp(ctx, 80, 180);
+  window.PF.lamp(ctx, 320, 180);
 }
 
 const PoliziaArea = {
@@ -89,7 +89,7 @@ const PoliziaArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawPoliceArea(ctx, t);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

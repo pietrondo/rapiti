@@ -9,7 +9,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H */
+/* global window.PALETTE, CANVAS_W, CANVAS_H */
 
 const areaTextures = {
   brick: null,
@@ -27,13 +27,13 @@ export function getAreaTexture(type) {
 
 export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
   var pulse = 0.5 + Math.sin(t * 2 + phase) * 0.18;
-  ctx.fillStyle = PALETTE.nightBlue;
+  ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
   ctx.fillStyle = warm
     ? `rgba(212,168,67,${pulse.toFixed(2)})`
     : `rgba(130,160,220,${pulse.toFixed(2)})`;
   ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(x, y, w, 2);
   ctx.fillRect(x, y + h - 2, w, 2);
   ctx.fillRect(x, y, 2, h);
@@ -45,7 +45,7 @@ export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
 export function drawTileRoof(ctx, x, y, w, color) {
   ctx.fillStyle = '#35241D';
   ctx.fillRect(x - 5, y - 3, w + 10, 4);
-  ctx.fillStyle = color || PALETTE.burntOrange;
+  ctx.fillStyle = color || window.PALETTE.burntOrange;
   ctx.beginPath();
   ctx.moveTo(x - 8, y);
   ctx.lineTo(x + w / 2, y - 24);

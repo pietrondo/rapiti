@@ -12,12 +12,12 @@ import './buildingDecorations.mjs';
 const PF = {
   /** Sfondo cielo notturno con stelle + luna */
   nightSky: (ctx, stars) => {
-    ctx.fillStyle = PALETTE.nightBlue;
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillStyle = window.PALETTE.nightBlue;
+    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+    ctx.fillStyle = window.PALETTE.creamPaper;
     for (var i = 0; i < (stars || 14); i++) {
       ctx.fillRect(
-        15 + ((i * 79) % CANVAS_W),
+        15 + ((i * 79) % window.CANVAS_W),
         5 + ((i * 27) % 50),
         i % 3 === 0 ? 2 : 1,
         i % 3 === 0 ? 2 : 1
@@ -27,7 +27,7 @@ const PF = {
 
   /** Montagne sullo sfondo */
   mountains: (ctx) => {
-    ctx.fillStyle = PALETTE.violetBlue;
+    ctx.fillStyle = window.PALETTE.violetBlue;
     ctx.beginPath();
     ctx.moveTo(0, 90);
     ctx.lineTo(60, 60);
@@ -42,26 +42,26 @@ const PF = {
 
   /** Edificio semplice */
   building: (ctx, x, y, w, h, windows) => {
-    ctx.fillStyle = PALETTE.slateGrey;
+    ctx.fillStyle = window.PALETTE.slateGrey;
     ctx.fillRect(x, y, w, h);
-    ctx.fillStyle = PALETTE.fadedBeige;
+    ctx.fillStyle = window.PALETTE.fadedBeige;
     for (var i = 0; i < (windows || 2); i++) {
       var wx = x + 7 + i * 18,
         wy = y + 8;
       ctx.fillRect(wx, wy, 8, 16);
-      ctx.fillStyle = PALETTE.lanternYel;
+      ctx.fillStyle = window.PALETTE.lanternYel;
       ctx.fillRect(wx + 2, wy + 2, 4, 6);
-      ctx.fillStyle = PALETTE.fadedBeige;
+      ctx.fillStyle = window.PALETTE.fadedBeige;
     }
-    ctx.fillStyle = PALETTE.burntOrange;
+    ctx.fillStyle = window.PALETTE.burntOrange;
     ctx.fillRect(x, y - 8, w, 8);
   },
 
   /** Lampione con alone */
   lamp: (ctx, x, y) => {
-    ctx.fillStyle = PALETTE.slateGrey;
+    ctx.fillStyle = window.PALETTE.slateGrey;
     ctx.fillRect(x, y, 3, 22);
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.fillRect(x - 2, y - 6, 7, 7);
     ctx.fillStyle = 'rgba(212,168,67,0.15)';
     ctx.beginPath();
@@ -71,9 +71,9 @@ const PF = {
 
   /** Albero stilizzato */
   tree: (ctx, x, y) => {
-    ctx.fillStyle = PALETTE.earthBrown;
+    ctx.fillStyle = window.PALETTE.earthBrown;
     ctx.fillRect(x - 1, y, 3, 14);
-    ctx.fillStyle = PALETTE.darkForest;
+    ctx.fillStyle = window.PALETTE.darkForest;
     ctx.beginPath();
     ctx.arc(x, y - 6, 7, 0, Math.PI * 2);
     ctx.fill();

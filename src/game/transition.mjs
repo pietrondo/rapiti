@@ -1,7 +1,7 @@
 export function checkAreaExits() {
-  if (gameState.fadeDir !== 0) return;
-  var p = gameState.player;
-  var area = window.areas[gameState.currentArea];
+  if (window.gameState.fadeDir !== 0) return;
+  var p = window.gameState.player;
+  var area = window.areas[window.gameState.currentArea];
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
     if (ex.requiresPuzzle) continue;
@@ -15,7 +15,7 @@ export function checkAreaExits() {
       triggered = true;
     if (
       ex.dir === 'down' &&
-      p.y >= CANVAS_H - p.h - 2 &&
+      p.y >= window.CANVAS_H - p.h - 2 &&
       p.x >= ex.xRange[0] &&
       p.x <= ex.xRange[1]
     )
@@ -24,7 +24,7 @@ export function checkAreaExits() {
       triggered = true;
     if (
       ex.dir === 'right' &&
-      p.x >= CANVAS_W - p.w - 2 &&
+      p.x >= window.CANVAS_W - p.w - 2 &&
       p.y >= ex.xRange[0] &&
       p.y <= ex.xRange[1]
     )
@@ -37,11 +37,11 @@ export function checkAreaExits() {
 }
 
 export function changeArea(areaId, spawnX, spawnY) {
-  gameState.fadeDir = 1;
-  gameState.fadeCallback = () => {
-    gameState.currentArea = areaId;
-    gameState.player.x = spawnX;
-    gameState.player.y = spawnY;
+  window.gameState.fadeDir = 1;
+  window.gameState.fadeCallback = () => {
+    window.gameState.currentArea = areaId;
+    window.gameState.player.x = spawnX;
+    window.gameState.player.y = spawnY;
 
     // Notifica StoryManager
     if (typeof StoryManager !== 'undefined') {
@@ -56,28 +56,28 @@ export function changeArea(areaId, spawnX, spawnY) {
     } else if (areaId === 'chiesa' || areaId === 'cimitero' || areaId === 'polizia') {
       ParticleSystem.createDust(spawnX, spawnY);
     }
-    updateHUD();
-    gameState.fadeDir = -1;
-    gameState.fadeCallback = () => {
-      gameState.fadeDir = 0;
-      gameState.fadeCallback = null;
+    window.updateHUD();
+    window.gameState.fadeDir = -1;
+    window.gameState.fadeCallback = () => {
+      window.gameState.fadeDir = 0;
+      window.gameState.fadeCallback = null;
     };
   };
 }
 
 export function updateFade() {
-  if (gameState.fadeDir === 1) {
-    gameState.fadeAlpha += 4;
-    if (gameState.fadeAlpha >= 100) {
-      gameState.fadeAlpha = 100;
-      if (gameState.fadeCallback) gameState.fadeCallback();
+  if (window.gameState.fadeDir === 1) {
+    window.gameState.fadeAlpha += 4;
+    if (window.gameState.fadeAlpha >= 100) {
+      window.gameState.fadeAlpha = 100;
+      if (window.gameState.fadeCallback) window.gameState.fadeCallback();
     }
-  } else if (gameState.fadeDir === -1) {
-    gameState.fadeAlpha -= 4;
-    if (gameState.fadeAlpha <= 0) {
-      gameState.fadeAlpha = 0;
-      gameState.fadeDir = 0;
-      if (gameState.fadeCallback) gameState.fadeCallback();
+  } else if (window.gameState.fadeDir === -1) {
+    window.gameState.fadeAlpha -= 4;
+    if (window.gameState.fadeAlpha <= 0) {
+      window.gameState.fadeAlpha = 0;
+      window.gameState.fadeDir = 0;
+      if (window.gameState.fadeCallback) window.gameState.fadeCallback();
     }
   }
 }
@@ -85,9 +85,9 @@ export function updateFade() {
 /** Stub — HUD update is handled by individual game state changes */
 export function updateHUD() {
   var areaEl = document.getElementById('hud-area');
-  if (areaEl) areaEl.textContent = gameState.currentArea;
+  if (areaEl) areaEl.textContent = window.gameState.currentArea;
   var cluesEl = document.getElementById('hud-clues');
-  if (cluesEl) cluesEl.textContent = gameState.cluesFound.length + '/9';
+  if (cluesEl) cluesEl.textContent = window.gameState.cluesFound.length + '/9';
 }
 
 // Global exports for dynamic module loading compatibility

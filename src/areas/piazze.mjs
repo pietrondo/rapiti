@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H */
 
 const areaTextures = {};
 
@@ -19,17 +19,17 @@ export function getAreaTexture(type) {
 // Helper functions per piazze
 export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   var windowGlow = 0.6 + Math.sin(t * 2) * 0.1;
-  ctx.fillStyle = PALETTE.uiBg;
+  ctx.fillStyle = window.PALETTE.uiBg;
   ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x + 5, y + h - 10, w - 10, 10);
-  ctx.fillStyle = PALETTE.darkForest;
+  ctx.fillStyle = window.PALETTE.darkForest;
   ctx.beginPath();
   ctx.moveTo(x + w / 2, y);
   ctx.lineTo(x + w, y + 30);
   ctx.lineTo(x, y + 30);
   ctx.fill();
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   for (var i = 0; i < 3; i++) {
     for (var j = 0; j < 2; j++) {
       ctx.globalAlpha = windowGlow;
@@ -37,20 +37,20 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
       ctx.globalAlpha = 1;
     }
   }
-  ctx.fillStyle = PALETTE.accent;
+  ctx.fillStyle = window.PALETTE.accent;
   ctx.fillRect(x + w / 2 - 12, y + h - 35, 24, 30);
 }
 
 export function drawPiazzaFountain(ctx, x, y, t) {
-  ctx.fillStyle = PALETTE.stoneGrey;
+  ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(x - 15, y + 10, 42, 18);
-  ctx.fillStyle = PALETTE.darkForest;
+  ctx.fillStyle = window.PALETTE.darkForest;
   ctx.beginPath();
   ctx.moveTo(x - 20, y + 10);
   ctx.lineTo(x + 32, y + 10);
   ctx.lineTo(x + 6, y - 15);
   ctx.fill();
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.globalAlpha = 0.8;
   ctx.fillRect(x + 2, y - 12, 8, 8);
   ctx.globalAlpha = 1;
@@ -61,21 +61,21 @@ export function drawPiazzaFountain(ctx, x, y, t) {
 }
 
 export function drawBarFacade(ctx, x, y, w, h, t) {
-  ctx.fillStyle = PALETTE.uiBg;
+  ctx.fillStyle = window.PALETTE.uiBg;
   ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x, y + h - 8, w, 8);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.globalAlpha = 0.7 + Math.sin(t * 2.5) * 0.1;
   ctx.fillRect(x + 8, y + 15, 18, 22);
   ctx.fillRect(x + 44, y + 15, 18, 22);
   ctx.globalAlpha = 1;
-  ctx.fillStyle = PALETTE.accent;
+  ctx.fillStyle = window.PALETTE.accent;
   ctx.fillRect(x + 26, y + h - 28, 18, 24);
 }
 
 export function drawNoticeBoard(ctx, x, y, _t) {
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x, y, 28, 38);
   ctx.fillStyle = '#dcb';
   ctx.fillRect(x + 3, y + 4, 22, 24);
@@ -86,7 +86,7 @@ export function drawNoticeBoard(ctx, x, y, _t) {
 }
 
 export function drawBench(ctx, x, y) {
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x, y, 36, 10);
   ctx.fillRect(x + 4, y + 10, 4, 12);
   ctx.fillRect(x + 28, y + 10, 4, 12);
@@ -111,25 +111,25 @@ const PiazzeArea = {
 
   draw: (ctx) => {
     window.PF.nightSky(ctx, 14);
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.beginPath();
     ctx.arc(340, 22, 14, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = PALETTE.nightBlue;
+    ctx.fillStyle = window.PALETTE.nightBlue;
     ctx.beginPath();
     ctx.arc(346, 18, 10, 0, Math.PI * 2);
     ctx.fill();
     window.PF.mountains(ctx);
     var t = Date.now() * 0.001;
-    ctx.fillStyle = PALETTE.oliveGreen;
-    ctx.fillRect(0, 104, CANVAS_W, 146);
-    ctx.fillStyle = PALETTE.darkForest;
-    ctx.fillRect(0, 102, CANVAS_W, 4);
+    ctx.fillStyle = window.PALETTE.oliveGreen;
+    ctx.fillRect(0, 104, window.CANVAS_W, 146);
+    ctx.fillStyle = window.PALETTE.darkForest;
+    ctx.fillRect(0, 102, window.CANVAS_W, 4);
 
     var stoneTex = getAreaTexture('stone');
-    ctx.drawImage(stoneTex, 0, 0, CANVAS_W, 120, 0, 130, CANVAS_W, 120);
+    ctx.drawImage(stoneTex, 0, 0, window.CANVAS_W, 120, 0, 130, window.CANVAS_W, 120);
     ctx.fillStyle = 'rgba(139,125,107,0.88)';
-    ctx.fillRect(0, 130, CANVAS_W, 120);
+    ctx.fillRect(0, 130, window.CANVAS_W, 120);
     ctx.fillStyle = 'rgba(74,85,104,0.32)';
     for (var r = 0; r < 10; r++) {
       for (var c = 0; c < 15; c++) {
@@ -137,7 +137,7 @@ const PiazzeArea = {
       }
     }
 
-    ctx.fillStyle = PALETTE.greyBrown;
+    ctx.fillStyle = window.PALETTE.greyBrown;
     ctx.beginPath();
     ctx.moveTo(170, 134);
     ctx.lineTo(230, 134);
@@ -162,7 +162,7 @@ const PiazzeArea = {
     window.PF.lamp(ctx, 352, 142);
     window.PF.tree(ctx, 36, 142);
     window.PF.tree(ctx, 292, 150);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

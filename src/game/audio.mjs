@@ -17,9 +17,9 @@ export function startMusic() {
 }
 
 export function toggleMusic() {
-  gameState.musicEnabled = !gameState.musicEnabled;
+  window.gameState.musicEnabled = !window.gameState.musicEnabled;
   if (!bgMusic) return;
-  if (gameState.musicEnabled) {
+  if (window.gameState.musicEnabled) {
     bgMusic.play().catch(() => {});
   } else {
     bgMusic.pause();
@@ -30,8 +30,8 @@ export function toggleMusic() {
 export function updateMuteButton() {
   var btn = document.getElementById('mute-btn');
   if (!btn) return;
-  btn.textContent = gameState.musicEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07'; // 🔊 : 🔇
-  if (!gameState.musicEnabled) btn.classList.add('muted');
+  btn.textContent = window.gameState.musicEnabled ? '\uD83D\uDD0A' : '\uD83D\uDD07'; // 🔊 : 🔇
+  if (!window.gameState.musicEnabled) btn.classList.add('muted');
   else btn.classList.remove('muted');
 }
 

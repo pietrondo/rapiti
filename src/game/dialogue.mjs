@@ -3,9 +3,9 @@
  * Usa StoryManager per determinare il nodo corretto
  */
 export function startDialogue(npcId) {
-  gameState.dialogueNpcId = npcId;
-  gameState.previousPhase = gameState.gamePhase;
-  gameState.gamePhase = 'dialogue';
+  window.gameState.dialogueNpcId = npcId;
+  window.gameState.previousPhase = window.gameState.gamePhase;
+  window.gameState.gamePhase = 'dialogue';
 
   // Usa StoryManager per determinare il nodo di dialogo
   var nodeKey = StoryManager.getDialogueNodeForNPC(npcId);
@@ -16,7 +16,7 @@ export function startDialogue(npcId) {
     node = dialogueNodes[`${npcId}_s0`];
   }
 
-  gameState.dialogueTree = node;
+  window.gameState.dialogueTree = node;
 
   // Registra che abbiamo parlato con questo NPC
   StoryManager.onDialogueStarted(npcId);
@@ -26,13 +26,13 @@ export function startDialogue(npcId) {
 }
 
 export function renderDialogueHTML() {
-  var node = gameState.dialogueTree;
+  var node = window.gameState.dialogueTree;
   if (!node) {
     document.getElementById('dialogue-overlay').classList.remove('active');
-    gameState.gamePhase = gameState.previousPhase || 'playing';
+    window.gameState.gamePhase = window.gameState.previousPhase || 'playing';
     return;
   }
-  var npcId = gameState.dialogueNpcId;
+  var npcId = window.gameState.dialogueNpcId;
   var npcData = npcsData.find((n) => n.id === npcId);
   var npcName = npcData ? npcData.name : '???';
   document.getElementById('dialogue-npc-name').textContent = npcName;
@@ -82,7 +82,7 @@ export function renderDialogueHTML() {
 }
 
 export function selectDialogueChoice(index) {
-  var node = gameState.dialogueTree;
+  var node = window.gameState.dialogueTree;
   if (!node?.choices || index >= node.choices.length) return;
   var ch = node.choices[index];
   if (ch.effect) applyDialogueEffect(ch.effect);
@@ -90,7 +90,7 @@ export function selectDialogueChoice(index) {
     var nextNode = dialogueNodes[ch.next];
     if (nextNode) {
       if (nextNode.effect) applyDialogueEffect(nextNode.effect);
-      gameState.dialogueTree = nextNode;
+      window.gameState.dialogueTree = nextNode;
       renderDialogueHTML();
       return;
     }
@@ -104,8 +104,8 @@ export function applyDialogueEffect(effect) {
   }
   if (effect.giveClue) {
     var cid = effect.giveClue;
-    if (gameState.cluesFound.indexOf(cid) === -1) {
-      gameState.cluesFound.push(cid);
+    if (window.gameState.cluesFound.indexOf(cid) === -1) {
+      window.gameState.cluesFound.push(cid);
 
       // Notifica StoryManager
       StoryManager.onClueFound(cid);
@@ -118,7 +118,7 @@ export function applyDialogueEffect(effect) {
             : null;
       if (action && dialogueEffects[action]) dialogueEffects[action]();
       else {
-        updateHUD();
+        window.updateHUD();
         window.showToast(`Hai raccolto: ${window.cluesMap[cid].name}`);
       }
     }
@@ -137,9 +137,9 @@ export function applyDialogueEffect(effect) {
 
 export function closeDialogue() {
   document.getElementById('dialogue-overlay').classList.remove('active');
-  gameState.gamePhase = gameState.previousPhase || 'playing';
-  gameState.dialogueNpcId = null;
-  gameState.dialogueTree = null;
+  window.gameState.gamePhase = window.gameState.previousPhase || 'playing';
+  window.gameState.dialogueNpcId = null;
+  window.gameState.dialogueTree = null;
 }
 
 // Global exports for dynamic module loading compatibility

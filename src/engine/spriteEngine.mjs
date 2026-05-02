@@ -48,7 +48,7 @@ const SpriteEngine = {
   /** Genera e cache uno sprite procedurale (player) */
   generatePlayer: function () {
     if (!this.generated.player) {
-      this.generated.player = SpriteGenerator.generatePlayerSheet();
+      this.generated.player = window.SpriteGenerator.generatePlayerSheet();
     }
     return this.generated.player;
   },
@@ -57,7 +57,7 @@ const SpriteEngine = {
   generateNPC: function (npcData) {
     var key = `npc_${npcData.id}`;
     if (!this.generated[key]) {
-      this.generated[key] = SpriteGenerator.generateNPCSheet(npcData);
+      this.generated[key] = window.SpriteGenerator.generateNPCSheet(npcData);
     }
     return this.generated[key];
   },
@@ -66,7 +66,7 @@ const SpriteEngine = {
   generateBG: function (areaId, areaData) {
     var key = `bg_${areaId}`;
     if (!this.generated[key]) {
-      this.generated[key] = SpriteGenerator.generateBackground(areaId, areaData);
+      this.generated[key] = window.SpriteGenerator.generateBackground(areaId, areaData);
     }
     return this.generated[key];
   },
@@ -74,7 +74,7 @@ const SpriteEngine = {
   /** Genera e cache spritesheet icone indizi */
   generateClueIcons: function (clues) {
     if (!this.generated.clueIcons) {
-      this.generated.clueIcons = SpriteGenerator.generateClueIcons(clues);
+      this.generated.clueIcons = window.SpriteGenerator.generateClueIcons(window.clues);
     }
     return this.generated.clueIcons;
   },
@@ -86,10 +86,10 @@ const SpriteEngine = {
     if (img) {
       if (alpha < 1) {
         ctx.globalAlpha = alpha;
-        ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
+        ctx.drawImage(img, 0, 0, window.CANVAS_W, window.CANVAS_H);
         ctx.globalAlpha = 1;
       } else {
-        ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
+        ctx.drawImage(img, 0, 0, window.CANVAS_W, window.CANVAS_H);
       }
       return true;
     }

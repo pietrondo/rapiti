@@ -8,7 +8,7 @@ const storyEvents = {
     trigger: { cluesFound: 1 },
     once: true,
     action: () => {
-      showToast('Primo indizio raccolto! Controlla il Diario con [J]');
+      window.showToast('Primo indizio raccolto! Controlla il Diario con [J]');
       StoryManager.setFlag('first_clue_found');
     },
   },
@@ -18,7 +18,7 @@ const storyEvents = {
     trigger: { cluesFound: 5 },
     once: true,
     action: () => {
-      showToast('Hai raccolto metà degli indizi. Continua così!');
+      window.showToast('Hai raccolto metà degli indizi. Continua così!');
       StoryManager.setFlag('half_clues_found');
     },
   },
@@ -28,7 +28,7 @@ const storyEvents = {
     trigger: { cluesFound: 'all' },
     once: true,
     action: () => {
-      showToast('Hai trovato TUTTI gli indizi! Sei pronto per la verità.');
+      window.showToast('Hai trovato TUTTI gli indizi! Sei pronto per la verità.');
       StoryManager.setFlag('all_clues_found');
     },
   },
@@ -38,7 +38,7 @@ const storyEvents = {
     trigger: { hasClues: ['registro_1861', 'mappa_campi', 'tracce_circolari'] },
     once: true,
     action: () => {
-      showToast('Hai raccolto abbastanza indizi per la Deduzione! Premi [T]');
+      window.showToast('Hai raccolto abbastanza indizi per la Deduzione! Premi [T]');
     },
   },
 
@@ -48,7 +48,7 @@ const storyEvents = {
     once: true,
     action: () => {
       ScreenShake.shake(3, 20);
-      showToast('La realtà sembra... instabile.');
+      window.showToast('La realtà sembra... instabile.');
     },
   },
 };

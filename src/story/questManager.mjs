@@ -103,8 +103,8 @@ const QuestManager = {
 
     var quest = storyQuests ? storyQuests[questId] : null;
     if (quest?.onComplete) {
-      if (quest.onComplete.message && typeof showToast === 'function') {
-        showToast(quest.onComplete.message);
+      if (quest.onComplete.message && typeof window.showToast === 'function') {
+        window.showToast(quest.onComplete.message);
       }
       if (quest.onComplete.reward) {
         this.applyReward(quest.onComplete.reward);
@@ -182,10 +182,10 @@ const QuestManager = {
     }
 
     // Update NPC state
-    if (reward.updateNPCState && typeof gameState !== 'undefined') {
+    if (reward.updateNPCState && typeof window.gameState !== 'undefined') {
       for (var npcId in reward.updateNPCState) {
-        if (gameState.npcStates) {
-          gameState.npcStates[npcId] = reward.updateNPCState[npcId];
+        if (window.gameState.npcStates) {
+          window.gameState.npcStates[npcId] = reward.updateNPCState[npcId];
         }
       }
     }

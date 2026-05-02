@@ -161,18 +161,18 @@ function generateNPCSheet(npcData) {
  * @returns {HTMLCanvasElement|null}
  */
 function generateBackground(areaId, areaData) {
-  var w = typeof CANVAS_W !== 'undefined' ? CANVAS_W : 400;
-  var h = typeof CANVAS_H !== 'undefined' ? CANVAS_H : 250;
+  var w = typeof window.CANVAS_W !== 'undefined' ? window.CANVAS_W : 400;
+  var h = typeof window.CANVAS_H !== 'undefined' ? window.CANVAS_H : 250;
 
   var _c = _createCanvas(w, h);
   var ctx = _c.ctx;
 
   // Sky
-  ctx.fillStyle = PALETTE ? PALETTE.nightBlue : '#1a1c2c';
+  ctx.fillStyle = window.PALETTE ? window.PALETTE.nightBlue : '#1a1c2c';
   ctx.fillRect(0, 0, w, h);
 
   // Ground
-  ctx.fillStyle = PALETTE ? PALETTE.earthBrown : '#5c4033';
+  ctx.fillStyle = window.PALETTE ? window.PALETTE.earthBrown : '#5c4033';
   ctx.fillRect(0, h - 40, w, 40);
 
   // Simple building silhouettes based on area

@@ -3,7 +3,7 @@
    Rendering interaction hint above targets
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-/* global PALETTE */
+/* global window.PALETTE */
 
 export function renderInteractionHint(ctx) {
   var t = gameState.interactionTarget;
@@ -27,7 +27,7 @@ export function renderInteractionHint(ctx) {
   ctx.strokeRect(px - w / 2 + 1, py - 12, w - 2, 14);
   ctx.fillStyle = 'rgba(212,168,67,0.24)';
   ctx.fillRect(px - 3, py + 5, 6, 5);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.textAlign = 'center';
   ctx.fillText(text, px, py - 2);
   ctx.textAlign = 'start';

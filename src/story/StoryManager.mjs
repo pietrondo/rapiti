@@ -155,34 +155,34 @@ const StoryManager = {
     }
 
     if (condition.hasClue) {
-      if (!gameState || gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
+      if (!window.gameState || window.gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
     }
 
     if (condition.missingClue) {
-      if (gameState && gameState.cluesFound.indexOf(condition.missingClue) !== -1) return false;
+      if (window.gameState && window.gameState.cluesFound.indexOf(condition.missingClue) !== -1) return false;
     }
 
     if (condition.hasClues) {
       for (var i = 0; i < condition.hasClues.length; i++) {
-        if (!gameState || gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
+        if (!window.gameState || window.gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
       }
     }
 
     if (condition.cluesMin) {
-      if (!gameState || gameState.cluesFound.length < condition.cluesMin) return false;
+      if (!window.gameState || window.gameState.cluesFound.length < condition.cluesMin) return false;
     }
 
     if (condition.cluesMax) {
-      if (!gameState || gameState.cluesFound.length > condition.cluesMax) return false;
+      if (!window.gameState || window.gameState.cluesFound.length > condition.cluesMax) return false;
     }
 
     if (condition.cluesFound === 'all') {
       var totalClues = typeof clues !== 'undefined' ? clues.length : 9;
-      if (!gameState || gameState.cluesFound.length < totalClues) return false;
+      if (!window.gameState || window.gameState.cluesFound.length < totalClues) return false;
     }
 
     if (typeof condition.cluesFound === 'number') {
-      if (!gameState || gameState.cluesFound.length < condition.cluesFound) return false;
+      if (!window.gameState || window.gameState.cluesFound.length < condition.cluesFound) return false;
     }
 
     if (condition.talkedTo) {
@@ -268,9 +268,9 @@ const StoryManager = {
 
     if (reward.setFlag) this.setFlag(reward.setFlag);
 
-    if (reward.updateNPCState && gameState?.npcStates) {
+    if (reward.updateNPCState && window.gameState?.npcStates) {
       for (var npcId in reward.updateNPCState) {
-        gameState.npcStates[npcId] = reward.updateNPCState[npcId];
+        window.gameState.npcStates[npcId] = reward.updateNPCState[npcId];
       }
     }
 
@@ -326,8 +326,8 @@ const StoryManager = {
   onPuzzleSolved: function (puzzleId) {
     if (typeof StatsManager !== 'undefined') StatsManager.onPuzzleSolved(puzzleId);
 
-    if (puzzleId === 'deduction' && gameState) gameState.puzzleSolved = true;
-    if (puzzleId === 'radio' && gameState) gameState.radioSolved = true;
+    if (puzzleId === 'deduction' && window.gameState) window.gameState.puzzleSolved = true;
+    if (puzzleId === 'radio' && window.gameState) window.gameState.radioSolved = true;
 
     this.checkQuestProgress();
     this.checkEvents();

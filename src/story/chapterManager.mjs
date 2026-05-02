@@ -56,8 +56,8 @@ const ChapterManager = {
     console.log('[ChapterManager] Chapter started:', chapter.title);
 
     // Notify via toast if available
-    if (typeof showToast === 'function') {
-      showToast(`Capitolo: ${chapter.title}`);
+    if (typeof window.showToast === 'function') {
+      window.showToast(`Capitolo: ${chapter.title}`);
     }
 
     return true;
@@ -81,8 +81,8 @@ const ChapterManager = {
       if (chapter.onComplete.unlockChapter) {
         this.startChapter(chapter.onComplete.unlockChapter);
       }
-      if (chapter.onComplete.message && typeof showToast === 'function') {
-        showToast(chapter.onComplete.message);
+      if (chapter.onComplete.message && typeof window.showToast === 'function') {
+        window.showToast(chapter.onComplete.message);
       }
     }
 

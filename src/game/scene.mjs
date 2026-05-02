@@ -24,16 +24,16 @@ let sceneFound = [];
 var _sceneSolved = false;
 
 export function openScenePuzzle() {
-  if (gameState.gamePhase !== 'playing') return;
-  gameState.previousPhase = 'playing';
-  gameState.gamePhase = 'scene';
+  if (window.gameState.gamePhase !== 'playing') return;
+  window.gameState.previousPhase = 'playing';
+  window.gameState.gamePhase = 'scene';
 
   // Popola elementi trovati
   var foundDiv = document.getElementById('scene-elements');
   foundDiv.innerHTML = '';
   sceneFound = [];
   for (var i = 0; i < sceneElements.length; i++) {
-    if (gameState.cluesFound.indexOf(sceneElements[i].id) >= 0) {
+    if (window.gameState.cluesFound.indexOf(sceneElements[i].id) >= 0) {
       sceneFound.push(sceneElements[i]);
       var el = document.createElement('div');
       el.style.cssText = 'color:#44cc44;font-size:12px;margin:4px 0';
@@ -63,7 +63,7 @@ export function openScenePuzzle() {
 
 export function closeScenePuzzle() {
   document.getElementById('scene-overlay').classList.remove('active');
-  gameState.gamePhase = 'playing';
+  window.gameState.gamePhase = 'playing';
 }
 
 // Global exports for dynamic module loading compatibility
@@ -92,13 +92,13 @@ export function checkScene() {
     result.textContent = '✓ Elena non stava scappando. Stava tornando verso qualcosa.';
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;
-    showToast('Scena ricostruita! Parla con Teresa nella stanza della cascina.');
+    window.showToast('Scena ricostruita! Parla con Teresa nella stanza della cascina.');
 
     // Notifica StoryManager
     StoryManager.onPuzzleSolved('scene');
 
     // Sblocca Teresa state 1 (retrocompatibilità)
-    if (gameState.npcStates.teresa < 1) gameState.npcStates.teresa = 1;
+    if (window.gameState.npcStates.teresa < 1) window.gameState.npcStates.teresa = 1;
 
     setTimeout(() => {
       closeScenePuzzle();
@@ -121,7 +121,7 @@ export function determineEndingV2() {
   }
 
   // Fallback al vecchio sistema se StoryManager non è disponibile
-  var cf = gameState.cluesFound;
+  var cf = window.gameState.cluesFound;
   var militaryScore = 0,
     alienScore = 0,
     psychScore = 0,
@@ -150,15 +150,15 @@ export function determineEndingV2() {
 }
 
 export function triggerEnding() {
-  gameState.endingType = determineEndingV2();
-  gameState.previousPhase = gameState.gamePhase;
-  gameState.gamePhase = 'ending';
+  window.gameState.endingType = determineEndingV2();
+  window.gameState.previousPhase = window.gameState.gamePhase;
+  window.gameState.gamePhase = 'ending';
   showEndingOverlayV2();
 }
 
 export function showEndingOverlayV2() {
-  var et = gameState.endingType;
-  var name = gameState.playerName || 'Maurizio';
+  var et = window.gameState.endingType;
+  var name = window.gameState.playerName || 'Maurizio';
   var endings = {
     military: {
       title: 'Finale: Esperimento FUORI CONTROLLO',

@@ -9,40 +9,40 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE */
+/* global window.PALETTE */
 
 import { drawLitWindow, drawTileRoof, drawWallTexture } from './drawCommon.mjs';
 
 export function drawMunicipioFacade(ctx, x, y, w, h, t) {
-  drawWallTexture(ctx, x, y, w, h, PALETTE.fadedBeige, 'rgba(107,91,79,0.22)');
-  ctx.fillStyle = PALETTE.greyBrown;
+  drawWallTexture(ctx, x, y, w, h, window.PALETTE.fadedBeige, 'rgba(107,91,79,0.22)');
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x - 6, y + h - 8, w + 12, 8);
-  ctx.fillStyle = PALETTE.burntOrange;
+  ctx.fillStyle = window.PALETTE.burntOrange;
   ctx.fillRect(x - 4, y - 8, w + 8, 8);
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(x - 8, y - 12, w + 16, 5);
-  ctx.fillStyle = PALETTE.fadedBeige;
+  ctx.fillStyle = window.PALETTE.fadedBeige;
   ctx.fillRect(x + w / 2 - 16, y - 30, 32, 24);
-  drawTileRoof(ctx, x + w / 2 - 18, y - 30, 36, PALETTE.greyBrown);
-  ctx.fillStyle = PALETTE.creamPaper;
+  drawTileRoof(ctx, x + w / 2 - 18, y - 30, 36, window.PALETTE.greyBrown);
+  ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.beginPath();
   ctx.arc(x + w / 2, y - 17, 8, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = PALETTE.nightBlue;
+  ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x + w / 2 - 1, y - 22, 2, 6);
   ctx.fillRect(x + w / 2 - 1, y - 18, 6, 2);
   drawLitWindow(ctx, x + 12, y + 16, 16, 20, true, t, 0);
   drawLitWindow(ctx, x + w - 28, y + 16, 16, 20, true, t, 1);
   drawLitWindow(ctx, x + 38, y + 16, 14, 18, false, t, 2);
   drawLitWindow(ctx, x + w - 52, y + 16, 14, 18, false, t, 3);
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(x + w / 2 - 13, y + h - 36, 26, 34);
-  ctx.fillStyle = PALETTE.slateGrey;
+  ctx.fillStyle = window.PALETTE.slateGrey;
   ctx.fillRect(x + w / 2 - 10, y + h - 32, 8, 14);
   ctx.fillRect(x + w / 2 + 2, y + h - 32, 8, 14);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.fillRect(x + w / 2 + 6, y + h - 18, 3, 3);
-  ctx.fillStyle = PALETTE.alumGrey;
+  ctx.fillStyle = window.PALETTE.alumGrey;
   ctx.fillRect(x + w / 2 - 22, y + h - 2, 44, 3);
   ctx.fillRect(x + w / 2 - 18, y + h - 6, 36, 4);
   ctx.fillStyle = '#00853E';
@@ -51,27 +51,27 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + w + 10, y + 12, 4, 14);
   ctx.fillStyle = '#C83737';
   ctx.fillRect(x + w + 14, y + 12, 4, 14);
-  ctx.fillStyle = PALETTE.slateGrey;
+  ctx.fillStyle = window.PALETTE.slateGrey;
   ctx.fillRect(x + w + 5, y + 10, 2, 18);
 }
 
 export function drawChurchFacade(ctx, x, y, w, h, t) {
-  drawWallTexture(ctx, x, y, w, h, PALETTE.greyBrown, 'rgba(232,220,200,0.12)');
-  ctx.fillStyle = PALETTE.earthBrown;
+  drawWallTexture(ctx, x, y, w, h, window.PALETTE.greyBrown, 'rgba(232,220,200,0.12)');
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.beginPath();
   ctx.moveTo(x - 10, y);
   ctx.lineTo(x + w / 2, y - 28);
   ctx.lineTo(x + w + 10, y);
   ctx.fill();
-  ctx.fillStyle = PALETTE.greyBrown;
+  ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x + w / 2 - 22, y - 50, 44, 50);
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.beginPath();
   ctx.moveTo(x + w / 2 - 25, y - 50);
   ctx.lineTo(x + w / 2, y - 74);
   ctx.lineTo(x + w / 2 + 25, y - 50);
   ctx.fill();
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.fillRect(x + w / 2 - 2, y - 66, 4, 18);
   ctx.fillRect(x + w / 2 - 9, y - 59, 18, 4);
   ctx.fillStyle = 'rgba(212,168,67,0.18)';
@@ -80,14 +80,14 @@ export function drawChurchFacade(ctx, x, y, w, h, t) {
   ctx.fill();
   drawLitWindow(ctx, x + 24, y + 22, 16, 30, true, t, 0);
   drawLitWindow(ctx, x + w - 40, y + 22, 16, 30, true, t, 1);
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(x + w / 2 - 14, y + h - 42, 28, 40);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.fillRect(x + w / 2 - 5, y + h - 34, 10, 10);
-  ctx.fillStyle = PALETTE.alumGrey;
+  ctx.fillStyle = window.PALETTE.alumGrey;
   ctx.fillRect(x - 10, y + h, w + 20, 8);
   for (var p = 0; p < 5; p++) {
-    ctx.fillStyle = p % 2 ? PALETTE.greyBrown : PALETTE.earthBrown;
+    ctx.fillStyle = p % 2 ? window.PALETTE.greyBrown : window.PALETTE.earthBrown;
     ctx.fillRect(x + 8 + p * 22, y + h + 8, 16, 60);
   }
 }
@@ -106,7 +106,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + 24, y - 33, w - 48, 25);
   ctx.fillStyle = `rgba(220,54,42,${neon.toFixed(2)})`;
   ctx.fillRect(x + 28, y - 29, w - 56, 17);
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.font = 'bold 11px "Courier New",monospace';
   ctx.textAlign = 'center';
   ctx.fillText('BAR SAN CELESTE', x + w / 2, y - 16);
@@ -123,7 +123,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x + w / 2 - 14, y + h - 45, 28, 34);
   ctx.fillStyle = 'rgba(130,160,220,0.38)';
   ctx.fillRect(x + w / 2 - 11, y + h - 42, 22, 27);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.fillRect(x + w / 2 + 9, y + h - 27, 3, 3);
 
   drawStripedAwning(ctx, x + 14, y + 66, w - 28, t);
@@ -134,7 +134,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
 export function drawBarWindow(ctx, x, y, w, h, t, phase) {
   ctx.fillStyle = '#35241D';
   ctx.fillRect(x - 3, y - 3, w + 6, h + 6);
-  ctx.fillStyle = PALETTE.nightBlue;
+  ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
   ctx.fillStyle = `rgba(212,168,67,${(0.42 + Math.sin(t * 2 + phase) * 0.12).toFixed(2)})`;
   ctx.fillRect(x + 3, y + 3, w - 6, h - 6);
@@ -162,15 +162,15 @@ export function drawStripedAwning(ctx, x, y, w, _t) {
 }
 
 export function drawPiazzaFountain(ctx, x, y, t) {
-  ctx.fillStyle = PALETTE.stoneGrey;
+  ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(x - 20, y + 10, 40, 12);
-  ctx.fillStyle = PALETTE.darkForest;
+  ctx.fillStyle = window.PALETTE.darkForest;
   ctx.beginPath();
   ctx.moveTo(x - 24, y + 10);
   ctx.lineTo(x + 24, y + 10);
   ctx.lineTo(x, y - 18);
   ctx.fill();
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.globalAlpha = 0.8;
   ctx.fillRect(x - 4, y - 14, 8, 8);
   ctx.globalAlpha = 1;

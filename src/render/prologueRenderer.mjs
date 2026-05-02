@@ -4,17 +4,17 @@
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 function _drawNightField(ctx, t) {
-  ctx.fillStyle = PALETTE.nightBlue;
+  ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   [30, 80, 140, 200, 260, 310, 360, 50, 120, 180, 340, 380].forEach((x, i) => {
     ctx.fillRect(x, 8 + ((i * 23) % 40), 1 + ((i * 3) % 2), 1 + ((i * 7) % 2));
   });
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.beginPath();
   ctx.arc(60, 25, 12, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = PALETTE.violetBlue;
+  ctx.fillStyle = window.PALETTE.violetBlue;
   ctx.beginPath();
   ctx.moveTo(0, 80);
   ctx.lineTo(50, 50);
@@ -25,14 +25,14 @@ function _drawNightField(ctx, t) {
   ctx.lineTo(400, 90);
   ctx.lineTo(0, 90);
   ctx.fill();
-  ctx.fillStyle = PALETTE.oliveGreen;
+  ctx.fillStyle = window.PALETTE.oliveGreen;
   ctx.fillRect(0, 95, CANVAS_W, 155);
-  ctx.fillStyle = PALETTE.darkForest;
+  ctx.fillStyle = window.PALETTE.darkForest;
   for (var g = 0; g < CANVAS_W; g += 6) {
     var wave = Math.sin(g * 0.05 + t * 3) * 4;
     ctx.fillRect(g, 93 + wave, 3, 20 + Math.abs(wave));
   }
-  ctx.fillStyle = PALETTE.earthBrown;
+  ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.fillRect(180, 90, 40, 160);
 }
 
@@ -64,7 +64,7 @@ function _drawConcentricCircles(ctx, step, t) {
     ctx.stroke();
   }
   ctx.lineWidth = 1;
-  ctx.fillStyle = `${PALETTE.oliveGreen}AA`;
+  ctx.fillStyle = `${window.PALETTE.oliveGreen}AA`;
   for (var a = 0; a < 24; a++) {
     var rad = (a * Math.PI) / 12;
     for (var r2 = 0; r2 < 3; r2++) {
@@ -89,7 +89,7 @@ function _drawElena(ctx, step, t) {
   ctx.fillStyle = '#1A1C20';
   ctx.fillRect(elenaX - 1, elenaY - 4, 1, 1);
   ctx.fillRect(elenaX + 1, elenaY - 4, 1, 1);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.fillRect(elenaX - 6, elenaY - 2, 3, 6);
   ctx.fillStyle = 'rgba(212,168,67,0.25)';
   ctx.beginPath();
@@ -98,9 +98,9 @@ function _drawElena(ctx, step, t) {
 }
 
 function _drawFragment(ctx) {
-  ctx.fillStyle = PALETTE.alumGrey;
+  ctx.fillStyle = window.PALETTE.alumGrey;
   ctx.fillRect(196, 132, 6, 4);
-  ctx.fillStyle = `${PALETTE.creamPaper}88`;
+  ctx.fillStyle = `${window.PALETTE.creamPaper}88`;
   ctx.fillRect(197, 131, 4, 2);
 }
 
@@ -111,12 +111,12 @@ function _drawWhiteFlash(ctx, step, timer) {
 }
 
 function _drawTitleOnWhite(ctx) {
-  ctx.fillStyle = PALETTE.nightBlue;
+  ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.font = 'bold 20px "Courier New",monospace';
   ctx.textAlign = 'center';
   ctx.fillText('LE LUCI DI SAN CELESTE', 200, 120);
   ctx.font = '11px "Courier New",monospace';
-  ctx.fillStyle = PALETTE.slateGrey;
+  ctx.fillStyle = window.PALETTE.slateGrey;
   ctx.fillText("1979 — Un'indagine della Prefettura", 200, 140);
   ctx.textAlign = 'start';
 }
@@ -139,7 +139,7 @@ function _drawSubtitles(ctx, step) {
   if (!txt) return;
   ctx.fillStyle = 'rgba(0,0,0,0.6)';
   ctx.fillRect(50, 210, 300, 22);
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.font = '9px "Courier New",monospace';
   ctx.textAlign = 'center';
   ctx.fillText(txt, 200, 226);

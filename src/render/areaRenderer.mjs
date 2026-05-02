@@ -6,7 +6,7 @@
 export function renderArea(ctx) {
   var area = window.areas[gameState.currentArea];
   area.draw(ctx);
-  UIRenderer.renderAreaExitMarkers(ctx, area);
+  window.UIRenderer.renderAreaExitMarkers(ctx, area);
 
   // Render NPCs
   for (var i = 0; i < area.npcs.length; i++) {
@@ -26,7 +26,7 @@ export function renderArea(ctx) {
     ctx.ellipse(n.x, n.y + 2, 10, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    var npcSheet = SpriteManager.getOrCreateNPCSheet(
+    var npcSheet = window.SpriteManager.getOrCreateNPCSheet(
       npc.id || npc.name.toLowerCase().replace(/[^a-z]/g, '')
     );
     if (npcSheet) {
@@ -55,7 +55,7 @@ export function renderArea(ctx) {
     ctx.fillRect(n.x - tw / 2, n.y - 42, tw, 12);
     ctx.strokeStyle = 'rgba(212,168,67,0.55)';
     ctx.strokeRect(n.x - tw / 2 + 1, n.y - 41, tw - 2, 10);
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.textAlign = 'center';
     ctx.fillText(npc.name, n.x, n.y - 33);
     ctx.textAlign = 'start';
@@ -88,13 +88,13 @@ export function renderArea(ctx) {
       ctx.fill();
       ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.fillRect(o.x + 1, o.y + o.h, o.w, 3);
-      ctx.fillStyle = PALETTE.slateGrey;
+      ctx.fillStyle = window.PALETTE.slateGrey;
       ctx.fillRect(o.x + 2, o.y, o.w - 4, o.h);
-      ctx.fillStyle = PALETTE.nightBlue;
+      ctx.fillStyle = window.PALETTE.nightBlue;
       ctx.fillRect(o.x + 5, o.y + 3, 7, 5);
-      ctx.fillStyle = PALETTE.lanternYel;
+      ctx.fillStyle = window.PALETTE.lanternYel;
       ctx.fillRect(o.x + 14, o.y + 3, 2, 2);
-      ctx.fillStyle = PALETTE.creamPaper;
+      ctx.fillStyle = window.PALETTE.creamPaper;
       ctx.fillRect(o.x + 5, o.y - 4, 1, 4);
       ctx.fillRect(o.x + 6, o.y - 6, 1, 2);
       continue;
@@ -112,16 +112,16 @@ export function renderArea(ctx) {
       ctx.fillStyle = '#11141B';
       ctx.fillRect(o.x + 3, o.y + 3, 8, 8);
       ctx.fillRect(o.x + 16, o.y + 3, 8, 8);
-      ctx.fillStyle = PALETTE.alumGrey;
+      ctx.fillStyle = window.PALETTE.alumGrey;
       ctx.fillRect(o.x + 5, o.y + 5, 4, 4);
       ctx.fillRect(o.x + 18, o.y + 5, 4, 4);
-      ctx.fillStyle = PALETTE.lanternYel;
+      ctx.fillStyle = window.PALETTE.lanternYel;
       ctx.fillRect(o.x + 12, o.y + 11, 6, 2);
       continue;
     }
     if (gameState.cluesFound.indexOf(o.id) >= 0) continue;
     if (o.requires && gameState.cluesFound.indexOf(o.requires) < 0) continue;
     if (!o.drawHint) continue;
-    UIRenderer.drawObjectIcon(ctx, o);
+    window.UIRenderer.drawObjectIcon(ctx, o);
   }
 }

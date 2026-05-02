@@ -50,8 +50,8 @@ const DialogueSystem = {
     if (condition.hasFlag && typeof FlagManager !== 'undefined') {
       if (!FlagManager.hasFlag(condition.hasFlag)) return false;
     }
-    if (condition.hasClue && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
+    if (condition.hasClue && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
     }
     return true;
   },

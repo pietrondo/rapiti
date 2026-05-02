@@ -37,9 +37,9 @@ export function drawObjectIcon(ctx, o) {
     ctx.fillStyle = '#3D5A3C';
     ctx.fillRect(o.x + 3, o.y + 9, 5, 3);
   } else if (o.id === 'lanterna_rotta') {
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.fillRect(o.x + 3, o.y, 5, 7);
-    ctx.fillStyle = PALETTE.alumGrey;
+    ctx.fillStyle = window.PALETTE.alumGrey;
     ctx.fillRect(o.x, o.y + 7, 10, 2);
     ctx.fillRect(o.x + 9, o.y + 4, 3, 2);
     ctx.fillStyle = VISUAL.danger;
@@ -48,12 +48,12 @@ export function drawObjectIcon(ctx, o) {
   } else if (o.id === 'registro_1861' || o.id === 'diario_enzo') {
     ctx.fillStyle = o.id === 'registro_1861' ? '#6B3F2A' : '#7A2323';
     ctx.fillRect(o.x, o.y, o.w, o.h);
-    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillStyle = window.PALETTE.creamPaper;
     ctx.fillRect(o.x + 3, o.y + 3, o.w - 6, 2);
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.fillRect(o.x + 2, o.y, 2, o.h);
   } else if (o.id === 'lettera_censurata') {
-    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillStyle = window.PALETTE.creamPaper;
     ctx.fillRect(o.x, o.y, o.w, o.h);
     ctx.fillStyle = '#1A1C20';
     ctx.fillRect(o.x + 2, o.y + 3, o.w - 4, 2);
@@ -69,7 +69,7 @@ export function drawObjectIcon(ctx, o) {
     ctx.beginPath();
     ctx.arc(cx, cy, 4, 0, Math.PI * 2);
     ctx.stroke();
-    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillStyle = window.PALETTE.creamPaper;
     ctx.fillRect(cx - 1, cy - 8, 2, 16);
     ctx.fillRect(cx - 8, cy - 1, 16, 2);
   } else if (o.id === 'frammento') {
@@ -80,7 +80,7 @@ export function drawObjectIcon(ctx, o) {
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(o.x + 2, o.y + 1, 4, 1);
   } else if (o.id === 'tracce_circolari') {
-    ctx.strokeStyle = PALETTE.lanternYel;
+    ctx.strokeStyle = window.PALETTE.lanternYel;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.ellipse(cx, cy, 20, 10, 0, 0, Math.PI * 2);
@@ -90,7 +90,7 @@ export function drawObjectIcon(ctx, o) {
     ctx.ellipse(cx, cy, 12, 6, 0, 0, Math.PI * 2);
     ctx.stroke();
   } else {
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.fillRect(cx - 4, cy - 4, 8, 8);
   }
   ctx.lineWidth = 1;

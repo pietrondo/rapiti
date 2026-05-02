@@ -74,7 +74,7 @@ export function drawPrompt(ctx, text, x, y) {
 
 function _drawNightSky(ctx, t) {
   fillGradientRect(ctx, 0, 0, CANVAS_W, CANVAS_H, '#060714', '#1A1C20');
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   for (var i = 0; i < 70; i++) {
     var sx = (i * 97) % CANVAS_W;
     var sy = (i * 43 + Math.sin(t + i) * 2) % 118;
@@ -129,7 +129,7 @@ function _drawBuildingSilhouette(ctx) {
   ctx.fillRect(195, 70, 10, 42);
   ctx.fillStyle = '#4F3428';
   ctx.fillRect(188, 64, 24, 7);
-  ctx.fillStyle = PALETTE.lanternYel;
+  ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.fillRect(150, 126, 8, 10);
   ctx.fillRect(240, 126, 8, 10);
   ctx.fillStyle = 'rgba(212,168,67,0.18)';

@@ -22,9 +22,9 @@ const registryData = [
 ];
 
 export function openRegistryPuzzle() {
-  if (gameState.gamePhase !== 'playing') return;
-  gameState.previousPhase = 'playing';
-  gameState.gamePhase = 'registry';
+  if (window.gameState.gamePhase !== 'playing') return;
+  window.gameState.previousPhase = 'playing';
+  window.gameState.gamePhase = 'registry';
   var pagesDiv = document.getElementById('registry-pages');
   pagesDiv.innerHTML = '';
   // Shuffle pages
@@ -66,7 +66,7 @@ export function openRegistryPuzzle() {
 
 export function closeRegistryPuzzle() {
   document.getElementById('registry-overlay').classList.remove('active');
-  gameState.gamePhase = 'playing';
+  window.gameState.gamePhase = 'playing';
 }
 
 export function setupRegistry() {
@@ -158,7 +158,7 @@ export function checkRegistry() {
   if (correct) {
     result.textContent = "✓ Registro ricostruito! C'è uno schema ciclico...";
     result.style.color = '#44cc44';
-    gameState.radioSolved = true; // Reuse flag — indica che il puzzle registro è risolto
+    window.gameState.radioSolved = true; // Reuse flag — indica che il puzzle registro è risolto
     document.getElementById('registry-confirm').disabled = true;
 
     // Notifica StoryManager
@@ -167,8 +167,8 @@ export function checkRegistry() {
     }
 
     // Sblocca dialogo Neri stato 2
-    if (gameState.npcStates.neri < 1) gameState.npcStates.neri = 1;
-    showToast('Schema scoperto: le sparizioni seguono un ciclo. Neri vorrà parlarti.');
+    if (window.gameState.npcStates.neri < 1) window.gameState.npcStates.neri = 1;
+    window.showToast('Schema scoperto: le sparizioni seguono un ciclo. Neri vorrà parlarti.');
     setTimeout(() => {
       closeRegistryPuzzle();
     }, 1500);

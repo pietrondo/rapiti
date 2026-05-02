@@ -1,14 +1,14 @@
 export function canOpenDeduction() {
   var needed = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
   for (var i = 0; i < needed.length; i++) {
-    if (gameState.cluesFound.indexOf(needed[i]) < 0) return false;
+    if (window.gameState.cluesFound.indexOf(needed[i]) < 0) return false;
   }
-  return !gameState.puzzleSolved;
+  return !window.gameState.puzzleSolved;
 }
 
 export function openDeduction() {
-  gameState.previousPhase = 'playing';
-  gameState.gamePhase = 'deduction';
+  window.gameState.previousPhase = 'playing';
+  window.gameState.gamePhase = 'deduction';
   var cluesDiv = document.getElementById('deduction-clues');
   cluesDiv.innerHTML = '';
   var keyClues = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
@@ -42,7 +42,7 @@ export function openDeduction() {
 
 export function closeDeduction() {
   document.getElementById('deduction-overlay').classList.remove('active');
-  gameState.gamePhase = 'playing';
+  window.gameState.gamePhase = 'playing';
 }
 
 export function setupDragDrop() {
@@ -116,21 +116,21 @@ export function checkDeduction() {
       break;
     }
   }
-  gameState.puzzleAttempts++;
+  window.gameState.puzzleAttempts++;
   if (correct) {
-    gameState.puzzleSolved = true;
+    window.gameState.puzzleSolved = true;
 
     // Notifica StoryManager
     StoryManager.onPuzzleSolved('deduction');
 
     document.getElementById('deduction-overlay').classList.remove('active');
-    gameState.gamePhase = 'playing';
+    window.gameState.gamePhase = 'playing';
     window.updateNPCStates();
     window.showToast('Ipotesi confermata! Torna al Campo delle Luci per la verifica finale.');
     window.updateHUD();
   } else {
     window.showToast('Ipotesi errata. Riprova a collegare gli indizi.');
-    if (gameState.puzzleAttempts >= 3) {
+    if (window.gameState.puzzleAttempts >= 3) {
       window.showToast("Suggerimento: parlane con l'Archivista Neri.");
     }
   }

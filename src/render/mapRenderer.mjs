@@ -58,27 +58,27 @@ export function renderAreaExitMarkers(ctx, area) {
       y = area.walkableTop + 62;
     } else if (ex.dir === 'down') {
       ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
-      ctx.fillRect(ex.xRange[0], CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
-      y = CANVAS_H - 18;
+      ctx.fillRect(ex.xRange[0], window.CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
+      y = window.CANVAS_H - 18;
     } else if (ex.dir === 'left') {
       x = 36;
       y = mid;
       ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
       ctx.fillRect(0, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     } else {
-      x = CANVAS_W - 36;
+      x = window.CANVAS_W - 36;
       y = mid;
       ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
-      ctx.fillRect(CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
+      ctx.fillRect(window.CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     }
 
     ctx.fillStyle = 'rgba(8,9,14,0.84)';
     ctx.fillRect(x - boxW / 2, y - 9, boxW, 18);
     ctx.strokeStyle = 'rgba(212,168,67,0.82)';
     ctx.strokeRect(x - boxW / 2 + 1, y - 8, boxW - 2, 16);
-    ctx.fillStyle = PALETTE.lanternYel;
+    ctx.fillStyle = window.PALETTE.lanternYel;
     drawArrow(ctx, ex.dir, x - boxW / 2 + 11, y);
-    ctx.fillStyle = PALETTE.creamPaper;
+    ctx.fillStyle = window.PALETTE.creamPaper;
     ctx.font = '7px "Courier New",monospace';
     ctx.textAlign = 'center';
     ctx.fillText(label, x + 7, y + 3);
@@ -101,8 +101,8 @@ export function renderMiniMap(ctx) {
   var y = 8;
   var w = 90;
   var h = 116;
-  var current = gameState.currentArea;
-  drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
+  var current = window.gameState.currentArea;
+  window.UIRenderer.drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
   ctx.strokeStyle = 'rgba(160,168,176,0.36)';
   ctx.lineWidth = 1;
   drawMapLink(ctx, nodes, x, y, 'cimitero', 'chiesa');
@@ -115,14 +115,14 @@ export function renderMiniMap(ctx) {
   for (var id in nodes) {
     var n = nodes[id];
     var active = id === current;
-    ctx.fillStyle = active ? PALETTE.lanternYel : 'rgba(232,220,200,0.82)';
+    ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(232,220,200,0.82)';
     ctx.fillRect(x + n.x - 3, y + n.y - 3, 6, 6);
     if (active) {
       ctx.strokeStyle = 'rgba(212,168,67,0.9)';
       ctx.strokeRect(x + n.x - 5, y + n.y - 5, 10, 10);
     }
   }
-  ctx.fillStyle = PALETTE.creamPaper;
+  ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.font = '7px "Courier New",monospace';
   ctx.textAlign = 'center';
   ctx.fillText(getAreaShortName(current), x + w / 2, y + h - 8);

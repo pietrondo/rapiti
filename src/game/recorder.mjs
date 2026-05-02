@@ -10,9 +10,9 @@ const recorderState = {
 };
 
 export function openRecorderPuzzle() {
-  if (gameState.gamePhase !== 'playing') return;
-  gameState.previousPhase = 'playing';
-  gameState.gamePhase = 'recorder';
+  if (window.gameState.gamePhase !== 'playing') return;
+  window.gameState.previousPhase = 'playing';
+  window.gameState.gamePhase = 'recorder';
   if (!document.getElementById('recorder-overlay')) buildRecorderOverlay();
   refreshRecorderUI();
   document.getElementById('recorder-overlay').classList.add('active');
@@ -20,7 +20,7 @@ export function openRecorderPuzzle() {
 
 export function closeRecorderPuzzle() {
   document.getElementById('recorder-overlay').classList.remove('active');
-  gameState.gamePhase = 'playing';
+  window.gameState.gamePhase = 'playing';
 }
 
 // Global exports for dynamic module loading compatibility
@@ -156,16 +156,16 @@ export function playRecorder() {
     }
 
     // Add clue
-    if (gameState.cluesFound.indexOf('registro_monte_ferro') === -1) {
-      gameState.cluesFound.push('registro_monte_ferro');
+    if (window.gameState.cluesFound.indexOf('registro_monte_ferro') === -1) {
+      window.gameState.cluesFound.push('registro_monte_ferro');
 
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {
         StoryManager.onClueFound('registro_monte_ferro');
       }
 
-      updateHUD();
-      showToast('Registrazione Monte Ferro salvata nel diario.');
+      window.updateHUD();
+      window.showToast('Registrazione Monte Ferro salvata nel diario.');
     }
     setTimeout(() => {
       closeRecorderPuzzle();

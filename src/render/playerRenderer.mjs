@@ -7,21 +7,21 @@ export function renderPlayer(ctx) {
   var p = gameState.player;
 
   // Update animation state
-  if (p.x !== SpriteManager.animState.lastX || p.y !== SpriteManager.animState.lastY) {
-    SpriteManager.animState.isMoving = true;
-    SpriteManager.animState.lastX = p.x;
-    SpriteManager.animState.lastY = p.y;
+  if (p.x !== window.SpriteManager.animState.lastX || p.y !== window.SpriteManager.animState.lastY) {
+    window.SpriteManager.animState.isMoving = true;
+    window.SpriteManager.animState.lastX = p.x;
+    window.SpriteManager.animState.lastY = p.y;
   } else {
-    SpriteManager.animState.isMoving = false;
+    window.SpriteManager.animState.isMoving = false;
   }
 
-  if (SpriteManager.animState.isMoving) {
-    SpriteManager.animState.playerTimer++;
-    if (SpriteManager.animState.playerTimer % 8 === 0) {
-      SpriteManager.animState.playerFrame = (SpriteManager.animState.playerFrame + 1) % 4;
+  if (window.SpriteManager.animState.isMoving) {
+    window.SpriteManager.animState.playerTimer++;
+    if (window.SpriteManager.animState.playerTimer % 8 === 0) {
+      window.SpriteManager.animState.playerFrame = (window.SpriteManager.animState.playerFrame + 1) % 4;
     }
   } else {
-    SpriteManager.animState.playerFrame = 0;
+    window.SpriteManager.animState.playerFrame = 0;
   }
 
   // Draw shadow
@@ -35,11 +35,11 @@ export function renderPlayer(ctx) {
   ctx.fill();
 
   // Draw from sprite sheet
-  var sheet = SpriteManager.getOrCreatePlayerSheet();
+  var sheet = window.SpriteManager.getOrCreatePlayerSheet();
   if (!sheet) return;
 
   var dirIndex = { down: 0, up: 1, left: 2, right: 3 }[p.dir] || 0;
-  var srcX = SpriteManager.animState.playerFrame * 32;
+  var srcX = window.SpriteManager.animState.playerFrame * 32;
   var srcY = dirIndex * 32;
 
   ctx.drawImage(sheet, srcX, srcY, 32, 32, Math.round(p.x), Math.round(p.y - 16), 32, 32);

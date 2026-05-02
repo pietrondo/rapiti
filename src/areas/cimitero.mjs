@@ -5,17 +5,17 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, drawVignette */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawCemeteryArea(ctx, t) {
-  PF.nightSky(ctx, 16);
-  PF.mountains(ctx);
+  window.PF.nightSky(ctx, 16);
+  window.PF.mountains(ctx);
 
-  ctx.fillStyle = PALETTE.darkForest;
-  ctx.fillRect(0, 80, CANVAS_W, 170);
+  ctx.fillStyle = window.PALETTE.darkForest;
+  ctx.fillRect(0, 80, window.CANVAS_W, 170);
 
   // Mura del cimitero
-  ctx.fillStyle = PALETTE.stoneGrey;
+  ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(0, 80, 30, 170);
   ctx.fillRect(370, 80, 30, 170);
 
@@ -41,8 +41,8 @@ export function drawCemeteryArea(ctx, t) {
   }
 
   // Alberi spettrali
-  PF.tree(ctx, 50, 100);
-  PF.tree(ctx, 350, 100);
+  window.PF.tree(ctx, 50, 100);
+  window.PF.tree(ctx, 350, 100);
 
   // Luce fredda
   var glow = 0.4 + Math.sin(t * 2) * 0.1;
@@ -51,7 +51,7 @@ export function drawCemeteryArea(ctx, t) {
   ctx.arc(200, 100, 40, 0, Math.PI * 2);
   ctx.fill();
 
-  PF.lamp(ctx, 200, 200);
+  window.PF.lamp(ctx, 200, 200);
 }
 
 const CimiteroArea = {
@@ -67,7 +67,7 @@ const CimiteroArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawCemeteryArea(ctx, t);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

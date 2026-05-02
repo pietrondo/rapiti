@@ -7,8 +7,8 @@ import { applyCustomization } from './customize.mjs';
 
 export function initCanvas() {
   var c = document.getElementById('gameCanvas');
-  c.width = CANVAS_W * 2;
-  c.height = CANVAS_H * 2;
+  c.width = window.CANVAS_W * 2;
+  c.height = window.CANVAS_H * 2;
   return c.getContext('2d');
 }
 
@@ -95,7 +95,7 @@ export function updateNPCStates() {
   console.log('[updateNPCStates] Stub — nessun aggiornamento NPC');
 }
 
-/** Collega i click dei color-swatch al gameState.playerColors */
+/** Collega i click dei color-swatch al window.gameState.playerColors */
 export function setupColorSwatches(containerId, colorKey) {
   var container = document.getElementById(containerId);
   if (!container) return;
@@ -108,7 +108,7 @@ export function setupColorSwatches(containerId, colorKey) {
       all[i].classList.remove('selected');
     }
     swatch.classList.add('selected');
-    gameState.playerColors[colorKey] = swatch.getAttribute('data-color');
+    window.gameState.playerColors[colorKey] = swatch.getAttribute('data-color');
     renderCustomizePreview();
   });
 }

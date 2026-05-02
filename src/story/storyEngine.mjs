@@ -153,29 +153,29 @@ const StoryEngine = {
     if (condition.hasFlag && !this.hasFlag(condition.hasFlag)) return false;
     if (condition.missingFlag && this.hasFlag(condition.missingFlag)) return false;
 
-    if (condition.hasClue && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
+    if (condition.hasClue && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
     }
-    if (condition.missingClue && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.indexOf(condition.missingClue) !== -1) return false;
+    if (condition.missingClue && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.indexOf(condition.missingClue) !== -1) return false;
     }
-    if (condition.hasClues && typeof gameState !== 'undefined') {
+    if (condition.hasClues && typeof window.gameState !== 'undefined') {
       for (var i = 0; i < condition.hasClues.length; i++) {
-        if (gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
+        if (window.gameState.cluesFound.indexOf(condition.hasClues[i]) === -1) return false;
       }
     }
-    if (condition.cluesMin && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.length < condition.cluesMin) return false;
+    if (condition.cluesMin && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.length < condition.cluesMin) return false;
     }
-    if (condition.cluesMax && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.length > condition.cluesMax) return false;
+    if (condition.cluesMax && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.length > condition.cluesMax) return false;
     }
-    if (condition.cluesFound === 'all' && typeof gameState !== 'undefined') {
+    if (condition.cluesFound === 'all' && typeof window.gameState !== 'undefined') {
       var totalClues = typeof clues !== 'undefined' ? clues.length : 9;
-      if (gameState.cluesFound.length < totalClues) return false;
+      if (window.gameState.cluesFound.length < totalClues) return false;
     }
-    if (typeof condition.cluesFound === 'number' && typeof gameState !== 'undefined') {
-      if (gameState.cluesFound.length < condition.cluesFound) return false;
+    if (typeof condition.cluesFound === 'number' && typeof window.gameState !== 'undefined') {
+      if (window.gameState.cluesFound.length < condition.cluesFound) return false;
     }
 
     if (condition.talkedTo && !this.hasTalkedTo(condition.talkedTo)) return false;
@@ -301,9 +301,9 @@ const StoryEngine = {
     var sm = this._sm();
     if (sm?.onPuzzleSolved) sm.onPuzzleSolved(puzzleId);
 
-    if (typeof gameState !== 'undefined') {
-      if (puzzleId === 'deduction') gameState.puzzleSolved = true;
-      if (puzzleId === 'radio') gameState.radioSolved = true;
+    if (typeof window.gameState !== 'undefined') {
+      if (puzzleId === 'deduction') window.gameState.puzzleSolved = true;
+      if (puzzleId === 'radio') window.gameState.radioSolved = true;
     }
   },
 

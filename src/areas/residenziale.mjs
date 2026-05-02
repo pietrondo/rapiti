@@ -5,20 +5,20 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global PALETTE, CANVAS_W, CANVAS_H, PF, drawVignette */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawResidentialArea(ctx, t) {
-  PF.nightSky(ctx, 10);
-  PF.mountains(ctx);
+  window.PF.nightSky(ctx, 10);
+  window.PF.mountains(ctx);
 
-  ctx.fillStyle = PALETTE.oliveGreen;
-  ctx.fillRect(0, 90, CANVAS_W, 160);
+  ctx.fillStyle = window.PALETTE.oliveGreen;
+  ctx.fillRect(0, 90, window.CANVAS_W, 160);
 
   // Case
   var houses = [
-    { x: 20, y: 30, w: 80, h: 85, color: PALETTE.fadedBeige },
-    { x: 160, y: 25, w: 80, h: 90, color: PALETTE.creamPaper },
-    { x: 300, y: 35, w: 80, h: 80, color: PALETTE.fadedBeige },
+    { x: 20, y: 30, w: 80, h: 85, color: window.PALETTE.fadedBeige },
+    { x: 160, y: 25, w: 80, h: 90, color: window.PALETTE.creamPaper },
+    { x: 300, y: 35, w: 80, h: 80, color: window.PALETTE.fadedBeige },
   ];
 
   for (var i = 0; i < houses.length; i++) {
@@ -27,7 +27,7 @@ export function drawResidentialArea(ctx, t) {
     ctx.fillRect(h.x, h.y, h.w, h.h);
 
     // Tetto
-    ctx.fillStyle = PALETTE.burntOrange;
+    ctx.fillStyle = window.PALETTE.burntOrange;
     ctx.beginPath();
     ctx.moveTo(h.x - 5, h.y);
     ctx.lineTo(h.x + h.w / 2, h.y - 20);
@@ -41,21 +41,21 @@ export function drawResidentialArea(ctx, t) {
     ctx.fillRect(h.x + h.w - 35, h.y + 25, 20, 25);
 
     // Porta
-    ctx.fillStyle = PALETTE.earthBrown;
+    ctx.fillStyle = window.PALETTE.earthBrown;
     ctx.fillRect(h.x + h.w / 2 - 10, h.y + h.h - 30, 20, 30);
   }
 
   // Strada
-  ctx.fillStyle = PALETTE.stoneGrey;
+  ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(175, 155, 50, 16);
 
   // Alberi
-  PF.tree(ctx, 10, 150);
-  PF.tree(ctx, 390, 140);
+  window.PF.tree(ctx, 10, 150);
+  window.PF.tree(ctx, 390, 140);
 
   // Lampioni
-  PF.lamp(ctx, 120, 180);
-  PF.lamp(ctx, 280, 180);
+  window.PF.lamp(ctx, 120, 180);
+  window.PF.lamp(ctx, 280, 180);
 }
 
 const ResidenzialeArea = {
@@ -76,7 +76,7 @@ const ResidenzialeArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawResidentialArea(ctx, t);
-    drawVignette(ctx);
+    window.drawVignette(ctx);
   },
 };
 

@@ -1,8 +1,8 @@
 export function openRadioPuzzle() {
-  if (gameState.gamePhase !== 'playing') return;
-  gameState.previousPhase = 'playing';
-  gameState.gamePhase = 'radio';
-  gameState.radioFrequency = 0;
+  if (window.gameState.gamePhase !== 'playing') return;
+  window.gameState.previousPhase = 'playing';
+  window.gameState.gamePhase = 'radio';
+  window.gameState.radioFrequency = 0;
   updateRadioKnob(0);
   document.getElementById('radio-message').textContent = '';
   document.getElementById('radio-overlay').classList.add('active');
@@ -10,7 +10,7 @@ export function openRadioPuzzle() {
 
 export function closeRadioPuzzle() {
   document.getElementById('radio-overlay').classList.remove('active');
-  gameState.gamePhase = 'playing';
+  window.gameState.gamePhase = 'playing';
 }
 
 // Global exports for dynamic module loading compatibility
@@ -55,7 +55,7 @@ export function setupRadio() {
 }
 
 export function updateRadioKnob(pct) {
-  gameState.radioFrequency = pct;
+  window.gameState.radioFrequency = pct;
   var knob = document.getElementById('radio-knob');
   var fill = document.getElementById('radio-fill');
   if (!knob) return;
@@ -65,14 +65,14 @@ export function updateRadioKnob(pct) {
 
   // Status: 0-69 static, 70-74 interference, 75+ clear
   var statusEl = document.getElementById('radio-status');
-  var target = gameState.radioTarget;
+  var target = window.gameState.radioTarget;
   var dist = Math.abs(pct - target);
 
   if (dist < 3) {
     statusEl.textContent = '\uD83D\uDFE2 Segnale chiaro';
     statusEl.className = 'radio-status clear';
-    if (!gameState.radioSolved) {
-      gameState.radioSolved = true;
+    if (!window.gameState.radioSolved) {
+      window.gameState.radioSolved = true;
 
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {
@@ -83,17 +83,17 @@ export function updateRadioKnob(pct) {
         '"...non guardare... quando si ferma..."';
       document.getElementById('radio-message').className = 'radio-message-found';
       // Aggiungi indizio audio al diario
-      if (gameState.cluesFound.indexOf('radio_audio') === -1) {
-        gameState.cluesFound.push('radio_audio');
+      if (window.gameState.cluesFound.indexOf('radio_audio') === -1) {
+        window.gameState.cluesFound.push('radio_audio');
 
         // Notifica StoryManager
         if (typeof StoryManager !== 'undefined') {
           StoryManager.onClueFound('radio_audio');
         }
 
-        updateHUD();
+        window.updateHUD();
         setTimeout(() => {
-          showToast('Registrazione radio salvata nel diario.');
+          window.showToast('Registrazione radio salvata nel diario.');
         }, 600);
       }
     }
