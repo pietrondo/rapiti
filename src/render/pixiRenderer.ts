@@ -203,17 +203,26 @@ class PixiRenderer {
 
   private _renderIntro() {
      const slide = gameState.introSlide;
-     const slideKey = `ui_intro_slide_${slide}`;
 
      if (this.lastStep !== slide) {
-        this.layers.ui.removeChildren();
-        this.sprites.ui_intro_panel = null;
+        // Animation transition logic
+        const oldPanel = this.sprites.ui_intro_panel;
+        if (oldPanel) {
+           oldPanel.alpha -= 0.1;
+           if (oldPanel.alpha <= 0) {
+              this.layers.ui.removeChild(oldPanel);
+              this.sprites.ui_intro_panel = null;
+              this.lastStep = slide;
+           }
+           return; // Wait for fade out
+        }
         this.lastStep = slide;
      }
 
      if (!this.sprites.ui_intro_panel) {
         const panel = this._createPixelPanel(352, 178, 'DOSSIER PREFETTURA');
         panel.x = 24; panel.y = 44;
+        panel.alpha = 0; // Start faded out
         this.sprites.ui_intro_panel = panel;
         this.layers.ui.addChild(panel);
 
@@ -228,17 +237,22 @@ class PixiRenderer {
         
         const titleText = new PIXI.Text({
            text: data.title,
-           style: { fontFamily: 'monospace', fontSize: 14, fill: 0xD4A843, fontWeight: 'bold' }
+           style: { fontFamily: 'monospace', fontSize: 16, fill: 0xD4A843, fontWeight: 'bold' }
         });
         titleText.x = 20; titleText.y = 15;
         panel.addChild(titleText);
 
         const bodyText = new PIXI.Text({
            text: data.text,
-           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 14 }
+           style: { fontFamily: 'monospace', fontSize: 11, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 16 }
         });
         bodyText.x = 20; bodyText.y = 45;
         panel.addChild(bodyText);
+     }
+     
+     if (this.sprites.ui_intro_panel.alpha < 1) {
+        this.sprites.ui_intro_panel.alpha += 0.05;
+        this.sprites.ui_intro_panel.y = 44 + (1 - this.sprites.ui_intro_panel.alpha) * 10; // Slide up
      }
      
      const prompts = ['Premi ENTER per continuare', 'Premi ENTER per continuare', 'Premi ENTER per personalizzare', 'Premi ENTER per iniziare'];
@@ -505,17 +519,22 @@ class PixiRenderer {
        }
        const f = this.world.filters[1] as PIXI.ColorMatrixFilter;
        f.hue(Math.sin(Date.now() * 0.005) * 45, true);
+       
+       // Glitch effect
        if (Math.random() > 0.9) {
-          this.world.x = (Math.random() - 0.5) * 4; this.world.y = (Math.random() - 0.5) * 4;
+          this.world.x = (Math.random() - 0.5) * 6;
+          this.world.y = (Math.random() - 0.5) * 6;
        } else { this.world.x = 0; this.world.y = 0; }
     } else {
        if (this.world.filters.length > 1) this.world.filters.pop();
        this.world.x = 0; this.world.y = 0;
     }
     
-    // Pulse the CRT scanlines
+    // Pulse and animate CRT scanlines
     if (this.sprites.ui_crt) {
-      this.sprites.ui_crt.alpha = 0.8 + Math.sin(Date.now() * 0.01) * 0.2;
+      const t = Date.now() * 0.001;
+      this.sprites.ui_crt.alpha = 0.7 + Math.sin(t * 10) * 0.1;
+      this.sprites.ui_crt.children[0].y = (t * 20) % 2; // Subtle scanline movement
     }
   }
 }
