@@ -42,7 +42,11 @@ class PixiRenderer {
       antialias: false,
     });
 
-    console.log(`[PixiRenderer] App initialized: ${this.app.renderer.type} renderer`);
+    if (this.app.renderer) {
+       console.log(`[PixiRenderer] App initialized: ${this.app.renderer.type} renderer`);
+    } else {
+       console.log('[PixiRenderer] App initialized (renderer pending)');
+    }
 
     PIXI.AbstractRenderer.defaultOptions.roundPixels = true;
     

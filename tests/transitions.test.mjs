@@ -42,7 +42,7 @@ describe('Transition Logic', () => {
   let triggerInteractExit;
 
   beforeEach(async () => {
-    const mod = await import('../src/game/transition.mjs');
+    const mod = await import('../src/game/transition.ts');
     triggerInteractExit = mod.triggerInteractExit;
     // Re-mock because the module overwrites window.changeArea
     global.changeArea = jest.fn();

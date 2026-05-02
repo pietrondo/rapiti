@@ -11,7 +11,7 @@
 
 import type { GameState } from '../types.js';
 import { updatePrologue } from './prologueUpdater.ts';
-import { updateFade, checkAreaExits } from './transition.mjs';
+import { updateFade, checkAreaExits } from './transition.ts';
 import { updatePlayerPosition } from './movement.ts';
 import { render as renderFrame } from '../render/index.ts';
 

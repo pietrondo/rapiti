@@ -179,7 +179,7 @@ async function initializeGame() {
     await loadModule('./game/scene.mjs');
     await loadModule('./game/recorder.mjs');
     await loadModule('./game/deduction.mjs');
-    await loadModule('./game/transition.mjs');
+    await loadModule('./game/transition.ts');
     await loadModule('./game/endings.mjs');
     await loadModule('./game/loop.ts');
 
