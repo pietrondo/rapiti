@@ -41,6 +41,28 @@ var dialogueNodes = {
     text: "Sapevo. Ma non potevo dire nulla. Ordini dall'alto. Era per il bene comune, almeno così ci dissero.",
   },
 
+  /* -- TRUST BRANCH -- */
+  ruggeri_s1_trust: {
+    text: "Maurizio, lei mi sembra un uomo d'onore. Le dirò la verità su quella lettera. L'esercito non stava cercando alieni. Stavano testando nuovi radar sperimentali proprio qui. Le 'luci' erano interferenze... o almeno così ci hanno giurato.",
+    choices: [
+      { text: 'Ne è proprio sicuro, sindaco?', next: 'ruggeri_s1_trust_sure' },
+      { text: 'Grazie per la sincerità.', next: 'ruggeri_s1_trust_thanks' },
+    ]
+  },
+  ruggeri_s1_trust_sure: { text: "No. Non ne sono sicuro. Per questo ho tenuto quella lettera. Se scopre altro... venga da me prima di fare rapporto alla Prefettura." },
+  ruggeri_s1_trust_thanks: { text: "Si fidi, ispettore. In questo paese le pareti hanno orecchie. Stia attento a quello che scrive nei suoi verbali." },
+
+  /* -- MISTRUST BRANCH -- */
+  ruggeri_s1_mistrust: {
+    text: "Ancora lei? Le ho detto che quella lettera è un falso, o robaccia burocratica senza valore. Se continua a importunare le autorità cittadine, sarò costretto a chiamare Parma per farla rimuovere dall'incarico.",
+    choices: [
+       { text: "Non mi minacci, sindaco.", next: 'ruggeri_s1_mistrust_threat', effect: { subTrust: { ruggeri: 10 } } },
+       { text: "Mi scusi. Proseguirò altrove.", next: 'ruggeri_s1_mistrust_exit' }
+    ]
+  },
+  ruggeri_s1_mistrust_threat: { text: "Non è una minaccia, Maurizio. È una promessa. Lei sta sprecando soldi pubblici dietro a fantasmi. Vada a dormire." },
+  ruggeri_s1_mistrust_exit: { text: "Saggia decisione. Se vuole un caffè, vada da Osvaldo. Ma non torni qui a parlare di lettere segrete." },
+
   /* ── TERESA BELLANDI ── */
   teresa_s0: {
     text: "Sant'Antonio ci protegga! Ha visto anche lei le luci? Erano sopra i campi, silenziose... Mio nipote Enzo è uscito a guardare e non è più tornato!",
@@ -122,7 +144,7 @@ var dialogueNodes = {
 
   /* ── GINO IL POSTINO ── */
   gino_s0: {
-    text: 'Buongiorno, Detective! Gino, postino! Sa che l\'altro giorno ho consegnato una lettera indirizzata a "I Visitatori del Cielo"? Roba da matti. Comunque, ho perso una raccomandata importante vicino al Cimitero... se la trova, le faccio vedere una cosa interessante.',
+    text: 'Buongiorno, Detective! Gino, postino! Sa che l\'altro giorno ho consegnato una letter indirizzata a "I Visitatori del Cielo"? Roba da matti. Comunque, ho perso una raccomandata importante vicino al Cimitero... se la trova, le faccio vedere una cosa interessante.',
     choices: [
       { text: 'La aiuterò a cercarla.', next: 'gino_mission_start' },
       { text: 'Lei crede agli alieni?', next: 'gino_alieni' },
@@ -166,6 +188,16 @@ var dialogueNodes = {
   anselmo_s0_cose: {
     text: 'Cose che non si possono spiegare. Mia moglie, Lena... sparì nel 1952. Dissero che era scappata. Ma io so che non è vero. Era nel campo quella notte. Poi più niente. Come inghiottita dalla terra.',
   },
+
+  anselmo_s2_lore: {
+    text: "*Anselmo ti guarda fisso, abbassando la voce.* Lena non è l'unica, Maurizio. Ogni vent'anni circa, qualcuno se ne va. Ma il Sindaco e quelli prima di lui hanno sempre coperto tutto. C'è un patto tra questo paese e... ciò che vive oltre le stelle.",
+    choices: [
+       { text: "Un patto? Di che tipo?", next: 'anselmo_s2_patto' },
+       { text: "Chi altro sa di questa storia?", next: 'anselmo_s2_chi' }
+    ]
+  },
+  anselmo_s2_patto: { text: "Un patto di silenzio in cambio di prosperità. Ma stavolta qualcosa è andato storto. Le luci sono troppo vicine. Troppo affamate." },
+  anselmo_s2_chi: { text: "Valli sa. Quel vecchio militare ha visto le stesse cose che ho visto io. Ma lui ha un fucile, e io solo una panchina." }
 };
 
 if (typeof window !== 'undefined') {

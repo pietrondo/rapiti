@@ -7,6 +7,16 @@ const storyDialogueTriggers = {
     npcId: 'ruggeri',
     states: [
       {
+        id: 's1_lettera_trust',
+        condition: { hasClue: 'lettera_censurata', trustAtLeast: { ruggeri: 10 } },
+        node: 'ruggeri_s1_trust',
+      },
+      {
+        id: 's1_lettera_mistrust',
+        condition: { hasClue: 'lettera_censurata', trustAtMost: { ruggeri: -5 } },
+        node: 'ruggeri_s1_mistrust',
+      },
+      {
         id: 's0_intro',
         condition: { chapterAtMost: 'intro' },
         node: 'ruggeri_s0',
@@ -106,14 +116,19 @@ const storyDialogueTriggers = {
     npcId: 'anselmo',
     states: [
       {
-        id: 's0_intro',
-        condition: { missingFlag: 'anselmo_remembering' },
-        node: 'anselmo_s0',
+        id: 's2_lore',
+        condition: { hasFlag: 'anselmo_quest_complete', trustAtLeast: { anselmo: 20 } },
+        node: 'anselmo_s2_lore',
       },
       {
         id: 's1_radio',
         condition: { hasFlag: 'anselmo_remembering' },
         node: 'anselmo_s1',
+      },
+      {
+        id: 's0_intro',
+        condition: { missingFlag: 'anselmo_remembering' },
+        node: 'anselmo_s0',
       },
     ],
     defaultNode: 'anselmo_s0',

@@ -95,7 +95,7 @@ const BarExteriorArea = {
   ],
   npcs: [{ id: 'osvaldo', x: 280, y: 175 }],
   exits: [
-    { dir: 'left', xRange: [122, 176], to: 'piazze', spawnX: 340, spawnY: 175 },
+    { dir: 'down', xRange: [100, 200], to: 'piazze', spawnX: 337, spawnY: 175 },
     { dir: 'up', xRange: [180, 220], to: 'bar_interno', spawnX: 200, spawnY: 220, requiresInteract: true }
   ],
 

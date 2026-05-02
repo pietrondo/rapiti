@@ -76,7 +76,7 @@ const GiardiniArea = {
     { x: 170, y: 155, w: 60, h: 18 },
   ],
   npcs: [{ id: 'anselmo', x: 120, y: 170 }],
-  exits: [{ dir: 'right', xRange: [100, 140], to: 'piazze', spawnX: 40, spawnY: 125 }],
+  exits: [{ dir: 'right', xRange: [100, 160], to: 'piazze', spawnX: 45, spawnY: 175 }],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;

@@ -147,30 +147,70 @@ class PixiRenderer {
     }
     
     if (!this.sprites.ui_title_panel) {
-       const panel = this._createPixelPanel(332, 74, 'BENVENUTO');
-       panel.x = 34; panel.y = 154;
+       const panel = this._createPixelPanel(332, 86, 'BENVENUTO');
+       panel.x = 34; panel.y = 148;
        this.sprites.ui_title_panel = panel;
        this.layers.ui.addChild(panel);
        
        const titleText = new PIXI.Text({
-          text: 'LE LUCI\nDI SAN CELESTE',
-          style: { fontFamily: 'monospace', fontSize: 22, fill: 0xD4A843, align: 'center', fontWeight: 'bold' }
+          text: 'LE LUCI\\nDI SAN CELESTE',
+          style: { fontFamily: 'monospace', fontSize: 24, fill: 0xD4A843, align: 'center', fontWeight: 'bold' }
        });
-       titleText.anchor.set(0.5); titleText.x = CANVAS_W / 2; titleText.y = 190;
-       this.layers.ui.addChild(titleText);
+       titleText.anchor.set(0.5); titleText.x = 332 / 2; titleText.y = 35;
+       panel.addChild(titleText);
+
+       const subtitleText = new PIXI.Text({
+          text: 'Italia Settentrionale / Estate 1978',
+          style: { fontFamily: 'monospace', fontSize: 10, fill: 0xC4956A, align: 'center' }
+       });
+       subtitleText.anchor.set(0.5); subtitleText.x = 332 / 2; subtitleText.y = 65;
+       panel.addChild(subtitleText);
     }
     this._renderPrompt('Premi ENTER per iniziare', CANVAS_W / 2, 238);
   }
 
   private _renderIntro() {
+     const slide = gameState.introSlide;
+     const slideKey = `ui_intro_slide_${slide}`;
+
+     if (this.lastStep !== slide) {
+        this.layers.ui.removeChildren();
+        this.sprites.ui_intro_panel = null;
+        this.lastStep = slide;
+     }
+
      if (!this.sprites.ui_intro_panel) {
-        this.layers.bg.removeChildren();
         const panel = this._createPixelPanel(352, 178, 'DOSSIER PREFETTURA');
         panel.x = 24; panel.y = 44;
         this.sprites.ui_intro_panel = panel;
         this.layers.ui.addChild(panel);
+
+        const introData = [
+           { title: 'SAN CELESTE', text: 'Un piccolo borgo tra Parma e Piacenza.\\n800 anime, una piazza, un campanile, un bar.\\n\\nDa tre notti, strane luci appaiono\\nnel cielo sopra i campi a nord.\\nNon sono stelle. Non sono aerei.\\n\\nIl paese ha paura.' },
+           { title: 'LE SPARIZIONI', text: 'Tre persone sono scomparse.\\nEnzo Bellandi, 19 anni.\\nEra uscito a guardare le luci.\\n\\nSua nonna Teresa\\nnon dorme più da tre giorni.\\n\\nLa Prefettura di Parma\\nha mandato il suo miglior uomo.' },
+           { title: 'IL DETECTIVE', text: `Quell'uomo sei tu,\\n${gameState.playerName}.\\n\\nUn detective pragmatico, razionale,\\ncon un debole per il caffè\\ne un sesto senso per i misteri.\\n\\nFuori ti aspettano la piazza e la cascina.\\nE il Campo delle Luci.` },
+           { title: "L'INCARICO", text: `"Detective ${gameState.playerName},\\nvada a San Celeste.\\nScopra cosa sta succedendo.\\nE torni con delle risposte."\\n\\nNon sai ancora che quelle risposte\\nti cambieranno per sempre.\\nLe luci sono tornate.\\nCome nel 1861. Come nel 1961.` }
+        ];
+
+        const data = introData[slide] || introData[0];
+        
+        const titleText = new PIXI.Text({
+           text: data.title,
+           style: { fontFamily: 'monospace', fontSize: 14, fill: 0xD4A843, fontWeight: 'bold' }
+        });
+        titleText.x = 20; titleText.y = 15;
+        panel.addChild(titleText);
+
+        const bodyText = new PIXI.Text({
+           text: data.text,
+           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 14 }
+        });
+        bodyText.x = 20; bodyText.y = 45;
+        panel.addChild(bodyText);
      }
-     this._renderPrompt('Premi ENTER per continuare', CANVAS_W / 2, 238);
+     
+     const prompts = ['Premi ENTER per continuare', 'Premi ENTER per continuare', 'Premi ENTER per personalizzare', 'Premi ENTER per iniziare'];
+     this._renderPrompt(prompts[slide] || 'Premi ENTER', CANVAS_W / 2, 238);
   }
 
   private _renderPrologue() {
@@ -200,7 +240,9 @@ class PixiRenderer {
            this.sprites.ui_pro_light = light;
            this.layers.mid.addChild(light);
         }
-        this.sprites.ui_pro_light.scale.set(1 + Math.sin(t * 5) * 0.2);
+        if (this.sprites.ui_pro_light) {
+           this.sprites.ui_pro_light.scale.set(1 + Math.sin(t * 5) * 0.2);
+        }
      }
 
      if (step >= 1 && step <= 5) {
@@ -223,8 +265,10 @@ class PixiRenderer {
            this.layers.mid.addChild(elena);
         }
         const e = this.sprites.ui_pro_elena as PIXI.Sprite;
-        e.x = step >= 5 ? 200 : 50 + (t * 22) % 150; e.y = 145;
-        e.scale.x = Math.sin(t * 12) > 0 ? 1 : -1;
+        if (e) {
+           e.x = step >= 5 ? 200 : 50 + (t * 22) % 150; e.y = 145;
+           e.scale.x = Math.sin(t * 12) > 0 ? 1 : -1;
+        }
      }
 
      if (step === 7) {
@@ -234,7 +278,9 @@ class PixiRenderer {
            this.sprites.ui_pro_flash = f; 
            this.layers.fg.addChild(f);
         }
-        this.sprites.ui_pro_flash.alpha = Math.min(1, t * 0.45);
+        if (this.sprites.ui_pro_flash) {
+           this.sprites.ui_pro_flash.alpha = Math.min(1, t * 0.45);
+        }
      }
 
      if (step === 8) {
