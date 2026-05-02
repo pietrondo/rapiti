@@ -17,6 +17,7 @@ class PixiRenderer {
   world: PIXI.Container | null = null;
   layers: Record<string, PIXI.Container> = {};
   sprites: Record<string, any> = {};
+  crtFilter: any = null;
   
   // Cache per texture generate da primitive Canvas
   textureCache: Record<string, any> = {};
@@ -67,7 +68,33 @@ class PixiRenderer {
     this.world.addChild(this.layers.weather);
     this.world.addChild(this.layers.ui);
 
+    // CRT EFFECT OVERLAY (Custom Pixi v8)
+    this._setupCRT();
+
     console.log('[PixiRenderer] Engine v8 inizializzato');
+  }
+
+  private _setupCRT() {
+    const crt = new PIXI.Container();
+    crt.zIndex = 1000;
+    
+    // Scanlines
+    const scanlines = new PIXI.Graphics();
+    for (let i = 0; i < CANVAS_H; i += 2) {
+      scanlines.rect(0, i, CANVAS_W, 1).fill({ color: 0x000000, alpha: 0.1 });
+    }
+    crt.addChild(scanlines);
+
+    // Vignette / Shadow
+    const grad = new PIXI.Graphics();
+    grad.rect(0, 0, CANVAS_W, CANVAS_H).fill({
+      color: 0x000000,
+      alpha: 0.05
+    });
+    crt.addChild(grad);
+
+    this.world?.addChild(crt);
+    this.sprites.ui_crt = crt;
   }
 
   generateTexture(id: string, drawFn: (ctx: CanvasRenderingContext2D) => void, w: number, h: number): PIXI.Texture {
@@ -484,6 +511,11 @@ class PixiRenderer {
     } else {
        if (this.world.filters.length > 1) this.world.filters.pop();
        this.world.x = 0; this.world.y = 0;
+    }
+    
+    // Pulse the CRT scanlines
+    if (this.sprites.ui_crt) {
+      this.sprites.ui_crt.alpha = 0.8 + Math.sin(Date.now() * 0.01) * 0.2;
     }
   }
 }
