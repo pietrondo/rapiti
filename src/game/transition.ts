@@ -50,7 +50,7 @@ export function triggerInteractExit(): boolean {
 
     if (ex.dir === 'up' || ex.dir === 'down') {
        if (p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) {
-          if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 15) {
+          if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 25) { // Range Y aumentato a 25 (era 15)
              console.log(`[Transition] Manual exit UP to ${ex.to}`);
              changeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;

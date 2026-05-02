@@ -175,19 +175,19 @@ export function drawBench(ctx, x, y) {
 
 const PiazzeArea = {
   name: 'Piazza del Paese',
-  walkableTop: 140,
+  walkableTop: 125, // Portato a 125 per permettere di toccare le porte (prima era 140)
   colliders: [
-    { x: 125, y: 0, w: 150, h: 140 }, // Municipio
-    { x: 302, y: 0, w: 23, h: 175 },  // Bar (Parte Sinistra)
-    { x: 349, y: 0, w: 51, h: 175 },  // Bar (Parte Destra)
-    { x: 82, y: 0, w: 36, h: 175 },   // Bacheca e muro SX
+    { x: 125, y: 0, w: 150, h: 120 }, // Municipio (Ridotto h per accessibilità)
+    { x: 302, y: 0, w: 23, h: 160 },  // Bar SX
+    { x: 349, y: 0, w: 51, h: 160 },  // Bar DX
+    { x: 82, y: 0, w: 36, h: 160 },   // Bacheca
     { x: 240, y: 155, w: 42, h: 28 }, // Fontana
-    { x: 0, y: 0, w: 100, h: 140 },  // Muro Chiesa
+    { x: 0, y: 0, w: 100, h: 120 },   // Chiesa
   ],
   exits: [
-    { dir: 'up', xRange: [180, 220], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true }, // Porta Municipio (Esatta)
-    { dir: 'up', xRange: [20, 80], to: 'chiesa', spawnX: 200, spawnY: 220 }, // Chiesa spostata all'estrema SX reale
-    { dir: 'up', xRange: [320, 350], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true }, // Porta Bar (Esatta)
+    { dir: 'up', xRange: [180, 220], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true },
+    { dir: 'up', xRange: [20, 80], to: 'chiesa', spawnX: 200, spawnY: 220 },
+    { dir: 'up', xRange: [320, 350], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true },
     { dir: 'down', xRange: [160, 240], to: 'residenziale', spawnX: 200, spawnY: 140 },
     { dir: 'left', xRange: [100, 200], to: 'giardini', spawnX: 340, spawnY: 175 },
   ],
