@@ -202,14 +202,14 @@ class PixiRenderer {
     if (!this.sprites.ui_alien_lights) {
       const c = new PIXI.Container();
       for (let i = 0; i < 3; i++) {
-        const l = new PIXI.Graphics();
-        l.circle(0, 0, 8).fill({ color: 0xc8dcff, alpha: 0.6 });
-        // Add glow
+        const light = new PIXI.Container();
         const glow = new PIXI.Graphics();
         glow.circle(0, 0, 20).fill({ color: 0x88aaff, alpha: 0.2 });
-        l.addChild(glow);
-        l.x = 100 + i * 100; l.y = 50;
-        c.addChild(l);
+        const core = new PIXI.Graphics();
+        core.circle(0, 0, 8).fill({ color: 0xc8dcff, alpha: 0.6 });
+        light.addChild(glow, core);
+        light.x = 100 + i * 100; light.y = 50;
+        c.addChild(light);
       }
       this.sprites.ui_alien_lights = c;
       this.layers.bg.addChild(c);
@@ -365,17 +365,19 @@ class PixiRenderer {
              source: baseSource, 
              frame: new PIXI.Rectangle(0,0,32,32) 
            });
+           const elenaGroup = new PIXI.Container();
            const elena = new PIXI.Sprite(elenaTex);
            elena.anchor.set(0.5, 1);
-           
+
            const glow = new PIXI.Graphics();
            glow.circle(0, 0, 10).fill({ color: 0xF0C15A, alpha: 0.3 });
-           glow.y = -15; elena.addChild(glow);
-           
-           this.sprites.ui_pro_elena = elena;
-           this.layers.mid.addChild(elena);
+           glow.y = -15;
+           elenaGroup.addChild(glow, elena);
+
+           this.sprites.ui_pro_elena = elenaGroup;
+           this.layers.mid.addChild(elenaGroup);
         }
-        const e = this.sprites.ui_pro_elena as PIXI.Sprite;
+        const e = this.sprites.ui_pro_elena as PIXI.Container;
         if (e) {
            e.x = step >= 5 ? 200 : 50 + (t * 22) % 150; e.y = 145;
            e.scale.x = Math.sin(t * 12) > 0 ? 1 : -1;

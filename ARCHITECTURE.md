@@ -91,3 +91,7 @@ title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENT
 1.  **Pixi Sync**: `pixiRenderer.render()` sincronizza gli sprite con le coordinate del `gameState`. Se la fase è `title` o `intro`, disegna i pannelli e i testi utilizzando oggetti `PIXI.Text` e `PIXI.Graphics`.
 2.  **Shader**: Applicazione di filtri `Noise` e `ColorMatrix` (Alien Glitch) via WebGL.
 3.  **Legacy Draw**: `RenderManager` disegna su `gameCanvas` l'HUD e la mini-mappa.
+
+### Note PixiJS v8 per UI Cinematiche
+
+`src/render/pixiRenderer.ts` gestisce cielo parallasse, titolo, intro e prologo con layer Pixi (`bg`, `mid`, `fg`, `ui`). Gli effetti compositi, come luci aliene e glow attorno a Elena, devono essere modellati come `PIXI.Container` che raggruppano leaf object (`PIXI.Graphics`, `PIXI.Sprite`, `PIXI.Text`). In PixiJS v8 i leaf object non devono ricevere children: aggiungere un glow a un `Graphics` o a uno `Sprite` può interrompere il render di `title`/`prologue_cutscene`.
