@@ -113,13 +113,24 @@ const ResidenzialeArea = {
   ],
   npcs: [{ id: 'valli', x: 200, y: 180 }],
   exits: [
-    { dir: 'up', xRange: [0, 400], to: 'piazze', spawnX: 200, spawnY: 220 },
+    { dir: 'up', xRange: [160, 240], to: 'piazze', spawnX: 200, spawnY: 220 }, // Uscita verso Piazza ristretta al centro
     { dir: 'down', xRange: [0, 400], to: 'industriale', spawnX: 200, spawnY: 100 },
   ],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawResidentialArea(ctx, t);
+    
+    // CARTELLO PER PIAZZA
+    ctx.fillStyle = '#333';
+    ctx.fillRect(198, 100, 4, 15); // Palo
+    ctx.fillStyle = window.PALETTE.greyBrown;
+    ctx.fillRect(175, 85, 50, 15); // Insegna
+    ctx.font = 'bold 8px "Courier New", monospace';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.fillText('↑ PIAZZA', 200, 96);
+    
     window.drawVignette(ctx);
   },
 };

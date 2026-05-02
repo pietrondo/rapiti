@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H */
+/* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.TextureGenerator, window.drawBrickPattern, window.drawTileRoof, window.drawLitWindow, window.drawStripedAwning, window.BuildingRenderers, window.PF, window.drawVignette */
 
 const areaTextures = {};
 
@@ -181,24 +181,82 @@ const PiazzeArea = {
     { x: 302, y: 0, w: 23, h: 175 },  // Bar (Parte Sinistra)
     { x: 349, y: 0, w: 51, h: 175 },  // Bar (Parte Destra)
     { x: 82, y: 0, w: 36, h: 175 },   // Bacheca e muro SX
-    { x: 240, y: 155, w: 42, h: 28 }, // Fontana (Spostata a DX della porta)
+    { x: 240, y: 155, w: 42, h: 28 }, // Fontana
+    { x: 0, y: 0, w: 100, h: 140 },  // Muro Chiesa
   ],
   exits: [
-    { dir: 'up', xRange: [125, 275], to: 'municipio', spawnX: 200, spawnY: 210, requiresInteract: true }, // Municipio (Porta Principale)
-    { dir: 'up', xRange: [40, 110], to: 'chiesa', spawnX: 200, spawnY: 220 }, // Chiesa spostata a SX (logica visiva)
-    { dir: 'up', xRange: [302, 372], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true }, // Porta Bar
-    { dir: 'down', xRange: [0, 400], to: 'residenziale', spawnX: 200, spawnY: 140 },
-    { dir: 'left', xRange: [0, 400], to: 'giardini', spawnX: 340, spawnY: 175 },
+    { dir: 'up', xRange: [180, 220], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true }, // Porta Municipio (Esatta)
+    { dir: 'up', xRange: [20, 80], to: 'chiesa', spawnX: 200, spawnY: 220 }, // Chiesa spostata all'estrema SX reale
+    { dir: 'up', xRange: [320, 350], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true }, // Porta Bar (Esatta)
+    { dir: 'down', xRange: [160, 240], to: 'residenziale', spawnX: 200, spawnY: 140 },
+    { dir: 'left', xRange: [100, 200], to: 'giardini', spawnX: 340, spawnY: 175 },
   ],
 
   draw: (ctx) => {
     window.PF.nightSky(ctx, 14);
-    // ... (Luna code remains same) ...
+    // Luna con alone
+    ctx.fillStyle = 'rgba(212,168,67,0.08)';
+    ctx.beginPath();
+    ctx.arc(340, 22, 28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(212,168,67,0.15)';
+    ctx.beginPath();
+    ctx.arc(340, 22, 18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = window.PALETTE.lanternYel;
+    ctx.beginPath();
+    ctx.arc(340, 22, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = window.PALETTE.nightBlue;
+    ctx.beginPath();
+    ctx.arc(346, 18, 9, 0, Math.PI * 2);
+    ctx.fill();
     window.PF.mountains(ctx);
     var t = Date.now() * 0.001;
     
-    // ... (Terreno/Piazza code remains same) ...
+    // Terreno base
+    ctx.fillStyle = '#2D3A1E';
+    ctx.fillRect(0, 104, window.CANVAS_W, 146);
+    ctx.fillStyle = '#253216';
+    ctx.fillRect(0, 102, window.CANVAS_W, 4);
     
+    // Erba variegata
+    ctx.fillStyle = '#354A24';
+    for (var i = 0; i < 40; i++) {
+      var gx = (i * 47) % window.CANVAS_W;
+      var gy = 108 + (i * 13) % 40;
+      ctx.fillRect(gx, gy, 8, 3);
+      ctx.fillRect(gx + 4, gy + 2, 6, 2);
+    }
+    
+    // Pavimentazione piazza
+    ctx.fillStyle = '#5A5045';
+    ctx.fillRect(0, 130, window.CANVAS_W, 120);
+    // Ciottoli
+    ctx.fillStyle = '#6A6055';
+    for (var r = 0; r < 12; r++) {
+      for (var c = 0; c < 20; c++) {
+        var cx = c * 22 + (r % 2) * 11;
+        var cy = 134 + r * 10;
+        ctx.fillRect(cx, cy, 18, 6);
+        // Bordo ciottolo
+        ctx.fillStyle = '#4A4038';
+        ctx.fillRect(cx, cy + 5, 18, 1);
+        ctx.fillStyle = '#6A6055';
+      }
+    }
+    // Ombre sotto gli edifici
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(120, 130, 160, 8);
+    ctx.fillRect(298, 165, 78, 6);
+    ctx.fillRect(78, 168, 32, 4);
+
+    // CHIESA (Facciata a sinistra)
+    ctx.fillStyle = '#2A2A2A';
+    ctx.fillRect(0, 40, 80, 100);
+    ctx.fillStyle = '#444';
+    ctx.fillRect(20, 90, 40, 50); // Porta chiesa
+
     drawMunicipioFacade(ctx, 125, 48, 150, 86, t);
     drawPiazzaFountain(ctx, 240, 155, t); 
     drawBarFacade(ctx, 302, 112, 70, 56, t);
@@ -211,21 +269,21 @@ const PiazzeArea = {
     
     // Municipio
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(175, 125, 50, 12);
+    ctx.fillRect(180, 130, 40, 10);
     ctx.fillStyle = window.PALETTE.lanternYel;
-    ctx.fillText('MUNICIPIO', 200, 134);
+    ctx.fillText('MUNICIPIO', 200, 138);
 
     // Bar
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(322, 158, 30, 12);
+    ctx.fillRect(322, 158, 30, 10);
     ctx.fillStyle = '#ff6666';
-    ctx.fillText('BAR', 337, 167);
+    ctx.fillText('BAR', 337, 166);
 
-    // Chiesa (Indicatore a SX)
+    // Chiesa (Sopra la porta a SX)
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(60, 125, 45, 12);
+    ctx.fillRect(25, 130, 40, 10);
     ctx.fillStyle = '#aaa';
-    ctx.fillText('CHIESA', 82, 134);
+    ctx.fillText('CHIESA', 45, 138);
 
     window.PF.lamp(ctx, 48, 142);
     window.PF.lamp(ctx, 160, 140);
