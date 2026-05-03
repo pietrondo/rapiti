@@ -49,7 +49,7 @@ const clues = [
   {
     id: 'tracce_circolari',
     name: 'Campione di Terreno (Tracce)',
-    area: 'giardini_tracce',
+    area: 'campo',
     desc: 'Terreno vetrificato prelevato dal centro di un cerchio nel grano.',
   },
   {
@@ -133,6 +133,9 @@ const _areaObjects = {
     { id: 'diario_enzo', x: 60, y: 180, w: 14, h: 12, type: 'clue', drawHint: true },
     { id: 'testim_tracce', x: 200, y: 170, w: 40, h: 30, type: 'clue', drawHint: true, requires: 'diario_enzo' },
     { id: 'menta', x: 280, y: 190, w: 12, h: 10, type: 'clue', drawHint: true },
+  ],
+  campo: [
+    { id: 'tracce_circolari', x: 194, y: 144, w: 24, h: 20, type: 'clue', drawHint: true, requires: 'mappa_campi' },
   ],
   bar_interno: [{ id: 'radio_bar', x: 60, y: 100, w: 34, h: 25, type: 'radio', drawHint: true }],
   bar_exterior: [],

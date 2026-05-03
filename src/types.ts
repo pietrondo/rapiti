@@ -124,6 +124,7 @@ export interface AreaExit {
   spawnY: number;
   requiresPuzzle?: boolean;
   requiresInteract?: boolean;
+  requiresFlag?: string;
 }
 
 /** Area collider */

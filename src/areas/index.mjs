@@ -112,17 +112,25 @@ class AreaManager {
 // Singleton instance
 const areaManager = new AreaManager();
 
-// Backward compatibility - register global areas
-if (typeof PiazzeArea !== 'undefined') areaManager.register('piazze', PiazzeArea);
-if (typeof ChiesaArea !== 'undefined') areaManager.register('chiesa', ChiesaArea);
-if (typeof CimiteroArea !== 'undefined') areaManager.register('cimitero', CimiteroArea);
-if (typeof GiardiniArea !== 'undefined') areaManager.register('giardini', GiardiniArea);
-if (typeof BarExteriorArea !== 'undefined') areaManager.register('bar_exterior', BarExteriorArea);
-if (typeof BarInternoArea !== 'undefined') areaManager.register('bar_interno', BarInternoArea);
-if (typeof MunicipioArea !== 'undefined') areaManager.register('municipio', MunicipioArea);
-if (typeof ResidenzialeArea !== 'undefined') areaManager.register('residenziale', ResidenzialeArea);
-if (typeof IndustrialeArea !== 'undefined') areaManager.register('industriale', IndustrialeArea);
-if (typeof PoliziaArea !== 'undefined') areaManager.register('polizia', PoliziaArea);
+// Backward compatibility - register global areas exposed by area modules.
+const globalScope = typeof window !== 'undefined' ? window : globalThis;
+
+function registerGlobalArea(id, globalName) {
+  var area = globalScope?.[globalName];
+  if (area) areaManager.register(id, area);
+}
+
+registerGlobalArea('piazze', 'PiazzeArea');
+registerGlobalArea('chiesa', 'ChiesaArea');
+registerGlobalArea('cimitero', 'CimiteroArea');
+registerGlobalArea('giardini', 'GiardiniArea');
+registerGlobalArea('campo', 'CampoArea');
+registerGlobalArea('bar_exterior', 'BarExteriorArea');
+registerGlobalArea('bar_interno', 'BarInternoArea');
+registerGlobalArea('municipio', 'MunicipioArea');
+registerGlobalArea('residenziale', 'ResidenzialeArea');
+registerGlobalArea('industriale', 'IndustrialeArea');
+registerGlobalArea('polizia', 'PoliziaArea');
 
 // Global exports
 if (typeof window !== 'undefined') {

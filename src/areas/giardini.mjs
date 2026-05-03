@@ -76,7 +76,10 @@ const GiardiniArea = {
     { x: 170, y: 155, w: 60, h: 18 },
   ],
   npcs: [{ id: 'anselmo', x: 120, y: 170 }],
-  exits: [{ dir: 'right', xRange: [100, 160], to: 'piazze', spawnX: 45, spawnY: 175 }],
+  exits: [
+    { dir: 'right', xRange: [100, 160], to: 'piazze', spawnX: 45, spawnY: 175 },
+    { dir: 'left', xRange: [135, 205], to: 'campo', spawnX: 350, spawnY: 170, requiresFlag: 'deduction_complete' },
+  ],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;
@@ -91,6 +94,8 @@ const GiardiniArea = {
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'right';
     ctx.fillText('PIAZZA →', 385, 178);
+    ctx.textAlign = 'left';
+    ctx.fillText('← CAMPO', 14, 178);
 
     window.drawVignette(ctx);
   },

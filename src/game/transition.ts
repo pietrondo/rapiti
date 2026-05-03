@@ -11,6 +11,13 @@
 import { gameState, CANVAS_W, CANVAS_H } from '../config.ts';
 import { saveLoad } from './saveLoad.ts';
 
+function canUseExit(ex: any): boolean {
+  if (!ex.requiresFlag) return true;
+  const storyManager = (window as any).StoryManager;
+  if (storyManager?.hasFlag) return storyManager.hasFlag(ex.requiresFlag);
+  return false;
+}
+
 /** Controlla se il player tocca un'uscita automatica */
 export function checkAreaExits(): void {
   if (gameState.fadeDir !== 0) return;
@@ -21,6 +28,7 @@ export function checkAreaExits(): void {
   for (let i = 0; i < area.exits.length; i++) {
     const ex = area.exits[i];
     if (ex.requiresInteract || ex.requiresPuzzle) continue;
+    if (!canUseExit(ex)) continue;
     
     let triggered = false;
     if (ex.dir === 'up' && p.y <= (area.walkableTop || 2) + 2 && p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) triggered = true;
@@ -47,6 +55,7 @@ export function triggerInteractExit(): boolean {
   for (let i = 0; i < area.exits.length; i++) {
     const ex = area.exits[i];
     if (!ex.requiresInteract) continue;
+    if (!canUseExit(ex)) continue;
 
     if (ex.dir === 'up' || ex.dir === 'down') {
        if (p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) {

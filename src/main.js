@@ -131,6 +131,7 @@ async function initializeGame() {
     await loadModule('./areas/chiesa.mjs');
     await loadModule('./areas/cimitero.mjs');
     await loadModule('./areas/giardini.mjs');
+    await loadModule('./areas/campo.mjs');
     await loadModule('./areas/barExterior.mjs');
     await loadModule('./areas/barInterno.mjs');
     await loadModule('./areas/municipio.mjs');

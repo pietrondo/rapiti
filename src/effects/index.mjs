@@ -55,7 +55,7 @@ class EffectsManager {
        this.systems.steam?.emitSteam(290, 15);
     }
     
-    if (area === 'cimitero' || area === 'giardini' || area === 'giardini_tracce') {
+    if (area === 'cimitero' || area === 'giardini' || area === 'campo') {
        this.systems.fog?.update(dt);
        this.systems.fireflies?.update(dt);
     }
@@ -75,7 +75,7 @@ class EffectsManager {
 
     // Background FX
     if (area === 'industriale') this.systems.steam?.draw(ctx);
-    if (area === 'cimitero' || area === 'giardini' || area === 'giardini_tracce') {
+    if (area === 'cimitero' || area === 'giardini' || area === 'campo') {
        this.systems.fog?.draw(ctx);
        this.systems.fireflies?.draw(ctx);
     }

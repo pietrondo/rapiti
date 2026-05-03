@@ -145,7 +145,7 @@ const storyChapters = {
       unlockChapter: 'finale',
       message: 'Hai collegato gli indizi. Ora vai al Campo delle Luci per la verità finale.',
       setFlag: 'deduction_complete',
-      unlockArea: 'giardini_tracce',
+      unlockArea: 'campo',
     },
   },
 

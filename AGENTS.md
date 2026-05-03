@@ -44,7 +44,7 @@ src/
   data/
     clues.js             — Array clues (9 indizi con id/name/area/desc), areaObjects (oggetti per area), cluesMap
     npcs.js              — npcsData (7 NPC con id/name/colors), dialogueNodes (albero dialoghi), dialogueEffects
-    areas.js             — Aree (8) con name/walkableTop/colliders/npcs/draw(), helper PF (engine.js), TextureGenerator
+    areas.js             — Aree con name/walkableTop/colliders/npcs/draw(), helper PF (engine.js), TextureGenerator
     puzzles.js           — registryData (4 sparizioni con anno/dettaglio)
   engine/
     spriteEngine.mjs     — Caricamento PNG, generazione procedurale sprite
@@ -128,7 +128,7 @@ src/
 | `piazza` | Piazza del Borgo | Ruggeri, Valli, Gino, Anselmo | Lanterna rotta, porte per bar/archivio/cascina/municipio |
 | `archivio` | Archivio Comunale | Neri | Registro 1861, Lettera censurata |
 | `cascina` | Cascina dei Bellandi | Teresa, Gino | Simboli portone, Frammento, Diario Enzo, 3 elementi scena |
-| `campo` | Campo delle Luci | — | Mappa campi, Tracce circolari |
+| `campo` | Campo delle Luci | — | Tracce circolari |
 | `bar_interno` | Bar Centrale | Osvaldo | Radio (puzzle frequenza) |
 | `municipio` | Ufficio del Sindaco | Ruggeri | — |
 | `cascina_interno` | Stanza di Teresa | Teresa | — |
@@ -160,7 +160,7 @@ Gli NPC hanno stati (0→1→2) che determinano il nodo di dialogo (`npcId_s0`/`
 - **psychological**: meno di 2 indizi
 - **secret** (vero finale): military ≥ 2 AND alien ≥ 3 AND ≥ 6 indizi totali
 
-Trigger: raccogliere `tracce_circolari` al campo DOPO aver risolto le puzzle deduzione.
+Trigger: raccogliere `tracce_circolari` al `campo` DOPO aver risolto la puzzle deduzione. Il `campo` è raggiungibile dai `giardini` solo quando lo StoryManager espone il flag `deduction_complete`.
 
 ## Effetti Ambientali
 
@@ -188,7 +188,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 ## Note per Modifiche
 
 - **Aggiungere NPC**: modificare `npcsData` + `dialogueNodes` in `src/data/npcs.mjs`, aggiungere a `area.npcs` in `src/data/areas.mjs`, colori default in `spriteGenerator.mjs._getDefaultNPCColors()`
-- **Aggiungere area**: creare entry in `areas` + `areaObjects` + `spriteGenerator.mjs.generateBackground()` + `lightingSystem.setupAreaLights()`
+- **Aggiungere area**: creare modulo in `src/areas/`, registrarlo in `src/main.js` e `src/areas/index.mjs`, aggiungere `areaObjects` se contiene oggetti interattivi, aggiornare `spriteGenerator.mjs.generateBackground()`/effetti se serve
 - **Aggiungere indizio**: push in `clues` array, aggiungere `areaObject`, aggiornare `updateNPCStates()` se sblocca dialoghi
 - **Modificare ending**: `determineEndingV2()` in `src/game/scene.mjs:92`
 - **Modificare gameState**: `src/config.ts:30` (tutti i campi inizializzati qui e in `resetGame()` in `loop.ts:60`)
@@ -199,6 +199,8 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
 - **Minimappa**: `renderMiniMap()` in `render.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
 - **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
+- **Campo delle Luci**: `src/areas/campo.mjs` è l'area finale canonica. `tracce_circolari` vive in `areaObjects.campo`; l'uscita dai `giardini` verso `campo` usa `requiresFlag: 'deduction_complete'` e viene filtrata da `transition.ts`.
+- **Interazione oggetti**: `handleInteract()` in `src/game/init.mjs` unisce `area.objects` legacy e `window.areaObjects[currentArea]`, rispettando `requires`; oggetti `radio` e `recorder` aprono i rispettivi puzzle invece di essere raccolti come indizi.
 - **Piazza**: helper dedicati in `civicDraw.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.
 - **Aree rifatte**: eccetto `piazze`, le scene principali usano helper `draw*Area()` in `areas.mjs` (`drawChurchArea`, `drawCemeteryArea`, `drawGardensArea`, `drawBarExteriorArea`, `drawResidentialArea`, `drawIndustrialArea`, `drawPoliceArea`) per mantenere layout e atmosfera coerenti.
 - **Ottimizzazione codice**: `sceneRenderer.mjs` spezzato in helper dedicati e poi in moduli separati (`prologueRenderer.mjs`, `introRenderer.mjs`, `endingRenderer.mjs`); `uiRenderer.mjs` spezzato in `objectRenderer.mjs` e `mapRenderer.mjs`; `input.ts` con collisioni estratte in `movement.ts`; `proceduralRenderer.mjs` con dispatcher `buildingDetailed` convertito a mappa `_buildingRenderers`; `buildingRenderers.mjs` spezzato in `civicBuildings.mjs`, `industrialBuildings.mjs`, `buildingDecorations.mjs`; `npcs.mjs` spezzato in `npcData.mjs`, `dialogueNodes.mjs`, `dialogueEffects.mjs`; `areas.mjs` spezzato in `drawCommon.mjs` e `civicDraw.mjs`; `gameRenderer.mjs` spezzato in `areaRenderer.mjs`, `playerRenderer.mjs`, `hintRenderer.mjs`; `loop.ts` spezzato con `prologueUpdater.ts`.

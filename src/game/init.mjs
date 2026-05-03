@@ -93,6 +93,17 @@ export function collectClue(clue) {
   updateHUD();
 }
 
+function getInteractiveObjects(area) {
+  var areaObjects = window.areaObjects?.[window.gameState.currentArea] || [];
+  var legacyObjects = area.objects || [];
+  return legacyObjects.concat(areaObjects);
+}
+
+function canInteractWithObject(o) {
+  if (!o.requires) return true;
+  return window.gameState.cluesFound.indexOf(o.requires) >= 0;
+}
+
 /** Gestisce interazione con oggetti/NPC con feedback migliorato */
 export function handleInteract() {
   // 1. Controlla prima le uscite manuali (Porte)
@@ -119,16 +130,22 @@ export function handleInteract() {
   }
 
   // 2. Controlla Oggetti/Indizi
-  if (area.objects) {
-    for (var j = 0; j < area.objects.length; j++) {
-      var o = area.objects[j];
+  var objects = getInteractiveObjects(area);
+  if (objects.length > 0) {
+    for (var j = 0; j < objects.length; j++) {
+      var o = objects[j];
       if (window.gameState.cluesFound.indexOf(o.id) >= 0) continue;
+      if (!canInteractWithObject(o)) continue;
       
       // Collisione rettangolare semplice
       if (p.x + 24 > o.x && p.x + 8 < o.x + (o.w || 20) &&
           p.y + 16 > o.y && p.y - 8 < o.y + (o.h || 20)) {
         
-        if (o.type === 'scene' && window.openScenePuzzle) {
+        if (o.type === 'radio' && window.openRadioPuzzle) {
+          window.openRadioPuzzle();
+        } else if (o.type === 'recorder' && window.openRecorderPuzzle) {
+          window.openRecorderPuzzle();
+        } else if (o.type === 'scene' && window.openScenePuzzle) {
           collectClue(o);
           // Se ha raccolto abbastanza indizi scena, apre il puzzle
           var sceneClues = ['scena_lanterna', 'scena_impronte', 'scena_segni'];

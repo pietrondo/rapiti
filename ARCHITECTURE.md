@@ -75,7 +75,7 @@ title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENT
     │ archivio │◀──────────────▶│  piazza   │───────────────▶│ cascina  │
     └──────────┘                └────┬─────┘                └────┬─────┘
                                     │ door_bar (E)               │
-                                    ▼                            │ door_campo
+                                    ▼                            │ door_campo / deduction_complete
                               ┌──────────┐                       ▼
                               │bar_interno│                ┌──────────┐
                               └──────────┘                │  campo   │
@@ -87,8 +87,10 @@ title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENT
 `handleInteract()` (in `init.mjs`) gestisce:
 1.  **Uscite Interattive**: Porte che richiedono il tasto **'E'** (Municipio, Bar).
 2.  **NPC**: Avvio dialoghi basati su stato e fiducia.
-3.  **Oggetti**: Raccolta indizi e trigger di puzzle (Radio, Registratore).
+3.  **Oggetti**: Raccolta indizi e trigger di puzzle (Radio, Registratore). La sorgente effettiva combina `area.objects` legacy e `window.areaObjects[currentArea]`, così renderer, click target e tasto **E** vedono gli stessi oggetti.
 4.  **Point & Click**: Il giocatore può cliccare su target per muoversi e interagire automaticamente.
+
+Le uscite possono dichiarare `requiresFlag` per dipendere da progressione narrativa. `transition.ts` controlla il flag tramite `StoryManager.hasFlag()` prima di attivare l'uscita. Il collegamento `giardini -> campo` usa `requiresFlag: 'deduction_complete'`, quindi il Campo delle Luci diventa raggiungibile solo dopo la deduzione.
 
 ## Pipeline di Rendering (Dettaglio)
 
