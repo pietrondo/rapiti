@@ -30,6 +30,7 @@ class PixiRenderer {
   lastArea: string | null = null;
   lastPhase: string | null = null;
   lastStep: number | null = null;
+  private alienLightNodes: PIXI.Container[] = [];
 
   async init() {
     this.app = new PIXI.Application();
@@ -198,9 +199,21 @@ class PixiRenderer {
       this.layers.bg.addChildAt(this.sprites.ui_sky, 0);
     }
 
+    if (this.sprites.ui_sky && !this.layers.bg.children.includes(this.sprites.ui_sky)) {
+      this.layers.bg.addChildAt(this.sprites.ui_sky, 0);
+    }
+
     // Alien Lights
-    if (!this.sprites.ui_alien_lights) {
+    if (
+      !this.sprites.ui_alien_lights ||
+      this.sprites.ui_alien_lights.destroyed ||
+      this.alienLightNodes.length !== 3
+    ) {
+      if (this.sprites.ui_alien_lights?.parent) {
+        this.sprites.ui_alien_lights.parent.removeChild(this.sprites.ui_alien_lights);
+      }
       const c = new PIXI.Container();
+      const lights: PIXI.Container[] = [];
       for (let i = 0; i < 3; i++) {
         const light = new PIXI.Container();
         const glow = new PIXI.Graphics();
@@ -210,13 +223,16 @@ class PixiRenderer {
         light.addChild(glow, core);
         light.x = 100 + i * 100; light.y = 50;
         c.addChild(light);
+        lights.push(light);
       }
       this.sprites.ui_alien_lights = c;
+      this.alienLightNodes = lights;
       this.layers.bg.addChild(c);
+    } else if (!this.layers.bg.children.includes(this.sprites.ui_alien_lights)) {
+      this.layers.bg.addChild(this.sprites.ui_alien_lights);
     }
 
-    const lights = this.sprites.ui_alien_lights.children;
-    lights.forEach((l: any, i: number) => {
+    this.alienLightNodes.forEach((l: PIXI.Container, i: number) => {
       l.x += Math.sin(t + i) * 0.5;
       l.y += Math.cos(t * 0.5 + i) * 0.3;
       l.alpha = 0.4 + Math.sin(t * 2 + i) * 0.4;
@@ -230,11 +246,17 @@ class PixiRenderer {
       this.sprites.ui_mtn_back = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
       this.layers.bg.addChild(this.sprites.ui_mtn_back);
     }
+    if (this.sprites.ui_mtn_back && !this.layers.bg.children.includes(this.sprites.ui_mtn_back)) {
+      this.layers.bg.addChild(this.sprites.ui_mtn_back);
+    }
     if (!this.sprites.ui_mtn_front) {
       const tex = this.generateTexture('mtn_front', (ctx) => {
         ctx.fillStyle = '#0a0d16'; ctx.beginPath(); ctx.moveTo(0, 180); ctx.lineTo(120, 140); ctx.lineTo(250, 170); ctx.lineTo(350, 130); ctx.lineTo(400, 180); ctx.lineTo(400, 250); ctx.lineTo(0, 250); ctx.fill();
       }, 400, 250);
       this.sprites.ui_mtn_front = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
+      this.layers.bg.addChild(this.sprites.ui_mtn_front);
+    }
+    if (this.sprites.ui_mtn_front && !this.layers.bg.children.includes(this.sprites.ui_mtn_front)) {
       this.layers.bg.addChild(this.sprites.ui_mtn_front);
     }
 
