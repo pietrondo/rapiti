@@ -106,7 +106,7 @@ src/
     render.js            — render() (dispatcher per gamePhase), renderTitle/IntroSlide/Tutorial, renderArea (NPC + oggetti + hint), renderPlayer (da sprite sheet), drawSprite (fallback), renderInteractionHint, renderEndingScreen, getOrCreatePlayerSheet() (cache con invalidazione colori), _lighten/_darken
     dialogue.js          — startDialogue() (state-based: npcId_s0/s1/s2), renderDialogueHTML(), selectDialogueChoice(), applyDialogueEffect(), closeDialogue()
     radio.js             — openRadioPuzzle(), setupRadio() (drag knob), updateRadioKnob() (static/interference/clear a 72 MHz)
-    registry.js          — openRegistryPuzzle() (shuffle, drag pages to slots), checkRegistry() (ordine 1952→1979)
+    registry.js          — openRegistryPuzzle() (shuffle, drag pages to slots), checkRegistry() (ordine 1952→1969→1974→1978)
     scene.js             — openScenePuzzle() (3 select elements), checkScene() (lanterna→impronte→segni), determineEndingV2() (4 finali: military/alien/psychological/secret), showEndingOverlayV2()
     recorder.js          — openRecorderPuzzle() (cavi rosso/blu/verde + bobina + power), playRecorder() (bobina 2 + tutti cavi + power)
     deduction.js         — canOpenDeduction() (3 indizi richiesti), openDeduction() (drag clue to slots), checkDeduction() (posizione=mappa, data=registro, prova=tracce)
@@ -148,9 +148,9 @@ Gli NPC hanno stati (0→1→2) che determinano il nodo di dialogo (`npcId_s0`/`
 
 1. **Deduzione** (T): Drag 3 indizi in 3 slot. Soluzione: Mappa→Posizione, Registro→Data, Tracce→Prova fisica. Sblocca alla raccolta di `registro_1861 + mappa_campi + tracce_circolari`.
 2. **Radio** (bar_interno): Trascina manopola a 72 MHz (target radio). Sblocca indizio `radio_audio` e dialogo Anselmo s1.
-3. **Registry** (archivio): Ordina 4 fogli cronologicamente (1952→1969→1974→1979). Sblocca Neri s1 se non già attivo.
+3. **Registry** (archivio): Ordina 4 fogli cronologicamente (1952→1969→1974→1978). Sblocca Neri s1 se non già attivo.
 4. **Scene** (cascina): Ricostruisci evento con 3 select. Soluzione: Lanterna→Impronte→Segni. Sblocca Teresa s1.
-5. **Recorder** (monte_ferro): Collega cavi rosso+blu+verde, seleziona bobina "TEST C — 1979", accendi. Sblocca indizio `registro_monte_ferro`.
+5. **Recorder** (monte_ferro): Collega cavi rosso+blu+verde, seleziona bobina "TEST C — 1978", accendi. Sblocca indizio `registro_monte_ferro`.
 
 ## Sistema Ending
 
@@ -208,6 +208,7 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **Inizializzazione in `main.js`**: le funzioni esposte globalmente dai moduli caricati dinamicamente (`initCanvas`, `initAudio`, `initEventListeners`, `initStoryManager`) devono essere accedute tramite `window.xxx`, non come variabili libere. In un modulo ES strict mode `typeof variabileNonDichiarata` restituisce `"undefined"` senza errore, causando il silenzioso skip dell'inizializzazione (bug bd `rapito-dagli-alieni-akg`). Test regressione in `tests/main.test.mjs`.
 - **Funzioni globali usate da `input.ts`**: `input.ts` dichiara molte dipendenze con `declare function` senza importarle. Nel bundle Vite diventano variabili libere. Se non esistono su `window`, generano `TypeError` e bloccano l'input (bug bd `rapito-dagli-alieni-akg` — blocco tutorial). Fix: tutte le funzioni chiamate da `input.ts` devono essere esposte su `window` dai rispettivi moduli (`transition.mjs`, `dialogue.mjs`, `deduction.mjs`, `radio.mjs`, `scene.mjs`, `recorder.mjs`, `customize.mjs`, `audio.mjs`, `init.mjs`). Le funzioni mancanti (`showToast`, `handleInteract`, `openJournal`, `openInventory`, `closePanels`) hanno stub in `init.mjs`.
 - **PixiRenderer cinematic UI**: `src/render/pixiRenderer.ts` usa PixiJS v8 anche per titolo/prologo. `PIXI.Graphics`, `PIXI.Sprite` e `PIXI.Text` devono restare leaf object: per glow, core, sprite e testi correlati usare sempre un `PIXI.Container` wrapper. Non chiamare `addChild()` su `Graphics` o `Sprite` per evitare crash nelle schermate cinematiche (`_renderParallaxSky`, `_renderPrologue`). Le luci aliene del cielo parallasse sono animate tramite l'array tipizzato `alienLightNodes`, non leggendo direttamente `children` dal display object in cache; se `bg` viene svuotato, cielo, luci e montagne vengono riattaccati esplicitamente al layer.
+- **Cronologia canonica**: il presente narrativo è estate 1978 (`gameDate`, intro, prologo, registro, recorder e finali). Le date storiche note sono 1861, 1952, 1961, 1969, 1974 e 1978; non descrivere il fenomeno come ciclo matematico fisso. Usare la formula "ricorrenze irregolari" o "aperture" secondo `docs/storyline.md`.
 
 ## Sviluppo Locale
 

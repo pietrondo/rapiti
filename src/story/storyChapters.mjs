@@ -80,7 +80,7 @@ const storyChapters = {
   deepening: {
     id: 'deepening',
     title: 'Approfondimento',
-    description: 'Scopri la connessione tra le sparizioni. Il ciclo di 116 anni.',
+    description: 'Scopri la connessione tra le sparizioni e le ricorrenze irregolari delle luci.',
     order: 2,
     objectives: [
       {

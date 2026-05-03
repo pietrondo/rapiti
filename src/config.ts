@@ -87,6 +87,9 @@ export const gameState: GameState = {
   fadeCallback: null,
   showMiniMap: true,
   titleAnim: 0,
+  gameTime: 1200,
+  gameDate: "Venerdì, 21 Luglio 1978",
+  confirmedHypotheses: [],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -125,6 +128,9 @@ export function resetGameState(): void {
   gameState.fadeCallback = null;
   gameState.showMiniMap = true;
   gameState.titleAnim = 0;
+  gameState.gameTime = 1200;
+  gameState.gameDate = "Venerdì, 21 Luglio 1978";
+  gameState.confirmedHypotheses = [];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

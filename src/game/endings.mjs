@@ -37,7 +37,7 @@ export function showEndingOverlay() {
       title: 'Finale: Loro Sono Tornati',
       text:
         'Il cielo si illumina. Luci silenziose scendono sul campo. Le tracce circolari pulsano di una luce azzurra. Il frammento metallico nella tua tasca vibra, sempre più forte.\n\n' +
-        'Il ciclo di 116 anni è reale. Nel 1861 come nel 1978, entità non umane visitano San Celeste. I simboli sulla cascina sono il loro messaggio. Le persone scomparse non sono morte — sono state "raccolte".\n\n' +
+        'La ricorrenza è reale. Nel 1861 come nel 1978, entità non umane visitano San Celeste quando qualcosa apre la strada. I simboli sulla cascina sono il loro messaggio. Le persone scomparse non sono morte — sono state "raccolte".\n\n' +
         'Tra le luci vedi una figura familiare: Enzo, il nipote di Teresa. Sorride. Ti guarda. Poi svanisce. Le luci si allontanano nel cielo, lasciando il campo nel silenzio.\n\n' +
         '"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche. La Prefettura valuti."\n' +
         '— ' +

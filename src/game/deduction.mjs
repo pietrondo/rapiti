@@ -12,7 +12,14 @@
 /* global window.gameState, window.cluesMap, window.hypotheses, window.StoryManager, window.showToast */
 
 export function canOpenDeduction() {
-  return window.gameState.cluesFound.length >= 2;
+  if (window.gameState.puzzleSolved) return false;
+
+  var requiredClues = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
+  var found = window.gameState.cluesFound || [];
+  for (var i = 0; i < requiredClues.length; i++) {
+    if (found.indexOf(requiredClues[i]) === -1) return false;
+  }
+  return true;
 }
 
 export function openDeduction() {

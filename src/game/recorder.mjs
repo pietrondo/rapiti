@@ -50,7 +50,7 @@ export function buildRecorderOverlay() {
     '    <h3 style="font-size:13px;color:#d4a843;margin-bottom:6px">📀 Bobina</h3>' +
     '    <button class="rec-bobin-btn" data-bobin="0">TEST A</button>' +
     '    <button class="rec-bobin-btn" data-bobin="1">TEST B</button>' +
-    '    <button class="rec-bobin-btn" data-bobin="2">TEST C — 1979</button>' +
+    '    <button class="rec-bobin-btn" data-bobin="2">TEST C — 1978</button>' +
     '    <div id="rec-bobin-label" style="color:#6b7b6b;font-size:11px;margin-top:4px">Nessuna selezionata</div>' +
     '  </div>' +
     '  <div style="flex:1;min-width:140px">' +
@@ -119,7 +119,7 @@ export function refreshRecorderUI() {
     btn.style.background = rs.bobin === bi ? '#d4a843' : '#2d3047';
     btn.style.color = rs.bobin === bi ? '#1a1c20' : '#e8dcc8';
   });
-  var bl = ['TEST A (prototipo)', 'TEST B (fase intermedia)', 'TEST C — 1979'];
+  var bl = ['TEST A (prototipo)', 'TEST B (fase intermedia)', 'TEST C — 1978'];
   document.getElementById('rec-bobin-label').textContent =
     rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
   document.getElementById('rec-bobin-label').style.color = rs.bobin >= 0 ? '#d4a843' : '#6b7b6b';

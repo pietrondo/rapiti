@@ -19,7 +19,7 @@ const _registryData = [
       'Pietro R. e Carla M. — due persone. Scomparsi nella stessa notte, 19 luglio. Nessuna traccia.',
   },
   {
-    year: '1979',
+    year: '1978',
     detail:
       'Enzo Bellandi — 19 anni. Scomparso il 25 luglio. Segni circolari nel terreno. Indagine in corso.',
   },

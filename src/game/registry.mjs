@@ -15,7 +15,7 @@ const registryData = [
       'Pietro R. e Carla M. — due persone. Scomparsi nella stessa notte, 19 luglio. Nessuna traccia.',
   },
   {
-    year: '1979',
+    year: '1978',
     detail:
       'Enzo Bellandi — 19 anni. Scomparso il 25 luglio. Segni circolari nel terreno. Indagine in corso.',
   },
@@ -145,7 +145,7 @@ export function updateRegistryConfirmButton() {
 }
 
 export function checkRegistry() {
-  var correctOrder = ['1952', '1969', '1974', '1979'];
+  var correctOrder = ['1952', '1969', '1974', '1978'];
   var slots = document.querySelectorAll('.registry-slot');
   var correct = true;
   for (var i = 0; i < slots.length; i++) {

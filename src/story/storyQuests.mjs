@@ -89,7 +89,7 @@ const storyQuests = {
     ],
     onComplete: {
       xp: 50,
-      message: 'Il pattern è chiaro: 1952, 1969, 1974, 1979...',
+      message: 'Il pattern è chiaro: 1952, 1969, 1974, 1978...',
     },
   },
 
@@ -97,7 +97,7 @@ const storyQuests = {
   monte_ferro_recorder: {
     id: 'monte_ferro_recorder',
     title: 'Il Registratore di Monte Ferro',
-    description: 'Ripara il registratore per ascoltare il messaggio del 1979.',
+    description: 'Ripara il registratore per ascoltare il messaggio del 1978.',
     chapter: 'deepening',
     stages: [
       {
@@ -115,7 +115,7 @@ const storyQuests = {
     ],
     onComplete: {
       xp: 100,
-      message: 'Hai ascoltato il messaggio. Qualcosa è andato storto nel 1979...',
+      message: 'Hai ascoltato il messaggio. Qualcosa è andato storto nel 1978...',
     },
   },
   /* ── Quest: La Ricetta di Osvaldo ── */

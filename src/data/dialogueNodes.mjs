@@ -215,7 +215,7 @@ var dialogueNodes = {
   },
 
   anselmo_s2_lore: {
-    text: "*Anselmo ti guarda fisso, abbassando la voce.* Lena non è l'unica, Maurizio. Ogni vent'anni circa, qualcuno se ne va. Ma il Sindaco e quelli prima di lui hanno sempre coperto tutto. C'è un patto tra questo paese e... ciò che vive oltre le stelle.",
+    text: "*Anselmo ti guarda fisso, abbassando la voce.* Lena non è l'unica, Maurizio. Le date non sono regolari, ma tornano sempre quando le luci si fanno vicine. Il Sindaco e quelli prima di lui hanno sempre coperto tutto. C'è un patto tra questo paese e... ciò che vive oltre le stelle.",
     choices: [
        { text: "Un patto? Di che tipo?", next: 'anselmo_s2_patto' },
        { text: "Chi altro sa di questa storia?", next: 'anselmo_s2_chi' }
@@ -247,7 +247,7 @@ var dialogueNodes = {
   don_pietro_s0_chiesa: { text: "Solo il silenzio di Dio. Ma a volte, nel silenzio, si sentono rumori che non appartengono a questa terra." },
 
   don_pietro_s1: {
-    text: "I cicli di cui parli... 1861, 1961... sono scritti nelle cronache parrocchiali non ufficiali. I miei predecessori li chiamavano 'I Visitatori della Mietitura'. Ogni secolo circa, il gregge viene sfoltito.",
+    text: "Le ricorrenze di cui parli... 1861, 1952, 1961... sono scritte nelle cronache parrocchiali non ufficiali. I miei predecessori le chiamavano 'I Visitatori della Mietitura'. Non seguono il calendario: seguono l'apertura.",
     choices: [
        { text: "È un castigo divino?", next: 'don_pietro_s1_castigo' },
        { text: "Posso vedere queste cronache?", next: 'don_pietro_s1_cronache', effect: { giveClue: 'cronaca_parrocchiale' } }

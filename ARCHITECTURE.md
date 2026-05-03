@@ -7,6 +7,10 @@
 
 Gioco investigativo 2D ambientato nel 1978. L'architettura è passata da un sistema Canvas 2D puro a un **Sistema Ibrido PixiJS/Canvas**. Il gioco è una Single Page Application (SPA) orchestrata da un `gameState` globale e packaged via Tauri.
 
+## Cronologia Narrativa
+
+Il presente canonico del gioco è l'estate 1978. `gameDate`, intro, prologo, puzzle Registry, puzzle Recorder e finali devono restare allineati a questo anno. Le sparizioni non seguono un ciclo matematico fisso: la storia parla di ricorrenze irregolari e "aperture" intensificate dai test radio del Progetto SIRIO. La timeline canonica è documentata in `docs/storyline.md`.
+
 ## Sistema di Rendering Ibrido (Stacked Canvas)
 
 Il gioco utilizza due motori di rendering simultaneamente, con una progressiva migrazione verso **PixiJS v8**:

@@ -169,7 +169,7 @@ export function showEndingOverlayV2() {
     alien: {
       title: 'Finale: NON SONO SOLI',
       text:
-        'Il frammento metallico è tecnologia non umana. I cerchi nel grano sono tracce di atterraggio. I simboli sulla cascina... un messaggio che nessuno ha ancora decifrato.\n\nIl ciclo di 116 anni è reale. Nel 1861 come nel 1979. Qualcosa torna. Qualcosa osserva.\n\nMentre scrivi il rapporto, la radio nella tua tasca emette un suono che non hai mai sentito prima.\n\n"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche."\n— ' +
+        'Il frammento metallico è tecnologia non umana. I cerchi nel grano sono tracce di atterraggio. I simboli sulla cascina... un messaggio che nessuno ha ancora decifrato.\n\nLa ricorrenza è reale. Nel 1861 come nel 1978. Qualcosa torna quando una porta viene aperta. Qualcosa osserva.\n\nMentre scrivi il rapporto, la radio nella tua tasca emette un suono che non hai mai sentito prima.\n\n"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche."\n— ' +
         name,
     },
     psychological: {
@@ -181,7 +181,7 @@ export function showEndingOverlayV2() {
     secret: {
       title: 'Finale: NON È ARRIVATO. È STATO APERTO.',
       text:
-        'Hai capito tutto.\n\nIl fenomeno esisteva PRIMA dei test militari. Nel 1952, nel 1969, nel 1974. I militari del Progetto SIRIO hanno provato a studiarlo. Controllarlo. E hanno solo peggiorato le cose.\n\n"Non è arrivato. È stato aperto."\n\nQualcosa era già qui. Sotto San Celeste. I test radio hanno aperto una porta che doveva restare chiusa.\n\nRegistri il rapporto. Ti fermi. La radio nella stanza vuota si accende da sola.\n\nVoce: "...non dovevi guardare quando si ferma..."\n\nSilenzio.\n\nBuio.\n\nFine.\n— ' +
+        'Hai capito tutto.\n\nIl fenomeno esisteva PRIMA dei test militari. Nel 1952, nel 1969, nel 1974. Nel 1978 i militari del Progetto SIRIO hanno provato a studiarlo. Controllarlo. E hanno solo peggiorato le cose.\n\n"Non è arrivato. È stato aperto."\n\nQualcosa era già qui. Sotto San Celeste. I test radio hanno aperto una porta che doveva restare chiusa.\n\nRegistri il rapporto. Ti fermi. La radio nella stanza vuota si accende da sola.\n\nVoce: "...non dovevi guardare quando si ferma..."\n\nSilenzio.\n\nBuio.\n\nFine.\n— ' +
         name,
     },
   };

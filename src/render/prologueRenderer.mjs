@@ -117,12 +117,12 @@ function _drawTitleOnWhite(ctx) {
   ctx.fillText('LE LUCI DI SAN CELESTE', 200, 120);
   ctx.font = '11px "Courier New",monospace';
   ctx.fillStyle = window.PALETTE.slateGrey;
-  ctx.fillText("1979 — Un'indagine della Prefettura", 200, 140);
+  ctx.fillText("1978 — Un'indagine della Prefettura", 200, 140);
   ctx.textAlign = 'start';
 }
 
 var _subtitles = [
-  'San Celeste, 25 luglio 1979. Ore 23:40.',
+  'San Celeste, 25 luglio 1978. Ore 23:40.',
   "Elena Bellandi corre tra l'erba alta.",
   '',
   'Una luce si accende dal terreno... non dal cielo.',

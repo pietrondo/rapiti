@@ -97,7 +97,7 @@ const hypotheses = [
     id: 'rapimento_ciclico',
     name: 'Il Patto del Silenzio',
     clues: ['registro_1861', 'diario_enzo'],
-    desc: 'Le sparizioni avvengono ogni 60 anni circa. Enzo non è il primo.'
+    desc: 'Le sparizioni seguono ricorrenze irregolari, sempre piu ravvicinate dopo i test radio. Enzo non è il primo.'
   },
   {
     id: 'tecnologia_aliena',
