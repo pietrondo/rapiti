@@ -96,7 +96,7 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('loop.ts should import real functions instead of declare', () => {
       var content = readFile('src/game/loop.ts');
-      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.mjs'");
+      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.ts'");
       expect(content).toContain("import { updatePlayerPosition } from './movement.ts'");
       expect(content).toContain("import { render as renderFrame } from '../render/index.ts'");
       expect(content).toContain("import '../effects/ambient.mjs'");
@@ -105,8 +105,8 @@ describe('Tauri Migration Sanity Checks', () => {
       expect(content).not.toContain('declare function checkAreaExits');
     });
 
-    it('transition.mjs should define updateHUD', () => {
-      var content = readFile('src/game/transition.mjs');
+    it('transition.ts should define updateHUD', () => {
+      var content = readFile('src/game/transition.ts');
       expect(content).toContain('export function updateHUD');
     });
 
@@ -265,7 +265,7 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('loop.ts should import real functions instead of declare', () => {
       var content = readFile('src/game/loop.ts');
-      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.mjs'");
+      expect(content).toContain("import { updateFade, checkAreaExits } from './transition.ts'");
       expect(content).toContain("import { updatePlayerPosition } from './movement.ts'");
       expect(content).toContain("import { render as renderFrame } from '../render/index.ts'");
       expect(content).toContain("import '../effects/ambient.mjs'");
@@ -274,8 +274,8 @@ describe('Tauri Migration Sanity Checks', () => {
       expect(content).not.toContain('declare function checkAreaExits');
     });
 
-    it('transition.mjs should define updateHUD', () => {
-      var content = readFile('src/game/transition.mjs');
+    it('transition.ts should define updateHUD', () => {
+      var content = readFile('src/game/transition.ts');
       expect(content).toContain('export function updateHUD');
     });
 

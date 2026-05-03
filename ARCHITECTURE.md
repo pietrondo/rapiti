@@ -92,6 +92,8 @@ title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENT
 
 Le uscite possono dichiarare `requiresFlag` per dipendere da progressione narrativa. `transition.ts` controlla il flag tramite `StoryManager.hasFlag()` prima di attivare l'uscita. Il collegamento `giardini -> campo` usa `requiresFlag: 'deduction_complete'`, quindi il Campo delle Luci diventa raggiungibile solo dopo la deduzione.
 
+Durante la migrazione `config.mjs` → `config.ts`, `transition.ts` legge lo stato attivo tramite `window.gameState` e le aree tramite `window.areas` quando sono disponibili. Gli import TypeScript restano fallback per test e uso isolato; il runtime Tauri deve modificare sempre lo stesso stato osservato da renderer, HUD e input.
+
 ## Pipeline di Rendering (Dettaglio)
 
 1.  **Pixi Sync**: `pixiRenderer.render()` sincronizza gli sprite con le coordinate del `gameState`. Se la fase è `title` o `intro`, disegna i pannelli e i testi utilizzando oggetti `PIXI.Text` e `PIXI.Graphics`.

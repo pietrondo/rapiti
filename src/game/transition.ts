@@ -8,8 +8,16 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { gameState, CANVAS_W, CANVAS_H } from '../config.ts';
+import { gameState as configGameState, CANVAS_W, CANVAS_H } from '../config.ts';
 import { saveLoad } from './saveLoad.ts';
+
+function getGameState(): any {
+  return (window as any).gameState || configGameState;
+}
+
+function getAreas(): any {
+  return (window as any).areas || {};
+}
 
 function canUseExit(ex: any): boolean {
   if (!ex.requiresFlag) return true;
@@ -18,11 +26,21 @@ function canUseExit(ex: any): boolean {
   return false;
 }
 
+function runChangeArea(areaId: string, spawnX: number, spawnY: number): void {
+  const globalChangeArea = (window as any).changeArea;
+  if (typeof globalChangeArea === 'function' && globalChangeArea !== changeArea) {
+    globalChangeArea(areaId, spawnX, spawnY);
+    return;
+  }
+  changeArea(areaId, spawnX, spawnY);
+}
+
 /** Controlla se il player tocca un'uscita automatica */
 export function checkAreaExits(): void {
+  const gameState = getGameState();
   if (gameState.fadeDir !== 0) return;
   const p = gameState.player;
-  const area = (window as any).areas[gameState.currentArea];
+  const area = getAreas()[gameState.currentArea];
   if (!area || !area.exits) return;
 
   for (let i = 0; i < area.exits.length; i++) {
@@ -38,7 +56,7 @@ export function checkAreaExits(): void {
     
     if (triggered) {
       console.log(`[Transition] Auto-exit triggered to ${ex.to} at pos ${p.x},${p.y}`);
-      changeArea(ex.to, ex.spawnX, ex.spawnY);
+      runChangeArea(ex.to, ex.spawnX, ex.spawnY);
       return;
     }
   }
@@ -46,8 +64,9 @@ export function checkAreaExits(): void {
 
 /** Triggera un'uscita manuale (es. via tasto E) */
 export function triggerInteractExit(): boolean {
+  const gameState = getGameState();
   const p = gameState.player;
-  const area = (window as any).areas[gameState.currentArea];
+  const area = getAreas()[gameState.currentArea];
   if (!area || !area.exits) return false;
 
   console.log(`[Transition] Manual interaction check at ${p.x},${p.y} in ${gameState.currentArea}`);
@@ -59,14 +78,14 @@ export function triggerInteractExit(): boolean {
 
     if (ex.dir === 'up' || ex.dir === 'down') {
        if (p.x >= ex.xRange[0] && p.x <= ex.xRange[1]) {
-          if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 25) { // Range Y aumentato a 25 (era 15)
+          if (ex.dir === 'up' && p.y <= (area.walkableTop || 0) + 15) {
              console.log(`[Transition] Manual exit UP to ${ex.to}`);
-             changeArea(ex.to, ex.spawnX, ex.spawnY);
+             runChangeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
           if (ex.dir === 'down' && p.y >= CANVAS_H - p.h - 15) {
              console.log(`[Transition] Manual exit DOWN to ${ex.to}`);
-             changeArea(ex.to, ex.spawnX, ex.spawnY);
+             runChangeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
        }
@@ -74,12 +93,12 @@ export function triggerInteractExit(): boolean {
        if (p.y >= ex.xRange[0] && p.y <= ex.xRange[1]) {
           if (ex.dir === 'right' && p.x >= CANVAS_W - p.w - 80) {
              console.log(`[Transition] Manual exit RIGHT to ${ex.to}`);
-             changeArea(ex.to, ex.spawnX, ex.spawnY);
+             runChangeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
           if (ex.dir === 'left' && p.x <= 40) {
              console.log(`[Transition] Manual exit LEFT to ${ex.to}`);
-             changeArea(ex.to, ex.spawnX, ex.spawnY);
+             runChangeArea(ex.to, ex.spawnX, ex.spawnY);
              return true;
           }
        }
@@ -90,6 +109,7 @@ export function triggerInteractExit(): boolean {
 
 /** Esegue il cambio area con effetto fade e AUTO-SAVE */
 export function changeArea(areaId: string, spawnX: number, spawnY: number): void {
+  const gameState = getGameState();
   console.log(`[Transition] Changing area to ${areaId} (spawn: ${spawnX},${spawnY})`);
   
   gameState.fadeDir = 1;
@@ -135,6 +155,7 @@ export function changeArea(areaId: string, spawnX: number, spawnY: number): void
 
 /** Gestisce l'animazione del fade */
 export function updateFade(): void {
+  const gameState = getGameState();
   if (gameState.fadeDir === 1) {
     gameState.fadeAlpha += 4;
     if (gameState.fadeAlpha >= 100) {
@@ -153,9 +174,10 @@ export function updateFade(): void {
 
 /** Aggiorna l'HUD (usando i18n se disponibile) */
 export function updateHUD(): void {
+  const gameState = getGameState();
   const areaEl = document.getElementById('hud-area');
   if (areaEl) {
-     const area = (window as any).areas?.[gameState.currentArea];
+     const area = getAreas()?.[gameState.currentArea];
      areaEl.textContent = area ? area.name : gameState.currentArea;
   }
   
