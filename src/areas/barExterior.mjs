@@ -22,16 +22,21 @@ export function drawBarExteriorArea(ctx, t) {
     ctx.fillRect(0, 130 + i * 20, window.CANVAS_W, 1);
   }
 
-  // Edificio bar (Mattone Scuro)
+  // Edificio bar — Muro SINISTRO
   ctx.fillStyle = '#3E2723';
-  ctx.fillRect(82, 34, 236, 96);
+  ctx.fillRect(82, 34, 103, 96);
+  if (window.drawBrickPattern) window.drawBrickPattern(ctx, 82, 34, 103, 96, '#4E342E');
 
-  // Dettagli mattoni
-  if (window.drawBrickPattern) {
-    window.drawBrickPattern(ctx, 82, 34, 236, 96, '#4E342E');
-  }
+  // Edificio bar — Muro DESTRO
+  ctx.fillStyle = '#3E2723';
+  ctx.fillRect(215, 34, 103, 96);
+  if (window.drawBrickPattern) window.drawBrickPattern(ctx, 215, 34, 103, 96, '#4E342E');
 
-  // Tetto
+  // Varco PORTA (tra i due muri, x:185-215)
+  ctx.fillStyle = '#1A1410';
+  ctx.fillRect(185, 34, 30, 96);
+
+  // Tetto (unico sopra entrambi i muri)
   ctx.fillStyle = window.PALETTE.burntOrange;
   ctx.beginPath();
   ctx.moveTo(78, 34);
@@ -96,7 +101,8 @@ const BarExteriorArea = {
   name: 'Bar — Esterno',
   walkableTop: 130, // Alzato per bloccare l'accesso alla facciata
   colliders: [
-    { x: 82, y: 0, w: 236, h: 130 }, // Edificio (blocco unico, giocatore arriva a y=130 per interagire con la porta)
+    { x: 82, y: 0, w: 103, h: 250 }, // Muro SINISTRO (impedisce di salire)
+    { x: 215, y: 0, w: 103, h: 250 }, // Muro DESTRO (impedisce di salire)
     { x: 112, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 226, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 302, y: 138, w: 24, h: 34 }, // Albero

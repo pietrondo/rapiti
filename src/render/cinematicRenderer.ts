@@ -67,10 +67,10 @@ export class CinematicRenderer {
      }
 
      if (!this.parent.sprites.ui_intro_panel) {
-        const panel = this.parent._createPixelPanel(352, 178, 'DOSSIER PREFETTURA');
-        panel.x = 24; panel.y = 44;
-        panel.alpha = 0;
-        panel.pivot.set(176, 89); panel.x = CANVAS_W/2; panel.y = 44 + 89;
+         const panel = this.parent._createPixelPanel(352, 195, 'DOSSIER PREFETTURA');
+         panel.x = 24; panel.y = 44;
+         panel.alpha = 0;
+         panel.pivot.set(176, 97); panel.x = CANVAS_W/2; panel.y = 44 + 97;
         this.parent.sprites.ui_intro_panel = panel;
         this.parent.layers.ui.addChild(panel);
 
@@ -92,7 +92,7 @@ export class CinematicRenderer {
 
         const bodyText = new PIXI.Text({
            text: data.text,
-           style: { fontFamily: 'monospace', fontSize: 11, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 16 }
+           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 14 }
         });
         bodyText.x = 20; bodyText.y = 45;
         panel.addChild(bodyText);

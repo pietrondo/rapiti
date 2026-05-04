@@ -95,9 +95,9 @@ export function drawIndustrialArea(ctx, t) {
 
 const IndustrialeArea = {
   name: 'Zona Industriale',
-  walkableTop: 80,
+  walkableTop: 115,
   colliders: [
-    { x: 80, y: 0, w: 240, h: 118 }, // Fabbrica (blocca intera facciata)
+    { x: 80, y: 0, w: 240, h: 110 }, // Fabbrica (lascia spazio per interagire con la porta)
     { x: 20, y: 120, w: 60, h: 40 }, // Container
     { x: 310, y: 100, w: 70, h: 50 }, // Container DX
   ],
