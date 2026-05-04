@@ -95,18 +95,24 @@ class PixiRenderer {
     
     const scanlines = new PIXI.Graphics();
     for (let i = 0; i < CANVAS_H; i += 3) {
-      scanlines.rect(0, i, CANVAS_W, 1.5).fill({ color: 0x000000, alpha: 0.15 });
+      scanlines.rect(0, i, CANVAS_W, 1.5).fill({ color: 0x000000, alpha: 0.22 });
     }
     crt.addChild(scanlines);
 
+    // Chromatic aberration (red/blue bleed ai bordi)
+    const chromaRed = new PIXI.Graphics();
+    chromaRed.rect(0, 0, 3, CANVAS_H).fill({ color: 0xff0000, alpha: 0.04 });
+    chromaRed.rect(CANVAS_W - 3, 0, 3, CANVAS_H).fill({ color: 0x0000ff, alpha: 0.04 });
+    crt.addChild(chromaRed);
+
     const vignette = new PIXI.Graphics();
-    vignette.rect(0, 0, CANVAS_W, CANVAS_H).fill({ color: 0x000000, alpha: 0.02 });
+    vignette.rect(0, 0, CANVAS_W, CANVAS_H).fill({ color: 0x000000, alpha: 0.03 });
     
     const corners = new PIXI.Graphics();
-    corners.rect(0, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
-    corners.rect(CANVAS_W-40, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
-    corners.rect(0, CANVAS_H-40, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
-    corners.rect(CANVAS_W-40, CANVAS_H-40, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
+    corners.rect(0, 0, 45, 45).fill({ color: 0x000000, alpha: 0.4 });
+    corners.rect(CANVAS_W-45, 0, 45, 45).fill({ color: 0x000000, alpha: 0.4 });
+    corners.rect(0, CANVAS_H-45, 45, 45).fill({ color: 0x000000, alpha: 0.4 });
+    corners.rect(CANVAS_W-45, CANVAS_H-45, 45, 45).fill({ color: 0x000000, alpha: 0.4 });
     crt.addChild(vignette);
     crt.addChild(corners);
 

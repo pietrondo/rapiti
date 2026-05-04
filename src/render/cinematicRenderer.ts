@@ -329,7 +329,7 @@ export class CinematicRenderer {
         panel.addChild(headerText);
 
         const controls = [
-           { key: 'WASD / Frecce', desc: 'Muovi il detective' },
+           { key: 'WASD', desc: 'Muovi il detective', icon: true },
            { key: 'E', desc: 'Interagisci / Parla / Raccogli' },
            { key: 'J', desc: 'Apri il Diario (indizi raccolti)' },
            { key: 'I', desc: "Apri l'Inventario" },
@@ -345,16 +345,33 @@ export class CinematicRenderer {
            const row = new PIXI.Container();
            row.y = tutY + i * spacing;
 
-           const keyBg = new PIXI.Graphics();
-           keyBg.rect(0, -5, 90, 11).fill({ color: 0xD4A843, alpha: 0.16 });
-           row.addChild(keyBg);
-
-           const keyText = new PIXI.Text({
-              text: c.key,
-              style: { fontFamily: 'monospace', fontSize: 10, fill: 0xD4A843 }
-           });
-           keyText.x = 5; keyText.y = -5;
-           row.addChild(keyText);
+           if (c.icon) {
+              // Disegna tasti WASD come keycaps
+              const keys = ['W', 'A', 'S', 'D'];
+              const positions = [[16, 0], [4, 8], [16, 8], [28, 8]];
+              positions.forEach((pos, ki) => {
+                 const kc = new PIXI.Graphics();
+                 kc.rect(pos[0], pos[1] - 2, 10, 10).fill({ color: 0x2A2D35 });
+                 kc.rect(pos[0], pos[1] - 2, 10, 10).stroke({ width: 1, color: 0x4A5568 });
+                 const kt = new PIXI.Text({
+                    text: keys[ki],
+                    style: { fontFamily: 'monospace', fontSize: 7, fill: 0xD4A843 }
+                 });
+                 kt.x = pos[0] + 2; kt.y = pos[1] - 2;
+                 row.addChild(kc);
+                 row.addChild(kt);
+              });
+           } else {
+              const keyBg = new PIXI.Graphics();
+              keyBg.rect(0, -5, c.key.length * 7 + 8, 11).fill({ color: 0xD4A843, alpha: 0.16 });
+              row.addChild(keyBg);
+              const keyText = new PIXI.Text({
+                 text: c.key,
+                 style: { fontFamily: 'monospace', fontSize: 10, fill: 0xD4A843 }
+              });
+              keyText.x = 5; keyText.y = -5;
+              row.addChild(keyText);
+           }
 
            const descText = new PIXI.Text({
               text: c.desc,
