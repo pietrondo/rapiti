@@ -416,6 +416,32 @@ var dialogueNodes = {
   teresa_s3_ciclo: {
     text: 'I segni sul portone... Enzo li aveva disegnati identici nel suo diario. Egli sapeva che le luci lo avrebbero chiamato. È il ciclo che si ripete, come diceva mio nonno.',
   },
+
+  /* ── TERESA S2: MEMORIA INSTABILE (glitch) ── */
+  teresa_s2: {
+    text: 'L\u200B\u200Be lu\u200Bci... l\u200Be lu\u200Bci t\u200Bornan\u200Bo sem\u200Bre. N\u200Bon s\u200Bono st\u200Belle. N\u200Bon s\u200Bono... n\u200Bon...',
+    choices: [
+      { text: 'Teresa, mi sente? Sta bene?', next: 'teresa_s2_calma' },
+      { text: 'Cosa ricorda di quella notte?', next: 'teresa_s2_ricordo' },
+    ],
+  },
+  teresa_s2_calma: {
+    text: 'S... sì. Mi scusi. A volte la m\u200Bente... va e vi\u200Bene. Come i cer\u200Bchi nel gra\u200Bno. Come En\u200Bzo. Era qu\u200Bi, poi...',
+  },
+  teresa_s2_ricordo: {
+    text: 'Ra\u200Bccolse qualc\u200Bosa da terr\u200Ba. Un ogge\u200Btto. Luccicav\u200Ba. Poi la l\u200Buce... tutto bi\u200Banco. E il si\u200Blenzio. Un si\u200Blenzio che pe\u200Bsa.',
+  },
+
+  /* ── TRUST-BASED VARIATIONS ── */
+  ruggeri_s0_trust_low: {
+    text: "Lei è qui per le luci, suppongo. Tutti vengono qui per quello. Non ho tempo per queste sciocchezze. Se ha qualcosa di concreto, mi faccia rapporto. Altrimenti, arrivederci.",
+  },
+  ruggeri_s0_trust_high: {
+    text: "Detective! Mi fa piacere rivederla. So che posso fidarmi di lei. Tra noi... le cose non quadrano. La Prefettura sa più di quanto dice. Ma continui a scavare. Io la copro.",
+  },
+  neri_s1_trust_high: {
+    text: "Ho trovato altri documenti che potrebbero interessarla. Rapporti del 1961. Nominali, ma con annotazioni a margine... non ufficiali. Qualcuno teneva un diario parallelo degli avvistamenti.",
+  },
 };
 
 if (typeof window !== 'undefined') {

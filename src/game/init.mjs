@@ -37,6 +37,7 @@ export function initEventListeners() {
   document.getElementById('save-close').addEventListener('click', closePanels);
   document.getElementById('settings-close').addEventListener('click', closePanels);
   document.getElementById('settings-back').addEventListener('click', closePanels);
+  document.getElementById('trust-close').addEventListener('click', closePanels);
   document.getElementById('deduction-close').addEventListener('click', closeDeduction);
   document.getElementById('deduction-confirm').addEventListener('click', checkDeduction);
   document.getElementById('radio-close').addEventListener('click', closeRadioPuzzle);
@@ -466,10 +467,40 @@ export function renderTrust() {
   }
 }
 
-/** Apre il pannello fiducia */
+/** Apre il pannello fiducia e achievement */
 export function openTrust() {
   renderTrust();
+  renderAchievements();
   document.getElementById('trust-overlay').classList.add('active');
+}
+
+/** Rende gli achievement sbloccati */
+export function renderAchievements() {
+  var content = document.getElementById('achievement-content');
+  if (!content) return;
+  content.innerHTML = '';
+
+  var gs = window.gameState;
+  var clues = gs.cluesFound.length;
+  var puzzles = Object.values(gs.puzzlesSolved || {}).filter(Boolean).length;
+  var npcTalked = Object.values(gs.npcStates || {}).filter(function (v) { return v > 0; }).length;
+
+  var achievements = [
+    { id: 'first_clue', name: 'Primo Indizio', desc: 'Raccogli il tuo primo indizio', done: clues >= 1 },
+    { id: 'all_clues', name: 'Collezionista', desc: 'Raccogli tutti gli indizi', done: clues >= 9 },
+    { id: 'deduction', name: 'Deduzione', desc: 'Completa il pannello delle deduzioni', done: !!(gs.puzzlesSolved && gs.puzzlesSolved.deduction) },
+    { id: 'talk_all', name: 'Diplomatico', desc: 'Parla con tutti gli NPC', done: npcTalked >= 6 },
+    { id: 'secret', name: 'Verità Nascosta', desc: 'Scopri il finale segreto', done: !!(gs.endingUnlocked === 'secret') },
+  ];
+
+  for (var i = 0; i < achievements.length; i++) {
+    var a = achievements[i];
+    var item = document.createElement('div');
+    item.style.cssText = 'margin:8px;padding:8px;border:1px solid ' + (a.done ? '#D4A843' : '#333') + ';border-radius:4px;background:' + (a.done ? 'rgba(212,168,67,0.08)' : 'rgba(0,0,0,0.2)');
+    item.innerHTML = '<span style="color:' + (a.done ? '#D4A843' : '#555') + ';font-weight:bold">' + (a.done ? '★ ' : '☆ ') + a.name + '</span>' +
+      '<br><span style="font-size:9px;color:' + (a.done ? '#A0A8B0' : '#444') + '">' + a.desc + '</span>';
+    content.appendChild(item);
+  }
 }
 
 /** Chiude pannelli aperti */
@@ -481,7 +512,7 @@ export function closePanels() {
   if (document.getElementById('trust-overlay'))
     document.getElementById('trust-overlay').classList.remove('active');
 
-  if (['journal', 'inventory', 'save', 'settings'].includes(window.gameState.gamePhase)) {
+  if (['journal', 'inventory', 'save', 'settings', 'trust'].includes(window.gameState.gamePhase)) {
     window.gameState.gamePhase = 'playing';
   }
 }
