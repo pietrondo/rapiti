@@ -93,11 +93,9 @@ LightingSystem.prototype.update = function (dt) {
 };
 
 LightingSystem.prototype.draw = function (ctx) {
-  // Disegna overlay ambientale prima delle luci
   this.dayNight.drawOverlay(ctx);
 
   ctx.save();
-  // Effetto "additivo" per le luci sul buio
   ctx.globalCompositeOperation = 'screen';
 
   for (var i = 0; i < this.lights.length; i++) {
@@ -106,7 +104,6 @@ LightingSystem.prototype.draw = function (ctx) {
     var gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, radius);
 
     var alpha = 0.5 * light.intensity;
-    // Se è giorno, le luci sono meno visibili
     if (this.dayNight.time > 0.3 && this.dayNight.time < 0.7) alpha *= 0.2;
 
     var color = light.color.replace('ALPHA', alpha.toFixed(2));
@@ -120,7 +117,25 @@ LightingSystem.prototype.draw = function (ctx) {
     ctx.fill();
   }
 
+  // Flash fulmine (dal WeatherSystem)
+  if (window.WeatherSystem && window.WeatherSystem.lightningActive && window.WeatherSystem.screenFlash > 0) {
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = `rgba(200,220,255,${window.WeatherSystem.screenFlash * 0.4})`;
+    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+  }
+
   ctx.restore();
+};
+
+/** Aggiunge override illuminazione per aree specifiche */
+LightingSystem.prototype.setAreaLighting = function (areaId) {
+  this.clear();
+  if (areaId === 'cimitero' || areaId === 'campo') {
+    this.dayNight.cycleSpeed = 0; // Ferma il ciclo, sempre notte
+    this.dayNight.time = 0.9;
+  } else {
+    this.dayNight.time = 0.9; // Sempre notte (1978, ore 23:40)
+  }
 };
 
 LightingSystem.prototype.setupAreaLights = function (areaId) {

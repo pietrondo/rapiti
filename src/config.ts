@@ -86,6 +86,7 @@ export const gameState: GameState = {
   fadeAlpha: 0,
   fadeDir: 0,
   fadeCallback: null,
+  transitionDir: '',
   showMiniMap: true,
   titleAnim: 0,
   gameTime: 1200,

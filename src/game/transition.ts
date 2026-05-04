@@ -113,6 +113,7 @@ export function changeArea(areaId: string, spawnX: number, spawnY: number): void
   console.log(`[Transition] Changing area to ${areaId} (spawn: ${spawnX},${spawnY})`);
   
   gameState.fadeDir = 1;
+  gameState.transitionDir = (window as any).areas?.[areaId]?.name || areaId;
   gameState.fadeCallback = () => {
     gameState.currentArea = areaId;
     gameState.player.x = spawnX;

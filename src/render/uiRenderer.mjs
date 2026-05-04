@@ -154,8 +154,22 @@ export function drawTitleLandscape(ctx, t) {
 }
 
 export function renderFade(ctx) {
-  ctx.fillStyle = `rgba(0,0,0,${(gameState.fadeAlpha / 100).toFixed(2)})`;
+  var alpha = gameState.fadeAlpha / 100;
+  ctx.fillStyle = `rgba(0,0,0,${alpha.toFixed(2)})`;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+  // Mostra nome area durante la transizione
+  if (alpha > 0.3 && alpha < 0.9 && gameState.transitionDir) {
+    ctx.fillStyle = '#D4A843';
+    ctx.font = 'bold 14px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = alpha < 0.5 ? (alpha - 0.3) * 5 : (0.9 - alpha) * 5;
+    ctx.fillText(gameState.transitionDir.toUpperCase(), CANVAS_W / 2, CANVAS_H / 2 - 4);
+    ctx.fillStyle = '#A0A8B0';
+    ctx.font = '8px "Courier New", monospace';
+    ctx.fillText('Caricamento...', CANVAS_W / 2, CANVAS_H / 2 + 10);
+    ctx.globalAlpha = 1;
+  }
 }
 
 // Export for other modules
