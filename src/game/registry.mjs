@@ -159,6 +159,7 @@ export function checkRegistry() {
     result.textContent = "✓ Registro ricostruito! C'è uno schema ciclico...";
     result.style.color = '#44cc44';
     window.gameState.puzzlesSolved.registry = true;
+    window.updateNPCStates();
     document.getElementById('registry-confirm').disabled = true;
 
     // Notifica StoryManager

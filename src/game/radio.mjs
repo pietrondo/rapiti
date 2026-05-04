@@ -73,7 +73,8 @@ export function updateRadioKnob(pct) {
     statusEl.className = 'radio-status clear';
     if (!window.gameState.puzzlesSolved.radio) {
       window.gameState.puzzlesSolved.radio = true;
-      window.gameState.radioSolved = true; // Mantieni per retrocompatibilità temporanea
+      window.gameState.radioSolved = true;
+      window.updateNPCStates();
 
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {

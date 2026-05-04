@@ -89,6 +89,7 @@ export function checkScene() {
   var result = document.getElementById('scene-result');
   if (correct) {
     window.gameState.puzzlesSolved.scene = true;
+    window.updateNPCStates();
     result.textContent = '✓ Elena non stava scappando. Stava tornando verso qualcosa.';
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;

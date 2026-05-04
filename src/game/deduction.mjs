@@ -219,8 +219,9 @@ export function checkDeduction() {
       window.gameState.npcTrust.anselmo += 10;
       if (window.gameState.confirmedHypotheses.length >= 3) {
         window.gameState.puzzlesSolved.deduction = true;
-        window.gameState.puzzleSolved = true; // Mantieni per retrocompatibilità temporanea
+        window.gameState.puzzleSolved = true;
         window.StoryManager.onPuzzleSolved('deduction');
+        window.updateNPCStates();
         window.showToast(window.t ? window.t('toast.deduction_complete') : 'Tutti i pezzi del puzzle combaciano. La verità è vicina.');
       }
     } else {

@@ -273,6 +273,7 @@ export function collectClue(clue) {
   }
 
   updateHUD();
+  updateNPCStates();
 }
 
 function getInteractiveObjects() {
@@ -583,9 +584,56 @@ if (typeof window !== 'undefined') {
   window.updateNPCStates = updateNPCStates;
 }
 
-/** Stub — aggiorna stati NPC dopo puzzle/dialogo */
+/** Aggiorna stati NPC dopo raccolta indizi o completamento puzzle */
 export function updateNPCStates() {
-  console.log('[updateNPCStates] Stub — nessun aggiornamento NPC');
+  var gs = window.gameState;
+  var clues = gs.cluesFound || [];
+  var puzzles = gs.puzzlesSolved || {};
+
+  // Clue → NPC s1 mapping
+  var clueToNpcS1 = {
+    'lettera_censurata': 'ruggeri',
+    'registro_1861': 'neri',
+    'simboli_portone': 'teresa',
+    'radio_audio': 'anselmo',
+    'frammento': 'valli',
+    'giornale_1952': 'osvaldo',
+    'registro_monte_ferro': 'neri',
+  };
+
+  // Puzzle → NPC s2 mapping
+  var puzzleToNpcS2 = {
+    'deduction': 'ruggeri',
+    'registry': 'neri',
+    'scene': 'teresa',
+    'radio': 'osvaldo',
+    'recorder': 'valli',
+  };
+
+  // Aggiorna s1 per indizi raccolti
+  for (var clueId in clueToNpcS1) {
+    if (clues.indexOf(clueId) >= 0) {
+      var npc = clueToNpcS1[clueId];
+      if (gs.npcStates[npc] !== undefined && gs.npcStates[npc] < 1) {
+        gs.npcStates[npc] = 1;
+      }
+    }
+  }
+
+  // Aggiorna s2 per puzzle risolti
+  for (var puzzleId in puzzleToNpcS2) {
+    if (puzzles[puzzleId]) {
+      var npc2 = puzzleToNpcS2[puzzleId];
+      if (gs.npcStates[npc2] !== undefined && gs.npcStates[npc2] < 2) {
+        gs.npcStates[npc2] = 2;
+      }
+    }
+  }
+
+  // Teresa s2 speciale (memoria instabile) quando scene risolto
+  if (puzzles['scene'] && gs.npcStates['teresa'] < 2) {
+    gs.npcStates['teresa'] = 2;
+  }
 }
 
 /** Collega i click dei color-swatch al window.gameState.playerColors */
