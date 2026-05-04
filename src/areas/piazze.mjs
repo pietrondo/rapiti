@@ -276,6 +276,9 @@ const PiazzeArea = {
     drawBarFacade(ctx, 302, 112, 70, 56, t);
     drawNoticeBoard(ctx, 82, 136, t);
     drawBench(ctx, 260, 166);
+    drawFlowerPot(ctx, 120, 195);
+    drawFlowerPot(ctx, 288, 188);
+    drawCat(ctx, 276, 162, t);
 
     // INDICATORI DI PASSAGGIO (FRECCE)
     function drawArrow(x, y, dir, color) {
@@ -338,6 +341,37 @@ const PiazzeArea = {
     window.PF.lamp(ctx, 352, 142);
     window.PF.tree(ctx, 36, 142);
     window.PF.tree(ctx, 292, 150);
+
+    // Helper: vaso di fiori
+    function drawFlowerPot(c, fx, fy) {
+      c.fillStyle = '#6B4E3D';
+      c.fillRect(fx, fy, 10, 8);
+      c.fillRect(fx + 1, fy - 2, 8, 3);
+      c.fillStyle = '#8B7355';
+      c.fillRect(fx + 1, fy, 8, 3);
+      c.fillStyle = '#D4A843';
+      c.fillRect(fx + 2, fy - 3, 2, 3);
+      c.fillRect(fx + 6, fy - 4, 2, 4);
+      c.fillStyle = '#CC4444';
+      c.fillRect(fx + 4, fy - 3, 2, 2);
+      c.fillStyle = '#5C7A4B';
+      c.fillRect(fx + 1, fy - 5, 3, 3);
+      c.fillRect(fx + 6, fy - 5, 3, 2);
+    }
+
+    // Helper: gatto
+    function drawCat(c, cx, cy, tt) {
+      var tail = Math.sin(tt * 4) * 2;
+      c.fillStyle = '#3A3A3A';
+      c.fillRect(cx, cy, 8, 6);
+      c.fillRect(cx + 1, cy - 3, 5, 3);
+      c.fillStyle = '#6EEBFF';
+      c.fillRect(cx + 4, cy - 2, 2, 1);
+      c.fillRect(cx + 5, cy - 2, 1, 1);
+      c.fillStyle = '#3A3A3A';
+      c.fillRect(cx - 3 + tail, cy + 1, 4, 2);
+    }
+
     window.drawVignette(ctx);
   },
 };

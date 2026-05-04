@@ -25,22 +25,25 @@ export function drawMunicipioInternoArea(ctx, t) {
     ctx.strokeRect(p * 50 + 2, 2, 46, 126);
   }
 
-  // Finestra con vista notte e luna
+  // Finestra con tende e vista notte
   ctx.fillStyle = '#1A1C20';
   ctx.fillRect(280, 15, 50, 60);
   ctx.fillStyle = '#D4A843';
   ctx.beginPath();
   ctx.arc(312, 30, 8, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = 'rgba(150,180,220,0.12)';
-  ctx.beginPath();
-  ctx.arc(312, 30, 18, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#4A3428';
-  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#4A3428'; ctx.lineWidth = 2;
   ctx.strokeRect(280, 15, 50, 60);
   ctx.beginPath(); ctx.moveTo(305, 15); ctx.lineTo(305, 75); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(280, 45); ctx.lineTo(330, 45); ctx.stroke();
+  // Tende
+  ctx.fillStyle = '#8B0000';
+  ctx.beginPath();
+  ctx.moveTo(278, 12); ctx.lineTo(290, 12); ctx.lineTo(295, 55); ctx.lineTo(280, 55); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(330, 12); ctx.lineTo(318, 12); ctx.lineTo(313, 55); ctx.lineTo(328, 55); ctx.fill();
+  // Bastone tenda
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(276, 11, 58, 2);
 
   // Libreria a sinistra
   ctx.fillStyle = '#3E2723';

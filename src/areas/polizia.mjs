@@ -13,6 +13,19 @@ export function drawPoliceArea(ctx, t) {
   window.PF.nightSky(ctx, 12, t);
   window.PF.mountains(ctx);
 
+  // Antenna radio sul tetto
+  ctx.fillStyle = '#555';
+  ctx.fillRect(180, 5, 2, 28);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(178, 4, 6, 2);
+
+  // Bandiera Italiana
+  ctx.fillStyle = '#666';
+  ctx.fillRect(50, 10, 2, 50);
+  ctx.fillStyle = '#00853E'; ctx.fillRect(52, 12, 10, 13);
+  ctx.fillStyle = '#FFF'; ctx.fillRect(62, 12, 10, 13);
+  ctx.fillStyle = '#C83737'; ctx.fillRect(72, 12, 10, 13);
+
   // Asfalto
   ctx.fillStyle = '#2A2D33';
   ctx.fillRect(0, 90, CANVAS_W, 160);
@@ -91,13 +104,36 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillRect(0, 100, 40, 1);
   ctx.fillRect(360, 100, 40, 1);
 
+  // Recinzione e sbarra
+  ctx.fillStyle = '#333';
+  ctx.fillRect(0, 100, 40, 3);
+  ctx.fillRect(360, 100, 40, 3);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(0, 100, 40, 1);
+  ctx.fillRect(360, 100, 40, 1);
+  // Sbarra mobile (rossa/bianca)
+  ctx.fillStyle = '#CC4444';
+  ctx.fillRect(0, 98, 45, 3);
+  ctx.fillStyle = '#FFF';
+  ctx.fillRect(10, 98, 8, 3); ctx.fillRect(26, 98, 8, 3);
+
   // Cartello PARCHEGGIO
   ctx.fillStyle = '#1A1C20';
-  ctx.fillRect(10, 115, 30, 12);
+  ctx.fillRect(12, 115, 30, 12);
   ctx.fillStyle = '#A0A8B0';
   ctx.font = '5px "Courier New",monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('PARCHEGGIO', 25, 124);
+  ctx.fillText('PARCHEGGIO', 27, 124);
+  ctx.textAlign = 'start';
+
+  // Cartello "DIVIETO DI SOSTA"
+  ctx.fillStyle = '#CC4444';
+  ctx.fillRect(348, 118, 28, 12);
+  ctx.fillStyle = '#FFF';
+  ctx.font = '4px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('DIVIETO', 362, 125);
+  ctx.fillText('DI SOSTA', 362, 129);
   ctx.textAlign = 'start';
 
   // Lampioni
