@@ -1,98 +1,180 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * AREA: CIMITERO
- * Cimitero Comunale
+ * Cimitero Comunale — Atmosfera gotica, nebbia, lapidi antiche
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawCemeteryArea(ctx, t) {
-  window.PF.nightSky(ctx, 16, t);
-  window.PF.mountains(ctx);
+  var PAL = window.PALETTE;
 
-  ctx.fillStyle = window.PALETTE.darkForest;
-  ctx.fillRect(0, 80, window.CANVAS_W, 170);
+  // Cielo notturno cupo
+  ctx.fillStyle = '#06090F';
+  ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-  // Pattern erba scura nel cimitero
-  if (window.drawWallTexture) {
-    window.drawWallTexture(
-      ctx,
-      0,
-      80,
-      window.CANVAS_W,
-      170,
-      window.PALETTE.darkForest,
-      'rgba(0,0,0,0.1)'
-    );
+  // Stelle fioche
+  ctx.fillStyle = '#E8DCC8';
+  for (var s = 0; s < 30; s++) {
+    ctx.globalAlpha = 0.15 + Math.random() * 0.2;
+    ctx.fillRect(Math.random() * CANVAS_W, Math.random() * 60, 1, 1);
   }
+  ctx.globalAlpha = 1;
 
-  // Mura del cimitero (Pietra)
-  if (window.drawBrickPattern) {
-    window.drawBrickPattern(ctx, 0, 80, 35, 170, window.PALETTE.stoneGrey);
-    window.drawBrickPattern(ctx, 365, 80, 35, 170, window.PALETTE.stoneGrey);
-  } else {
-    ctx.fillStyle = window.PALETTE.stoneGrey;
-    ctx.fillRect(0, 80, 30, 170);
-    ctx.fillRect(370, 80, 30, 170);
+  // Luna velata
+  ctx.fillStyle = 'rgba(180,200,220,0.2)';
+  ctx.beginPath();
+  ctx.arc(60, 20, 30, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(220,235,255,0.5)';
+  ctx.beginPath();
+  ctx.arc(60, 20, 10, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Terreno erba scura
+  ctx.fillStyle = '#1A2416';
+  ctx.fillRect(0, 75, CANVAS_W, 175);
+
+  // Mura di cinta in pietra
+  ctx.fillStyle = '#2A2D35';
+  ctx.fillRect(0, 75, 18, 175);
+  ctx.fillRect(CANVAS_W - 18, 75, 18, 175);
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(0, 75, 18, 2);
+  ctx.fillRect(CANVAS_W - 18, 75, 18, 2);
+
+  // Cancello in ferro battuto (centro in alto)
+  ctx.strokeStyle = '#1A1C20';
+  ctx.lineWidth = 2;
+  ctx.fillStyle = '#2A2D35';
+  ctx.fillRect(175, 72, 50, 8);
+  for (var gx = 180; gx < 220; gx += 6) {
+    ctx.beginPath();
+    ctx.moveTo(gx, 75);
+    ctx.lineTo(gx + 3, 65);
+    ctx.stroke();
   }
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(196, 68, 8, 2);
 
-  // Lapidi migliorate
-  var tombstones = [
-    { x: 60, y: 120, w: 20, h: 30, type: 'rounded' },
-    { x: 100, y: 140, w: 18, h: 28, type: 'flat' },
-    { x: 150, y: 110, w: 22, h: 35, type: 'cross' },
-    { x: 200, y: 130, w: 20, h: 32, type: 'rounded' },
-    { x: 250, y: 115, w: 18, h: 28, type: 'flat' },
-    { x: 300, y: 145, w: 20, h: 30, type: 'rounded' },
-    { x: 80, y: 180, w: 20, h: 28, type: 'flat' },
-    { x: 130, y: 190, w: 22, h: 32, type: 'cross' },
-    { x: 280, y: 185, w: 18, h: 26, type: 'rounded' },
+  // Lapidi con nomi e date
+  var graves = [
+    { x: 50, y: 105, w: 22, h: 34, name: 'ROSSI', year: '1901' },
+    { x: 100, y: 120, w: 18, h: 28, name: 'BIANCHI', year: '1923' },
+    { x: 160, y: 98, w: 24, h: 38, name: 'FERRARI', year: '1889' },
+    { x: 230, y: 115, w: 18, h: 30, name: 'MORETTI', year: '1945' },
+    { x: 290, y: 108, w: 20, h: 32, name: 'COLOMBO', year: '1912' },
+    { x: 70, y: 165, w: 16, h: 24, name: 'RICCI', year: '1958' },
+    { x: 140, y: 170, w: 18, h: 28, name: 'GRECO', year: '1936' },
+    { x: 250, y: 162, w: 20, h: 30, name: 'ESPOSITO', year: '1961' },
+    { x: 320, y: 155, w: 16, h: 26, name: 'RUSSO', year: '1940' },
   ];
 
-  for (var i = 0; i < tombstones.length; i++) {
-    var ts = tombstones[i];
-    ctx.fillStyle = '#5a5a5a';
-
-    if (ts.type === 'cross') {
-      ctx.fillRect(ts.x + ts.w / 2 - 4, ts.y, 8, ts.h);
-      ctx.fillRect(ts.x, ts.y + 8, ts.w, 8);
-    } else if (ts.type === 'rounded') {
-      ctx.beginPath();
-      ctx.roundRect(ts.x, ts.y, ts.w, ts.h, [8, 8, 0, 0]);
-      ctx.fill();
-    } else {
-      ctx.fillRect(ts.x, ts.y, ts.w, ts.h);
-    }
-
-    // Dettagli muschio/erosione
-    ctx.fillStyle = 'rgba(0,50,0,0.2)';
-    ctx.fillRect(ts.x + 2, ts.y + ts.h - 6, ts.w - 4, 4);
+  for (var i = 0; i < graves.length; i++) {
+    var g = graves[i];
+    ctx.fillStyle = '#4A4A50';
+    ctx.beginPath();
+    ctx.roundRect(g.x, g.y, g.w, g.h, [g.w / 3, g.w / 3, 0, 0]);
+    ctx.fill();
+    ctx.fillStyle = '#5A5A60';
+    ctx.fillRect(g.x + 2, g.y + 2, g.w - 4, g.h - 4);
+    // Muschio
+    ctx.fillStyle = 'rgba(20,40,10,0.4)';
+    ctx.fillRect(g.x + 2, g.y + g.h - 8, g.w - 4, 6);
+    // Nome e anno
+    ctx.fillStyle = 'rgba(180,170,160,0.7)';
+    ctx.font = '5px "Courier New",monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(g.name, g.x + g.w / 2, g.y + 10);
+    ctx.fillText(g.year, g.x + g.w / 2, g.y + 18);
+    ctx.textAlign = 'start';
   }
 
-  // Busta Gialla di Gino (Indizio Missione)
-  if (window.gameState.cluesFound.indexOf('lettera_gino') === -1) {
-    ctx.fillStyle = '#FFD700';
-    ctx.fillRect(100, 220, 16, 12);
-    ctx.strokeStyle = '#DAA520';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(100, 220, 16, 12);
-    // Sigillo ceralacca
-    ctx.fillStyle = '#CC4444';
-    ctx.fillRect(106, 224, 4, 4);
+  // Mausoleo Famiglia Bellandi
+  ctx.fillStyle = '#2E2E35';
+  ctx.fillRect(280, 75, 50, 55);
+  ctx.fillStyle = '#353540';
+  ctx.beginPath();
+  ctx.moveTo(275, 75);
+  ctx.lineTo(305, 50);
+  ctx.lineTo(335, 75);
+  ctx.fill();
+  // Porta mausoleo
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(295, 100, 20, 30);
+  ctx.beginPath();
+  ctx.arc(305, 115, 10, Math.PI, 0);
+  ctx.fill();
+  // Iscrizione
+  ctx.fillStyle = '#D4A843';
+  ctx.font = '5px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('BELLANDI', 305, 88);
+  ctx.fillText('1861 - 1978', 305, 96);
+  ctx.textAlign = 'start';
+
+  // Cipressi
+  function drawCypress(cx, cy, ch) {
+    ctx.fillStyle = '#1A2411';
+    ctx.fillRect(cx - 3, cy, 6, ch);
+    ctx.fillStyle = '#1F2E12';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - ch * 0.6);
+    ctx.lineTo(cx + 8, cy + ch * 0.3);
+    ctx.lineTo(cx - 8, cy + ch * 0.3);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - ch * 0.3);
+    ctx.lineTo(cx + 10, cy + ch * 0.5);
+    ctx.lineTo(cx - 10, cy + ch * 0.5);
+    ctx.fill();
   }
+  drawCypress(35, 85, 50);
+  drawCypress(55, 95, 40);
+  drawCypress(365, 85, 55);
+  drawCypress(345, 100, 40);
 
-  // Alberi spettrali (usano il nuovo renderer)
-  window.PF.tree(ctx, 50, 105);
-  window.PF.tree(ctx, 350, 105);
-  window.PF.tree(ctx, 160, 160);
+  // Lanterne con luce tremolante
+  var f1 = 0.5 + Math.sin(t * 6) * 0.2;
+  var f2 = 0.5 + Math.sin(t * 6 + 2) * 0.2;
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(118, 195, 4, 20);
+  ctx.fillRect(278, 195, 4, 20);
+  ctx.fillStyle = `rgba(255,200,100,${f1})`;
+  ctx.beginPath();
+  ctx.arc(120, 194, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = `rgba(255,200,100,${f2})`;
+  ctx.beginPath();
+  ctx.arc(280, 194, 5, 0, Math.PI * 2);
+  ctx.fill();
+  // Alone lanterne
+  ctx.fillStyle = `rgba(255,200,100,${f1 * 0.15})`;
+  ctx.beginPath();
+  ctx.arc(120, 194, 25, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = `rgba(255,200,100,${f2 * 0.15})`;
+  ctx.beginPath();
+  ctx.arc(280, 194, 25, 0, Math.PI * 2);
+  ctx.fill();
 
-  // Nebbia bassa (placeholder per hya task)
-  var glow = 0.4 + Math.sin(t * 1.5) * 0.1;
-  ctx.fillStyle = `rgba(120, 150, 180, ${glow * 0.3})`;
-  ctx.fillRect(0, 180, window.CANVAS_W, 70);
+  // Nebbia ground-level
+  var fog = 0.35 + Math.sin(t * 0.8) * 0.1;
+  var fogGrad = ctx.createLinearGradient(0, 160, 0, CANVAS_H);
+  fogGrad.addColorStop(0, 'transparent');
+  fogGrad.addColorStop(0.6, `rgba(160,180,200,${fog * 0.3})`);
+  fogGrad.addColorStop(1, `rgba(160,180,200,${fog * 0.5})`);
+  ctx.fillStyle = fogGrad;
+  ctx.fillRect(0, 160, CANVAS_W, 90);
 
-  window.PF.lamp(ctx, 200, 190, t);
+  // Nebbia fluttuante
+  for (var m = 0; m < 4; m++) {
+    var mx = ((t * 15 + m * 80) % (CANVAS_W + 80)) - 40;
+    var ma = 0.08 + Math.sin(t * 2 + m) * 0.04;
+    ctx.fillStyle = `rgba(180,190,210,${ma})`;
+    ctx.fillRect(mx, 170 + m * 12, 60, 20);
+  }
 }
 
 const CimiteroArea = {
