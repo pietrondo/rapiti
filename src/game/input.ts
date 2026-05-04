@@ -126,6 +126,20 @@ class InputManager {
 
     this.keys.add(key);
 
+    // Map editor toggle (F12)
+    if (key === 'F12') {
+      e.preventDefault();
+      const w = window as any;
+      if (w.toggleEditor) {
+        w.toggleEditor();
+      } else {
+        import('../tools/mapEditor/editor.ts').then(mod => {
+          mod.openEditor();
+        }).catch(() => {});
+      }
+      return;
+    }
+
     // Cancel mouse movement if key is pressed
     if (['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(key) >= 0) {
        (gameState.player as any).targetX = null;

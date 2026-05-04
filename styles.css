@@ -432,4 +432,52 @@ body {
   .deduction-layout { flex-direction: column; }
   .panel { padding: 20px 16px; width: 94%; }
   .panel h2 { font-size: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MAP EDITOR OVERLAY
+   ═══════════════════════════════════════════════════════════════ */
+#map-editor-overlay {
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #0a0a0f; z-index: 9999;
+  font-family: 'Courier New', monospace; font-size: 11px; color: #ccc;
+}
+#me-toolbar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; background: #12141a; border-bottom: 1px solid #2a2a3a;
+}
+.me-title { color: #D4A843; font-weight: bold; font-size: 14px; margin-right: 12px; }
+#me-area-label { color: #888; }
+#me-area-select { background: #1a1a2e; color: #ccc; border: 1px solid #444; padding: 2px 6px; font-family: inherit; font-size: 11px; }
+.me-btn {
+  background: #1e2030; color: #aaa; border: 1px solid #333; padding: 3px 10px;
+  cursor: pointer; font-family: inherit; font-size: 10px;
+}
+.me-btn:hover { background: #2a2d40; color: #fff; }
+.me-btn.active { background: #D4A843; color: #0a0a0f; border-color: #D4A843; }
+.me-export { background: #2a4a2a; border-color: #3a6a3a; }
+.me-export:hover { background: #3a6a3a; }
+.me-close { background: #4a2a2a; border-color: #6a3a3a; }
+.me-close:hover { background: #6a3a3a; }
+#me-main { display: flex; flex: 1; overflow: hidden; }
+#me-canvas-wrap {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  background: #08080f; padding: 10px;
+}
+#me-canvas { image-rendering: pixelated; border: 1px solid #333; max-width: 100%; max-height: 100%; }
+#me-props {
+  width: 200px; background: #12141a; border-left: 1px solid #2a2a3a;
+  padding: 10px; overflow-y: auto;
+}
+#me-props h4 { color: #D4A843; margin-bottom: 8px; font-size: 11px; }
+.me-prop-row { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.me-prop-row span { color: #888; min-width: 60px; font-size: 10px; }
+.me-prop-row input {
+  background: #1a1a2e; color: #ccc; border: 1px solid #444;
+  padding: 2px 4px; font-family: inherit; font-size: 10px;
+}
+#me-status {
+  padding: 4px 12px; background: #12141a; border-top: 1px solid #2a2a3a;
+  color: #666; font-size: 10px;
+}
 }
