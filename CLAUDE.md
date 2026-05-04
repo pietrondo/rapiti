@@ -79,11 +79,23 @@ curl https://api.openadapter.in/v1/images/generations \
 
 ## Architecture Overview
 
-*   **Single Source of Truth:** `src/config.ts` is the authoritative source for `gameState`. `src/config.mjs` is a compatibility proxy.
-*   **Authoritative Narrative Engine:** `src/story/index.ts` (`StoryManager`) orchestrates chapters, quests, and flags.
-*   **Unified Objects:** All interactive objects are defined in `src/data/clues.mjs` (`areaObjects`).
-*   **Safe UI:** Avoid `innerHTML`. Use `textContent` and DOM construction.
-*   **Hybrid Rendering:** PixiJS v8 for world/menus, Canvas 2D for HUD/Mini-map.
+- **Single Source of Truth:** `src/config.ts` for `gameState`; `config.mjs` is a compatibility proxy.
+- **Rendering:** PixiJS v8 (cinematicRenderer for title/intro/prologue/tutorial, gameplaySync for gameplay) + Canvas 2D (HUD/mini-map).
+- **Narrative Engine:** `src/story/index.ts` (StoryManager) delegates to ChapterManager, QuestManager, FlagManager, StatsManager.
+- **Areas:** 11 areas in `src/areas/` registered via AreaManager (`src/areas/index.mjs`).
+- **Interactive Objects:** `window.areaObjects` in `src/data/clues.mjs`.
+- **Map Editor:** `src/tools/mapEditor/` — F12 overlay, dynamic import, zero bundle impact.
+- **Safe UI:** Avoid `innerHTML`. Use `textContent` and DOM construction.
 
 ## Conventions & Patterns
-...
+
+- **PixiJS v8**: `rect().fill()`, `Texture.from()`, `Container` wrapper per glow/core/sprite — mai `addChild()` su leaf object.
+- **window.\* in .mjs**: I moduli `.mjs` usano `window.gameState`, `window.PALETTE`, `window.UIRenderer`, etc.
+- **`"use strict"`**: Primo statement in ogni file `src/game/*.mjs`.
+- **Variabili**: `var` nei `.mjs`, `let`/`const` nei `.ts`.
+- **Naming**: funzioni `camelCase`, costanti `UPPER_SNAKE`. Codice in inglese, UI in italiano.
+- **i18n defensive**: `window.t ? window.t(key, params) : fallback` — `window.t` è definito in `src/i18n/index.mjs`.
+- **Canvas API**: `fillRect` per pixel art, `fillText` con `"Courier New"` monospace.
+- **Collisioni AABB**: `movement.ts` — player vs colliders vs NPC vs canvas edges.
+- **Phase transitions**: ENTER per avanzare (title→prologo→intro→tutorial→playing), F12 per editor mappe.
+- **Dynamic import**: Moduli tools/mapEditor caricati solo quando F12 premuto.

@@ -40,12 +40,19 @@ Il gioco è una **macchina a stati** (`gameState.gamePhase`) orchestrata dal `Re
 
 ```
 src/
-  config.js              — PALETTE (12 colori), CANVAS_W/H, PLAYER_SPEED, gameState (tutti i campi)
+  config.ts              — PALETTE (12 colori), CANVAS_W/H, PLAYER_SPEED, gameState (tutti i campi)
+  config.mjs             — Re-export retrocompatibile di config.ts
+  types.ts               — TypeScript tipi condivisi (Area, Exit, NPC, Clue, etc.)
+  global.d.ts            — Dichiarazioni globali window.*
   data/
-    clues.js             — Array clues (9 indizi con id/name/area/desc), areaObjects (oggetti per area), cluesMap
-    npcs.js              — npcsData (7 NPC con id/name/colors), dialogueNodes (albero dialoghi), dialogueEffects
-    areas.js             — Aree con name/walkableTop/colliders/npcs/draw(), helper PF (engine.js), TextureGenerator
-    puzzles.js           — registryData (4 sparizioni con anno/dettaglio)
+    clues.mjs            — Array clues (17 indizi), areaObjects (oggetti per area), cluesMap
+    npcData.mjs          — Dati visivi NPC (8 NPC con id/name/colors)
+    dialogueNodes.mjs    — Albero dialoghi NPC (stati 0/1/2)
+    dialogueEffects.mjs  — Effetti applicati dopo scelte di dialogo
+    areas.mjs            — Facade: re-export drawCommon.mjs + civicDraw.mjs
+    drawCommon.mjs       — Primitive: getAreaTexture, drawLitWindow, drawTileRoof, drawWallTexture, drawVignette
+    civicDraw.mjs        — Facciate: drawMunicipioFacade, drawChurchFacade, drawBarFacade, drawPiazzaFountain
+    puzzles.mjs          — Dati puzzle (4 sparizioni)
   engine/
     spriteEngine.mjs     — Caricamento PNG, generazione procedurale sprite
     proceduralRenderer.mjs — Dispatcher rendering aree e edifici procedurali
@@ -53,73 +60,96 @@ src/
     civicBuildings.mjs   — Chiese, case residenziali, negozi
     industrialBuildings.mjs — Fabbriche, stazioni di polizia
     buildingDecorations.mjs — Fontane, lampioni
-    index.ts             — Engine hub: SpriteEngine, ProceduralRenderer, BuildingRenderers
+    index.ts             — Engine hub
+  areas/
+    piazze.mjs           — Piazza del Paese (hub principale)
+    chiesa.mjs           — Chiesa di San Celeste (don Pietro)
+    cimitero.mjs         — Cimitero
+    giardini.mjs         — Giardini (Anselmo)
+    campo.mjs            — Campo delle Luci (Teresa, finale)
+    barExterior.mjs      — Bar — Esterno (Osvaldo)
+    barInterno.mjs       — Bar — Interno (radio puzzle)
+    municipio.mjs        — Municipio — Interno (Ruggeri)
+    residenziale.mjs     — Quartiere Residenziale (Gino)
+    industriale.mjs      — Zona Industriale (recorder puzzle)
+    polizia.mjs          — Stazione di Polizia (Neri)
+    index.mjs            — AreaManager (Map-based, Proxy su window.areas)
+  i18n/
+    index.mjs            — Motore i18n (t(), setLocale(), getLocale()), window.t = t
+    locales/
+      it.mjs             — Dizionario italiano (tutti i testi UI, dialogo, aree)
+      en.mjs             — Dizionario inglese
+  effects/
+    ambient.mjs          — Ambiente: fireflies (piazze/campo), dust (archivio/cascina)
+    particles.mjs        — FireflySystem, DustSystem, SparkleSystem
+    lighting.mjs         — LightingSystem, TorchSystem, luci dinamiche per area
+    weather.mjs          — Effetti meteo (pioggia, nebbia)
+    animations.mjs       — Animazioni (scritte, transizioni)
+    uiEffects.mjs        — Effetti UI (notifiche, pulse)
+    index.mjs            — Facade effetti
+  render/
+    spriteManager.mjs    — Gestione sprite e cache (getOrCreateNPCSheet, getOrCreatePlayerSheet)
+    uiRenderer.mjs       — Primitive UI (drawPixelPanel, drawPrompt, drawTitleLandscape, drawFilmGrain)
+    objectRenderer.mjs   — Icone oggetti interattivi (radio, recorder, clue icons)
+    mapRenderer.mjs      — Minimappa, indicatori uscite, nomi aree
+    prologueRenderer.mjs — Cutscene prologo Canvas 2D (Elena, night field, cerchi, frammento)
+    introRenderer.mjs    — Titolo Canvas 2D, slide intro, tutorial
+    endingRenderer.mjs   — Schermata finale Canvas 2D
+    gameRenderer.mjs     — Facade: areaRenderer + playerRenderer + hintRenderer
+    areaRenderer.mjs     — Rendering area: NPC, oggetti, exit marker
+    playerRenderer.mjs   — Rendering player: sprite sheet, animazione, ombra
+    hintRenderer.mjs     — Hint interazione (pulsante E sopra target)
+    cinematicRenderer.ts — Titolo/prologo/intro/tutorial in PixiJS v8 (renderParallaxSky, renderPrologue)
+    pixiRenderer.ts      — Engine PixiJS v8: Application, layer, CRT filter, _createPixelPanel
+    gameplaySync.ts      — Sync gameplay PixiJS (area bg, player sprite, NPC sprite)
+    index.ts             — RenderManager ES6+ (dispatcher fasi, orchestrazione Pixi/Canvas)
+  game/
+    engine.mjs           — PF helper (nightSky, mountains, building, lamp, tree, buildingDetailed)
+    init.mjs             — initCanvas, initEventListeners, showToast, handleInteract, collectClue, updateHUD, openJournal/Inventory/Settings
+    audio.mjs            — initAudio, startMusic, toggleMusic
+    customize.mjs        — openCustomize, applyCustomization, renderCustomizePreview (EarthBound style)
+    input.ts             — InputManager: WASD, touch, F12 (editor mappe), phase transitions
+    movement.ts          — updatePlayerPosition, resolveCollisions (AABB)
+    dialogue.ts          — startDialogue (state-based), renderDialogueHTML, selectChoice, applyEffect
+    radio.mjs            — openRadioPuzzle, setupRadio (drag knob a 72 MHz)
+    registry.mjs         — openRegistryPuzzle, checkRegistry (ordine 1952→1969→1974→1978)
+    scene.mjs            — openScenePuzzle, checkScene (lanterna→impronte→segni), determineEndingV2
+    recorder.mjs         — openRecorderPuzzle (cavi + bobina + power), playRecorder
+    deduction.mjs        — canOpenDeduction, openDeduction, checkDeduction (3 indizi in 3 slot)
+    transition.ts        — checkAreaExits, changeArea (fade 100→0), triggerInteractExit
+    endings.mjs          — determineEnding (v1), showEndingOverlay
+    store.ts             — GameStore: stato reattivo
+    saveLoad.ts          — SaveLoadSystem: localStorage, export/import JSON
+    settings.ts          — SettingsManager: fullscreen, audio, lingua
+    loop.ts              — GameLoop: update + render + prologo auto-advance
+    prologueUpdater.ts   — updatePrologue auto-advance (9 step, timing array)
+    spriteGenerator.mjs  — generatePlayerSheet (32x32, 4 dir x 4 frame, colori dinamici), generateNPCSheet, generateBackground
+    textureGenerator.mjs — generateBrickWall, generateWoodFloor, generateGrassTexture, cache getOrCreateTexture
   story/
     storyChapters.mjs    — Capitoli della storia e obiettivi
     storyQuests.mjs      — Quest parallele e ricompense
     storyDialogues.mjs   — Trigger dialoghi NPC per stato
     storyEndings.mjs     — Condizioni per i finali
     storyEvents.mjs      — Eventi speciali one-shot
-    storyAchievements.mjs — Obiettivi globali (achievements)
-    chapterManager.mjs   — Gestione progressione capitoli
-    questManager.mjs     — Gestione progressione quest
-    storyEngine.mjs      — Facade che orchestra i sotto-moduli del motore narrativo
+    storyAchievements.mjs — Obiettivi globali
+    chapterManager.ts    — Gestione progressione capitoli
+    questManager.ts      — Gestione progressione quest
+    storyEngine.ts       — Facade orchestrazione motore narrativo
     dialogueSystem.mjs   — Determina nodi dialogo NPC per stato
-    conditionSystem.mjs  — Valuta condizioni narrative (flag, indizi, capitoli, puzzle)
+    conditionSystem.mjs  — Valuta condizioni (flag, indizi, capitoli, puzzle)
     eventSystem.mjs      — Eventi speciali one-shot
     endingSystem.mjs     — Determina il finale in base alle prove raccolte
     achievementSystem.mjs — Obiettivi globali
-    flagManager.mjs      — Manager flag booleani
-    statsManager.mjs     — Manager statistiche di gioco
-    StoryManager.mjs     — Facade legacy che delega a ChapterManager, QuestManager, StoryEngine
-    index.ts             — StoryManager ES6+ class e singleton
-  data/
-    clues.mjs            — Array clues, areaObjects, cluesMap
-    npcData.mjs          — Dati visivi NPC (nome, colori)
-    dialogueNodes.mjs    — Albero dialoghi NPC
-    dialogueEffects.mjs  — Effetti applicati dopo scelte di dialogo
-    areas.mjs            — Facade: re-export drawCommon.mjs + civicDraw.mjs
-    drawCommon.mjs       — Primitive disegno condivise: getAreaTexture, drawLitWindow, drawTileRoof, drawWallTexture, drawVignette
-    civicDraw.mjs        — Facciate edifici civili: drawMunicipioFacade, drawChurchFacade, drawBarFacade, drawPiazzaFountain, drawNoticeBoard, drawBench
-    puzzles.mjs          — Dati puzzle
-  render/
-    spriteManager.mjs    — Gestione sprite e cache
-    uiRenderer.mjs       — Primitive UI, pannelli, effetti visivi, title landscape, fade
-    objectRenderer.mjs   — Icone oggetti interattivi
-    mapRenderer.mjs      — Minimappa, indicatori uscite, nomi aree
-    sceneRenderer.mjs    — Facade scene (aggrega sotto-moduli)
-    prologueRenderer.mjs — Cutscene prologo scomparsa Elena
-    introRenderer.mjs    — Titolo, slide intro, tutorial
-    endingRenderer.mjs   — Schermata finale
-    gameRenderer.mjs     — Facade: re-export areaRenderer + playerRenderer + hintRenderer
-    areaRenderer.mjs     — Rendering area: NPCs, oggetti interattivi, exit markers
-    playerRenderer.mjs   — Rendering player: sprite sheet, animazione, shadow
-    hintRenderer.mjs     — Rendering hint interazione sopra target
-    index.ts             — RenderManager ES6+ class e dispatcher
-  game/
-    engine.js            — SpriteEngine (caricamento PNG, generazione procedurale), PF (helper disegno: nightSky, mountains, building, lamp, tree, buildingDetailed)
-    init.js              — initCanvas(), initEventListeners(), setupColorSwatches(), setupDragDrop(), setupRadio(), setupRegistry()
-    audio.js             — initAudio(), startMusic(), toggleMusic(), updateMuteButton()
-    customize.js         — openCustomize(), applyCustomization(), renderCustomizePreview() (EarthBound style), _lighten/_darken helpers (EarthBound style), _lighten/_darken helpers
-    input.ts             — InputManager class: handleKeyDown/KeyUp (macchina a stati tasti), touch controls
-    movement.ts          — updatePlayerPosition() (WASD + collider + NPC collision), resolveCollisions()
-    render.js            — render() (dispatcher per gamePhase), renderTitle/IntroSlide/Tutorial, renderArea (NPC + oggetti + hint), renderPlayer (da sprite sheet), drawSprite (fallback), renderInteractionHint, renderEndingScreen, getOrCreatePlayerSheet() (cache con invalidazione colori), _lighten/_darken
-    dialogue.js          — startDialogue() (state-based: npcId_s0/s1/s2), renderDialogueHTML(), selectDialogueChoice(), applyDialogueEffect(), closeDialogue()
-    radio.js             — openRadioPuzzle(), setupRadio() (drag knob), updateRadioKnob() (static/interference/clear a 72 MHz)
-    registry.js          — openRegistryPuzzle() (shuffle, drag pages to slots), checkRegistry() (ordine 1952→1969→1974→1978)
-    scene.js             — openScenePuzzle() (3 select elements), checkScene() (lanterna→impronte→segni), determineEndingV2() (4 finali: military/alien/psychological/secret), showEndingOverlayV2()
-    recorder.js          — openRecorderPuzzle() (cavi rosso/blu/verde + bobina + power), playRecorder() (bobina 2 + tutti cavi + power)
-    deduction.js         — canOpenDeduction() (3 indizi richiesti), openDeduction() (drag clue to slots), checkDeduction() (posizione=mappa, data=registro, prova=tracce)
-    transition.js        — checkAreaExits(), changeArea() (fade 100→0), updateFade()
-    endings.js           — determineEnding() (v1: alien/human/ambiguous), showEndingOverlay()
-    loop.ts              — GameLoop class (update + render + prologo auto-advance)
-    prologueUpdater.ts   — updatePrologue() auto-advance cutscene scomparsa Elena
-    effects.js           — ParticleSystem (fireflies, dust, sparkles), LightingSystem (area lights con flicker), ScreenShake, Vignette
-    spriteGenerator.js   — generatePlayerSheet(colors) (32×32, 4 dir × 4 frame, colori dinamici), generateNPCSheet (32×32, 4 dir × 2 frame), generateBackground (8 aree), generateClueIcons
-    textureGenerator.js  — generateBrickWall, generateWoodFloor, generateGrassTexture, generateStonePath, cache getOrCreateTexture()
+    flagManager.ts       — Manager flag booleani
+    statsManager.ts      — Manager statistiche di gioco
+    storyEvents.mjs      — Eventi narrativi one-shot
+    index.ts             — StoryManager ES6+ class e singleton (delega a sotto-moduli)
+  tools/
+    mapEditor/
+      types.ts           — Schema (AreaDef, Collider, Exit, NpcSpawn, AreaObject, EditorExportData)
+      validator.ts       — Validatore (coordinate, ID, exit target, 36 test)
+      editor.ts          — Overlay interattivo F12 (canvas grid, drag, property panel, export JSON)
 ```
-
-**Nota**: Il progetto è in transizione da `.js` a `.mjs`/`.ts`. I moduli principali (`input.ts`, `loop.ts`, `store.ts`, `saveLoad.ts`, `render/index.ts`, `engine/index.ts`) usano classi ES6+ e tipi TypeScript. I moduli dati e rendering procedurali usano `.mjs` con `var` per compatibilità.
 
 ## Aree di Gioco
 
@@ -166,12 +196,12 @@ Trigger: raccogliere `tracce_circolari` al `campo` DOPO aver risolto la puzzle d
 
 Il gioco utilizza un sistema dinamico di effetti visivi:
 
-### ParticleSystem (`effects.js`)
+### ParticleSystem (`effects/ambient.mjs`, `effects/particles.mjs`)
 - **Fireflies** (lucciole): piazza, campo, cascina — particelle gialle fluttuanti
 - **Dust** (polvere): archivio, cascina_interno, fienile — particelle grigie lente
 - **Sparkles** (scintille): raccolte indizi — esplosione dorata
 
-### LightingSystem (`effects.js`)
+### LightingSystem (`effects/lighting.mjs`)
 - Luci dinamiche con flicker per ogni area
 - **piazza**: 3 lampioni + 2 finestre
 - **cascina**: luce calda finestra + lanterna esterna
@@ -180,10 +210,10 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **bar_interno**: luci bancone
 - **pozzo**: ripple animato sull'acqua
 
-### Sprite Cache (`render.js`)
+### Sprite Cache (`render/spriteManager.mjs`)
 - `spriteCache.player` con invalidazione basata su `gameState.playerColors`
 - `getOrCreatePlayerSheet()` rigenera sheet quando colori cambiano
-- Cache resettata in `resetGame()` (loop.js)
+- Cache resettata in `resetGame()` (loop.ts)
 
 ## Note per Modifiche
 
@@ -195,10 +225,10 @@ Il gioco utilizza un sistema dinamico di effetti visivi:
 - **CSS**: `styles.css` — overlay, panel, pulsanti; font in `index.html` head
 - **Texture/Sprite procedurali**: `textureGenerator.mjs` per background tile, `spriteGenerator.mjs` per personaggi
 - **Effetti visivi**: `src/effects/ambient.mjs` — ParticleSystem, LightingSystem, ScreenShake, Vignette (singleton usati dal game loop); `src/effects/particles.mjs` — FireflySystem, DustSystem, SparkleSystem; `src/effects/lighting.mjs` — LightingSystem, TorchSystem, ShadowSystem
-- **Il game loop**: `requestAnimationFrame` in `loop.ts:38`; tutto il rendering passa da `render()` in `render/index.ts:38`
-- **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `render.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
-- **Minimappa**: `renderMiniMap()` in `render.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
-- **Marker uscite**: `renderAreaExitMarkers()` in `render.mjs` evidenzia le soglie reali delle uscite; evitare cartelli posizionati nel cielo.
+- **Il game loop**: `requestAnimationFrame` in `loop.ts:38`; tutto il rendering passa da `render()` in `render/index.ts:56`
+- **Sprite player**: `generatePlayerSheet(colors)` in `spriteGenerator.mjs` accetta oggetto `colors` con chiavi `body`, `bodyLight`, `bodyDark`, `detail`, `head`, `legs`. La cache in `spriteManager.mjs` si invalida automaticamente quando `gameState.playerColors` cambia.
+- **Minimappa**: `renderMiniMap()` in `mapRenderer.mjs`, visibile durante il gameplay e nascondibile con `N` (`gameState.showMiniMap`).
+- **Marker uscite**: marker di uscita renderizzati in `areaRenderer.mjs` e `mapRenderer.mjs`; evidenziano le soglie reali delle uscite.
 - **Campo delle Luci**: `src/areas/campo.mjs` è l'area finale canonica. `tracce_circolari` vive in `areaObjects.campo`; l'uscita dai `giardini` verso `campo` usa `requiresFlag: 'deduction_complete'` e viene filtrata da `transition.ts`.
 - **Interazione oggetti**: `handleInteract()` in `src/game/init.mjs` unisce `area.objects` legacy e `window.areaObjects[currentArea]`, rispettando `requires`; oggetti `radio` e `recorder` aprono i rispettivi puzzle invece di essere raccolti come indizi.
 - **Piazza**: helper dedicati in `civicDraw.mjs` (`drawMunicipioFacade`, `drawPiazzaFountain`, `drawBarFacade`, `drawNoticeBoard`, `drawBench`). Gli oggetti principali sono distribuiti su bacheca/fontana/panchina in `src/data/clues.mjs`.

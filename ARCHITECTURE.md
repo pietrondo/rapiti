@@ -46,10 +46,16 @@ intro ──▶ investigation ──▶ deepening ──▶ deduction_phase ─�
 
 | File | Scopo |
 |------|-------|
-| `src/story/storyChapters.mjs` | Capitoli della storia e obiettivi |
-| `src/story/storyQuests.mjs` | Quest parallele e ricompense (Trust System) |
-| `src/story/storyDialogues.mjs` | Trigger dialoghi NPC e bivi di fiducia |
-| `src/story/StoryManager.ts` | Orchestrazione core: flag, quest, capitoli |
+| `src/story/index.ts` | StoryManager ES6+ — orchestratore unico (facade) |
+| `src/story/storyEngine.ts` | Core evaluation: condizioni, eventi, flag |
+| `src/story/chapterManager.ts` | Progressione capitoli e obiettivi |
+| `src/story/questManager.ts` | Missioni secondarie e trust system |
+| `src/story/flagManager.ts` | Manager flag booleani |
+| `src/story/statsManager.ts` | Manager statistiche di gioco |
+| `src/story/conditionSystem.mjs` | Proxy leggero → StoryEngine |
+| `src/story/eventSystem.mjs` | Proxy leggero → StoryEngine |
+| `src/story/endingSystem.mjs` | Proxy leggero → StoryEngine |
+| `src/story/achievementSystem.mjs` | Proxy leggero → StoryEngine |
 
 ## Trust System (Sistema di Fiducia)
 
@@ -128,9 +134,11 @@ Durante la migrazione `config.mjs` → `config.ts`, `transition.ts` legge lo sta
 
 ## Pipeline di Rendering (Dettaglio)
 
-1.  **Pixi Sync**: `pixiRenderer.render()` sincronizza gli sprite con le coordinate del `gameState`. Se la fase è `title` o `intro`, disegna i pannelli e i testi utilizzando oggetti `PIXI.Text` e `PIXI.Graphics`.
-2.  **Shader**: Applicazione di filtri `Noise` e `ColorMatrix` (Alien Glitch) via WebGL.
-3.  **Legacy Draw**: `RenderManager` disegna su `gameCanvas` l'HUD e la mini-mappa.
+1.  **Pixi Sync**: `pixiRenderer.render()` dispatcchia a `CinematicRenderer` (title/intro/prologo/tutorial) o `GameplaySync` (playing/dialogue) in base a `gamePhase`.
+2.  **CinematicRenderer** (`src/render/cinematicRenderer.ts`): Gestisce sky parallasse con luna/edificio/erba, prologo con night field/cerchi/frammento/sottotitoli, intro slide con fade, tutorial.
+3.  **GameplaySync** (`src/render/gameplaySync.ts`): Sincronizza background area, sprite player e NPC con `gameState`.
+4.  **Shader**: Applicazione di filtri `Noise` e `ColorMatrix` (Alien Glitch) via WebGL.
+5.  **Legacy Draw**: `RenderManager` disegna su `gameCanvas` l'HUD e la mini-mappa. Per fasi cinematiche con Pixi attivo, il Canvas 2D viene saltato per evitare sovrapposizioni.
 
 ### Note PixiJS v8 per UI Cinematiche
 
