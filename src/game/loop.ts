@@ -118,6 +118,16 @@ class GameLoop {
     checkAreaExits();
     checkInteractions();
 
+    // Step sounds (random, ~every 20 frames)
+    if (Math.random() < 0.05) {
+      var area = gameState.currentArea;
+      var stepType = 'step_stone';
+      if (area === 'giardini' || area === 'campo' || area === 'cimitero') stepType = 'step_grass';
+      else if (area === 'chiesa' || area === 'municipio' || area === 'bar_interno') stepType = 'step_wood';
+      else if (area === 'industriale' || area === 'residenziale') stepType = 'step_gravel';
+      window.playSFX?.(stepType, { volume: 0.3 });
+    }
+
     // Advance game time (1 minute game = 10 seconds real)
     gameState.gameTime += this.deltaTime / 10000;
     if (Math.floor(gameState.gameTime / 1) % 60 === 0) {

@@ -266,6 +266,7 @@ export function collectClue(clue) {
   }
 
   showToast('toast.clue_found', { name: name });
+  window.playSFX?.('clue_found');
 
   // Notifica StoryManager
   if (typeof StoryManager !== 'undefined') {

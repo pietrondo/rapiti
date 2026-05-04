@@ -114,6 +114,7 @@ export function changeArea(areaId: string, spawnX: number, spawnY: number): void
   
   gameState.fadeDir = 1;
   gameState.transitionDir = (window as any).areas?.[areaId]?.name || areaId;
+  window.playSFX?.('door_open');
   gameState.fadeCallback = () => {
     gameState.currentArea = areaId;
     gameState.player.x = spawnX;

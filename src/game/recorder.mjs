@@ -146,6 +146,7 @@ export function playRecorder() {
   if (correct) {
     window.gameState.puzzlesSolved.recorder = true;
     window.updateNPCStates();
+    window.playSFX?.('bell');
     result.textContent =
       '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
     result.style.color = '#44cc44';

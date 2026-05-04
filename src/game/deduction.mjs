@@ -222,6 +222,7 @@ export function checkDeduction() {
         window.gameState.puzzleSolved = true;
         window.StoryManager.onPuzzleSolved('deduction');
         window.updateNPCStates();
+        window.playSFX?.('bell');
         window.showToast(window.t ? window.t('toast.deduction_complete') : 'Tutti i pezzi del puzzle combaciano. La verità è vicina.');
       }
     } else {

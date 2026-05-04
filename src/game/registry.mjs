@@ -160,6 +160,7 @@ export function checkRegistry() {
     result.style.color = '#44cc44';
     window.gameState.puzzlesSolved.registry = true;
     window.updateNPCStates();
+    window.playSFX?.('bell');
     document.getElementById('registry-confirm').disabled = true;
 
     // Notifica StoryManager

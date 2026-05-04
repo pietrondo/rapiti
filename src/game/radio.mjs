@@ -75,6 +75,7 @@ export function updateRadioKnob(pct) {
       window.gameState.puzzlesSolved.radio = true;
       window.gameState.radioSolved = true;
       window.updateNPCStates();
+      window.playSFX?.('bell');
 
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {
