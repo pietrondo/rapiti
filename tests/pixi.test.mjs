@@ -3,7 +3,7 @@
  */
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { gameState } from '../src/config.mjs';
+import { gameState } from '../src/config.ts';
 
 describe('PixiRenderer Prototype', () => {
   let pixiRenderer;
@@ -12,15 +12,15 @@ describe('PixiRenderer Prototype', () => {
     // Reset globals for each test
     global.window.CANVAS_W = 400;
     global.window.CANVAS_H = 250;
-    
+
     // Modify the REAL gameState object used by renderer
     gameState.player = { x: 195, y: 188, dir: 'down', discoveryJump: 0 };
     gameState.currentArea = 'piazze';
     gameState.gamePhase = 'playing';
-    
+
     global.window.gameState = gameState;
     global.window.areas = {
-      piazze: { npcs: [], draw: jest.fn() }
+      piazze: { npcs: [], draw: jest.fn() },
     };
     global.window.UIRenderer = {
       drawTitleLandscape: jest.fn(),
@@ -29,10 +29,10 @@ describe('PixiRenderer Prototype', () => {
       getOrCreatePlayerSheet: jest.fn().mockReturnValue({}),
       getOrCreateNPCSheet: jest.fn().mockReturnValue({}),
       artist: {
-         lighten: (c) => c,
-         darken: (c) => c
+        lighten: (c) => c,
+        darken: (c) => c,
       },
-      animState: { playerFrame: 0 }
+      animState: { playerFrame: 0 },
     };
 
     // Fix for JSDOM getContext not implemented
@@ -58,7 +58,7 @@ describe('PixiRenderer Prototype', () => {
   it('should toggle enabled state and hide/show canvases', () => {
     const mockLegacy = { style: { display: 'block', pointerEvents: 'auto' } };
     const mockPixi = { style: { display: 'block', visibility: 'hidden' } };
-    
+
     document.getElementById = jest.fn((id) => {
       if (id === 'gameCanvas') return mockLegacy;
       if (id === 'pixi-canvas') return mockPixi;
@@ -73,7 +73,7 @@ describe('PixiRenderer Prototype', () => {
   it('should synchronize player position during render', async () => {
     await pixiRenderer.init();
     pixiRenderer.render();
-    
+
     expect(pixiRenderer.sprites.player).toBeDefined();
     // Default x from config is 195. 195 + 16 (centered) = 211
     // Default y from config is 188. 188 + 16 (centered) = 204

@@ -23,7 +23,7 @@ import {
   PLAYER_W,
   resetGameState,
   VERSION,
-} from './config.mjs';
+} from './config.ts';
 
 // Esporta globalmente per retrocompatibilità durante la transizione
 window.PALETTE = PALETTE;
@@ -51,6 +51,7 @@ const moduleMap = import.meta.glob([
   './areas/*.mjs',
   './render/*.{mjs,ts}',
   './story/*.{mjs,ts}',
+  './i18n/*.mjs',
 ]);
 
 /**
@@ -96,6 +97,9 @@ async function initializeGame() {
   console.log('[Main] Initializing game...');
 
   try {
+    // Phase 0: Load i18n engine (needed by almost everything)
+    await loadModule('./i18n/index.mjs');
+
     // Phase 1: Load data modules
     await loadModule('./data/clues.mjs');
     await loadModule('./data/npcData.mjs');

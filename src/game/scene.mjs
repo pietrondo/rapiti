@@ -88,7 +88,7 @@ export function checkScene() {
   var correct = s1 === 'scena_lanterna' && s2 === 'scena_impronte' && s3 === 'scena_segni';
   var result = document.getElementById('scene-result');
   if (correct) {
-    _sceneSolved = true;
+    window.gameState.puzzlesSolved.scene = true;
     result.textContent = '✓ Elena non stava scappando. Stava tornando verso qualcosa.';
     result.style.color = '#44cc44';
     document.getElementById('scene-confirm').disabled = true;
@@ -107,86 +107,4 @@ export function checkScene() {
     result.textContent = '✗ Ricostruzione errata. Riprova.';
     result.style.color = '#cc4444';
   }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   ENDINGS v2 — 4 finali con sistema connessione
-   ══════════════════════════════════════════════════════════════ */
-
-export function determineEndingV2() {
-  // Usa StoryManager per determinare il finale
-  if (typeof StoryManager !== 'undefined' && StoryManager.determineEnding) {
-    var ending = StoryManager.determineEnding();
-    return ending ? ending.id : 'psychological';
-  }
-
-  // Fallback al vecchio sistema se StoryManager non è disponibile
-  var cf = window.gameState.cluesFound;
-  var militaryScore = 0,
-    alienScore = 0,
-    psychScore = 0,
-    secretEligible = false;
-
-  if (cf.indexOf('lettera_censurata') >= 0) militaryScore += 2;
-  if (cf.indexOf('radio_audio') >= 0) militaryScore += 1;
-  if (cf.indexOf('registro_1861') >= 0) militaryScore += 1;
-
-  if (cf.indexOf('frammento') >= 0) alienScore += 2;
-  if (cf.indexOf('tracce_circolari') >= 0) alienScore += 2;
-  if (cf.indexOf('simboli_portone') >= 0) alienScore += 1;
-
-  psychScore = 8 - cf.length;
-
-  if (militaryScore >= 2 && alienScore >= 3 && cf.length >= 6) {
-    secretEligible = true;
-  }
-
-  if (secretEligible) return 'secret';
-  if (alienScore > militaryScore && alienScore > 3) return 'alien';
-  if (militaryScore > alienScore && militaryScore > 3) return 'military';
-  if (psychScore >= 5 || cf.length < 2) return 'psychological';
-  if (alienScore >= militaryScore) return 'alien';
-  return 'military';
-}
-
-export function triggerEnding() {
-  window.gameState.endingType = determineEndingV2();
-  window.gameState.previousPhase = window.gameState.gamePhase;
-  window.gameState.gamePhase = 'ending';
-  showEndingOverlayV2();
-}
-
-export function showEndingOverlayV2() {
-  var et = window.gameState.endingType;
-  var name = window.gameState.playerName || 'Maurizio';
-  var endings = {
-    military: {
-      title: 'Finale: Esperimento FUORI CONTROLLO',
-      text:
-        'I droni del Progetto SIRIO. Esperimenti radio militari iniziati nel 1961 e mai fermati. La lettera censurata è la prova.\n\nLe luci? Riflessi dei velivoli sperimentali sulle nuvole basse. Le sparizioni? Testimoni "ricollocati" con nuove identità.\n\nIl Capitano Valli confessa. Il Ministero insabbia. Ma il tuo rapporto è già partito per Roma.\n\n"Esperimenti militari non autorizzati su civili. Chiedo l\'intervento della magistratura."\n— ' +
-        name,
-    },
-    alien: {
-      title: 'Finale: NON SONO SOLI',
-      text:
-        'Il frammento metallico è tecnologia non umana. I cerchi nel grano sono tracce di atterraggio. I simboli sulla cascina... un messaggio che nessuno ha ancora decifrato.\n\nLa ricorrenza è reale. Nel 1861 come nel 1978. Qualcosa torna quando una porta viene aperta. Qualcosa osserva.\n\nMentre scrivi il rapporto, la radio nella tua tasca emette un suono che non hai mai sentito prima.\n\n"Non posso spiegare razionalmente ciò che ho visto. Allego prove fisiche."\n— ' +
-        name,
-    },
-    psychological: {
-      title: 'Finale: ISTERIA COLLETTIVA',
-      text:
-        'Nessuna prova concreta. Testimonianze contraddittorie. La suggestione ha fatto il resto.\n\nSan Celeste è un paese di anziani e superstizioni. Le luci erano probabilmente fuochi fatui o riflessi atmosferici. Le sparizioni? Persone che se ne sono andate per conto loro.\n\nIl caso viene archiviato. Ma mentre lasci il paese, una luce nel retrovisore... no, sarà stato un lampione.\n\n"Caso n. 79-034. Archiviato per insufficienza di prove."\n— ' +
-        name,
-    },
-    secret: {
-      title: 'Finale: NON È ARRIVATO. È STATO APERTO.',
-      text:
-        'Hai capito tutto.\n\nIl fenomeno esisteva PRIMA dei test militari. Nel 1952, nel 1969, nel 1974. Nel 1978 i militari del Progetto SIRIO hanno provato a studiarlo. Controllarlo. E hanno solo peggiorato le cose.\n\n"Non è arrivato. È stato aperto."\n\nQualcosa era già qui. Sotto San Celeste. I test radio hanno aperto una porta che doveva restare chiusa.\n\nRegistri il rapporto. Ti fermi. La radio nella stanza vuota si accende da sola.\n\nVoce: "...non dovevi guardare quando si ferma..."\n\nSilenzio.\n\nBuio.\n\nFine.\n— ' +
-        name,
-    },
-  };
-  var e = endings[et];
-  document.getElementById('ending-title').textContent = e.title;
-  document.getElementById('ending-text').innerHTML = e.text.replace(/\n/g, '<br>');
-  document.getElementById('ending-overlay').classList.add('active');
 }

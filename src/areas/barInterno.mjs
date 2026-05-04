@@ -35,7 +35,7 @@ export function drawBarInternoArea(ctx, t) {
   barGrad.addColorStop(1, '#3E2723');
   ctx.fillStyle = barGrad;
   ctx.fillRect(40, 130, 320, 60);
-  
+
   // Piano del bancone (marmo/zinco)
   ctx.fillStyle = '#A9A9A9';
   ctx.fillRect(35, 125, 330, 8);
@@ -43,7 +43,7 @@ export function drawBarInternoArea(ctx, t) {
   // Scaffale Bottiglie Retro
   ctx.fillStyle = '#2D1E15';
   ctx.fillRect(50, 20, 300, 80);
-  
+
   // Bottiglie (puntini colorati retroilluminati)
   var colors = ['#CC4444', '#44CC44', '#4444CC', '#CCCC44', '#CC44CC'];
   for (var i = 0; i < 40; i++) {
@@ -88,7 +88,7 @@ export function drawBarInternoArea(ctx, t) {
   ctx.fillRect(60, 100, 34, 25);
   ctx.fillStyle = '#D4A843';
   ctx.fillRect(65, 105, 24, 15);
-  
+
   // Luci bancone calde
   var glow = 0.15 + Math.sin(t * 2) * 0.05;
   var lightGrad = ctx.createRadialGradient(200, 50, 20, 200, 50, 150);
@@ -103,16 +103,11 @@ const BarInternoArea = {
   walkableTop: 180,
   colliders: [
     { x: 40, y: 125, w: 320, h: 65 }, // Bancone
-    { x: 0, y: 0, w: 50, h: 250 },   // Muro SX
+    { x: 0, y: 0, w: 50, h: 250 }, // Muro SX
     { x: 350, y: 0, w: 50, h: 250 }, // Muro DX
   ],
   npcs: [{ id: 'osvaldo', x: 150, y: 120 }], // Osvaldo dietro il bancone
-  objects: [
-    { id: 'radio_bar', x: 60, y: 100, w: 34, h: 25, type: 'radio', drawHint: true }
-  ],
-  exits: [
-    { dir: 'down', xRange: [150, 250], to: 'bar_exterior', spawnX: 200, spawnY: 135 }
-  ],
+  exits: [{ dir: 'down', xRange: [150, 250], to: 'bar_exterior', spawnX: 200, spawnY: 135 }],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;

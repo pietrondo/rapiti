@@ -358,6 +358,47 @@ body {
 }
 .scene-select:focus { border-color:var(--gold); }
 
+/* ── SAVE/LOAD ── */
+#save-slots-container { margin: 15px 0; }
+.save-slot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(16,19,26,0.74);
+  border: 1px solid var(--line);
+  padding: 12px;
+  margin: 10px 0;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+.save-slot:hover { border-color: var(--gold); background: rgba(212,168,67,0.05); }
+.save-slot.empty { opacity: 0.6; border-style: dashed; }
+.save-slot.autosave { border-left: 4px solid var(--amber); }
+
+.slot-info { flex: 1; }
+.slot-name { color: var(--gold); font-weight: bold; font-size: 15px; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+.slot-meta { font-size: 11px; color: var(--muted); }
+.slot-actions { display: flex; gap: 6px; }
+
+.btn-slot {
+  padding: 4px 8px;
+  font-size: 11px;
+  background: #1a1c24;
+  color: var(--paper);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font-family: 'VT323', monospace;
+}
+.btn-slot:hover { border-color: var(--gold); color: var(--gold); }
+.btn-slot.delete { color: var(--danger); border-color: rgba(204,68,68,0.3); }
+.btn-slot.delete:hover { border-color: var(--danger); background: rgba(204,68,68,0.1); }
+
+/* ── SETTINGS ── */
+.settings-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin: 20px 0; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid rgba(212,168,67,0.1); }
+.setting-item label { color: var(--gold); font-size: 14px; }
+
 /* ── RECORDER PUZZLE ── */
 .rec-cable-btn {
   display:block; width:100%; padding:8px; margin:4px 0;

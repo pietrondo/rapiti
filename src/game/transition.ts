@@ -177,13 +177,27 @@ export function updateHUD(): void {
   const gameState = getGameState();
   const areaEl = document.getElementById('hud-area');
   if (areaEl) {
-     const area = getAreas()?.[gameState.currentArea];
-     areaEl.textContent = area ? area.name : gameState.currentArea;
+     const areaId = gameState.currentArea;
+     let areaName = areaId;
+     if ((window as any).t) {
+        areaName = (window as any).t(`area.${areaId}`);
+        if (areaName === `[area.${areaId}]`) areaName = areaId;
+        areaEl.textContent = (window as any).t('hud.area', { area: areaName });
+     } else {
+        areaEl.textContent = areaName;
+     }
   }
   
   const cluesEl = document.getElementById('hud-clues');
   if (cluesEl) {
-     cluesEl.textContent = `${gameState.cluesFound.length}/9`;
+     if ((window as any).t) {
+        cluesEl.textContent = (window as any).t('hud.clues', {
+          found: gameState.cluesFound.length,
+          total: 9
+        });
+     } else {
+        cluesEl.textContent = `${gameState.cluesFound.length}/9`;
+     }
   }
   
   const timeEl = document.getElementById('hud-time');

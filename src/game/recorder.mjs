@@ -144,7 +144,7 @@ export function playRecorder() {
     recorderState.powered;
 
   if (correct) {
-    recorderState.solved = true;
+    window.gameState.puzzlesSolved.recorder = true;
     result.textContent =
       '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
     result.style.color = '#44cc44';

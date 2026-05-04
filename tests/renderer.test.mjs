@@ -24,7 +24,7 @@ function createMockCtx() {
     scale: jest.fn(),
     measureText: jest.fn(() => ({ width: 50 })),
     createRadialGradient: jest.fn(() => ({
-      addColorStop: jest.fn()
+      addColorStop: jest.fn(),
     })),
     fillStyle: '',
     strokeStyle: '',
@@ -56,7 +56,11 @@ beforeEach(() => {
   };
 
   global.npcsData = [
-    { id: 'test_npc', name: 'Test NPC', colors: { body: '#000', detail: '#fff', head: '#000', legs: '#000' } }
+    {
+      id: 'test_npc',
+      name: 'Test NPC',
+      colors: { body: '#000', detail: '#fff', head: '#000', legs: '#000' },
+    },
   ];
 
   global.areaObjects = {
@@ -99,7 +103,7 @@ beforeEach(() => {
     renderAreaExitMarkers: jest.fn(),
     drawObjectIcon: jest.fn(),
   };
-  
+
   if (typeof window !== 'undefined') {
     window.t = jest.fn((key) => `[${key}]`);
   }
@@ -142,7 +146,9 @@ describe('Area Renderer', () => {
   });
 
   it('should skip collected clues', async () => {
-    global.areaObjects.piazze = [{ id: 'test_clue', x: 50, y: 50, w: 10, h: 10, type: 'clue', drawHint: true }];
+    global.areaObjects.piazze = [
+      { id: 'test_clue', x: 50, y: 50, w: 10, h: 10, type: 'clue', drawHint: true },
+    ];
     global.gameState.cluesFound = ['test_clue'];
     const ctx = createMockCtx();
     await renderArea(ctx);
@@ -150,21 +156,27 @@ describe('Area Renderer', () => {
   });
 
   it('should render radio object with pulse', async () => {
-    global.areaObjects.piazze = [{ id: 'radio', x: 50, y: 50, w: 20, h: 20, type: 'radio', drawHint: true }];
+    global.areaObjects.piazze = [
+      { id: 'radio', x: 50, y: 50, w: 20, h: 20, type: 'radio', drawHint: true },
+    ];
     const ctx = createMockCtx();
     await renderArea(ctx);
     expect(ctx.arc).toHaveBeenCalled();
   });
 
   it('should render recorder object', async () => {
-    global.areaObjects.piazze = [{ id: 'recorder', x: 50, y: 50, w: 24, h: 20, type: 'recorder', drawHint: true }];
+    global.areaObjects.piazze = [
+      { id: 'recorder', x: 50, y: 50, w: 24, h: 20, type: 'recorder', drawHint: true },
+    ];
     const ctx = createMockCtx();
     await renderArea(ctx);
     expect(ctx.fillRect).toHaveBeenCalled();
   });
 
   it('should render cat object', async () => {
-    global.areaObjects.piazze = [{ id: 'gatto', x: 50, y: 50, w: 12, h: 10, type: 'gatto', drawHint: true }];
+    global.areaObjects.piazze = [
+      { id: 'gatto', x: 50, y: 50, w: 12, h: 10, type: 'gatto', drawHint: true },
+    ];
     const ctx = createMockCtx();
     await renderArea(ctx);
     expect(ctx.fillRect).toHaveBeenCalled();
@@ -248,42 +260,66 @@ describe('Hint Renderer', () => {
     global.gameState.interactionTarget = { type: 'object' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Raccogli', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Raccogli',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render door interaction hint', async () => {
     global.gameState.interactionTarget = { type: 'door' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Entra / Esci', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Entra / Esci',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render radio interaction hint', async () => {
     global.gameState.interactionTarget = { type: 'radio' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Accendi Radio', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Accendi Radio',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render recorder interaction hint', async () => {
     global.gameState.interactionTarget = { type: 'recorder' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Usa Registratore', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Usa Registratore',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render scene interaction hint', async () => {
     global.gameState.interactionTarget = { type: 'scene' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Esamina', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Esamina',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render cat interaction hint', async () => {
     global.gameState.interactionTarget = { type: 'gatto' };
     const ctx = createMockCtx();
     await renderInteractionHint(ctx);
-    expect(ctx.fillText).toHaveBeenCalledWith('[E] Accarezza', expect.any(Number), expect.any(Number));
+    expect(ctx.fillText).toHaveBeenCalledWith(
+      '[E] Accarezza',
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
   it('should render unknown interaction hint', async () => {

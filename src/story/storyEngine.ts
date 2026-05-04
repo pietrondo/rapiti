@@ -77,19 +77,54 @@ export class StoryEngine {
     statsManager.onTalkedTo(npcId);
   }
 
+  onAreaVisited(areaId: string): void {
+    statsManager.onAreaVisited(areaId);
+  }
+
+  onClueFound(): void {
+    statsManager.onClueFound();
+  }
+
+  onPuzzleSolved(puzzleId: string): void {
+    statsManager.onPuzzleSolved(puzzleId);
+  }
+
+  getStats(): any {
+    const stats = statsManager.serialize();
+    return {
+      ...stats,
+      talkedToCount: Object.keys(stats.talkedTo).length,
+      visitedAreasCount: Object.keys(stats.visitedAreas).length
+    };
+  }
+
   /* ── CONDITION SYSTEM ── */
 
   checkCondition(condition: Condition | undefined): boolean {
     if (!condition) return true;
 
+    const cm = (window as any).ChapterManager || (window as any).StoryManager?.chapters;
+    const currentChapter = cm?.getCurrentChapterId?.() || null;
+
     // Chapter checks
-    if (condition.chapter) {
-      const cm = (window as any).chapterManager || (window as any).StoryManager?.chapters;
-      if (cm && cm.getCurrentChapterId?.() !== condition.chapter) return false;
+    if (condition.chapter && currentChapter !== condition.chapter) return false;
+
+    if (condition.chapterAtMost) {
+      const chapters = (window as any).storyChapters;
+      if (chapters) {
+        const maxOrder = chapters[condition.chapterAtMost]?.order ?? 999;
+        const currentOrder = (currentChapter && chapters[currentChapter]) ? chapters[currentChapter].order : -1;
+        if (currentOrder > maxOrder) return false;
+      }
     }
+
     if (condition.chapterAtLeast) {
-      const cm = (window as any).chapterManager || (window as any).StoryManager?.chapters;
-      if (cm && !cm.isChapterCompleted?.(condition.chapterAtLeast) && cm.getCurrentChapterId?.() !== condition.chapterAtLeast) return false;
+      const chapters = (window as any).storyChapters;
+      if (chapters) {
+        const minOrder = chapters[condition.chapterAtLeast]?.order ?? 0;
+        const currentOrder = (currentChapter && chapters[currentChapter]) ? chapters[currentChapter].order : -1;
+        if (currentOrder < minOrder) return false;
+      }
     }
 
     if (condition.hasFlag && !this.hasFlag(condition.hasFlag)) return false;
@@ -107,22 +142,38 @@ export class StoryEngine {
       }
     }
     if (condition.cluesMin && gs.cluesFound.length < condition.cluesMin) return false;
+    if (condition.cluesMax && gs.cluesFound.length > condition.cluesMax) return false;
     
+    if (condition.cluesFound === 'all') {
+      const totalClues = (window as any).clues?.length || 9;
+      if (gs.cluesFound.length < totalClues) return false;
+    }
+
+    if (typeof condition.cluesFound === 'number') {
+      if (gs.cluesFound.length < condition.cluesFound) return false;
+    }
+
     // Stats checks
     if (condition.talkedTo && !statsManager.hasTalkedTo(condition.talkedTo)) return false;
+    if (condition.talkedToCount && (statsManager.getTalkedToCount() || 0) < condition.talkedToCount) return false;
+    
+    if (condition.talkedToAll) {
+      for (const t of condition.talkedToAll) {
+        if (!statsManager.hasTalkedTo(t)) return false;
+      }
+    }
+
     if (condition.visitedArea && !statsManager.hasVisitedArea(condition.visitedArea)) return false;
 
     // Check Hypotheses
-    if (condition.hasHypothesis && gs) {
-       if (gs.confirmedHypotheses.indexOf(condition.hasHypothesis) === -1) return false;
-    }
-    if (condition.hasHypotheses && gs) {
+    if (condition.hasHypothesis && gs.confirmedHypotheses.indexOf(condition.hasHypothesis) === -1) return false;
+    if (condition.hasHypotheses) {
        for (const h of condition.hasHypotheses) {
           if (gs.confirmedHypotheses.indexOf(h) === -1) return false;
        }
     }
 
-    // Check Trust Levels (Modern & Legacy support)
+    // Check Trust Levels
     const trustAtLeast = condition.trustAtLeast || condition.trustMin;
     if (trustAtLeast) {
        for (const nid in trustAtLeast) {
@@ -143,6 +194,12 @@ export class StoryEngine {
         if (!statsManager.stats.puzzlesSolved[p]) return false;
       }
     }
+    
+    if (condition.puzzlesSolved) {
+      for (const p of condition.puzzlesSolved) {
+        if (!statsManager.stats.puzzlesSolved[p]) return false;
+      }
+    }
 
     return true;
   }
@@ -157,11 +214,43 @@ export class StoryEngine {
       const event = events[eventId] as StoryEvent;
       if (event.once && this.triggeredEvents.indexOf(eventId) !== -1) continue;
       if (this.checkCondition(event.trigger)) {
-        this.triggeredEvents.push(eventId);
-        if (typeof event.action === 'function') event.action();
-        console.log('[StoryEngine] Event triggered:', eventId);
+        this.triggerEvent(eventId);
       }
     }
+  }
+
+  wasEventTriggered(eventId: string): boolean {
+    return this.triggeredEvents.indexOf(eventId) !== -1;
+  }
+
+  triggerEvent(eventId: string): void {
+    if (this.triggeredEvents.indexOf(eventId) === -1) {
+      this.triggeredEvents.push(eventId);
+    }
+    
+    const events = (window as any).storyEvents;
+    const event = events ? events[eventId] as StoryEvent : null;
+    if (event && typeof event.action === 'function') {
+      event.action();
+      console.log('[StoryEngine] Event triggered:', eventId);
+    }
+  }
+
+  unlockAchievement(achievementId: string): boolean {
+    if (this.unlockedAchievements.indexOf(achievementId) === -1) {
+      this.unlockedAchievements.push(achievementId);
+      console.log('[StoryEngine] Achievement unlocked:', achievementId);
+      return true;
+    }
+    return false;
+  }
+
+  hasAchievement(achievementId: string): boolean {
+    return this.unlockedAchievements.indexOf(achievementId) !== -1;
+  }
+
+  getUnlockedAchievements(): string[] {
+    return [...this.unlockedAchievements];
   }
 
   /* ── ENDING SYSTEM ── */

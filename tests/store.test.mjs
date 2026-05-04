@@ -2,9 +2,9 @@
  * Tests for GameStore and SaveLoad System
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import { GameStore, gameStore } from '../src/game/store.ts';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { SaveLoadSystem, saveLoad } from '../src/game/saveLoad.ts';
+import { GameStore } from '../src/game/store.ts';
 
 describe('GameStore (Reactive State)', () => {
   let store;
@@ -133,13 +133,13 @@ describe('SaveLoad System', () => {
       puzzleSolved: false,
       puzzleAttempts: 0,
       radioSolved: false,
-      npcTrust: {}
+      npcTrust: {},
     };
     global.StoryManager = {
       serialize: () => ({}),
       deserialize: () => {},
       getStats: () => ({}),
-      stats: { totalPlayTime: 0 }
+      stats: { totalPlayTime: 0 },
     };
   });
 
@@ -183,7 +183,7 @@ describe('SaveLoad System', () => {
   it('should list all saves', () => {
     const saves = saveLoad.getAllSaves();
     expect(Array.isArray(saves)).toBe(true);
-    expect(saves.length).toBe(3); // slot1, slot2, slot3
+    expect(saves.length).toBe(4); // autosave, slot1, slot2, slot3
   });
 
   it('should export save as string', () => {
@@ -207,11 +207,11 @@ describe('SaveLoad System', () => {
         puzzleSolved: false,
         puzzleAttempts: 0,
         radioSolved: false,
-        npcTrust: {}
+        npcTrust: {},
       },
       story: {},
       stats: {},
-      playTime: 0
+      playTime: 0,
     };
     const result = saveLoad.importSave(JSON.stringify(saveData), 'slot2');
     expect(result).toBe(true);

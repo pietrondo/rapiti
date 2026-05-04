@@ -72,7 +72,7 @@ const SpriteEngine = {
   },
 
   /** Genera e cache spritesheet icone indizi */
-  generateClueIcons: function (clues) {
+  generateClueIcons: function (_clues) {
     if (!this.generated.clueIcons) {
       this.generated.clueIcons = window.SpriteGenerator.generateClueIcons(window.clues);
     }

@@ -105,7 +105,7 @@ export function renderMiniMap(ctx) {
   var t = Date.now() * 0.001;
 
   window.UIRenderer.drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
-  
+
   // Linee di collegamento migliorate
   ctx.strokeStyle = 'rgba(160,168,176,0.25)';
   ctx.setLineDash([2, 2]);
@@ -123,16 +123,16 @@ export function renderMiniMap(ctx) {
     var n = nodes[id];
     var active = id === current;
     var areaData = window.areas ? window.areas[id] : null;
-    
+
     // Rettangolo area
     ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(80, 80, 80, 0.8)';
     ctx.fillRect(x + n.x - 4, y + n.y - 4, 8, 8);
-    
+
     if (active) {
       ctx.strokeStyle = '#FFFFFF';
       ctx.lineWidth = 1;
       var pulse = Math.abs(Math.sin(t * 4)) * 3;
-      ctx.strokeRect(x + n.x - 5 - pulse/2, y + n.y - 5 - pulse/2, 10 + pulse, 10 + pulse);
+      ctx.strokeRect(x + n.x - 5 - pulse / 2, y + n.y - 5 - pulse / 2, 10 + pulse, 10 + pulse);
     }
 
     // Indicatori dinamici
@@ -141,28 +141,31 @@ export function renderMiniMap(ctx) {
       if (areaData.npcs && areaData.npcs.length > 0) {
         for (var i = 0; i < areaData.npcs.length; i++) {
           ctx.fillStyle = '#6EEBFF';
-          ctx.fillRect(x + n.x + 5, y + n.y - 6 + (i * 3), 2, 2);
+          ctx.fillRect(x + n.x + 5, y + n.y - 6 + i * 3, 2, 2);
         }
       }
-      
+
       // 2. Obiettivi / Quest (Stella o Punto Esclamativo)
       var hasObjective = false;
       if (window.StoryManager) {
-         var objectives = window.StoryManager.getCurrentObjectives();
-         // Semplificazione: se l'area e' menzionata negli obiettivi
-         for (var j = 0; j < objectives.length; j++) {
-            if (!objectives[j].completed && objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0) {
-               hasObjective = true;
-               break;
-            }
-         }
+        var objectives = window.StoryManager.getCurrentObjectives();
+        // Semplificazione: se l'area e' menzionata negli obiettivi
+        for (var j = 0; j < objectives.length; j++) {
+          if (
+            !objectives[j].completed &&
+            objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0
+          ) {
+            hasObjective = true;
+            break;
+          }
+        }
       }
-      
+
       if (hasObjective) {
-         var flash = Math.sin(t * 10) > 0;
-         ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
-         ctx.font = 'bold 8px monospace';
-         ctx.fillText('!', x + n.x - 12, y + n.y + 4);
+        var flash = Math.sin(t * 10) > 0;
+        ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
+        ctx.font = 'bold 8px monospace';
+        ctx.fillText('!', x + n.x - 12, y + n.y + 4);
       }
     }
   }

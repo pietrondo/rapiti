@@ -41,16 +41,16 @@ DayNightSystem.prototype.getOverlayColor = function () {
 DayNightSystem.prototype.drawOverlay = function (ctx) {
   var color = this.getOverlayColor();
   if (color === 'rgba(255, 255, 255, 0)') return;
-  
+
   ctx.save();
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
-  
+
   // Moltiplicazione per scurire realmente
   if (this.time > 0.8 || this.time < 0.25) {
-     ctx.globalCompositeOperation = 'multiply';
-     ctx.fillStyle = 'rgba(10, 15, 30, 0.4)';
-     ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillStyle = 'rgba(10, 15, 30, 0.4)';
+    ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);
   }
   ctx.restore();
 };
@@ -82,7 +82,7 @@ LightingSystem.prototype.addLight = function (x, y, radius, color, flicker) {
 
 LightingSystem.prototype.update = function (dt) {
   this.dayNight.update(dt);
-  
+
   for (var i = 0; i < this.lights.length; i++) {
     var light = this.lights[i];
     if (light.flicker > 0) {

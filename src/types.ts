@@ -70,6 +70,7 @@ export type GamePhase =
   | 'radio'
   | 'scene'
   | 'recorder'
+  | 'save'
   | 'customize'
   | 'ending';
 
@@ -86,6 +87,7 @@ export interface GameState {
   musicEnabled: boolean;
   puzzleSolved: boolean;
   puzzleAttempts: number;
+  puzzlesSolved: Record<string, boolean>;
   introSlide: number;
   introText: string;
   introCharIndex: number;
@@ -109,6 +111,7 @@ export interface GameState {
   gameTime: number; // In minuti dall'inizio
   gameDate: string; // Es. "Venerdì, 21 Luglio 1978"
   confirmedHypotheses: string[];
+  locale: 'it' | 'en';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

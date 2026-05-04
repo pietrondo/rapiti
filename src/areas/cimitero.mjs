@@ -13,10 +13,18 @@ export function drawCemeteryArea(ctx, t) {
 
   ctx.fillStyle = window.PALETTE.darkForest;
   ctx.fillRect(0, 80, window.CANVAS_W, 170);
-  
+
   // Pattern erba scura nel cimitero
   if (window.drawWallTexture) {
-    window.drawWallTexture(ctx, 0, 80, window.CANVAS_W, 170, window.PALETTE.darkForest, 'rgba(0,0,0,0.1)');
+    window.drawWallTexture(
+      ctx,
+      0,
+      80,
+      window.CANVAS_W,
+      170,
+      window.PALETTE.darkForest,
+      'rgba(0,0,0,0.1)'
+    );
   }
 
   // Mura del cimitero (Pietra)
@@ -45,9 +53,9 @@ export function drawCemeteryArea(ctx, t) {
   for (var i = 0; i < tombstones.length; i++) {
     var ts = tombstones[i];
     ctx.fillStyle = '#5a5a5a';
-    
+
     if (ts.type === 'cross') {
-      ctx.fillRect(ts.x + ts.w/2 - 4, ts.y, 8, ts.h);
+      ctx.fillRect(ts.x + ts.w / 2 - 4, ts.y, 8, ts.h);
       ctx.fillRect(ts.x, ts.y + 8, ts.w, 8);
     } else if (ts.type === 'rounded') {
       ctx.beginPath();
@@ -56,7 +64,7 @@ export function drawCemeteryArea(ctx, t) {
     } else {
       ctx.fillRect(ts.x, ts.y, ts.w, ts.h);
     }
-    
+
     // Dettagli muschio/erosione
     ctx.fillStyle = 'rgba(0,50,0,0.2)';
     ctx.fillRect(ts.x + 2, ts.y + ts.h - 6, ts.w - 4, 4);

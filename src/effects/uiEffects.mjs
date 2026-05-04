@@ -5,8 +5,6 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { CANVAS_H, CANVAS_W } from '../config.mjs';
-
 /* ── CONSTANTS ── */
 var DEFAULT_GOLD = '#d4af37';
 var DEFAULT_BG = '#1a1a2e';
@@ -17,7 +15,7 @@ var DEFAULT_RED = '#f00';
 
 /** Helper: resolve color from palette or fallback */
 function _c(palette, key, fallback) {
-  return palette && palette[key] ? palette[key] : fallback;
+  return palette?.[key] ? palette[key] : fallback;
 }
 
 /**

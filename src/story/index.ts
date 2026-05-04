@@ -223,8 +223,8 @@ class StoryManager {
 
     // Mission logic: Set flags based on clue collection
     if (eventType === 'cluesFound') {
-       if (target === 'menta') this.engine.setFlag('menta_found', true);
-       if (target === 'lettera_gino') this.engine.setFlag('lettera_gino_found', true);
+       if (target === 'menta') this.engine.setFlag('menta_collected', true);
+       if (target === 'lettera_gino') this.engine.setFlag('lettera_found', true);
     }
 
     for (const obj of chapter.objectives) {

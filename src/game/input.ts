@@ -9,26 +9,29 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import type { GameState } from '../types.js';
-import { updatePlayerPosition } from './movement.ts';
+import { gameState, resetGameState } from '../config';
+import type { GameState } from '../types';
+import { updatePlayerPosition } from './movement';
 
-declare const gameState: GameState;
-declare function handleInteract(): void;
-declare function openJournal(): void;
-declare function openInventory(): void;
-declare function canOpenDeduction(): boolean;
-declare function openDeduction(): void;
-declare function toggleMusic(): void;
-declare function showToast(msg: string): void;
-declare function closeDialogue(): void;
-declare function closePanels(): void;
-declare function closeDeduction(): void;
-declare function closeRadioPuzzle(): void;
-declare function closeScenePuzzle(): void;
-declare function closeRecorderPuzzle(): void;
-declare function openCustomize(): void;
-declare function updateHUD(): void;
-declare function resetGame(): void;
+// Explicit imports for game actions to replace legacy globals
+import { toggleMusic } from './audio.mjs';
+import { openCustomize } from './customize.mjs';
+import { canOpenDeduction, openDeduction, closeDeduction } from './deduction.mjs';
+import { closeDialogue } from './dialogue';
+import { closeRadioPuzzle } from './radio.mjs';
+import { closeRecorderPuzzle } from './recorder.mjs';
+import { closeScenePuzzle } from './scene.mjs';
+import { 
+  handleInteract, 
+  openJournal, 
+  openInventory, 
+  openSaveMenu,
+  openSettings,
+  closePanels, 
+  updateHUD, 
+  showToast 
+} from './init.mjs';
+import { saveLoad } from './saveLoad';
 
 interface TouchPoint {
   x: number;
@@ -192,7 +195,7 @@ class InputManager {
      
      if (dx === 0 && dy === 0) {
         if ((p as any).autoInteract) {
-           (window as any).handleInteract();
+           handleInteract();
            (p as any).autoInteract = false;
         }
         p.targetX = null;
@@ -223,15 +226,15 @@ class InputManager {
           gameState.gamePhase = 'tutorial';
         } else {
           gameState.introSlide++;
-          if (gameState.introSlide >= 2) (window as any).openCustomize();
+          if (gameState.introSlide >= 2) openCustomize();
         }
       },
       prologue: () => { gameState.gamePhase = 'tutorial'; },
       tutorial: () => {
         gameState.gamePhase = 'playing';
-        (window as any).updateHUD();
+        updateHUD();
       },
-      ending: () => { (window as any).resetGame(); }
+      ending: () => { resetGameState(); }
     };
 
     if (transitions[ph]) {
@@ -249,18 +252,24 @@ class InputManager {
     gameState.keys[key] = true;
 
     const actions: Record<string, () => void> = {
-      'e': () => { (window as any).handleInteract(); e.preventDefault(); },
-      'E': () => { (window as any).handleInteract(); e.preventDefault(); },
-      'j': () => { (window as any).openJournal(); e.preventDefault(); },
-      'J': () => { (window as any).openJournal(); e.preventDefault(); },
-      'i': () => { (window as any).openInventory(); e.preventDefault(); },
-      'I': () => { (window as any).openInventory(); e.preventDefault(); },
-      't': () => { if ((window as any).canOpenDeduction()) { (window as any).openDeduction(); e.preventDefault(); } },
-      'T': () => { if ((window as any).canOpenDeduction()) { (window as any).openDeduction(); e.preventDefault(); } },
+      'e': () => { handleInteract(); e.preventDefault(); },
+      'E': () => { handleInteract(); e.preventDefault(); },
+      'j': () => { openJournal(); e.preventDefault(); },
+      'J': () => { openJournal(); e.preventDefault(); },
+      'i': () => { openInventory(); e.preventDefault(); },
+      'I': () => { openInventory(); e.preventDefault(); },
+      'k': () => { openSaveMenu(); e.preventDefault(); },
+      'K': () => { openSaveMenu(); e.preventDefault(); },
+      'o': () => { openSettings(); e.preventDefault(); },
+      'O': () => { openSettings(); e.preventDefault(); },
+      't': () => { if (canOpenDeduction()) { openDeduction(); e.preventDefault(); } },
+      'T': () => { if (canOpenDeduction()) { openDeduction(); e.preventDefault(); } },
       'n': () => { this._toggleMiniMap(e); },
       'N': () => { this._toggleMiniMap(e); },
-      'm': () => { (window as any).toggleMusic(); e.preventDefault(); },
-      'M': () => { (window as any).toggleMusic(); e.preventDefault(); }
+      'm': () => { toggleMusic(); e.preventDefault(); },
+      'M': () => { toggleMusic(); e.preventDefault(); },
+      'F5': () => { saveLoad.save('slot1', 'Quick Save'); e.preventDefault(); },
+      'F9': () => { if (saveLoad.load('slot1')) { updateHUD(); (window as any).pixiRenderer?.syncState?.(); } e.preventDefault(); }
     };
 
     if (actions[key]) {
@@ -273,7 +282,7 @@ class InputManager {
    */
   private _toggleMiniMap(e: KeyboardEvent): void {
     gameState.showMiniMap = !gameState.showMiniMap;
-    (window as any).showToast(gameState.showMiniMap ? 'Minimappa visibile' : 'Minimappa nascosta');
+    showToast(gameState.showMiniMap ? 'Minimappa visibile' : 'Minimappa nascosta');
     e.preventDefault();
   }
 
@@ -284,13 +293,15 @@ class InputManager {
     if (key !== 'Escape') return;
 
     const closeActions: Record<string, () => void> = {
-      dialogue: () => (window as any).closeDialogue(),
-      journal: () => (window as any).closePanels(),
-      inventory: () => (window as any).closePanels(),
-      deduction: () => (window as any).closeDeduction(),
-      radio: () => (window as any).closeRadioPuzzle(),
-      scene: () => (window as any).closeScenePuzzle(),
-      recorder: () => (window as any).closeRecorderPuzzle()
+      dialogue: () => closeDialogue(),
+      journal: () => closePanels(),
+      inventory: () => closePanels(),
+      save: () => closePanels(),
+      settings: () => closePanels(),
+      deduction: () => closeDeduction(),
+      radio: () => closeRadioPuzzle(),
+      scene: () => closeScenePuzzle(),
+      recorder: () => closeRecorderPuzzle()
     };
 
     if (closeActions[ph]) {

@@ -67,6 +67,7 @@ export const gameState: GameState = {
   musicEnabled: true,
   puzzleSolved: false,
   puzzleAttempts: 0,
+  puzzlesSolved: {},
   introSlide: 0,
   introText: '',
   introCharIndex: 0,
@@ -90,6 +91,7 @@ export const gameState: GameState = {
   gameTime: 1200,
   gameDate: "Venerdì, 21 Luglio 1978",
   confirmedHypotheses: [],
+  locale: 'it',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -108,6 +110,7 @@ export function resetGameState(): void {
   gameState.musicEnabled = true;
   gameState.puzzleSolved = false;
   gameState.puzzleAttempts = 0;
+  gameState.puzzlesSolved = {};
   gameState.introSlide = 0;
   gameState.introText = '';
   gameState.introCharIndex = 0;
@@ -131,6 +134,7 @@ export function resetGameState(): void {
   gameState.gameTime = 1200;
   gameState.gameDate = "Venerdì, 21 Luglio 1978";
   gameState.confirmedHypotheses = [];
+  gameState.locale = 'it';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

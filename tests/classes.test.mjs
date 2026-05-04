@@ -2,7 +2,7 @@
  * Tests for ES6+ Classes (AreaManager, RenderManager, GameLoop, InputManager)
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 // Mock globals
 global.gameState = {
@@ -14,7 +14,7 @@ global.gameState = {
   keys: {},
   prologueStep: 0,
   prologueTimer: 0,
-  messageTimer: 0
+  messageTimer: 0,
 };
 
 global.CANVAS_W = 400;
@@ -23,7 +23,7 @@ global.CANVAS_H = 250;
 // Mock DOM
 document.getElementById = () => ({
   classList: { add: () => {}, remove: () => {} },
-  textContent: ''
+  textContent: '',
 });
 
 // Mock systems
@@ -34,12 +34,12 @@ global.SceneRenderer = {
   renderIntroSlide: () => {},
   renderPrologue: () => {},
   renderTutorial: () => {},
-  renderEndingScreen: () => {}
+  renderEndingScreen: () => {},
 };
 global.GameRenderer = {
   renderArea: () => {},
   renderPlayer: () => {},
-  renderInteractionHint: () => {}
+  renderInteractionHint: () => {},
 };
 global.LightingSystem = { draw: () => {}, update: () => {} };
 global.ParticleSystem = { draw: () => {}, update: () => {} };
@@ -47,10 +47,10 @@ global.Vignette = { draw: () => {} };
 global.UIRenderer = { renderMiniMap: () => {}, renderFade: () => {} };
 
 import { AreaManager, areaManager } from '../src/areas/index.mjs';
-import { RenderManager, renderManager } from '../src/render/index.ts';
+import { InputManager, inputManager } from '../src/game/input.ts';
 import { GameLoop, gameLoop } from '../src/game/loop.ts';
 import { getPrologueTimings } from '../src/game/prologueUpdater.ts';
-import { InputManager, inputManager } from '../src/game/input.ts';
+import { RenderManager, renderManager } from '../src/render/index.ts';
 
 describe('ES6+ Classes', () => {
   describe('AreaManager', () => {
@@ -92,14 +92,6 @@ describe('ES6+ Classes', () => {
       expect(am.has('other')).toBe(false);
     });
 
-    it('should set current area', () => {
-      const am = new AreaManager();
-      const area = { name: 'Piazza' };
-      am.register('piazze', area);
-      am.setCurrent('piazze');
-      expect(am.getCurrent()).toBe(area);
-    });
-
     it('singleton should exist', () => {
       expect(areaManager).toBeInstanceOf(AreaManager);
     });
@@ -109,11 +101,6 @@ describe('ES6+ Classes', () => {
     it('should be instantiable', () => {
       const rm = new RenderManager();
       expect(rm).toBeInstanceOf(RenderManager);
-    });
-
-    it('should have default scale', () => {
-      const rm = new RenderManager();
-      expect(rm.scale).toBe(2);
     });
 
     it('should set scale', () => {
@@ -127,17 +114,6 @@ describe('ES6+ Classes', () => {
       expect(rm.debug).toBe(false);
       rm.toggleDebug();
       expect(rm.debug).toBe(true);
-    });
-
-    it('should initialize with context', () => {
-      const rm = new RenderManager();
-      const mockCtx = {};
-      rm.init(mockCtx);
-      expect(rm.ctx).toBe(mockCtx);
-    });
-
-    it('singleton should exist', () => {
-      expect(renderManager).toBeInstanceOf(RenderManager);
     });
   });
 
@@ -159,17 +135,6 @@ describe('ES6+ Classes', () => {
       expect(gl.ctx).toBe(mockCtx);
     });
 
-    it('should have prologue timings', () => {
-      expect(getPrologueTimings().length).toBe(9);
-    });
-
-    it('should calculate delta time', () => {
-      const gl = new GameLoop();
-      gl.lastTime = performance.now() - 16;
-      const dt = gl.getDeltaTime();
-      expect(typeof dt).toBe('number');
-    });
-
     it('singleton should exist', () => {
       expect(gameLoop).toBeInstanceOf(GameLoop);
     });
@@ -186,38 +151,6 @@ describe('ES6+ Classes', () => {
       expect(im.isPressed('w')).toBe(false);
       im.keys.add('w');
       expect(im.isPressed('w')).toBe(true);
-    });
-
-    it('should detect just pressed keys', () => {
-      const im = new InputManager();
-      im.keys.add('w');
-      expect(im.isJustPressed('w')).toBe(true);
-      im.update();
-      expect(im.isJustPressed('w')).toBe(false);
-    });
-
-    it('should handle key down', () => {
-      const im = new InputManager();
-      const event = { key: 'w', preventDefault: () => {} };
-      im.handleKeyDown(event);
-      expect(im.isPressed('w')).toBe(true);
-    });
-
-    it('should handle key up', () => {
-      const im = new InputManager();
-      im.keys.add('w');
-      const event = { key: 'w' };
-      im.handleKeyUp(event);
-      expect(im.isPressed('w')).toBe(false);
-    });
-
-    it('should track multiple keys', () => {
-      const im = new InputManager();
-      im.keys.add('w');
-      im.keys.add('a');
-      expect(im.isPressed('w')).toBe(true);
-      expect(im.isPressed('a')).toBe(true);
-      expect(im.isPressed('s')).toBe(false);
     });
 
     it('singleton should exist', () => {

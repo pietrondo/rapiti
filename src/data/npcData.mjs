@@ -60,3 +60,5 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = npcsData;
 }
+
+export default npcsData;

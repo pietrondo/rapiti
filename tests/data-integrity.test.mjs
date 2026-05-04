@@ -85,6 +85,29 @@ describe('data integrity', () => {
     expect(invalidExits).toEqual([]);
   });
 
+  it('keeps NPCs aligned with npcsData and placed in areas', async () => {
+    const npcData = (await import('../src/data/npcData.mjs')).default;
+    const registeredNpcIds = new Set(npcData.map((n) => n.id));
+    const placedNpcIds = new Set();
+    const areaIds = window.areaManager.getIds();
+    const invalidNpcs = [];
+
+    for (const areaId of areaIds) {
+      const area = window.areaManager.get(areaId);
+      for (const npc of area.npcs || []) {
+        if (!registeredNpcIds.has(npc.id)) {
+          invalidNpcs.push(`${areaId}:unknown_npc:${npc.id}`);
+        }
+        placedNpcIds.add(npc.id);
+      }
+    }
+
+    expect(invalidNpcs).toEqual([]);
+    // Ensure all registered NPCs are placed somewhere
+    const unplacedNpcs = [...registeredNpcIds].filter((id) => !placedNpcIds.has(id));
+    expect(unplacedNpcs).toEqual([]);
+  });
+
   it('gates the Campo delle Luci behind deduction completion', () => {
     const giardini = window.areaManager.get('giardini');
     const campoExit = giardini.exits.find((exit) => exit.to === 'campo');

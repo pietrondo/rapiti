@@ -52,18 +52,38 @@ bd close <id>         # Complete work
 
 ## Build & Test
 
-_Add your build and test commands here_
+```bash
+npm install     # Install dependencies
+npm test        # Run all tests
+npm run dev     # Start Vite dev server
+npm run build   # Build for production
+```
+
+## Image Generation
+
+If you need to generate images for the project, use the following API:
 
 ```bash
-# Example:
-# npm install
-# npm test
+curl https://api.openadapter.in/v1/images/generations \
+  -H "Authorization: Bearer sk-cv-5ad57af700a5459aa35c157faed9e96a" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen-image-2512",
+    "prompt": "A serene mountain lake at sunset with vibrant colors",
+    "n": 1,
+    "size": "1024x1024"
+  }'
 ```
+
+*Note: Keep the authorization header and model unchanged. Modify the prompt and size as needed.*
 
 ## Architecture Overview
 
-_Add a brief overview of your project architecture_
+*   **Single Source of Truth:** `src/config.ts` is the authoritative source for `gameState`. `src/config.mjs` is a compatibility proxy.
+*   **Authoritative Narrative Engine:** `src/story/index.ts` (`StoryManager`) orchestrates chapters, quests, and flags.
+*   **Unified Objects:** All interactive objects are defined in `src/data/clues.mjs` (`areaObjects`).
+*   **Safe UI:** Avoid `innerHTML`. Use `textContent` and DOM construction.
+*   **Hybrid Rendering:** PixiJS v8 for world/menus, Canvas 2D for HUD/Mini-map.
 
 ## Conventions & Patterns
-
-_Add your project-specific conventions here_
+...

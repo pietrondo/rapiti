@@ -40,7 +40,7 @@ export function renderCustomizePreview() {
   var ctx = pv.getContext('2d');
   ctx.clearRect(0, 0, pv.width, pv.height);
   ctx.imageSmoothingEnabled = false;
-  
+
   var colors = window.gameState.playerColors;
   var artist = window.SpriteManager.artist;
   var t = Date.now() * 0.001;
@@ -53,8 +53,8 @@ export function renderCustomizePreview() {
   ctx.save();
   // Center in the 48x56 preview canvas
   ctx.translate(pv.width / 2, pv.height / 2 + 5);
-  ctx.scale(1.5 * scaleX, 1.5 * scaleY); 
-  
+  ctx.scale(1.5 * scaleX, 1.5 * scaleY);
+
   // Shadow
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
   ctx.beginPath();
@@ -69,7 +69,7 @@ export function renderCustomizePreview() {
   artist.drawHead(ctx, ox, oy + 6, colors, { type: 'player' });
   artist.drawEyes(ctx, ox, oy + 6, 'down', { type: 'player' });
   artist.drawBody(ctx, ox, oy + 17, 'down', colors, { type: 'player' });
-  
+
   // Legs (simple for preview)
   var legs = colors.legs || '#4A3728';
   artist.drawPixelRect(ctx, ox + 11, oy + 26, 4, 6, legs);

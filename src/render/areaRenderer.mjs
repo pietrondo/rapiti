@@ -50,9 +50,9 @@ export function renderArea(ctx) {
       drawSprite(ctx, n.x, n.y, npc.colors, npc.details, 'npc', n.facing);
     }
     ctx.font = '7px "Courier New",monospace';
-    var displayName = window.t('npc.' + npc.id);
-    if (displayName === '[' + 'npc.' + npc.id + ']') displayName = npc.name;
-    
+    var displayName = window.t ? window.t(`npc.${npc.id}`) : npc.name;
+    if (!displayName || displayName === `[npc.${npc.id}]`) displayName = npc.name;
+
     var tw = ctx.measureText(displayName).width + 12;
     ctx.fillStyle = 'rgba(8,9,14,0.76)';
     ctx.fillRect(n.x - tw / 2, n.y - 42, tw, 12);

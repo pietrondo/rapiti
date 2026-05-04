@@ -12,6 +12,11 @@ const storyDialogueTriggers = {
         node: 'ruggeri_s4_corruzione',
       },
       {
+        id: 's5_complotto',
+        condition: { hasHypothesis: 'complotto_comunale' },
+        node: 'ruggeri_s5_complotto',
+      },
+      {
         id: 's3_esperimento',
         condition: { hasHypothesis: 'esperimento_militare' },
         node: 'ruggeri_s3_esperimento',
@@ -54,6 +59,11 @@ const storyDialogueTriggers = {
     npcId: 'teresa',
     states: [
       {
+        id: 's3_ciclo',
+        condition: { hasHypothesis: 'falle_dimensionali' },
+        node: 'teresa_s3_ciclo',
+      },
+      {
         id: 's0_intro',
         condition: { chapterAtMost: 'investigation' },
         node: 'teresa_s0',
@@ -82,6 +92,11 @@ const storyDialogueTriggers = {
     npcId: 'neri',
     states: [
       {
+        id: 's3_confessione',
+        condition: { trustAtLeast: { neri: 20 }, hasHypothesis: 'complotto_comunale' },
+        node: 'neri_s3_confessione',
+      },
+      {
         id: 's0_intro',
         condition: { chapterAtMost: 'investigation' },
         node: 'neri_s0',
@@ -103,6 +118,11 @@ const storyDialogueTriggers = {
   valli: {
     npcId: 'valli',
     states: [
+      {
+        id: 's3_segnale',
+        condition: { hasHypothesis: 'segnale_risposta' },
+        node: 'valli_s3_segnale',
+      },
       {
         id: 's0_cold',
         condition: { chapterAtMost: 'deepening', missingClue: 'frammento' },
@@ -152,8 +172,13 @@ const storyDialogueTriggers = {
   osvaldo: {
     npcId: 'osvaldo',
     states: [
+      {
+        id: 's3_fiducia',
+        condition: { trustAtLeast: { osvaldo: 20 }, hasFlag: 'osvaldo_quest_complete' },
+        node: 'osvaldo_s3_fiducia',
+      },
       { id: 's1_menta', condition: { hasClue: 'menta' }, node: 'osvaldo_s1' },
-      { id: 's0_always', condition: null, node: 'osvaldo_s0' }
+      { id: 's0_always', condition: null, node: 'osvaldo_s0' },
     ],
     defaultNode: 'osvaldo_s0',
   },
@@ -161,8 +186,13 @@ const storyDialogueTriggers = {
   gino: {
     npcId: 'gino',
     states: [
+      {
+        id: 's3_testimone',
+        condition: { trustAtLeast: { gino: 20 }, hasFlag: 'gino_quest_complete' },
+        node: 'gino_s3_testimone',
+      },
       { id: 's1_lettera', condition: { hasClue: 'lettera_gino' }, node: 'gino_s1' },
-      { id: 's0_always', condition: null, node: 'gino_s0' }
+      { id: 's0_always', condition: null, node: 'gino_s0' },
     ],
     defaultNode: 'gino_s0',
   },
@@ -171,11 +201,21 @@ const storyDialogueTriggers = {
     npcId: 'don_pietro',
     states: [
       {
+        id: 's3_segreto',
+        condition: { trustAtLeast: { don_pietro: 25 }, hasHypothesis: 'falle_dimensionali' },
+        node: 'don_pietro_s3_segreto',
+      },
+      {
+        id: 's2_falle',
+        condition: { hasHypothesis: 'falle_dimensionali' },
+        node: 'don_pietro_s2_falle',
+      },
+      {
         id: 's1_religione',
         condition: { hasHypothesis: 'rapimento_ciclico' },
         node: 'don_pietro_s1',
       },
-      { id: 's0_always', condition: null, node: 'don_pietro_s0' }
+      { id: 's0_always', condition: null, node: 'don_pietro_s0' },
     ],
     defaultNode: 'don_pietro_s0',
   },

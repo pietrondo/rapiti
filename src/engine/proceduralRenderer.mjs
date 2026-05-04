@@ -27,11 +27,11 @@ const PF = {
       var sx = 15 + ((i * 127) % (window.CANVAS_W - 30));
       var sy = 5 + ((i * 43) % 80);
       var blink = 0.5 + Math.sin(t * 2 + i) * 0.5;
-      
+
       ctx.globalAlpha = 0.4 + blink * 0.5;
       var size = i % 4 === 0 ? 2 : 1;
       ctx.fillRect(sx, sy, size, size);
-      
+
       // Alone stellare per quelle grandi
       if (size > 1 && blink > 0.7) {
         ctx.fillStyle = 'rgba(232, 220, 200, 0.2)';
@@ -40,7 +40,7 @@ const PF = {
       }
       ctx.fillStyle = window.PALETTE.creamPaper;
     }
-    
+
     // Via Lattea / Nebulosa leggera
     var milkyWay = ctx.createRadialGradient(200, 50, 20, 200, 50, 150);
     milkyWay.addColorStop(0, 'rgba(100, 120, 200, 0.05)');
@@ -73,13 +73,13 @@ const PF = {
     ctx.lineTo(400, 110);
     ctx.lineTo(0, 110);
     ctx.fill();
-    
+
     // Montagne vicine con gradiente
     var mGrad = ctx.createLinearGradient(0, 50, 0, 110);
     mGrad.addColorStop(0, window.PALETTE.violetBlue);
     mGrad.addColorStop(1, '#1A1C2C');
     ctx.fillStyle = mGrad;
-    
+
     ctx.beginPath();
     ctx.moveTo(0, 95);
     ctx.lineTo(70, 55);
@@ -113,7 +113,7 @@ const PF = {
     // Muro base
     ctx.fillStyle = window.PALETTE.slateGrey;
     ctx.fillRect(x, y, w, h);
-    
+
     // Ombra laterale per profondità
     ctx.fillStyle = 'rgba(0,0,0,0.15)';
     ctx.fillRect(x + w - 4, y, 4, h);
@@ -122,8 +122,8 @@ const PF = {
     for (var i = 0; i < (windows || 2); i++) {
       var wx = x + 8 + i * 20;
       var wy = y + 10;
-      var isLit = (Math.floor(x + i + t * 0.2)) % 3 === 0;
-      
+      var isLit = Math.floor(x + i + t * 0.2) % 3 === 0;
+
       if (window.drawLitWindow) {
         window.drawLitWindow(ctx, wx, wy, 12, 18, isLit, t, i);
       } else {
@@ -131,7 +131,7 @@ const PF = {
         ctx.fillRect(wx, wy, 12, 18);
       }
     }
-    
+
     // Tetto
     ctx.fillStyle = window.PALETTE.burntOrange;
     ctx.fillRect(x - 2, y - 6, w + 4, 6);
@@ -144,15 +144,15 @@ const PF = {
       BR.drawStreetLamp(ctx, x, y, true, t);
       return;
     }
-    
+
     // Fallback migliorato
     ctx.fillStyle = '#1A1A1A';
     ctx.fillRect(x - 1.5, y, 3, 30); // Palo
     ctx.fillRect(x - 4, y - 6, 8, 6); // Lanterna
-    
+
     ctx.fillStyle = window.PALETTE.lanternYel;
     ctx.fillRect(x - 2, y - 4, 4, 3);
-    
+
     // Luce
     var glow = 0.5 + Math.sin((t || 0) * 4) * 0.1;
     ctx.fillStyle = `rgba(212, 168, 67, ${glow * 0.2})`;
@@ -178,7 +178,7 @@ const PF = {
 
     // Chioma strati (stile "blob" EarthBound)
     var leafColors = ['#1A331A', '#224422', '#2D5A2D', '#3A6D3A'];
-    
+
     function drawLeafBlob(ox, oy, r, color) {
       ctx.fillStyle = color;
       ctx.beginPath();
@@ -187,7 +187,7 @@ const PF = {
       // Riflesso su ogni blob
       ctx.fillStyle = 'rgba(255,255,255,0.05)';
       ctx.beginPath();
-      ctx.arc(x + ox - r*0.3, y + oy - r*0.3, r*0.4, 0, Math.PI * 2);
+      ctx.arc(x + ox - r * 0.3, y + oy - r * 0.3, r * 0.4, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -197,7 +197,7 @@ const PF = {
     drawLeafBlob(-2, -15, 9, leafColors[3]);
   },
 
-  _buildingRenderers: (function () {
+  _buildingRenderers: (() => {
     var BR = typeof BuildingRenderers !== 'undefined' ? BuildingRenderers : {};
     return {
       municipio: BR.drawMunicipio || null,

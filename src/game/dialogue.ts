@@ -56,27 +56,52 @@ export function renderDialogueHTML(): void {
   
   const npcId = gs.dialogueNpcId;
   const npcData = nd.find((n: any) => n.id === npcId);
-  const npcName = npcData ? npcData.name : '???';
+  let npcName = npcData ? npcData.name : '???';
+  if ((window as any).t) {
+    const translatedName = (window as any).t(`npc.${npcId}`);
+    if (translatedName !== `[npc.${npcId}]`) npcName = translatedName;
+  }
   
   const nameEl = document.getElementById('dialogue-npc-name');
   if (nameEl) nameEl.textContent = npcName;
   
   const textEl = document.getElementById('dialogue-text');
   if (textEl) {
-    const rawText = node.text;
+    let rawText = node.text;
+    if ((window as any).t) {
+      const dn = (window as any).dialogueNodes;
+      let nodeKey = '';
+      for (const key in dn) {
+        if (dn[key] === node) {
+          nodeKey = key;
+          break;
+        }
+      }
+      if (nodeKey) {
+        const translatedText = (window as any).t(`dialogue.${nodeKey}.text`);
+        if (translatedText !== `[dialogue.${nodeKey}.text]`) rawText = translatedText;
+      }
+    }
+
     if (node.memoryCorrupt) {
-      let html = '';
+      textEl.textContent = '';
+      const fragment = document.createDocumentFragment();
       for (let c = 0; c < rawText.length; c++) {
         const ch = rawText[c];
         if (ch === '%' || ch === '#' || ch === '@') {
           const corruptChars = '▓▒░█▄▀■□▪▫●○◘◙';
           const rnd = corruptChars[Math.floor(Math.random() * corruptChars.length)];
-          html += `<span style="color:#cc4444;text-shadow:0 0 4px #cc4444;animation:glitchPulse 0.3s infinite alternate">${rnd}</span>`;
+          const span = document.createElement('span');
+          span.style.color = '#cc4444';
+          span.style.textShadow = '0 0 4px #cc4444';
+          span.style.animation = 'glitchPulse 0.3s infinite alternate';
+          span.textContent = rnd;
+          fragment.appendChild(span);
         } else {
-          html += ch;
+          fragment.appendChild(document.createTextNode(ch));
         }
       }
-      textEl.innerHTML = html;
+      textEl.appendChild(fragment);
     } else {
       textEl.textContent = rawText;
     }
@@ -88,16 +113,33 @@ export function renderDialogueHTML(): void {
     if (node.choices && node.choices.length > 0) {
       for (let i = 0; i < node.choices.length; i++) {
         const ch = node.choices[i];
+        let choiceText = ch.text;
+
+        if ((window as any).t) {
+          const dn = (window as any).dialogueNodes;
+          let nodeKey = '';
+          for (const key in dn) {
+            if (dn[key] === node) {
+              nodeKey = key;
+              break;
+            }
+          }
+          if (nodeKey) {
+            const translatedChoice = (window as any).t(`dialogue.${nodeKey}.choice${i + 1}`);
+            if (translatedChoice !== `[dialogue.${nodeKey}.choice${i + 1}]`) choiceText = translatedChoice;
+          }
+        }
+
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.textContent = `${i + 1}. ${ch.text}`;
+        btn.textContent = `${i + 1}. ${choiceText}`;
         btn.addEventListener('click', () => selectDialogueChoice(i));
         choicesDiv.appendChild(btn);
       }
     } else {
       const closeBtn = document.createElement('button');
       closeBtn.className = 'choice-btn';
-      closeBtn.textContent = '[Continua]';
+      closeBtn.textContent = (window as any).t ? (window as any).t('ui.continue') : '[Continua]';
       closeBtn.addEventListener('click', closeDialogue);
       choicesDiv.appendChild(closeBtn);
     }
@@ -162,7 +204,8 @@ export function applyDialogueEffect(effect: any): void {
         (window as any).updateHUD();
         const cluesMap = (window as any).cluesMap;
         if (cluesMap && cluesMap[cid]) {
-          (window as any).showToast(`Hai raccolto: ${cluesMap[cid].name}`);
+          const name = cluesMap[cid].name;
+          (window as any).showToast((window as any).t ? (window as any).t('toast.clue_found', { name }) : `Hai raccolto: ${name}`);
         }
       }
     }
@@ -179,7 +222,10 @@ export function applyDialogueEffect(effect: any): void {
         gs.npcTrust[nid] = (gs.npcTrust[nid] || 0) + effect.addTrust[nid];
         console.log(`[Dialogue] Trust added for ${nid}: +${effect.addTrust[nid]}`);
         const npcData = (window as any).npcsData.find((n: any) => n.id === nid);
-        if (npcData) (window as any).showToast(`Fiducia di ${npcData.name} aumentata!`);
+        if (npcData) {
+          const name = (window as any).t ? (window as any).t(`npc.${nid}`) : npcData.name;
+          (window as any).showToast(`Fiducia di ${name} aumentata!`);
+        }
      }
   }
   if (effect.subTrust) {
@@ -187,7 +233,10 @@ export function applyDialogueEffect(effect: any): void {
         gs.npcTrust[nid] = (gs.npcTrust[nid] || 0) - effect.subTrust[nid];
         console.log(`[Dialogue] Trust subtracted for ${nid}: -${effect.subTrust[nid]}`);
         const npcData = (window as any).npcsData.find((n: any) => n.id === nid);
-        if (npcData) (window as any).showToast(`Fiducia di ${npcData.name} diminuita...`);
+        if (npcData) {
+          const name = (window as any).t ? (window as any).t(`npc.${nid}`) : npcData.name;
+          (window as any).showToast(`Fiducia di ${name} diminuita...`);
+        }
      }
   }
 

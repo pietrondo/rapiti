@@ -14,7 +14,7 @@ export function drawBarExteriorArea(ctx, t) {
   // Terreno: Marciapiede in cemento davanti al bar
   ctx.fillStyle = '#454B56';
   ctx.fillRect(0, 130, window.CANVAS_W, 120);
-  
+
   // Bordi marciapiede
   ctx.fillStyle = '#2C313B';
   for (var i = 0; i < 8; i++) {
@@ -25,7 +25,7 @@ export function drawBarExteriorArea(ctx, t) {
   // Edificio bar (Mattone Scuro)
   ctx.fillStyle = '#3E2723';
   ctx.fillRect(82, 34, 236, 96);
-  
+
   // Dettagli mattoni
   if (window.drawBrickPattern) {
     window.drawBrickPattern(ctx, 82, 34, 236, 96, '#4E342E');
@@ -87,7 +87,7 @@ const BarExteriorArea = {
   name: 'Bar — Esterno',
   walkableTop: 130, // Alzato per bloccare l'accesso alla facciata
   colliders: [
-    { x: 82, y: 0, w: 103, h: 130 },  // Edificio (Parte SX)
+    { x: 82, y: 0, w: 103, h: 130 }, // Edificio (Parte SX)
     { x: 215, y: 0, w: 103, h: 130 }, // Edificio (Parte DX)
     { x: 112, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 226, y: 150, w: 34, h: 24 }, // Tavolino
@@ -96,17 +96,26 @@ const BarExteriorArea = {
   npcs: [{ id: 'osvaldo', x: 280, y: 175 }],
   exits: [
     { dir: 'down', xRange: [100, 200], to: 'piazze', spawnX: 337, spawnY: 175 },
-    { dir: 'up', xRange: [180, 220], to: 'bar_interno', spawnX: 200, spawnY: 220, requiresInteract: true }
+    {
+      dir: 'up',
+      xRange: [180, 220],
+      to: 'bar_interno',
+      spawnX: 200,
+      spawnY: 220,
+      requiresInteract: true,
+    },
   ],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawBarExteriorArea(ctx, t);
-    
+
     // Freccia verso Piazza
     ctx.fillStyle = 'rgba(212,168,67,0.6)';
     ctx.beginPath();
-    ctx.moveTo(200, 245); ctx.lineTo(205, 240); ctx.lineTo(195, 240);
+    ctx.moveTo(200, 245);
+    ctx.lineTo(205, 240);
+    ctx.lineTo(195, 240);
     ctx.fill();
     ctx.font = 'bold 8px "Courier New", monospace';
     ctx.fillStyle = '#fff';

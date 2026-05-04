@@ -22,7 +22,7 @@ class EffectsManager {
     if (typeof SparkleSystem !== 'undefined') this.systems.sparkles = new SparkleSystem();
     if (typeof SteamSystem !== 'undefined') this.systems.steam = new SteamSystem();
     if (typeof FogSystem !== 'undefined') this.systems.fog = new FogSystem();
-    
+
     if (typeof WeatherSystem !== 'undefined') this.systems.weather = new WeatherSystem();
     if (typeof FallingLeavesSystem !== 'undefined') this.systems.leaves = new FallingLeavesSystem();
     if (typeof LightingSystem !== 'undefined') this.systems.lighting = new LightingSystem();
@@ -44,27 +44,27 @@ class EffectsManager {
     // Aggiorna sempre
     this.systems.sparkles?.update(dt);
     this.systems.lighting?.update(dt);
-    
+
     if (typeof ScreenShake !== 'undefined') ScreenShake.update(dt);
 
     // Aggiorna in base all'area
     if (area === 'industriale') {
-       this.systems.steam?.update(dt);
-       // Emissione automatica per ciminiere (posizioni fisse in IndustrialeArea)
-       this.systems.steam?.emitSteam(110, 20);
-       this.systems.steam?.emitSteam(290, 15);
+      this.systems.steam?.update(dt);
+      // Emissione automatica per ciminiere (posizioni fisse in IndustrialeArea)
+      this.systems.steam?.emitSteam(110, 20);
+      this.systems.steam?.emitSteam(290, 15);
     }
-    
+
     if (area === 'cimitero' || area === 'giardini' || area === 'campo') {
-       this.systems.fog?.update(dt);
-       this.systems.fireflies?.update(dt);
+      this.systems.fog?.update(dt);
+      this.systems.fireflies?.update(dt);
     }
-    
+
     if (area === 'cimitero') {
-       this.systems.leaves?.setActive(true);
-       this.systems.leaves?.update(dt);
+      this.systems.leaves?.setActive(true);
+      this.systems.leaves?.update(dt);
     } else {
-       this.systems.leaves?.setActive(false);
+      this.systems.leaves?.setActive(false);
     }
 
     if (this.systems.weather?.active) this.systems.weather.update(dt);
@@ -76,15 +76,15 @@ class EffectsManager {
     // Background FX
     if (area === 'industriale') this.systems.steam?.draw(ctx);
     if (area === 'cimitero' || area === 'giardini' || area === 'campo') {
-       this.systems.fog?.draw(ctx);
-       this.systems.fireflies?.draw(ctx);
+      this.systems.fog?.draw(ctx);
+      this.systems.fireflies?.draw(ctx);
     }
-    
+
     // Foreground FX
     this.systems.leaves?.draw(ctx);
     this.systems.weather?.draw(ctx);
     this.systems.sparkles?.draw(ctx);
-    
+
     // Vignetta (da ambient.mjs)
     if (typeof Vignette !== 'undefined') Vignette.draw(ctx);
   }

@@ -26,12 +26,12 @@ const storyQuests = {
         id: 'hear_story',
         description: 'Riascolta Anselmo dopo aver risolto la radio',
         condition: { talkedTo: 'anselmo', hasFlag: 'anselmo_remembering' },
-        reward: { giveClueHint: 'registro_1861_location', setFlag: 'anselmo_quest_complete' },
+        reward: { giveClueHint: 'cronaca_parrocchiale', setFlag: 'anselmo_quest_complete', addTrust: { anselmo: 20 } },
       },
     ],
     onComplete: {
       xp: 50,
-      message: 'Hai aiutato Anselmo a ricordare. Ora sai della connessione con il 1952.',
+      message: 'Hai aiutato Anselmo a ricordare. Ti ha suggerito di cercare tra le cronache parrocchiali.',
     },
   },
 
@@ -58,12 +58,12 @@ const storyQuests = {
         id: 'solve_scene',
         description: 'Risolvi il puzzle della scena',
         condition: { puzzleSolved: 'scene' },
-        reward: { giveClue: 'diario_enzo', setFlag: 'cascina_quest_complete' },
+        reward: { giveClue: 'diario_enzo', setFlag: 'cascina_quest_complete', addTrust: { teresa: 25 } },
       },
     ],
     onComplete: {
       xp: 75,
-      message: 'Hai decifrato i simboli. Il diario di Enzo è tuo.',
+      message: 'Hai decifrato i simboli. Il diario di Enzo conferma i tuoi sospetti.',
     },
   },
 
@@ -84,12 +84,12 @@ const storyQuests = {
         id: 'solve_registry',
         description: "Ricostruisci l'ordine cronologico",
         condition: { puzzleSolved: 'registry' },
-        reward: { setFlag: 'registry_solved', updateNPCState: { neri: 1 } },
+        reward: { giveClue: 'lettera_censurata', setFlag: 'registry_solved', updateNPCState: { neri: 1 }, addTrust: { neri: 15 } },
       },
     ],
     onComplete: {
       xp: 50,
-      message: 'Il pattern è chiaro: 1952, 1969, 1974, 1978...',
+      message: 'Il pattern è chiaro. Neri ti ha consegnato una lettera militare che teneva nascosta.',
     },
   },
 
@@ -110,12 +110,12 @@ const storyQuests = {
         id: 'solve_recorder',
         description: 'Collega correttamente i cavi',
         condition: { puzzleSolved: 'recorder' },
-        reward: { giveClue: 'registro_monte_ferro', setFlag: 'recorder_quest_complete' },
+        reward: { giveClue: 'nastro_monte_ferro_2', setFlag: 'recorder_quest_complete' },
       },
     ],
     onComplete: {
       xp: 100,
-      message: 'Hai ascoltato il messaggio. Qualcosa è andato storto nel 1978...',
+      message: 'Hai ascoltato il messaggio. Il Nastro 4 contiene le coordinate finali.',
     },
   },
   /* ── Quest: La Ricetta di Osvaldo ── */
@@ -128,19 +128,20 @@ const storyQuests = {
       {
         id: 'collect_menta',
         description: 'Trova la menta nei Giardini',
-        condition: { hasFlag: 'menta_found' },
-        reward: { addTrust: { osvaldo: 15 } },
+        condition: { hasClue: 'menta' },
+        reward: { setFlag: 'menta_collected' },
       },
       {
         id: 'deliver_menta',
         description: 'Consegna la menta a Osvaldo',
-        condition: { talkedTo: 'osvaldo', hasFlag: 'menta_found' },
-        reward: { giveClueHint: 'secret_ingredient', setFlag: 'osvaldo_quest_complete' },
+        condition: { talkedTo: 'osvaldo', hasFlag: 'menta_collected' },
+        reward: { giveClueHint: 'radio_audio', setFlag: 'osvaldo_quest_complete', addTrust: { osvaldo: 20 } },
       },
     ],
     onComplete: {
       xp: 40,
-      message: 'Osvaldo è felice. Ti ha rivelato che le luci ronzano con la stessa frequenza della radio.',
+      message:
+        'Osvaldo è felice. Ti ha svelato che la radio del bar intercetta strane frequenze.',
     },
   },
 
@@ -155,18 +156,18 @@ const storyQuests = {
         id: 'find_letter',
         description: 'Cerca la busta gialla nel Cimitero',
         condition: { hasClue: 'lettera_gino' },
-        reward: { addTrust: { gino: 10 } },
+        reward: { setFlag: 'letter_found' },
       },
       {
         id: 'deliver_letter',
         description: 'Riporta la lettera a Gino',
-        condition: { talkedTo: 'gino', hasClue: 'lettera_gino' },
-        reward: { setFlag: 'gino_quest_complete' },
+        condition: { talkedTo: 'gino', hasFlag: 'letter_found' },
+        reward: { giveClueHint: 'registro_comunale', setFlag: 'gino_quest_complete', addTrust: { gino: 15 } },
       },
     ],
     onComplete: {
       xp: 30,
-      message: 'Gino ti ringrazia. "Sei un vero ispettore, mica come quelli della TV!"',
+      message: 'Gino ti ringrazia. Ti ha confidato che al Municipio alcuni registri sono spariti.',
     },
   },
 };

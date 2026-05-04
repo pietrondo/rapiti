@@ -26,7 +26,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x - 6, y + h - 8, w + 12, 10);
   ctx.fillStyle = window.PALETTE.burntOrange;
   ctx.fillRect(x - 4, y - 8, w + 8, 8);
-  
+
   // Timpano / Frontone
   ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.beginPath();
@@ -52,7 +52,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.strokeStyle = window.PALETTE.nightBlue;
   ctx.lineWidth = 1;
   ctx.stroke();
-  
+
   // Lancette orologio
   ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x + w / 2 - 0.5, y - 33, 1, 5);
@@ -69,7 +69,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.beginPath();
   ctx.roundRect(x + w / 2 - 14, y + h - 38, 28, 38, [8, 8, 0, 0]);
   ctx.fill();
-  
+
   // Battenti porta
   ctx.strokeStyle = 'rgba(0,0,0,0.3)';
   ctx.beginPath();
@@ -80,7 +80,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   // Bandiera Italiana
   ctx.fillStyle = window.PALETTE.slateGrey;
   ctx.fillRect(x + w + 5, y + 10, 2, 24); // Asta
-  
+
   ctx.fillStyle = '#00853E';
   ctx.fillRect(x + w + 7, y + 12, 6, 12);
   ctx.fillStyle = '#F4F0E8';
@@ -91,7 +91,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
 
 export function drawChurchFacade(ctx, x, y, w, h, t) {
   // Uso il modulo specializzato se disponibile, altrimenti fallback migliorato
-  if (window.BuildingRenderers && window.BuildingRenderers.drawChurch) {
+  if (window.BuildingRenderers?.drawChurch) {
     window.BuildingRenderers.drawChurch(ctx, x, y, w, h);
     return;
   }
@@ -103,7 +103,7 @@ export function drawChurchFacade(ctx, x, y, w, h, t) {
   ctx.lineTo(x + w / 2, y - 28);
   ctx.lineTo(x + w + 10, y);
   ctx.fill();
-  
+
   // Campanile
   ctx.fillStyle = window.PALETTE.greyBrown;
   ctx.fillRect(x + w / 2 - 22, y - 50, 44, 50);
@@ -113,21 +113,21 @@ export function drawChurchFacade(ctx, x, y, w, h, t) {
   ctx.lineTo(x + w / 2, y - 74);
   ctx.lineTo(x + w / 2 + 25, y - 50);
   ctx.fill();
-  
+
   // Croce
   ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.fillRect(x + w / 2 - 2, y - 66, 4, 18);
   ctx.fillRect(x + w / 2 - 9, y - 59, 18, 4);
-  
+
   // Effetto bagliore rosone
   ctx.fillStyle = 'rgba(212,168,67,0.18)';
   ctx.beginPath();
   ctx.arc(x + w / 2, y + 36, 25 + Math.sin(t * 1.5) * 4, 0, Math.PI * 2);
   ctx.fill();
-  
+
   drawLitWindow(ctx, x + 24, y + 22, 16, 34, true, t, 0);
   drawLitWindow(ctx, x + w - 40, y + 22, 16, 34, true, t, 1);
-  
+
   ctx.fillStyle = window.PALETTE.earthBrown;
   ctx.beginPath();
   ctx.roundRect(x + w / 2 - 16, y + h - 44, 32, 44, [12, 12, 0, 0]);
@@ -141,10 +141,10 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   } else {
     drawWallTexture(ctx, x, y, w, h, '#BBA07A', 'rgba(80,54,38,0.18)');
   }
-  
+
   ctx.fillStyle = '#442B1F';
   ctx.fillRect(x - 8, y + h - 8, w + 16, 10);
-  
+
   // Insegna Neon
   var neon = 0.62 + Math.sin(t * 4) * 0.28;
   ctx.fillStyle = '#1A1C20';
@@ -152,7 +152,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   ctx.strokeStyle = `rgba(220,54,42,${neon.toFixed(2)})`;
   ctx.lineWidth = 2;
   ctx.strokeRect(x + 22, y - 33, w - 44, 26);
-  
+
   ctx.fillStyle = `rgba(255,100,100,${(neon * 0.8).toFixed(2)})`;
   ctx.font = 'bold 10px "Courier New",monospace';
   ctx.textAlign = 'center';
@@ -179,11 +179,11 @@ export function drawBarWindow(ctx, x, y, w, h, t, phase) {
   ctx.fillRect(x - 3, y - 3, w + 6, h + 6);
   ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
-  
+
   var pulse = (0.42 + Math.sin(t * 2 + phase) * 0.12).toFixed(2);
   ctx.fillStyle = `rgba(212,168,67,${pulse})`;
   ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
-  
+
   // Riflesso diagonale
   ctx.fillStyle = 'rgba(255,255,255,0.15)';
   ctx.beginPath();
@@ -210,7 +210,7 @@ export function drawStripedAwning(ctx, x, y, w, _t) {
     ctx.lineTo(x + s * 12 - 2, y + 20);
     ctx.closePath();
     ctx.fill();
-    
+
     // Ombra interna tenda
     ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(x + s * 12, y + 3, 2, 15);
@@ -218,11 +218,11 @@ export function drawStripedAwning(ctx, x, y, w, _t) {
 }
 
 export function drawPiazzaFountain(ctx, x, y, t) {
-  if (window.BuildingRenderers && window.BuildingRenderers.drawFountain) {
+  if (window.BuildingRenderers?.drawFountain) {
     window.BuildingRenderers.drawFountain(ctx, x, y, 25, t);
     return;
   }
-  
+
   ctx.fillStyle = window.PALETTE.stoneGrey;
   ctx.fillRect(x - 20, y + 10, 40, 12);
   ctx.fillStyle = window.PALETTE.darkForest;
@@ -237,18 +237,18 @@ export function drawNoticeBoard(ctx, x, y, _t) {
   // Ombra board
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
   ctx.fillRect(x + 2, y + 2, 44, 54);
-  
+
   ctx.fillStyle = '#5A4030';
   ctx.fillRect(x - 2, y - 2, 44, 54);
   ctx.fillStyle = '#3A2820';
   ctx.fillRect(x, y, 40, 50);
   ctx.fillStyle = '#D4C4A8';
   ctx.fillRect(x + 4, y + 4, 32, 42);
-  
+
   ctx.fillStyle = '#2A1C18';
   ctx.font = 'bold 8px monospace';
   ctx.fillText('AVVISI', x + 7, y + 14);
-  
+
   // Post-it e foglietti
   ctx.fillStyle = '#FFF9C4';
   ctx.fillRect(x + 6, y + 18, 12, 10);
@@ -256,22 +256,24 @@ export function drawNoticeBoard(ctx, x, y, _t) {
   ctx.fillRect(x + 22, y + 22, 10, 12);
   ctx.fillStyle = '#F8BBD0';
   ctx.fillRect(x + 8, y + 32, 14, 8);
-  
+
   // Testo finto
   ctx.strokeStyle = 'rgba(0,0,0,0.2)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(x + 8, y + 22); ctx.lineTo(x + 16, y + 22);
-  ctx.moveTo(x + 8, y + 25); ctx.lineTo(x + 14, y + 25);
+  ctx.moveTo(x + 8, y + 22);
+  ctx.lineTo(x + 16, y + 22);
+  ctx.moveTo(x + 8, y + 25);
+  ctx.lineTo(x + 14, y + 25);
   ctx.stroke();
 }
 
 export function drawBench(ctx, x, y) {
-  if (window.BuildingRenderers && window.BuildingRenderers.drawParkBench) {
+  if (window.BuildingRenderers?.drawParkBench) {
     window.BuildingRenderers.drawParkBench(ctx, x, y, 44);
     return;
   }
-  
+
   ctx.fillStyle = '#5A4030';
   ctx.fillRect(x - 2, y - 4, 44, 8);
   ctx.fillRect(x, y + 4, 4, 14);

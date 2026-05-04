@@ -146,7 +146,15 @@ export function renderPrologue(ctx) {
 }
 
 export function renderTutorial(ctx) {
-  window.UIRenderer.fillGradientRect(ctx, 0, 0, window.CANVAS_W, window.CANVAS_H, '#080A13', '#1B211C');
+  window.UIRenderer.fillGradientRect(
+    ctx,
+    0,
+    0,
+    window.CANVAS_W,
+    window.CANVAS_H,
+    '#080A13',
+    '#1B211C'
+  );
   window.UIRenderer.drawFilmGrain(ctx);
   window.UIRenderer.drawPixelPanel(ctx, 30, 15, 340, 220, 'TACCUINO OPERATIVO');
   ctx.fillStyle = window.PALETTE.lanternYel;

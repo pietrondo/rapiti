@@ -63,6 +63,38 @@ Implementato per gestire le relazioni con gli NPC. Le scelte nei dialoghi influe
 title ──ENTER──▶ prologue_cutscene ──auto──▶ intro ──ENTER──▶ customize ──ENTER──▶ tutorial ──ENTER──▶ playing ──triggerEnding()──▶ ending
 ```
 
+## Source of Truth & Configuration
+
+L'architettura è stata consolidata per avere un'unica **Fonte della Verità** in TypeScript:
+-   **GameState (`src/config.ts`)**: Definisce l'interfaccia `GameState` e l'istanza iniziale. Tutti i moduli (JS e TS) accedono allo stesso oggetto reattivo.
+-   **Compatibility Bridge (`src/config.mjs`)**: Riesporta le costanti e lo stato da `config.ts` per i moduli legacy `.mjs`, garantendo che non ci siano sdoppiamenti di stato.
+-   **Persistenza**: Il sistema `SaveLoadSystem` (`src/game/saveLoad.ts`) salva l'intero `gameState`, inclusi i puzzle risolti (`puzzlesSolved`) e le ipotesi confermate.
+
+## Story System & Narrative Engine
+
+Il motore narrativo è centralizzato in `StoryManager` (`src/story/index.ts`), che funge da orchestratore unico.
+
+### Gerarchia del Motore
+1.  **StoryManager (Facade)**: Punto di accesso unico per il resto del gioco.
+2.  **ChapterManager**: Gestisce la progressione dei capitoli e il completamento degli obiettivi.
+3.  **QuestManager**: Gestisce le missioni secondarie e le ricompense (inclusa la fiducia degli NPC).
+4.  **StoryEngine (Core Evaluation)**: Valuta le condizioni (`checkCondition`), triggera gli eventi (`checkEvents`) e gestisce flag/achievement.
+
+**Nota sulla Retrocompatibilità**: I moduli legacy come `conditionSystem.mjs` e `eventSystem.mjs` sono stati trasformati in **proxy leggeri** che delegano l'intera logica al `StoryEngine` in TypeScript. Questo evita "implementation drift" e assicura che una condizione sia valutata allo stesso modo ovunque.
+
+## Sistema di Interazione & Oggetti
+
+`handleInteract()` (in `init.mjs`) gestisce:
+1.  **Uscite Interattive**: Porte che richiedono il tasto **'E'** (Municipio, Bar).
+2.  **NPC**: Avvio dialoghi basati su stato e fiducia.
+3.  **Oggetti (`areaObjects`)**: Tutti gli oggetti interattivi e gli indizi sono centralizzati in `src/data/clues.mjs`. I moduli delle aree (`src/areas/*.mjs`) non devono più definire un campo `objects` locale; devono invece usare la mappa globale `window.areaObjects`.
+
+## Sicurezza e Robustezza UI
+
+Per prevenire bug di rendering e migliorare la manutenibilità, l'uso di `innerHTML` è proibito per contenuti dinamici provenienti dal `gameState` o traduzioni.
+-   **Sostituzione con DOM Puro**: Overlay di inventario, deduzione, fiducia e finali utilizzano `document.createElement`, `textContent` e `appendChild`.
+-   **Glitch Effect**: Gli effetti testuali (come la memoria corrotta nei dialoghi) sono implementati tramite `DocumentFragment` e nodi di testo individuali invece di stringhe HTML concatenate.
+
 ## Aree e Connessioni (Mappa Logica)
 
 ```

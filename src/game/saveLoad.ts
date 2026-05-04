@@ -131,7 +131,9 @@ class SaveLoadSystem {
         radioSolved: gs.radioSolved,
         npcTrust: { ...gs.npcTrust },
         gameTime: gs.gameTime,
-        gameDate: gs.gameDate
+        gameDate: gs.gameDate,
+        confirmedHypotheses: [...(gs.confirmedHypotheses || [])],
+        puzzlesSolved: { ...(gs.puzzlesSolved || {}) }
       },
       story: (sm?.serialize?.() ?? {}) as StorySaveData,
       stats: (sm?.getStats?.() ?? {}) as GameStats,
@@ -161,6 +163,8 @@ class SaveLoadSystem {
     gs.npcTrust = { ...(saveGs.npcTrust ?? {}) } as GameState['npcTrust'];
     gs.gameTime = saveGs.gameTime ?? gs.gameTime;
     gs.gameDate = saveGs.gameDate ?? gs.gameDate;
+    gs.confirmedHypotheses = [...(saveGs.confirmedHypotheses ?? [])];
+    gs.puzzlesSolved = { ...(saveGs.puzzlesSolved ?? {}) } as GameState['puzzlesSolved'];
 
     // Apply story state
     if (saveData.story) {
@@ -196,7 +200,7 @@ class SaveLoadSystem {
    */
   getAllSaves(): SaveSlotInfo[] {
     const meta = this._getMeta();
-    const slots = ['slot1', 'slot2', 'slot3'];
+    const slots = ['autosave', 'slot1', 'slot2', 'slot3'];
 
     return slots.map((slot) => ({
       slot,

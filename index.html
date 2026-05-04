@@ -15,15 +15,15 @@
     <canvas id="gameCanvas" width="800" height="500"></canvas>
   </div>
   <div id="hud">
-    <div class="hud-section"><span class="hud-label">📍</span><span class="hud-value" id="hud-area">Piazza del Borgo</span></div>
-    <div class="hud-section"><span class="hud-label">🕵️</span><span class="hud-value">WASD Muovi | E Interagisci</span></div>
-    <div class="hud-section"><span class="hud-label">🔍</span><span class="hud-value" id="hud-clues">0/9</span></div>
+    <div class="hud-section"><span class="hud-label">📍</span><span class="hud-value" id="hud-area" data-i18n="area.piazze">Piazza del Borgo</span></div>
+    <div class="hud-section"><span class="hud-label">🕵️</span><span class="hud-value" data-i18n="hud.help">WASD Muovi | E Interagisci</span></div>
+    <div class="hud-section"><span class="hud-label">🔍</span><span class="hud-value" id="hud-clues" data-i18n="hud.clues_short">0/9</span></div>
     <div class="hud-section">
-      <span class="hud-label">[J]</span><span class="hud-value">Diario</span>
-      <span class="hud-label">[I]</span><span class="hud-value">Inv</span>
-      <span class="hud-label">[N]</span><span class="hud-value">Mappa</span>
-      <span id="hud-ded-hint" class="hud-value" style="display:none"><span class="hud-label">[T]</span><span class="hud-blinking">Teoria</span></span>
-      <button id="mute-btn" class="mute-btn" title="Musica ON/OFF" onclick="toggleMusic()">🔊</button>
+      <span class="hud-label">[J]</span><span class="hud-value" data-i18n="ui.journal">Diario</span>
+      <span class="hud-label">[I]</span><span class="hud-value" data-i18n="ui.inventory">Inv</span>
+      <span class="hud-label">[N]</span><span class="hud-value" data-i18n="ui.map">Mappa</span>
+      <span id="hud-ded-hint" class="hud-value" style="display:none"><span class="hud-label">[T]</span><span class="hud-blinking" data-i18n="ui.theory">Teoria</span></span>
+      <button id="mute-btn" class="mute-btn" title="Musica ON/OFF" onclick="toggleMusic()" data-i18n-title="ui.mute_toggle">🔊</button>
     </div>
   </div>
 </div>
@@ -181,6 +181,60 @@
     <h2 id="ending-title"></h2>
     <div class="ending-text" id="ending-text"></div>
     <div style="text-align:center;margin-top:16px;color:#6b7b6b;font-size:12px">Premi ENTER per ricominciare</div>
+  </div>
+</div>
+
+<div id="save-overlay" class="overlay">
+  <div class="panel" style="max-width:500px">
+    <button class="pnl-close" id="save-close">✕</button>
+    <h2>💾 Salvataggi</h2>
+    <div id="save-slots-container"></div>
+    <div style="margin-top:20px; display:flex; gap:10px;">
+      <button class="btn-primary" id="btn-export-json" style="margin-top:0; font-size:12px; padding:10px;" data-i18n="ui.export_json">Esporta JSON</button>
+      <button class="btn-primary" id="btn-import-json" style="margin-top:0; font-size:12px; padding:10px;" data-i18n="ui.import_json">Importa JSON</button>
+      <button class="btn-primary" id="btn-switch-lang" style="margin-top:0; font-size:12px; padding:10px;">English</button>
+    </div>
+  </div>
+</div>
+
+<div id="settings-overlay" class="overlay">
+  <div class="panel" style="max-width:400px">
+    <button class="pnl-close" id="settings-close">✕</button>
+    <h2 data-i18n="ui.settings">⚙️ Impostazioni</h2>
+    
+    <div class="settings-grid">
+      <div class="setting-item">
+        <label data-i18n="ui.fullscreen">Fullscreen</label>
+        <button class="btn-slot" id="btn-toggle-fs">OFF</button>
+      </div>
+      
+      <div class="setting-item">
+        <label data-i18n="ui.language">Lingua</label>
+        <select id="select-lang" class="scene-select" style="width:100px; padding:4px;">
+          <option value="it">Italiano</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      
+      <div class="setting-item">
+        <label data-i18n="ui.audio">Audio</label>
+        <button class="btn-slot" id="btn-toggle-audio">ON</button>
+      </div>
+      
+      <div class="setting-item">
+        <label data-i18n="ui.volume">Volume</label>
+        <input type="range" id="range-volume" min="0" max="1" step="0.1" style="width:100px">
+      </div>
+
+      <div class="setting-item">
+        <label data-i18n="ui.map">Minimappa</label>
+        <button class="btn-slot" id="btn-toggle-map">ON</button>
+      </div>
+    </div>
+    
+    <div style="margin-top:20px; text-align:center;">
+       <button class="btn-primary" id="settings-back" style="margin-top:0">OK</button>
+    </div>
   </div>
 </div>
 

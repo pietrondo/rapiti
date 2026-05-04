@@ -14,7 +14,7 @@ export function drawResidentialArea(ctx, t) {
   // Terreno: Erba scura
   ctx.fillStyle = '#1D2A14';
   ctx.fillRect(0, 80, window.CANVAS_W, 170);
-  
+
   // Marciapiede
   ctx.fillStyle = '#3A3F4B';
   ctx.fillRect(0, 115, window.CANVAS_W, 15);
@@ -32,7 +32,7 @@ export function drawResidentialArea(ctx, t) {
 
   for (var i = 0; i < houses.length; i++) {
     var h = houses[i];
-    
+
     // Ombra edificio
     ctx.fillStyle = 'rgba(0,0,0,0.3)';
     ctx.fillRect(h.x + 5, h.y + h.h - 5, h.w, 10);
@@ -42,7 +42,14 @@ export function drawResidentialArea(ctx, t) {
     ctx.fillRect(h.x, h.y, h.w, h.h);
 
     if (h.brick && window.drawBrickPattern) {
-      window.drawBrickPattern(ctx, h.x, h.y, h.w, h.h, h.color === '#6D4C41' ? '#5D4037' : '#455A64');
+      window.drawBrickPattern(
+        ctx,
+        h.x,
+        h.y,
+        h.w,
+        h.h,
+        h.color === '#6D4C41' ? '#5D4037' : '#455A64'
+      );
     }
 
     // Tetto
@@ -77,7 +84,7 @@ export function drawResidentialArea(ctx, t) {
   // Strada (Senza collider ora)
   ctx.fillStyle = '#2A2E35';
   ctx.fillRect(0, 130, window.CANVAS_W, 100);
-  
+
   // Strisce stradali rovinate
   ctx.fillStyle = 'rgba(200, 200, 200, 0.15)';
   for (var j = 0; j < 5; j++) {
@@ -87,7 +94,7 @@ export function drawResidentialArea(ctx, t) {
   // Dettagli ambientali
   window.PF.tree(ctx, 110, 105);
   window.PF.tree(ctx, 270, 110);
-  
+
   // Siepi
   ctx.fillStyle = '#1A331A';
   for (var k = 0; k < 6; k++) {
@@ -105,13 +112,16 @@ const ResidenzialeArea = {
   name: 'Quartiere Residenziale',
   walkableTop: 115,
   colliders: [
-    { x: 15, y: 0, w: 75, h: 115 },  // Casa 1
+    { x: 15, y: 0, w: 75, h: 115 }, // Casa 1
     { x: 155, y: 0, w: 85, h: 115 }, // Casa 2
     { x: 305, y: 0, w: 80, h: 115 }, // Casa 3
     { x: 100, y: 105, w: 20, h: 10 }, // Albero 1
     { x: 260, y: 110, w: 20, h: 10 }, // Albero 2
   ],
-  npcs: [{ id: 'valli', x: 200, y: 180 }],
+  npcs: [
+    { id: 'valli', x: 200, y: 180 },
+    { id: 'gino', x: 100, y: 125 },
+  ],
   exits: [
     { dir: 'up', xRange: [160, 240], to: 'piazze', spawnX: 200, spawnY: 220 }, // Uscita verso Piazza ristretta al centro
     { dir: 'down', xRange: [0, 400], to: 'industriale', spawnX: 200, spawnY: 100 },
@@ -120,7 +130,7 @@ const ResidenzialeArea = {
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawResidentialArea(ctx, t);
-    
+
     // CARTELLO PER PIAZZA
     ctx.fillStyle = '#333';
     ctx.fillRect(198, 100, 4, 15); // Palo
@@ -130,7 +140,7 @@ const ResidenzialeArea = {
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';
     ctx.fillText('↑ PIAZZA', 200, 96);
-    
+
     window.drawVignette(ctx);
   },
 };

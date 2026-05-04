@@ -31,16 +31,16 @@ export function getAreaTexture(type) {
 export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
   phase = phase || 0;
   var pulse = 0.5 + Math.sin(t * 2 + phase) * 0.18;
-  
+
   // Sfondo finestra (vetro scuro)
   ctx.fillStyle = window.PALETTE.nightBlue;
   ctx.fillRect(x, y, w, h);
-  
+
   // Bagliore interno
   var glowColor = warm
     ? `rgba(212,168,67,${pulse.toFixed(2)})`
     : `rgba(130,160,220,${pulse.toFixed(2)})`;
-    
+
   ctx.fillStyle = glowColor;
   ctx.fillRect(x + 1, y + 1, w - 2, h - 2);
 
@@ -59,7 +59,7 @@ export function drawLitWindow(ctx, x, y, w, h, warm, t, phase) {
   ctx.fillRect(x, y + h - 2, w, 2); // Bottom
   ctx.fillRect(x, y, 2, h); // Left
   ctx.fillRect(x + w - 2, y, 2, h); // Right
-  
+
   // Croce infissi
   ctx.fillRect(x + Math.floor(w / 2) - 1, y, 2, h);
   ctx.fillRect(x, y + Math.floor(h / 2) - 1, w, 2);
@@ -72,7 +72,7 @@ export function drawTileRoof(ctx, x, y, w, color) {
   // Ombra sottotetto
   ctx.fillStyle = '#1A120A';
   ctx.fillRect(x - 6, y - 2, w + 12, 4);
-  
+
   // Base tetto
   var roofColor = color || window.PALETTE.burntOrange;
   ctx.fillStyle = roofColor;
@@ -94,7 +94,7 @@ export function drawTileRoof(ctx, x, y, w, color) {
     ctx.lineTo(rowX + rowW, y - h);
     ctx.stroke();
   }
-  
+
   // Tegole verticali (sfalsate)
   ctx.fillStyle = 'rgba(0,0,0,0.1)';
   for (var i = 0; i < w + 16; i += 8) {
@@ -108,10 +108,10 @@ export function drawTileRoof(ctx, x, y, w, color) {
 export function drawBrickPattern(ctx, x, y, w, h, color) {
   ctx.fillStyle = color;
   ctx.fillRect(x, y, w, h);
-  
+
   ctx.strokeStyle = 'rgba(0,0,0,0.15)';
   ctx.lineWidth = 1;
-  
+
   // Linee malta orizzontali
   for (var ry = y + 4; ry < y + h; ry += 8) {
     ctx.beginPath();
@@ -119,7 +119,7 @@ export function drawBrickPattern(ctx, x, y, w, h, color) {
     ctx.lineTo(x + w, ry);
     ctx.stroke();
   }
-  
+
   // Mattoni verticali sfalsati
   for (var row = 0; row < h / 8; row++) {
     var offset = (row % 2) * 8;

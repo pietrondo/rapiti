@@ -70,11 +70,20 @@ export function drawBuildingDetailed(ctx, x, y, width, height, options) {
     for (var col = 0; col < windowCols; col++) {
       var wx = startX + col * (width / windowCols);
       var wy = startY + row * 40;
-      
+
       if (wx + windowW < x + width - 5 && wy + windowH < y + height - 30) {
         if (window.drawLitWindow) {
           var isLit = (row + col + Math.floor(animTime)) % 3 === 0;
-          window.drawLitWindow(ctx, wx, wy, windowW, windowH, isLit, animTime * 0.5, (row * 10 + col));
+          window.drawLitWindow(
+            ctx,
+            wx,
+            wy,
+            windowW,
+            windowH,
+            isLit,
+            animTime * 0.5,
+            row * 10 + col
+          );
         } else {
           ctx.fillStyle = windowColor;
           ctx.fillRect(wx, wy, windowW, windowH);
@@ -91,11 +100,11 @@ export function drawBuildingDetailed(ctx, x, y, width, height, options) {
   var doorH = 42;
   var doorX = x + width / 2 - doorW / 2;
   var doorY = y + height - doorH - 5;
-  
+
   // Cornice porta
   ctx.fillStyle = '#3E2723';
   ctx.fillRect(doorX - 2, doorY - 2, doorW + 4, doorH + 2);
-  
+
   // Battente porta
   ctx.fillStyle = doorColor;
   ctx.fillRect(doorX, doorY, doorW, doorH);

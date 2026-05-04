@@ -9,95 +9,37 @@
  */
 
 const EventSystem = {
-  /** Triggered event IDs */
-  triggeredEvents: [],
-
   /**
-   * Initialize event system
+   * Check and trigger events — Delegato a StoryEngine (TS)
    */
-  init: function () {
-    this.triggeredEvents = [];
-  },
-
-  /**
-   * Reset to initial state
-   */
-  reset: function () {
-    this.init();
-  },
-
-  /**
-   * Check and trigger events
-   */
-  checkEvents: function () {
-    if (typeof storyEvents === 'undefined') return;
-
-    var checkCondition =
-      typeof ConditionSystem !== 'undefined'
-        ? ConditionSystem.checkCondition.bind(ConditionSystem)
-        : typeof StoryEngine !== 'undefined'
-          ? StoryEngine.checkCondition.bind(StoryEngine)
-          : () => true;
-
-    for (var eventId in storyEvents) {
-      var event = storyEvents[eventId];
-
-      if (event.once && this.triggeredEvents.indexOf(eventId) !== -1) {
-        continue;
-      }
-
-      if (checkCondition(event.trigger)) {
-        this.triggeredEvents.push(eventId);
-
-        if (typeof event.action === 'function') {
-          event.action();
-        }
-
-        console.log('[EventSystem] Event triggered:', eventId);
-      }
+  checkEvents: () => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.checkEvents) {
+      StoryEngine.checkEvents();
     }
   },
 
-  /**
-   * Check if event was triggered
-   * @param {string} eventId - Event ID
-   * @returns {boolean}
-   */
-  wasEventTriggered: function (eventId) {
-    return this.triggeredEvents.indexOf(eventId) !== -1;
+  wasEventTriggered: (eventId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.wasEventTriggered) {
+      return StoryEngine.wasEventTriggered(eventId);
+    }
+    return false;
   },
 
-  /**
-   * Manually trigger an event
-   * @param {string} eventId - Event ID
-   */
-  triggerEvent: function (eventId) {
-    if (this.triggeredEvents.indexOf(eventId) === -1) {
-      this.triggeredEvents.push(eventId);
-    }
-
-    if (typeof storyEvents === 'undefined') return;
-
-    var event = storyEvents[eventId];
-    if (event && typeof event.action === 'function') {
-      event.action();
+  triggerEvent: (eventId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.triggerEvent) {
+      StoryEngine.triggerEvent(eventId);
     }
   },
 
-  /**
-   * Serialize event state
-   * @returns {Array}
-   */
-  serialize: function () {
-    return this.triggeredEvents.slice();
+  serialize: () => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.serialize) {
+      return StoryEngine.serialize().triggeredEvents;
+    }
+    return [];
   },
 
-  /**
-   * Deserialize event state
-   * @param {Array} data - Serialized state
-   */
-  deserialize: function (data) {
-    this.triggeredEvents = data || [];
+  deserialize: (data) => {
+    // La deserializzazione è gestita da StoryEngine.deserialize
   },
 };
 

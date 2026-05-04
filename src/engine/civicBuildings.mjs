@@ -60,7 +60,7 @@ export function drawChurch(ctx, x, y, width, height) {
   var towerH = height * 0.8;
   var towerX = x + width * 0.7;
   var towerY = y + height * 0.2;
-  
+
   if (window.drawBrickPattern) {
     window.drawBrickPattern(ctx, towerX, towerY, towerW, towerH, C.wallTan);
   } else {
@@ -94,7 +94,7 @@ export function drawChurch(ctx, x, y, width, height) {
   ctx.beginPath();
   ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
   ctx.fill();
-  
+
   // Colori vetrata
   var colors = ['#4169E1', '#FF6347', '#FFD700', '#32CD32'];
   for (var i = 0; i < 8; i++) {
@@ -132,7 +132,7 @@ export function drawResidentialHouse(ctx, x, y, width, height, options) {
   // Mura
   ctx.fillStyle = color;
   ctx.fillRect(x + 10, y + 20, width - 20, height - 20);
-  
+
   // Pattern mattoni leggero
   ctx.strokeStyle = 'rgba(0,0,0,0.05)';
   for (var j = 0; j < (height - 20) / 8; j++) {
@@ -154,7 +154,7 @@ export function drawResidentialHouse(ctx, x, y, width, height, options) {
     ctx.closePath();
     ctx.fill();
   }
-  
+
   // Camino
   ctx.fillStyle = C.wallBrick;
   ctx.fillRect(x + width - 35, y + 5, 10, 20);
@@ -165,13 +165,13 @@ export function drawResidentialHouse(ctx, x, y, width, height, options) {
   var winY = y + 45;
   var winW = 18;
   var winH = 24;
-  
+
   function drawWindowWithShutters(wx, wy) {
     // Persiane (chiuse a metà o aperte)
     ctx.fillStyle = '#4E342E';
     ctx.fillRect(wx - 10, wy, 8, winH); // Sinistra
     ctx.fillRect(wx + winW + 2, wy, 8, winH); // Destra
-    
+
     // Vetro
     ctx.fillStyle = C.glassSky;
     ctx.fillRect(wx, wy, winW, winH);
@@ -179,10 +179,10 @@ export function drawResidentialHouse(ctx, x, y, width, height, options) {
     ctx.lineWidth = 1;
     ctx.strokeRect(wx, wy, winW, winH);
     ctx.beginPath();
-    ctx.moveTo(wx, wy + winH/2);
-    ctx.lineTo(wx + winW, wy + winH/2);
-    ctx.moveTo(wx + winW/2, wy);
-    ctx.lineTo(wx + winW/2, wy + winH);
+    ctx.moveTo(wx, wy + winH / 2);
+    ctx.lineTo(wx + winW, wy + winH / 2);
+    ctx.moveTo(wx + winW / 2, wy);
+    ctx.lineTo(wx + winW / 2, wy + winH);
     ctx.stroke();
   }
 
@@ -221,7 +221,7 @@ export function drawShopFront(ctx, x, y, width, height, options) {
   // Mura
   ctx.fillStyle = C.wallShop;
   ctx.fillRect(x, y + 15, width, height - 15);
-  
+
   // Zoccolo pietra
   ctx.fillStyle = C.stoneDim;
   ctx.fillRect(x, y + height - 8, width, 8);
@@ -257,7 +257,7 @@ export function drawShopFront(ctx, x, y, width, height, options) {
     ctx.moveTo(x + i * stripeW, y + 15);
     ctx.lineTo(x + (i + 1) * stripeW, y + 15);
     ctx.lineTo(x + (i + 1) * stripeW, y + 35);
-    ctx.quadraticCurveTo(x + i * stripeW + stripeW/2, y + 40, x + i * stripeW, y + 35);
+    ctx.quadraticCurveTo(x + i * stripeW + stripeW / 2, y + 40, x + i * stripeW, y + 35);
     ctx.fill();
   }
 
@@ -274,7 +274,7 @@ export function drawShopFront(ctx, x, y, width, height, options) {
     ctx.strokeStyle = C.gold;
     ctx.lineWidth = 1;
     ctx.strokeRect(x + width / 2 - 43, y - 3, 86, 18);
-    
+
     ctx.fillStyle = C.gold;
     ctx.font = "bold 9px 'Courier New', monospace";
     ctx.textAlign = 'center';

@@ -2,9 +2,9 @@
  * Tests per verificare la migrazione a Tauri e prevenire regressioni
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import fs from 'fs';
-import path from 'path';
 
 const ROOT = process.cwd();
 
@@ -31,7 +31,7 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('should NOT contain electron scripts', () => {
       const scripts = Object.values(pkg.scripts || {});
-      expect(scripts.some(s => s.includes('electron'))).toBe(false);
+      expect(scripts.some((s) => s.includes('electron'))).toBe(false);
     });
 
     it('should NOT contain electron-builder config', () => {
@@ -86,11 +86,15 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('init.mjs should import dependencies instead of relying on globals', () => {
       var content = readFile('src/game/init.mjs');
-      expect(content).toContain("import { handleKeyDown, handleKeyUp } from './input.ts'");
-      expect(content).toContain("import { closeDeduction, checkDeduction, setupDragDrop } from './deduction.mjs'");
+      expect(content).toContain("window.inputManager.init()");
+      expect(content).toContain(
+        "import { checkDeduction, closeDeduction, setupDragDrop } from './deduction.mjs'"
+      );
       expect(content).toContain("import { closeRadioPuzzle, setupRadio } from './radio.mjs'");
-      expect(content).toContain("import { closeRegistryPuzzle, checkRegistry, setupRegistry } from './registry.mjs'");
-      expect(content).toContain("import { closeScenePuzzle, checkScene } from './scene.mjs'");
+      expect(content).toContain(
+        "import { checkRegistry, closeRegistryPuzzle, setupRegistry } from './registry.mjs'"
+      );
+      expect(content).toContain("import { checkScene, closeScenePuzzle } from './scene.mjs'");
       expect(content).toContain("import { applyCustomization } from './customize.mjs'");
     });
 
@@ -255,11 +259,15 @@ describe('Tauri Migration Sanity Checks', () => {
 
     it('init.mjs should import dependencies instead of relying on globals', () => {
       var content = readFile('src/game/init.mjs');
-      expect(content).toContain("import { handleKeyDown, handleKeyUp } from './input.ts'");
-      expect(content).toContain("import { closeDeduction, checkDeduction, setupDragDrop } from './deduction.mjs'");
+      expect(content).toContain("window.inputManager.init()");
+      expect(content).toContain(
+        "import { checkDeduction, closeDeduction, setupDragDrop } from './deduction.mjs'"
+      );
       expect(content).toContain("import { closeRadioPuzzle, setupRadio } from './radio.mjs'");
-      expect(content).toContain("import { closeRegistryPuzzle, checkRegistry, setupRegistry } from './registry.mjs'");
-      expect(content).toContain("import { closeScenePuzzle, checkScene } from './scene.mjs'");
+      expect(content).toContain(
+        "import { checkRegistry, closeRegistryPuzzle, setupRegistry } from './registry.mjs'"
+      );
+      expect(content).toContain("import { checkScene, closeScenePuzzle } from './scene.mjs'");
       expect(content).toContain("import { applyCustomization } from './customize.mjs'");
     });
 

@@ -31,7 +31,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.fillRect(x - 4, y + h - 8, w + 8, 10);
   ctx.fillStyle = window.PALETTE.burntOrange;
   ctx.fillRect(x - 2, y, w + 4, 6);
-  
+
   // Tetto con tegole
   if (window.drawTileRoof) {
     window.drawTileRoof(ctx, x, y, w, window.PALETTE.darkForest);
@@ -50,7 +50,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
       var wx = x + 18 + i * 42;
       var wy = y + 25 + j * 26;
       if (window.drawLitWindow) {
-        window.drawLitWindow(ctx, wx, wy, 16, 20, true, t, (i * 2 + j));
+        window.drawLitWindow(ctx, wx, wy, 16, 20, true, t, i * 2 + j);
       } else {
         ctx.fillStyle = window.PALETTE.lanternYel;
         ctx.fillRect(wx, wy, 15, 18);
@@ -63,7 +63,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
   ctx.beginPath();
   ctx.roundRect(x + w / 2 - 14, y + h - 38, 28, 38, [10, 10, 0, 0]);
   ctx.fill();
-  
+
   // Maniglia oro
   ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.beginPath();
@@ -77,7 +77,7 @@ export function drawMunicipioFacade(ctx, x, y, w, h, t) {
 }
 
 export function drawPiazzaFountain(ctx, x, y, t) {
-  if (window.BuildingRenderers && window.BuildingRenderers.drawFountain) {
+  if (window.BuildingRenderers?.drawFountain) {
     window.BuildingRenderers.drawFountain(ctx, x, y, 22, t);
   } else {
     // Fallback base
@@ -99,10 +99,10 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
 
   // Tettoia a strisce (Awning)
   if (window.drawStripedAwning) {
-     window.drawStripedAwning(ctx, x - 5, y + 10, w + 10, t);
+    window.drawStripedAwning(ctx, x - 5, y + 10, w + 10, t);
   } else {
-     ctx.fillStyle = '#5A2A1A';
-     ctx.fillRect(x - 4, y - 6, w + 8, 6);
+    ctx.fillStyle = '#5A2A1A';
+    ctx.fillRect(x - 4, y - 6, w + 8, 6);
   }
 
   // Insegna neon
@@ -112,7 +112,7 @@ export function drawBarFacade(ctx, x, y, w, h, t) {
   ctx.strokeStyle = `rgba(200,40,40,${neonPulse})`;
   ctx.lineWidth = 1;
   ctx.strokeRect(x + 5, y - 21, w - 10, 14);
-  
+
   ctx.fillStyle = `rgba(255,200,100,${neonPulse})`;
   ctx.font = 'bold 8px "Courier New",monospace';
   ctx.textAlign = 'center';
@@ -178,16 +178,30 @@ const PiazzeArea = {
   walkableTop: 125, // Portato a 125 per permettere di toccare le porte (prima era 140)
   colliders: [
     { x: 125, y: 0, w: 150, h: 120 }, // Municipio (Ridotto h per accessibilità)
-    { x: 302, y: 0, w: 23, h: 160 },  // Bar SX
-    { x: 349, y: 0, w: 51, h: 160 },  // Bar DX
-    { x: 82, y: 0, w: 36, h: 160 },   // Bacheca
+    { x: 302, y: 0, w: 23, h: 160 }, // Bar SX
+    { x: 349, y: 0, w: 51, h: 160 }, // Bar DX
+    { x: 82, y: 0, w: 36, h: 160 }, // Bacheca
     { x: 240, y: 155, w: 42, h: 28 }, // Fontana
-    { x: 0, y: 0, w: 100, h: 120 },   // Chiesa
+    { x: 0, y: 0, w: 100, h: 120 }, // Chiesa
   ],
   exits: [
-    { dir: 'up', xRange: [180, 220], to: 'municipio', spawnX: 200, spawnY: 200, requiresInteract: true },
+    {
+      dir: 'up',
+      xRange: [180, 220],
+      to: 'municipio',
+      spawnX: 200,
+      spawnY: 200,
+      requiresInteract: true,
+    },
     { dir: 'up', xRange: [20, 80], to: 'chiesa', spawnX: 200, spawnY: 220 },
-    { dir: 'up', xRange: [320, 350], to: 'bar_exterior', spawnX: 130, spawnY: 175, requiresInteract: true },
+    {
+      dir: 'up',
+      xRange: [320, 350],
+      to: 'bar_exterior',
+      spawnX: 130,
+      spawnY: 175,
+      requiresInteract: true,
+    },
     { dir: 'down', xRange: [160, 240], to: 'residenziale', spawnX: 200, spawnY: 140 },
     { dir: 'left', xRange: [100, 200], to: 'giardini', spawnX: 340, spawnY: 175 },
   ],
@@ -213,22 +227,22 @@ const PiazzeArea = {
     ctx.fill();
     window.PF.mountains(ctx);
     var t = Date.now() * 0.001;
-    
+
     // Terreno base
     ctx.fillStyle = '#2D3A1E';
     ctx.fillRect(0, 104, window.CANVAS_W, 146);
     ctx.fillStyle = '#253216';
     ctx.fillRect(0, 102, window.CANVAS_W, 4);
-    
+
     // Erba variegata
     ctx.fillStyle = '#354A24';
     for (var i = 0; i < 40; i++) {
       var gx = (i * 47) % window.CANVAS_W;
-      var gy = 108 + (i * 13) % 40;
+      var gy = 108 + ((i * 13) % 40);
       ctx.fillRect(gx, gy, 8, 3);
       ctx.fillRect(gx + 4, gy + 2, 6, 2);
     }
-    
+
     // Pavimentazione piazza
     ctx.fillStyle = '#5A5045';
     ctx.fillRect(0, 130, window.CANVAS_W, 120);
@@ -258,41 +272,49 @@ const PiazzeArea = {
     ctx.fillRect(20, 90, 40, 50); // Porta chiesa
 
     drawMunicipioFacade(ctx, 125, 48, 150, 86, t);
-    drawPiazzaFountain(ctx, 240, 155, t); 
+    drawPiazzaFountain(ctx, 240, 155, t);
     drawBarFacade(ctx, 302, 112, 70, 56, t);
     drawNoticeBoard(ctx, 82, 136, t);
     drawBench(ctx, 260, 166);
 
     // INDICATORI DI PASSAGGIO (FRECCE)
     function drawArrow(x, y, dir, color) {
-       ctx.save();
-       ctx.translate(x, y);
-       ctx.fillStyle = color || 'rgba(212,168,67,0.6)';
-       ctx.beginPath();
-       if (dir === 'up') {
-          ctx.moveTo(0, 0); ctx.lineTo(5, 5); ctx.lineTo(-5, 5);
-       } else if (dir === 'down') {
-          ctx.moveTo(0, 5); ctx.lineTo(5, 0); ctx.lineTo(-5, 0);
-       } else if (dir === 'left') {
-          ctx.moveTo(-5, 0); ctx.lineTo(0, 5); ctx.lineTo(0, -5);
-       } else if (dir === 'right') {
-          ctx.moveTo(5, 0); ctx.lineTo(0, 5); ctx.lineTo(0, -5);
-       }
-       ctx.fill();
-       ctx.restore();
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = color || 'rgba(212,168,67,0.6)';
+      ctx.beginPath();
+      if (dir === 'up') {
+        ctx.moveTo(0, 0);
+        ctx.lineTo(5, 5);
+        ctx.lineTo(-5, 5);
+      } else if (dir === 'down') {
+        ctx.moveTo(0, 5);
+        ctx.lineTo(5, 0);
+        ctx.lineTo(-5, 0);
+      } else if (dir === 'left') {
+        ctx.moveTo(-5, 0);
+        ctx.lineTo(0, 5);
+        ctx.lineTo(0, -5);
+      } else if (dir === 'right') {
+        ctx.moveTo(5, 0);
+        ctx.lineTo(0, 5);
+        ctx.lineTo(0, -5);
+      }
+      ctx.fill();
+      ctx.restore();
     }
 
     // Frecce per uscite
     drawArrow(200, 145, 'up'); // Municipio
-    drawArrow(45, 145, 'up');  // Chiesa
+    drawArrow(45, 145, 'up'); // Chiesa
     drawArrow(337, 172, 'up'); // Bar
     drawArrow(200, 240, 'down'); // Residenziale
-    drawArrow(10, 150, 'left');  // Giardini
+    drawArrow(10, 150, 'left'); // Giardini
 
     // CARTELLI / INSEGNE TESTUALI PER CHIAREZZA
     ctx.font = 'bold 9px "Courier New", monospace';
     ctx.textAlign = 'center';
-    
+
     // Municipio
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.fillRect(180, 130, 40, 10);

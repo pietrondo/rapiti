@@ -72,23 +72,30 @@ export function drawGardensArea(ctx, t) {
 const GiardiniArea = {
   name: 'Giardini Pubblici',
   walkableTop: 90,
-  colliders: [
-    { x: 170, y: 155, w: 60, h: 18 },
-  ],
+  colliders: [{ x: 170, y: 155, w: 60, h: 18 }],
   npcs: [{ id: 'anselmo', x: 120, y: 170 }],
   exits: [
     { dir: 'right', xRange: [100, 160], to: 'piazze', spawnX: 45, spawnY: 175 },
-    { dir: 'left', xRange: [135, 205], to: 'campo', spawnX: 350, spawnY: 170, requiresFlag: 'deduction_complete' },
+    {
+      dir: 'left',
+      xRange: [135, 205],
+      to: 'campo',
+      spawnX: 350,
+      spawnY: 170,
+      requiresFlag: 'deduction_complete',
+    },
   ],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;
     drawGardensArea(ctx, t);
-    
+
     // Freccia verso Piazza
     ctx.fillStyle = 'rgba(212,168,67,0.6)';
     ctx.beginPath();
-    ctx.moveTo(395, 175); ctx.lineTo(390, 180); ctx.lineTo(390, 170);
+    ctx.moveTo(395, 175);
+    ctx.lineTo(390, 180);
+    ctx.lineTo(390, 170);
     ctx.fill();
     ctx.font = 'bold 8px "Courier New", monospace';
     ctx.fillStyle = '#fff';

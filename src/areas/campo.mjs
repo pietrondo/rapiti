@@ -38,7 +38,7 @@ export function drawCampoArea(ctx, t) {
   ctx.fillStyle = '#89a66c';
   for (var i = 0; i < 70; i++) {
     var x = (i * 37) % window.CANVAS_W;
-    var y2 = 98 + (i * 19) % 132;
+    var y2 = 98 + ((i * 19) % 132);
     ctx.fillRect(x, y2, 2, 8);
   }
 
@@ -49,7 +49,9 @@ export function drawCampoArea(ctx, t) {
 
   ctx.fillStyle = 'rgba(212,168,67,0.6)';
   ctx.beginPath();
-  ctx.moveTo(395, 172); ctx.lineTo(390, 177); ctx.lineTo(390, 167);
+  ctx.moveTo(395, 172);
+  ctx.lineTo(390, 177);
+  ctx.lineTo(390, 167);
   ctx.fill();
   ctx.font = 'bold 8px "Courier New", monospace';
   ctx.fillStyle = '#fff';
@@ -61,7 +63,7 @@ const CampoArea = {
   name: 'Campo delle Luci',
   walkableTop: 88,
   colliders: [],
-  npcs: [],
+  npcs: [{ id: 'teresa', x: 210, y: 160 }],
   exits: [{ dir: 'right', xRange: [135, 200], to: 'giardini', spawnX: 35, spawnY: 170 }],
 
   draw: (ctx) => {

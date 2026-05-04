@@ -9,7 +9,7 @@ beforeEach(() => {
   global.window = global;
   global.CANVAS_W = 400;
   global.CANVAS_H = 250;
-  
+
   global.gameState = {
     currentArea: 'piazze',
     player: { x: 100, y: 100, w: 32, h: 32, dir: 'down' },
@@ -23,15 +23,13 @@ beforeEach(() => {
       walkableTop: 140,
       exits: [
         { dir: 'up', xRange: [170, 230], to: 'municipio', requiresInteract: true },
-        { dir: 'up', xRange: [320, 355], to: 'bar_exterior', requiresInteract: true }
+        { dir: 'up', xRange: [320, 355], to: 'bar_exterior', requiresInteract: true },
       ],
     },
     bar_exterior: {
       walkableTop: 130,
-      exits: [
-        { dir: 'up', xRange: [180, 220], to: 'bar_interno', requiresInteract: true }
-      ]
-    }
+      exits: [{ dir: 'up', xRange: [180, 220], to: 'bar_interno', requiresInteract: true }],
+    },
   };
 
   global.changeArea = jest.fn();
@@ -52,7 +50,7 @@ describe('Transition Logic', () => {
     // Player at x=200, y=140 (just at the door)
     global.gameState.player.x = 200 - 16; // Center at 200
     global.gameState.player.y = 140;
-    
+
     const result = triggerInteractExit();
     expect(result).toBe(true);
     expect(global.changeArea).toHaveBeenCalledWith('municipio', undefined, undefined);
@@ -62,7 +60,7 @@ describe('Transition Logic', () => {
     // Bar door is at 320-355. Center at 337.
     global.gameState.player.x = 337 - 16;
     global.gameState.player.y = 140;
-    
+
     const result = triggerInteractExit();
     expect(result).toBe(true);
     expect(global.changeArea).toHaveBeenCalledWith('bar_exterior', undefined, undefined);
@@ -73,7 +71,7 @@ describe('Transition Logic', () => {
     // Door at 180-220. Center at 200.
     global.gameState.player.x = 200 - 16;
     global.gameState.player.y = 130;
-    
+
     const result = triggerInteractExit();
     expect(result).toBe(true);
     expect(global.changeArea).toHaveBeenCalledWith('bar_interno', undefined, undefined);
@@ -82,7 +80,7 @@ describe('Transition Logic', () => {
   it('should NOT trigger exit if player is too far (x)', async () => {
     global.gameState.player.x = 100;
     global.gameState.player.y = 140;
-    
+
     const result = triggerInteractExit();
     expect(result).toBe(false);
     expect(global.changeArea).not.toHaveBeenCalled();
@@ -91,7 +89,7 @@ describe('Transition Logic', () => {
   it('should NOT trigger exit if player is too far (y)', async () => {
     global.gameState.player.x = 200 - 16;
     global.gameState.player.y = 160; // Beyond walkableTop + 15
-    
+
     const result = triggerInteractExit();
     expect(result).toBe(false);
     expect(global.changeArea).not.toHaveBeenCalled();

@@ -10,51 +10,34 @@
 
 const DialogueSystem = {
   /**
-   * Get dialogue node for NPC based on current state
-   * @param {string} npcId - NPC identifier
-   * @returns {string} Dialogue node ID
+   * Get dialogue node for NPC — Delegato a StoryEngine (TS)
+   * @param {string} npcId
+   * @returns {string} Node ID
    */
-  getDialogueNodeForNPC: function (npcId) {
-    var trigger =
-      typeof storyDialogueTriggers !== 'undefined' ? storyDialogueTriggers[npcId] : null;
-    if (!trigger) {
-      console.warn('[DialogueSystem] No dialogue trigger for NPC:', npcId);
-      return `${npcId}_s0`;
+  getDialogueNodeForNPC: (npcId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.getDialogueNodeForNPC) {
+      return StoryEngine.getDialogueNodeForNPC(npcId);
     }
-
-    if (trigger.states) {
-      for (var i = 0; i < trigger.states.length; i++) {
-        var state = trigger.states[i];
-        if (this.checkCondition(state.condition)) {
-          return state.node;
-        }
-      }
-    }
-
-    return trigger.defaultNode || `${npcId}_s0`;
+    return npcId + '_s0';
   },
 
   /**
-   * Check a condition object (minimal local copy for independence)
-   * @param {Object} condition - Condition to check
-   * @returns {boolean}
+   * Called when dialogue starts — Delegato a StoryEngine (TS)
+   * @param {string} npcId
    */
-  checkCondition: (condition) => {
-    if (!condition) return true;
+  onDialogueStarted: (npcId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.onDialogueStarted) {
+      StoryEngine.onDialogueStarted(npcId);
+    }
+  },
 
+  /** Check condition — Delegato a StoryEngine (TS) */
+  checkCondition: (condition) => {
     if (typeof StoryEngine !== 'undefined' && StoryEngine.checkCondition) {
       return StoryEngine.checkCondition(condition);
     }
-
-    // Minimal fallback
-    if (condition.hasFlag && typeof FlagManager !== 'undefined') {
-      if (!FlagManager.hasFlag(condition.hasFlag)) return false;
-    }
-    if (condition.hasClue && typeof window.gameState !== 'undefined') {
-      if (window.gameState.cluesFound.indexOf(condition.hasClue) === -1) return false;
-    }
     return true;
-  },
+  }
 };
 
 if (typeof window !== 'undefined') {

@@ -71,8 +71,9 @@ export function updateRadioKnob(pct) {
   if (dist < 3) {
     statusEl.textContent = '\uD83D\uDFE2 Segnale chiaro';
     statusEl.className = 'radio-status clear';
-    if (!window.gameState.radioSolved) {
-      window.gameState.radioSolved = true;
+    if (!window.gameState.puzzlesSolved.radio) {
+      window.gameState.puzzlesSolved.radio = true;
+      window.gameState.radioSolved = true; // Mantieni per retrocompatibilità temporanea
 
       // Notifica StoryManager
       if (typeof StoryManager !== 'undefined') {

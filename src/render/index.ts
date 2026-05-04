@@ -10,7 +10,7 @@
  */
 
 import type { GameState } from '../types.js';
-import { CANVAS_H, CANVAS_W, gameState } from '../config.mjs';
+import { CANVAS_H, CANVAS_W, gameState } from '../config.ts';
 
 // Side-effect imports to ensure window globals are initialized
 import '../effects/ambient.mjs';

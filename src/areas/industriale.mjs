@@ -13,7 +13,7 @@ export function drawIndustrialArea(ctx, t) {
 
   ctx.fillStyle = '#2a2a2a';
   ctx.fillRect(0, 85, window.CANVAS_W, 165);
-  
+
   // Terreno industriale sporco
   if (window.drawWallTexture) {
     window.drawWallTexture(ctx, 0, 85, window.CANVAS_W, 165, '#2a2a2a', 'rgba(0,0,0,0.2)');
@@ -26,7 +26,7 @@ export function drawIndustrialArea(ctx, t) {
     ctx.fillStyle = '#3a3a3a';
     ctx.fillRect(80, 50, 240, 70);
   }
-  
+
   // Zoccolo cemento fabbrica
   ctx.fillStyle = '#444';
   ctx.fillRect(80, 112, 240, 8);
@@ -68,19 +68,23 @@ export function drawIndustrialArea(ctx, t) {
   // Container con texture ruggine
   ctx.fillStyle = '#8B4513';
   ctx.fillRect(20, 120, 60, 40);
-  if (window.drawWallTexture) window.drawWallTexture(ctx, 20, 120, 60, 40, '#8B4513', 'rgba(100,0,0,0.1)');
-  
+  if (window.drawWallTexture)
+    window.drawWallTexture(ctx, 20, 120, 60, 40, '#8B4513', 'rgba(100,0,0,0.1)');
+
   ctx.fillStyle = '#556B2F';
   ctx.fillRect(320, 130, 50, 35);
-  if (window.drawWallTexture) window.drawWallTexture(ctx, 320, 130, 50, 35, '#556B2F', 'rgba(0,50,0,0.1)');
+  if (window.drawWallTexture)
+    window.drawWallTexture(ctx, 320, 130, 50, 35, '#556B2F', 'rgba(0,50,0,0.1)');
 
   // Recinzione metallica (Pattern)
   ctx.strokeStyle = 'rgba(255,255,255,0.1)';
   ctx.lineWidth = 1;
   for (var rx = 0; rx < 25; rx += 4) {
     ctx.beginPath();
-    ctx.moveTo(rx, 85); ctx.lineTo(rx, 250);
-    ctx.moveTo(375 + rx, 85); ctx.lineTo(375 + rx, 250);
+    ctx.moveTo(rx, 85);
+    ctx.lineTo(rx, 250);
+    ctx.moveTo(375 + rx, 85);
+    ctx.lineTo(375 + rx, 250);
     ctx.stroke();
   }
 

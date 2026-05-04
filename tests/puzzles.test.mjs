@@ -3,7 +3,7 @@
  */
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { gameState, resetGameState } from '../src/config.mjs';
+import { gameState, resetGameState } from '../src/config.ts';
 
 // Setup globals before importing modules
 global.gameState = gameState;

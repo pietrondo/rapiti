@@ -14,7 +14,7 @@ export function drawChurchArea(ctx, t) {
   // Terreno: Sagrato in pietra antica
   ctx.fillStyle = '#37474F';
   ctx.fillRect(0, 130, window.CANVAS_W, 120);
-  
+
   // Grandi lastre di pietra
   ctx.fillStyle = '#263238';
   for (var i = 0; i < 10; i++) {
@@ -33,7 +33,7 @@ export function drawChurchArea(ctx, t) {
   // Facciata Principale
   ctx.fillStyle = '#455A64';
   ctx.fillRect(cx, cy + 30, cw, ch - 30);
-  
+
   // Texture Pietra
   if (window.drawWallTexture) {
     window.drawWallTexture(ctx, cx, cy + 30, cw, ch - 30, '#37474F', 'rgba(0,0,0,0.1)');
@@ -46,7 +46,7 @@ export function drawChurchArea(ctx, t) {
   ctx.lineTo(cx + cw + 10, cy + 40);
   ctx.lineTo(cx - 10, cy + 40);
   ctx.fill();
-  
+
   // Campanile laterale
   ctx.fillStyle = '#37474F';
   ctx.fillRect(cx + cw, cy + 10, 30, 120);
@@ -56,7 +56,7 @@ export function drawChurchArea(ctx, t) {
   ctx.lineTo(cx + cw + 15, cy - 15);
   ctx.lineTo(cx + cw + 35, cy + 10);
   ctx.fill();
-  
+
   // Campana (Dettaglio oro)
   ctx.fillStyle = window.PALETTE.lanternYel;
   ctx.beginPath();
@@ -74,9 +74,12 @@ export function drawChurchArea(ctx, t) {
   ctx.stroke();
   // Intreccio Rosone
   ctx.beginPath();
-  for(var a=0; a<8; a++) {
-    ctx.moveTo(cx+cw/2, cy+60);
-    ctx.lineTo(cx+cw/2 + Math.cos(a*Math.PI/4)*18, cy+60 + Math.sin(a*Math.PI/4)*18);
+  for (var a = 0; a < 8; a++) {
+    ctx.moveTo(cx + cw / 2, cy + 60);
+    ctx.lineTo(
+      cx + cw / 2 + Math.cos((a * Math.PI) / 4) * 18,
+      cy + 60 + Math.sin((a * Math.PI) / 4) * 18
+    );
   }
   ctx.stroke();
 
@@ -120,7 +123,14 @@ const ChiesaArea = {
   ],
   npcs: [{ id: 'don_pietro', x: 200, y: 180 }],
   exits: [
-    { dir: 'up', xRange: [175, 225], to: 'cimitero', spawnX: 200, spawnY: 112, requiresInteract: true },
+    {
+      dir: 'up',
+      xRange: [175, 225],
+      to: 'cimitero',
+      spawnX: 200,
+      spawnY: 112,
+      requiresInteract: true,
+    },
     { dir: 'down', xRange: [150, 250], to: 'piazze', spawnX: 200, spawnY: 155 },
   ],
 

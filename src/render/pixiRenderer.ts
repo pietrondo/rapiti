@@ -10,7 +10,9 @@
  */
 
 import * as PIXI from 'pixi.js';
-import { CANVAS_W, CANVAS_H, gameState } from '../config.mjs';
+import { CANVAS_W, CANVAS_H, gameState } from '../config.ts';
+import { CinematicRenderer } from './cinematicRenderer.ts';
+import { GameplaySync } from './gameplaySync.ts';
 
 class PixiRenderer {
   app: PIXI.Application | null = null;
@@ -30,7 +32,15 @@ class PixiRenderer {
   lastArea: string | null = null;
   lastPhase: string | null = null;
   lastStep: number | null = null;
-  private alienLightNodes: PIXI.Container[] = [];
+
+  // Sub-renderers
+  private cinematic: CinematicRenderer;
+  private gameplay: GameplaySync;
+
+  constructor() {
+    this.cinematic = new CinematicRenderer(this);
+    this.gameplay = new GameplaySync(this);
+  }
 
   async init() {
     this.app = new PIXI.Application();
@@ -83,17 +93,15 @@ class PixiRenderer {
     const crt = new PIXI.Container();
     crt.zIndex = 1000;
     
-    // Advanced Scanlines (Every 3rd pixel for subgrid feel)
     const scanlines = new PIXI.Graphics();
     for (let i = 0; i < CANVAS_H; i += 3) {
       scanlines.rect(0, i, CANVAS_W, 1.5).fill({ color: 0x000000, alpha: 0.15 });
     }
     crt.addChild(scanlines);
 
-    // Vignette (Elliptical shadow)
     const vignette = new PIXI.Graphics();
     vignette.rect(0, 0, CANVAS_W, CANVAS_H).fill({ color: 0x000000, alpha: 0.02 });
-    // Soft corners
+    
     const corners = new PIXI.Graphics();
     corners.rect(0, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
     corners.rect(CANVAS_W-40, 0, 40, 40).fill({ color: 0x000000, alpha: 0.3 });
@@ -112,7 +120,6 @@ class PixiRenderer {
     canvas.width = w; canvas.height = h;
     const ctx = canvas.getContext('2d')!;
     drawFn(ctx);
-    // PIXI v8: v8 pattern per canvas resource
     const texture = PIXI.Texture.from({ resource: canvas });
     this.textureCache[id] = texture;
     return texture;
@@ -167,301 +174,18 @@ class PixiRenderer {
     }
 
     switch (ph) {
-      case 'title': this._renderTitle(); break;
-      case 'intro': this._renderIntro(); break;
-      case 'prologue_cutscene': this._renderPrologue(); break;
-      case 'tutorial': this._renderTutorial(); break;
+      case 'title': this.cinematic.renderTitle(); break;
+      case 'intro': this.cinematic.renderIntro(); break;
+      case 'prologue_cutscene': this.cinematic.renderPrologue(); break;
+      case 'tutorial': this.cinematic.renderTutorial(); break;
       case 'playing':
-      case 'dialogue': this._renderGameplay(); break;
+      case 'dialogue': this.gameplay.syncGameplay(); break;
     }
 
     this._applyFilters();
   }
 
-  private _renderParallaxSky(t: number) {
-    if (!this.sprites.ui_sky) {
-      const tex = this.generateTexture('cinematic_sky', (ctx) => {
-        const g = ctx.createLinearGradient(0, 0, 0, 250);
-        g.addColorStop(0, '#020408');
-        g.addColorStop(1, '#0b0e1a');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, 400, 250);
-        
-        // Stars
-        ctx.fillStyle = '#fff';
-        for (let i = 0; i < 100; i++) {
-          ctx.globalAlpha = Math.random() * 0.5 + 0.2;
-          ctx.fillRect(Math.random() * 400, Math.random() * 150, 1, 1);
-        }
-        ctx.globalAlpha = 1;
-      }, 400, 250);
-      this.sprites.ui_sky = new PIXI.Sprite(tex);
-      this.layers.bg.addChildAt(this.sprites.ui_sky, 0);
-    }
-
-    if (this.sprites.ui_sky && !this.layers.bg.children.includes(this.sprites.ui_sky)) {
-      this.layers.bg.addChildAt(this.sprites.ui_sky, 0);
-    }
-
-    // Alien Lights
-    if (
-      !this.sprites.ui_alien_lights ||
-      this.sprites.ui_alien_lights.destroyed ||
-      this.alienLightNodes.length !== 3
-    ) {
-      if (this.sprites.ui_alien_lights?.parent) {
-        this.sprites.ui_alien_lights.parent.removeChild(this.sprites.ui_alien_lights);
-      }
-      const c = new PIXI.Container();
-      const lights: PIXI.Container[] = [];
-      for (let i = 0; i < 3; i++) {
-        const light = new PIXI.Container();
-        const glow = new PIXI.Graphics();
-        glow.circle(0, 0, 20).fill({ color: 0x88aaff, alpha: 0.2 });
-        const core = new PIXI.Graphics();
-        core.circle(0, 0, 8).fill({ color: 0xc8dcff, alpha: 0.6 });
-        light.addChild(glow, core);
-        light.x = 100 + i * 100; light.y = 50;
-        c.addChild(light);
-        lights.push(light);
-      }
-      this.sprites.ui_alien_lights = c;
-      this.alienLightNodes = lights;
-      this.layers.bg.addChild(c);
-    } else if (!this.layers.bg.children.includes(this.sprites.ui_alien_lights)) {
-      this.layers.bg.addChild(this.sprites.ui_alien_lights);
-    }
-
-    this.alienLightNodes.forEach((l: PIXI.Container, i: number) => {
-      l.x += Math.sin(t + i) * 0.5;
-      l.y += Math.cos(t * 0.5 + i) * 0.3;
-      l.alpha = 0.4 + Math.sin(t * 2 + i) * 0.4;
-    });
-
-    // Mountains Parallax
-    if (!this.sprites.ui_mtn_back) {
-      const tex = this.generateTexture('mtn_back', (ctx) => {
-        ctx.fillStyle = '#111824'; ctx.beginPath(); ctx.moveTo(0, 150); ctx.lineTo(80, 100); ctx.lineTo(180, 140); ctx.lineTo(300, 90); ctx.lineTo(400, 150); ctx.lineTo(400, 250); ctx.lineTo(0, 250); ctx.fill();
-      }, 400, 250);
-      this.sprites.ui_mtn_back = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
-      this.layers.bg.addChild(this.sprites.ui_mtn_back);
-    }
-    if (this.sprites.ui_mtn_back && !this.layers.bg.children.includes(this.sprites.ui_mtn_back)) {
-      this.layers.bg.addChild(this.sprites.ui_mtn_back);
-    }
-    if (!this.sprites.ui_mtn_front) {
-      const tex = this.generateTexture('mtn_front', (ctx) => {
-        ctx.fillStyle = '#0a0d16'; ctx.beginPath(); ctx.moveTo(0, 180); ctx.lineTo(120, 140); ctx.lineTo(250, 170); ctx.lineTo(350, 130); ctx.lineTo(400, 180); ctx.lineTo(400, 250); ctx.lineTo(0, 250); ctx.fill();
-      }, 400, 250);
-      this.sprites.ui_mtn_front = new PIXI.TilingSprite({ texture: tex, width: 800, height: 250 });
-      this.layers.bg.addChild(this.sprites.ui_mtn_front);
-    }
-    if (this.sprites.ui_mtn_front && !this.layers.bg.children.includes(this.sprites.ui_mtn_front)) {
-      this.layers.bg.addChild(this.sprites.ui_mtn_front);
-    }
-
-    this.sprites.ui_mtn_back.tilePosition.x = -t * 5;
-    this.sprites.ui_mtn_front.tilePosition.x = -t * 12;
-  }
-
-  private _renderTitle() {
-    const t = Date.now() * 0.001;
-    this._renderParallaxSky(t);
-    
-    if (!this.sprites.ui_title_panel) {
-       const panel = this._createPixelPanel(332, 90, 'BENVENUTO');
-       panel.x = 34; panel.y = 140;
-       this.sprites.ui_title_panel = panel;
-       this.layers.ui.addChild(panel);
-       
-       const titleText = new PIXI.Text({
-          text: 'LE LUCI\\nDI SAN CELESTE',
-          style: { fontFamily: 'monospace', fontSize: 26, fill: 0xD4A843, align: 'center', fontWeight: 'bold' }
-       });
-       titleText.anchor.set(0.5); titleText.x = 332 / 2; titleText.y = 35;
-       panel.addChild(titleText);
-
-       const subtitleText = new PIXI.Text({
-          text: 'Italia Settentrionale / Estate 1978',
-          style: { fontFamily: 'monospace', fontSize: 10, fill: 0xC4956A, align: 'center' }
-       });
-       subtitleText.anchor.set(0.5); subtitleText.x = 332 / 2; subtitleText.y = 70;
-       panel.addChild(subtitleText);
-    }
-    
-    this.sprites.ui_title_panel.y = 140 + Math.sin(t * 2) * 2;
-    this._renderPrompt('Premi ENTER per iniziare', CANVAS_W / 2, 238);
-  }
-
-  private _renderIntro() {
-     const slide = gameState.introSlide;
-
-     if (this.lastStep !== slide) {
-        // Animation transition logic
-        const oldPanel = this.sprites.ui_intro_panel;
-        if (oldPanel) {
-           oldPanel.alpha -= 0.1;
-           oldPanel.scale.set(1 + (1 - oldPanel.alpha) * 0.05);
-           if (oldPanel.alpha <= 0) {
-              this.layers.ui.removeChild(oldPanel);
-              this.sprites.ui_intro_panel = null;
-              this.lastStep = slide;
-           }
-           return; // Wait for fade out
-        }
-        this.lastStep = slide;
-     }
-
-     if (!this.sprites.ui_intro_panel) {
-        const panel = this._createPixelPanel(352, 178, 'DOSSIER PREFETTURA');
-        panel.x = 24; panel.y = 44;
-        panel.alpha = 0; // Start faded out
-        panel.pivot.set(176, 89); panel.x = CANVAS_W/2; panel.y = 44 + 89;
-        this.sprites.ui_intro_panel = panel;
-        this.layers.ui.addChild(panel);
-
-        const introData = [
-           { title: 'SAN CELESTE', text: 'Un piccolo borgo tra Parma e Piacenza.\\n800 anime, una piazza, un campanile, un bar.\\n\\nDa tre notti, strane luci appaiono\\nnel cielo sopra i campi a nord.\\nNon sono stelle. Non sono aerei.\\n\\nIl paese ha paura.' },
-           { title: 'LE SPARIZIONI', text: 'Tre persone sono scomparse.\\nEnzo Bellandi, 19 anni.\\nEra uscito a guardare le luci.\\n\\nSua nonna Teresa\\nnon dorme più da tre giorni.\\n\\nLa Prefettura di Parma\\nha mandato il suo miglior uomo.' },
-           { title: 'IL DETECTIVE', text: `Quell'uomo sei tu,\\n${gameState.playerName}.\\n\\nUn detective pragmatico, razionale,\\ncon un debole per il caffè\\ne un sesto senso per i misteri.\\n\\nFuori ti aspettano la piazza e la cascina.\\nE il Campo delle Luci.` },
-           { title: "L'INCARICO", text: `"Detective ${gameState.playerName},\\nvada a San Celeste.\\nScopra cosa sta succedendo.\\nE torni con delle risposte."\\n\\nNon sai ancora che quelle risposte\\nti cambieranno per sempre.\\nLe luci sono tornate.\\nCome nel 1861. Come nel 1961.` }
-        ];
-
-        const data = introData[slide] || introData[0];
-        
-        const titleText = new PIXI.Text({
-           text: data.title,
-           style: { fontFamily: 'monospace', fontSize: 16, fill: 0xD4A843, fontWeight: 'bold' }
-        });
-        titleText.x = 20; titleText.y = 15;
-        panel.addChild(titleText);
-
-        const bodyText = new PIXI.Text({
-           text: data.text,
-           style: { fontFamily: 'monospace', fontSize: 11, fill: 0xE8DCC8, wordWrap: true, wordWrapWidth: 310, lineHeight: 16 }
-        });
-        bodyText.x = 20; bodyText.y = 45;
-        panel.addChild(bodyText);
-     }
-     
-     if (this.sprites.ui_intro_panel.alpha < 1) {
-        this.sprites.ui_intro_panel.alpha += 0.05;
-        this.sprites.ui_intro_panel.scale.set(1.05 - this.sprites.ui_intro_panel.alpha * 0.05);
-     }
-     
-     const prompts = ['Premi ENTER per continuare', 'Premi ENTER per continuare', 'Premi ENTER per personalizzare', 'Premi ENTER per iniziare'];
-     this._renderPrompt(prompts[slide] || 'Premi ENTER', CANVAS_W / 2, 238);
-  }
-
-  private _renderPrologue() {
-     const step = gameState.prologueStep;
-     const t = gameState.prologueTimer * 0.016;
-
-     if (this.lastStep !== step) {
-        this._cleanupUI();
-        this.layers.bg.removeChildren();
-        this.lastStep = step;
-     }
-
-     this._renderParallaxSky(t);
-
-     if (step >= 2 && step <= 6) {
-        if (!this.sprites.ui_pro_light) {
-           const light = new PIXI.Graphics();
-           light.circle(0, 0, 60).fill({ color: 0xC8DCFF, alpha: 0.4 });
-           light.x = 200; light.y = 140;
-           this.sprites.ui_pro_light = light;
-           this.layers.mid.addChild(light);
-        }
-        if (this.sprites.ui_pro_light) {
-           this.sprites.ui_pro_light.scale.set(1 + Math.sin(t * 5) * 0.2);
-        }
-     }
-
-     if (step >= 1 && step <= 5) {
-        if (!this.sprites.ui_pro_elena) {
-           const sm = (window as any).SpriteManager;
-           const sheet = sm.getOrCreateNPCSheet('teresa');
-           const baseSource = PIXI.Texture.from({ resource: sheet }).source;
-           const elenaTex = new PIXI.Texture({ 
-             source: baseSource, 
-             frame: new PIXI.Rectangle(0,0,32,32) 
-           });
-           const elenaGroup = new PIXI.Container();
-           const elena = new PIXI.Sprite(elenaTex);
-           elena.anchor.set(0.5, 1);
-
-           const glow = new PIXI.Graphics();
-           glow.circle(0, 0, 10).fill({ color: 0xF0C15A, alpha: 0.3 });
-           glow.y = -15;
-           elenaGroup.addChild(glow, elena);
-
-           this.sprites.ui_pro_elena = elenaGroup;
-           this.layers.mid.addChild(elenaGroup);
-        }
-        const e = this.sprites.ui_pro_elena as PIXI.Container;
-        if (e) {
-           e.x = step >= 5 ? 200 : 50 + (t * 22) % 150; e.y = 145;
-           e.scale.x = Math.sin(t * 12) > 0 ? 1 : -1;
-        }
-     }
-
-     if (step === 7) {
-        if (!this.sprites.ui_pro_flash) {
-           const f = new PIXI.Graphics(); 
-           f.rect(0, 0, 400, 250).fill({ color: 0xFFFFFF });
-           this.sprites.ui_pro_flash = f; 
-           this.layers.fg.addChild(f);
-        }
-        if (this.sprites.ui_pro_flash) {
-           this.sprites.ui_pro_flash.alpha = Math.min(1, t * 0.45);
-        }
-     }
-
-     if (step === 8) {
-        if (!this.sprites.ui_pro_final) {
-           this._cleanupUI();
-           const cont = new PIXI.Container();
-           const bg = new PIXI.Graphics(); 
-           bg.rect(0, 0, 400, 250).fill({ color: 0xFFFFFF });
-           cont.addChild(bg);
-           const title = new PIXI.Text({ text: 'LE LUCI DI SAN CELESTE', style: { fontFamily: 'monospace', fontSize: 20, fill: 0x0B0C12, fontWeight: 'bold' } });
-           title.anchor.set(0.5); title.x = 200; title.y = 120;
-           cont.addChild(title);
-           this.sprites.ui_pro_final = cont; this.layers.ui.addChild(cont);
-        }
-     }
-  }
-
-  private _renderTutorial() {
-     if (!this.sprites.ui_tut_panel) {
-        const panel = this._createPixelPanel(340, 210, 'ISTRUZIONI');
-        panel.x = 30; panel.y = 20;
-        this.sprites.ui_tut_panel = panel;
-        this.layers.ui.addChild(panel);
-        
-        const helpText = new PIXI.Text({
-           text: 'WASD: Muovi\\nE: Interagisci\\nJ: Diario\\nI: Inventario\\nESC: Chiudi',
-           style: { fontFamily: 'monospace', fontSize: 12, fill: 0xE8DCC8, lineHeight: 20 }
-        });
-        helpText.x = 60; helpText.y = 70;
-        this.layers.ui.addChild(helpText);
-     }
-     this._renderPrompt('Premi ENTER per iniziare', CANVAS_W / 2, 235);
-  }
-
-  private _renderGameplay() {
-    if (this.lastArea !== gameState.currentArea) {
-      console.log(`[PixiRenderer] Area transition: ${this.lastArea} -> ${gameState.currentArea}`);
-      this._cleanupArea();
-      this.layers.bg.removeChildren(); // FIX: Forza pulizia BG al cambio area
-      this.lastArea = gameState.currentArea;
-    }
-    this._syncBackground(); this._syncPlayer(); this._syncNPCs();
-    this.layers.mid.children.sort((a, b) => a.y - b.y);
-  }
-
-  private _createPixelPanel(w: number, h: number, title?: string): PIXI.Container {
+  _createPixelPanel(w: number, h: number, title?: string): PIXI.Container {
     const c = new PIXI.Container();
     const s = new PIXI.Graphics();
     s.rect(4, 5, w, h).fill({ color: 0x05060a, alpha: 0.4 });
@@ -483,7 +207,7 @@ class PixiRenderer {
     return c;
   }
 
-  private _renderPrompt(text: string, x: number, y: number) {
+  _renderPrompt(text: string, x: number, y: number) {
     const key = `ui_prompt_${text}`;
     if (!this.sprites[key]) {
        const c = new PIXI.Container();
@@ -495,103 +219,6 @@ class PixiRenderer {
        c.x = x; c.y = y; this.sprites[key] = c; this.layers.ui.addChild(c);
     }
     this.sprites[key].alpha = 0.5 + Math.sin(Date.now() * 0.004) * 0.4;
-  }
-
-  private _syncBackground() {
-    const areaId = gameState.currentArea;
-    const bgKey = `ui_bg_${areaId}`;
-
-    if (!this.sprites[bgKey]) {
-      const area = (window as any).areas[areaId];
-      if (area?.draw) {
-        console.log(`[PixiRenderer] Generating background for ${areaId}`);
-        const tex = this.generateTexture(bgKey, (ctx) => area.draw(ctx, 0), CANVAS_W, CANVAS_H);
-        const bg = new PIXI.Sprite(tex);
-        this.sprites[bgKey] = bg;
-      } else {
-        console.warn(`[PixiRenderer] Area ${areaId} has no draw function!`);
-      }
-    }
-
-    // Assicurati che sia nel layer corretto
-    const bg = this.sprites[bgKey];
-    if (bg && !this.layers.bg.children.includes(bg)) {
-       console.log(`[PixiRenderer] Re-attaching background: ${bgKey}`);
-       this.layers.bg.addChild(bg);
-    }
-
-    for (let k in this.sprites) {
-       if (k.startsWith('ui_bg_')) {
-          this.sprites[k].visible = (k === bgKey);
-       }
-    }
-  }
-
-  private _syncPlayer() {
-    const p = gameState.player;
-    const sm = (window as any).SpriteManager;
-    const sheet = sm.getOrCreatePlayerSheet();
-    
-    if (!this.sprites.player || this.textureCache.playerSheet !== sheet) {
-       console.log('[PixiRenderer] Updating player sprite textures');
-       this.textureCache.playerSheet = sheet;
-       this.playerTextures = [];
-       const baseSource = PIXI.Texture.from({ resource: sheet }).source;
-       
-       for (let i = 0; i < 16; i++) {
-          const row = Math.floor(i / 4);
-          const col = i % 4;
-          this.playerTextures.push(new PIXI.Texture({ 
-             source: baseSource, 
-             frame: new PIXI.Rectangle(col * 32, row * 32, 32, 32) 
-          }));
-       }
-       if (!this.sprites.player) {
-         this.sprites.player = new PIXI.Sprite(this.playerTextures[0]);
-         this.sprites.player.anchor.set(0.5, 1);
-         this.layers.mid.addChild(this.sprites.player);
-       }
-    }
-
-    const s = this.sprites.player as PIXI.Sprite;
-    s.x = p.x + 16; s.y = p.y + 16;
-    const dir = { down: 0, up: 1, left: 2, right: 3 }[p.dir] || 0;
-    const f = Math.floor(sm.animState.playerFrame || 0);
-    s.texture = this.playerTextures[(dir * 4) + (f % 4)];
-    
-    if (p.discoveryJump > 0) {
-      const pr = p.discoveryJump / 20;
-      s.scale.y = 1 + Math.sin(pr * Math.PI) * 0.3; s.scale.x = 1 / s.scale.y;
-    } else s.scale.set(1);
-  }
-
-  private _syncNPCs() {
-    const area = (window as any).areas[gameState.currentArea];
-    if (!area?.npcs) return;
-    const sm = (window as any).SpriteManager;
-
-    area.npcs.forEach((n: any) => {
-      const key = `npc_${n.id}`;
-      const sheet = sm.getOrCreateNPCSheet(n.id);
-      if (!this.sprites[key] || this.textureCache[`npc_${n.id}`] !== sheet) {
-        console.log(`[PixiRenderer] Creating/Updating NPC sprite: ${n.id}`);
-        this.textureCache[`npc_${n.id}`] = sheet;
-        const baseSource = PIXI.Texture.from({ resource: sheet }).source;
-        const npcTex = new PIXI.Texture({
-           source: baseSource,
-           frame: new PIXI.Rectangle(0, 0, 32, 32)
-        });
-        this.npcTextures[n.id] = [npcTex];
-        
-        if (!this.sprites[key]) {
-           const spr = new PIXI.Sprite(npcTex);
-           spr.anchor.set(0.5, 1); this.layers.mid.addChild(spr); this.sprites[key] = spr;
-        }
-      }
-      const s = this.sprites[key] as PIXI.Sprite;
-      s.x = n.x; s.y = n.y;
-      s.texture = this.npcTextures[n.id][0];
-    });
   }
 
   private _applyFilters() {
@@ -609,7 +236,6 @@ class PixiRenderer {
        const f = this.world.filters[1] as PIXI.ColorMatrixFilter;
        f.hue(Math.sin(Date.now() * 0.005) * 45, true);
        
-       // Glitch effect
        if (Math.random() > 0.9) {
           this.world.x = (Math.random() - 0.5) * 6;
           this.world.y = (Math.random() - 0.5) * 6;
@@ -619,14 +245,19 @@ class PixiRenderer {
        this.world.x = 0; this.world.y = 0;
     }
     
-    // Pulse and animate CRT scanlines
     if (this.sprites.ui_crt) {
       const t = Date.now() * 0.001;
       this.sprites.ui_crt.alpha = 0.7 + Math.sin(t * 10) * 0.1;
-      this.sprites.ui_crt.children[0].y = (t * 20) % 3; // Refined scanline movement
+      this.sprites.ui_crt.children[0].y = (t * 20) % 3;
     }
+  }
+
+  // Public sync methods for manual calls if needed
+  syncState() {
+    this.gameplay.syncGameplay();
   }
 }
 
 export const pixiRenderer = new PixiRenderer();
 if (typeof window !== 'undefined') (window as any).pixiRenderer = pixiRenderer;
+

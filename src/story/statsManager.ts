@@ -49,6 +49,10 @@ export class StatsManager {
 
   onPuzzleSolved(puzzleId: string): void {
     this.stats.puzzlesSolved[puzzleId] = true;
+    if (typeof window !== 'undefined' && (window as any).gameState) {
+      if (!(window as any).gameState.puzzlesSolved) (window as any).gameState.puzzlesSolved = {};
+      (window as any).gameState.puzzlesSolved[puzzleId] = true;
+    }
   }
 
   hasTalkedTo(npcId: string): boolean {

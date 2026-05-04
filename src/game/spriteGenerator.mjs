@@ -31,7 +31,7 @@ function generatePlayerSheet(colors) {
     for (var col = 0; col < 4; col++) {
       var ox = col * 32;
       var oy = row * 32;
-      var headBob = (col % 2 === 0) ? 0 : 1;
+      var headBob = col % 2 === 0 ? 0 : 1;
       var dir = ['down', 'up', 'left', 'right'][row];
       var opt = { type: 'player' };
 
@@ -42,14 +42,14 @@ function generatePlayerSheet(colors) {
 
       // Gambe e Piedi (ancora locali per semplicità di animazione frame)
       var legY = oy + 26;
-      var l1Offset = (col === 1) ? -2 : (col === 3) ? 2 : 0;
-      var l2Offset = (col === 1) ? 2 : (col === 3) ? -2 : 0;
+      var l1Offset = col === 1 ? -2 : col === 3 ? 2 : 0;
+      var l2Offset = col === 1 ? 2 : col === 3 ? -2 : 0;
       var legs = colors.legs || '#4A3728';
 
-      artist.drawPixelRect(ctx, ox + 11, legY + l1Offset/2, 4, 5, legs);
-      artist.drawPixelRect(ctx, ox + 17, legY + l2Offset/2, 4, 5, legs);
-      artist.drawPixelRect(ctx, ox + 10, legY + 4 + l1Offset/2, 5, 2, '#1A1510');
-      artist.drawPixelRect(ctx, ox + 17, legY + 4 + l2Offset/2, 5, 2, '#1A1510');
+      artist.drawPixelRect(ctx, ox + 11, legY + l1Offset / 2, 4, 5, legs);
+      artist.drawPixelRect(ctx, ox + 17, legY + l2Offset / 2, 4, 5, legs);
+      artist.drawPixelRect(ctx, ox + 10, legY + 4 + l1Offset / 2, 5, 2, '#1A1510');
+      artist.drawPixelRect(ctx, ox + 17, legY + 4 + l2Offset / 2, 5, 2, '#1A1510');
     }
   }
   return _c.canvas;
@@ -70,7 +70,7 @@ function generateNPCSheet(npcData) {
     for (var col = 0; col < 4; col++) {
       var ox = col * 32;
       var oy = row * 32;
-      var headBob = (col % 2 === 0) ? 0 : 1;
+      var headBob = col % 2 === 0 ? 0 : 1;
       var dir = ['down', 'up', 'left', 'right'][row];
       var opt = { id: npcData.id, type: 'npc' };
 
@@ -80,7 +80,7 @@ function generateNPCSheet(npcData) {
       artist.drawBody(ctx, ox, oy + 17, dir, colors, opt);
 
       var legY = oy + 26;
-      var legOffset = (col % 2 === 0) ? 0 : 2;
+      var legOffset = col % 2 === 0 ? 0 : 2;
       var legs = colors.legs || '#3D3025';
       artist.drawPixelRect(ctx, ox + 12 + legOffset, legY, 3, 7, legs);
       artist.drawPixelRect(ctx, ox + 17 - legOffset, legY, 3, 7, legs);
@@ -95,7 +95,7 @@ function generateNPCSheet(npcData) {
  * @param {Object} areaData
  * @returns {HTMLCanvasElement|null}
  */
-function generateBackground(areaId, areaData) {
+function generateBackground(areaId, _areaData) {
   var w = typeof window.CANVAS_W !== 'undefined' ? window.CANVAS_W : 400;
   var h = typeof window.CANVAS_H !== 'undefined' ? window.CANVAS_H : 250;
 

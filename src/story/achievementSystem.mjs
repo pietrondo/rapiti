@@ -9,68 +9,41 @@
  */
 
 const AchievementSystem = {
-  /** Unlocked achievement IDs */
-  unlockedAchievements: [],
-
   /**
-   * Initialize achievement system
+   * Unlock an achievement — Delegato a StoryEngine (TS)
+   * @param {string} achievementId
+   * @returns {boolean}
    */
-  init: function () {
-    this.unlockedAchievements = [];
-  },
-
-  /**
-   * Reset to initial state
-   */
-  reset: function () {
-    this.init();
-  },
-
-  /**
-   * Unlock an achievement
-   * @param {string} achievementId - Achievement ID
-   * @returns {boolean} Whether it was newly unlocked
-   */
-  unlockAchievement: function (achievementId) {
-    if (this.unlockedAchievements.indexOf(achievementId) === -1) {
-      this.unlockedAchievements.push(achievementId);
-      console.log('[AchievementSystem] Achievement unlocked:', achievementId);
-      return true;
+  unlockAchievement: (achievementId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.unlockAchievement) {
+      return StoryEngine.unlockAchievement(achievementId);
     }
     return false;
   },
 
-  /**
-   * Check if achievement is unlocked
-   * @param {string} achievementId - Achievement ID
-   * @returns {boolean}
-   */
-  hasAchievement: function (achievementId) {
-    return this.unlockedAchievements.indexOf(achievementId) !== -1;
+  hasAchievement: (achievementId) => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.hasAchievement) {
+      return StoryEngine.hasAchievement(achievementId);
+    }
+    return false;
   },
 
-  /**
-   * Get unlocked achievements
-   * @returns {Array}
-   */
-  getUnlockedAchievements: function () {
-    return this.unlockedAchievements.slice();
+  getUnlockedAchievements: () => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.getUnlockedAchievements) {
+      return StoryEngine.getUnlockedAchievements();
+    }
+    return [];
   },
 
-  /**
-   * Serialize achievement state
-   * @returns {Array}
-   */
-  serialize: function () {
-    return this.unlockedAchievements.slice();
+  serialize: () => {
+    if (typeof StoryEngine !== 'undefined' && StoryEngine.serialize) {
+      return StoryEngine.serialize().unlockedAchievements;
+    }
+    return [];
   },
 
-  /**
-   * Deserialize achievement state
-   * @param {Array} data - Serialized state
-   */
-  deserialize: function (data) {
-    this.unlockedAchievements = data || [];
+  deserialize: (data) => {
+    // Gestito da StoryEngine.deserialize
   },
 };
 
