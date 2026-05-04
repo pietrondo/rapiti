@@ -147,7 +147,10 @@ export function renderSaveSlots() {
     meta.className = 'slot-meta';
     if (s.exists) {
       var date = new Date(s.timestamp).toLocaleString();
-      meta.textContent = `${s.meta?.area || 'Area sconosciuta'} — ${date}`;
+      var areaName = s.meta?.area || 'Area sconosciuta';
+      var pct = s.meta?.completionPct;
+      var pctStr = pct !== undefined ? ` | ${pct}% completato` : '';
+      meta.textContent = `${areaName} — ${date}${pctStr}`;
     } else {
       meta.textContent = 'Nessun dato salvato';
     }

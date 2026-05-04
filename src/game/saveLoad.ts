@@ -41,7 +41,7 @@ class SaveLoadSystem {
   constructor() {
     this.prefix = 'sanceleste_';
     this.currentSlot = 'slot1';
-    this.autoSaveInterval = 60000; // 1 minute
+    this.autoSaveInterval = 300000; // 5 minutes
     this.autoSaveTimer = null;
   }
 
@@ -69,11 +69,13 @@ class SaveLoadSystem {
       localStorage.setItem(key, JSON.stringify(saveData));
 
       // Update save metadata
+      const gs = (window as any).gameState;
       this._updateMeta(slot, {
          timestamp: saveData.timestamp,
-         area: (window as any).gameState.currentArea,
+         area: gs.currentArea,
          name: slotName || `Salvataggio ${new Date().toLocaleTimeString()}`,
-         playTime: saveData.playTime
+         playTime: saveData.playTime,
+         completionPct: saveData.completionPct,
       });
 
       (window as any).showToast?.('Gioco salvato');
@@ -116,6 +118,9 @@ class SaveLoadSystem {
   private _createSaveData(): SaveData {
     const gs = (window as any).gameState;
     const sm = (window as any).StoryManager;
+    const clues = gs.cluesFound?.length || 0;
+    const total = 9;
+    const pct = Math.round((clues / total) * 100);
     return {
       version: '2.0.0',
       timestamp: Date.now(),
@@ -138,6 +143,7 @@ class SaveLoadSystem {
       story: (sm?.serialize?.() ?? {}) as StorySaveData,
       stats: (sm?.getStats?.() ?? {}) as GameStats,
       playTime: sm?.stats?.totalPlayTime ?? 0,
+      completionPct: pct,
     };
   }
 
