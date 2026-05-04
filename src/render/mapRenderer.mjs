@@ -42,47 +42,83 @@ export function drawArrow(ctx, dir, x, y) {
 
 export function renderAreaExitMarkers(ctx, area) {
   if (!area?.exits) return;
-  var tick = Date.now() * 0.006;
+  var tick = Date.now() * 0.005;
+  var pulse = 0.6 + Math.sin(tick * 3) * 0.3;
   for (var i = 0; i < area.exits.length; i++) {
     var ex = area.exits[i];
     var mid = Math.round((ex.xRange[0] + ex.xRange[1]) / 2);
     var label = getAreaShortName(ex.to);
     var x = mid;
     var y = Math.max(area.walkableTop + 10, 112);
-    var boxW = Math.max(44, label.length * 7 + 25);
-    var alpha = 0.2 + Math.sin(tick + i) * 0.08;
+    var boxW = Math.max(ex.requiresInteract ? 60 : 44, label.length * 7 + 25);
+    var alpha = 0.25 + Math.sin(tick + i) * 0.08;
 
+    // Barra colorata al bordo
     if (ex.dir === 'up') {
-      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(ex.xRange[0], area.walkableTop - 2, ex.xRange[1] - ex.xRange[0], 8);
       y = area.walkableTop + 62;
     } else if (ex.dir === 'down') {
-      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(ex.xRange[0], window.CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
       y = window.CANVAS_H - 18;
     } else if (ex.dir === 'left') {
-      x = 36;
-      y = mid;
-      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      x = 36; y = mid;
+      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(0, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     } else {
-      x = window.CANVAS_W - 36;
-      y = mid;
-      ctx.fillStyle = `rgba(212,168,67,${alpha.toFixed(2)})`;
+      x = window.CANVAS_W - 36; y = mid;
+      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(window.CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     }
 
+    // Box nome area
     ctx.fillStyle = 'rgba(8,9,14,0.84)';
     ctx.fillRect(x - boxW / 2, y - 9, boxW, 18);
-    ctx.strokeStyle = 'rgba(212,168,67,0.82)';
+    ctx.strokeStyle = ex.requiresInteract ? `rgba(255,200,100,0.9)` : 'rgba(212,168,67,0.82)';
     ctx.strokeRect(x - boxW / 2 + 1, y - 8, boxW - 2, 16);
-    ctx.fillStyle = window.PALETTE.lanternYel;
-    drawArrow(ctx, ex.dir, x - boxW / 2 + 11, y);
+
+    // Freccia o icona E
+    if (ex.requiresInteract) {
+      // Pulsante E pulsante
+      var eAlpha = 0.4 + Math.sin(tick * 4 + i) * 0.3;
+      ctx.fillStyle = `rgba(212,168,67,${eAlpha})`;
+      ctx.fillRect(x - boxW / 2 + 6, y - 2, 2, 4);
+      ctx.fillRect(x - boxW / 2 + 6, y - 2, 5, 1);
+      ctx.fillRect(x - boxW / 2 + 6, y + 1, 4, 1);
+      drawArrow(ctx, ex.dir, x - boxW / 2 + 14, y);
+      // Etichetta "E"
+      ctx.fillStyle = `rgba(255,200,100,${pulse})`;
+      ctx.font = 'bold 9px "Courier New",monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('E', x - boxW / 2 + 12, y - 2);
+      ctx.textAlign = 'start';
+    } else {
+      drawArrow(ctx, ex.dir, x - boxW / 2 + 11, y);
+    }
+
+    // Nome area
     ctx.fillStyle = window.PALETTE.creamPaper;
     ctx.font = '7px "Courier New",monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(label, x + 7, y + 3);
+    ctx.fillText(label, x + (ex.requiresInteract ? 10 : 7), y + 3);
     ctx.textAlign = 'start';
+
+    // Lucchetto per exit bloccate da flag
+    if (ex.requiresFlag) {
+      var w = window;
+      var locked = true;
+      if (w.StoryManager && typeof w.StoryManager.hasFlag === 'function') {
+        locked = !w.StoryManager.hasFlag(ex.requiresFlag);
+      }
+      if (locked) {
+        ctx.fillStyle = 'rgba(180,40,40,0.8)';
+        ctx.fillRect(x + boxW / 2 - 14, y - 6, 8, 10);
+        ctx.fillRect(x + boxW / 2 - 12, y - 1, 4, 5);
+        ctx.fillStyle = '#D4A843';
+        ctx.fillRect(x + boxW / 2 - 12, y + 2, 2, 2);
+      }
+    }
   }
 }
 
