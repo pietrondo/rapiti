@@ -139,10 +139,8 @@ export function renderSaveSlots() {
     name.className = 'slot-name';
     var icon = s.slot === 'autosave' ? '🕒 ' : '💾 ';
     var label = s.slot === 'autosave' ? 'Autosave' : `Slot ${s.slot.replace('slot','')}`;
-    name.textContent = s.exists ? (s.meta?.name || label) : `Slot ${s.slot.replace('slot','')} (Vuoto)`;
-    if (s.slot === 'autosave' && !s.exists) return; // Non mostrare autosave se vuoto
-
-    name.innerHTML = icon + name.textContent;
+    name.textContent = icon + (s.exists ? (s.meta?.name || label) : 'Slot ' + s.slot.replace('slot','') + ' (Vuoto)');
+    if (s.slot === 'autosave' && !s.exists) return;
     
     var meta = document.createElement('div');
     meta.className = 'slot-meta';

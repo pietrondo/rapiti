@@ -135,8 +135,17 @@ class PixiRenderer {
     console.log('[PixiRenderer] Cleaning up area sprites');
     for (let key in this.sprites) {
       if (key.startsWith('npc_')) {
+        const npcId = key.substring(4);
         this.layers.mid.removeChild(this.sprites[key]);
         delete this.sprites[key];
+        // Destroy NPC textures non più referenziate da sprite
+        if (this.npcTextures[npcId]) {
+          for (const tex of this.npcTextures[npcId]) tex.destroy();
+          delete this.npcTextures[npcId];
+        }
+        if (this.textureCache[key]) {
+          delete this.textureCache[key];
+        }
       }
     }
   }
@@ -152,6 +161,53 @@ class PixiRenderer {
     if (this.sprites.player) {
       this.layers.mid.addChild(this.sprites.player);
     }
+  }
+
+  /** Distrugge texture legacy e libera memoria GPU per vecchi player sheet */
+  _cleanupPlayerTextures() {
+    for (const tex of this.playerTextures) {
+      tex.destroy();
+    }
+    this.playerTextures = [];
+  }
+
+  /** Distrugge texture per un NPC specifico (es. cambio sprite sheet) */
+  _cleanupNPCTexture(npcId: string) {
+    if (this.npcTextures[npcId]) {
+      for (const tex of this.npcTextures[npcId]) {
+        tex.destroy();
+      }
+      delete this.npcTextures[npcId];
+    }
+    if (this.textureCache[`npc_${npcId}`]) {
+      delete this.textureCache[`npc_${npcId}`];
+    }
+  }
+
+  /** Reset completo: distrugge tutte le texture e i riferimenti */
+  reset() {
+    console.log('[PixiRenderer] Full reset — destroying all textures');
+    // Distruggi player textures
+    this._cleanupPlayerTextures();
+    // Distruggi tutte le texture NPC
+    for (const npcId in this.npcTextures) {
+      for (const tex of this.npcTextures[npcId]) tex.destroy();
+    }
+    this.npcTextures = {};
+    // Distruggi texture cache (area backgrounds, sheet cache)
+    for (const key in this.textureCache) {
+      const tex = this.textureCache[key];
+      if (tex && !tex.destroyed) tex.destroy();
+    }
+    this.textureCache = {};
+    // Rimuovi tutti gli sprite
+    for (const layerName in this.layers) {
+      this.layers[layerName].removeChildren();
+    }
+    this.sprites = {};
+    this.lastArea = null;
+    this.lastPhase = null;
+    this.lastStep = null;
   }
 
   setEnabled(active: boolean) {

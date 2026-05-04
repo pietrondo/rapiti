@@ -34,7 +34,10 @@ window.PLAYER_W = PLAYER_W;
 window.PLAYER_H = PLAYER_H;
 window.gameState = gameState;
 window.resetGameState = resetGameState;
-window.resetGame = resetGameState;
+window.resetGame = () => {
+  resetGameState();
+  if (window.pixiRenderer?.reset) window.pixiRenderer.reset();
+};
 window.VERSION = VERSION;
 
 console.log(`[Main] Le Luci di San Celeste v${VERSION} - ES6+ Module System`);

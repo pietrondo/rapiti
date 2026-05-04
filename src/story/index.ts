@@ -202,6 +202,7 @@ class StoryManager {
 
   onPuzzleSolved(puzzleId: string): void {
     this.engine.onPuzzleSolved(puzzleId);
+    this.checkObjectivesForEvent('puzzleSolved', puzzleId);
     this.checkQuestProgress();
     this.checkEvents();
   }
@@ -234,6 +235,20 @@ class StoryManager {
         }
         if (eventType === 'visitedArea' && obj.condition.visitedArea === target) {
           this.completeObjective(obj.id);
+        }
+        if (eventType === 'cluesFound' && obj.condition.hasClue === target) {
+          this.completeObjective(obj.id);
+        }
+        if (eventType === 'puzzleSolved' && obj.condition.puzzleSolved === target) {
+          this.completeObjective(obj.id);
+        }
+        if (eventType === 'puzzleSolved' && Array.isArray(obj.condition.puzzleSolved)) {
+          for (const p of obj.condition.puzzleSolved) {
+            if (p === target) {
+              this.completeObjective(obj.id);
+              break;
+            }
+          }
         }
         if (eventType === 'talkedToCount' && obj.condition.talkedToCount) {
           const count = this.engine.getStats().talkedToCount || 0;

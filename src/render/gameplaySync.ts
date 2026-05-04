@@ -68,6 +68,7 @@ export class GameplaySync {
     
     if (!this.parent.sprites.player || this.parent.textureCache.playerSheet !== sheet) {
        console.log('[PixiRenderer] Updating player sprite textures');
+       this.parent._cleanupPlayerTextures();
        this.parent.textureCache.playerSheet = sheet;
        this.parent.playerTextures = [];
        const baseSource = PIXI.Texture.from({ resource: sheet }).source;
@@ -109,6 +110,7 @@ export class GameplaySync {
       const sheet = sm.getOrCreateNPCSheet(n.id);
       if (!this.parent.sprites[key] || this.parent.textureCache[`npc_${n.id}`] !== sheet) {
         console.log(`[PixiRenderer] Creating/Updating NPC sprite: ${n.id}`);
+        this.parent._cleanupNPCTexture(n.id);
         this.parent.textureCache[`npc_${n.id}`] = sheet;
         const baseSource = PIXI.Texture.from({ resource: sheet }).source;
         const npcTex = new PIXI.Texture({

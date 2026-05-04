@@ -185,9 +185,19 @@ export class QuestManager {
       (window as any).collectClue(reward.giveClue);
     }
 
-    // Clue hint
+    // Clue hint — mostra un suggerimento diegetico al giocatore
     if (reward.giveClueHint) {
-      console.log('[QuestManager] Clue hint:', reward.giveClueHint);
+      const cluesMap = (window as any).cluesMap;
+      const clueData = cluesMap?.[reward.giveClueHint];
+      const hintName = clueData?.name || reward.giveClueHint;
+      const areaName = clueData?.area ? (window as any).t?.(`area.${clueData.area}`) || clueData.area : 'un\'area';
+      if (typeof (window as any).showToast === 'function') {
+        if ((window as any).t) {
+          (window as any).showToast('toast.clue_hint', { name: hintName, area: areaName });
+        } else {
+          (window as any).showToast(`Nuova pista: "${hintName}" — cerca in ${areaName}.`);
+        }
+      }
     }
 
     // Experience points

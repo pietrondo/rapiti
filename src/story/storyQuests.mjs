@@ -110,7 +110,7 @@ const storyQuests = {
         id: 'solve_recorder',
         description: 'Collega correttamente i cavi',
         condition: { puzzleSolved: 'recorder' },
-        reward: { giveClue: 'nastro_monte_ferro_2', setFlag: 'recorder_quest_complete' },
+        reward: { giveClue: 'registro_monte_ferro', setFlag: 'recorder_quest_complete' },
       },
     ],
     onComplete: {

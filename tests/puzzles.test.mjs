@@ -67,13 +67,13 @@ describe('Puzzle Validation', () => {
       expect(canOpenDeduction()).toBe(false);
     });
 
-    it('should return false with only 2 clues', () => {
+    it('should return true with the 2 required clues (registro_1861 + mappa_campi)', () => {
       gameState.cluesFound.push('registro_1861');
       gameState.cluesFound.push('mappa_campi');
-      expect(canOpenDeduction()).toBe(false);
+      expect(canOpenDeduction()).toBe(true);
     });
 
-    it('should return true with all 3 required clues', () => {
+    it('should return true with all 3 clues (including tracce_circolari)', () => {
       gameState.cluesFound.push('registro_1861');
       gameState.cluesFound.push('mappa_campi');
       gameState.cluesFound.push('tracce_circolari');
@@ -93,6 +93,31 @@ describe('Puzzle Validation', () => {
       gameState.cluesFound.push('registro_1861');
       gameState.cluesFound.push('mappa_campi');
       expect(canOpenDeduction()).toBe(true);
+    });
+  });
+
+  describe('Critical Progression Path (Deduction → Campo)', () => {
+    it('should NOT require tracce_circolari (avoids circular deadlock with campo)', () => {
+      // Il campo è bloccato dietro deduction_complete.
+      // canOpenDeduction NON deve richiedere tracce_circolari (solo al campo)
+      // altrimenti: per aprire deduction → serve tracce → serve campo → serve deduction_complete → serve deduction.
+      gameState.cluesFound.push('registro_1861');
+      gameState.cluesFound.push('mappa_campi');
+      // tracce_circolari NON è presente
+      expect(canOpenDeduction()).toBe(true);
+    });
+
+    it('should allow progression: clues → deduction → campo access', () => {
+      // Simula il flusso canonico:
+      // 1. Raccogli registro_1861 (chiesa) e mappa_campi (piazze)
+      gameState.cluesFound.push('registro_1861');
+      gameState.cluesFound.push('mappa_campi');
+      expect(canOpenDeduction()).toBe(true);
+
+      // 2. Dopo deduction risolta, il capitolo collegamenti setta deduction_complete
+      // e sblocca l'uscita giardini→campo. Ora il giocatore può raccogliere tracce_circolari.
+      gameState.cluesFound.push('tracce_circolari');
+      expect(gameState.cluesFound).toContain('tracce_circolari');
     });
   });
 });

@@ -74,12 +74,14 @@ export class CinematicRenderer {
         this.parent.sprites.ui_intro_panel = panel;
         this.parent.layers.ui.addChild(panel);
 
-        const introData = [
-           { title: 'SAN CELESTE', text: 'Un piccolo borgo tra Parma e Piacenza.\n800 anime, una piazza, un campanile, un bar.\n\nDa tre notti, strane luci appaiono\nnel cielo sopra i campi a nord.\nNon sono stelle. Non sono aerei.\n\nIl paese ha paura.' },
-           { title: 'LE SPARIZIONI', text: 'Tre persone sono scomparse.\nEnzo Bellandi, 19 anni.\nEra uscito a guardare le luci.\n\nSua nonna Teresa\nnon dorme più da tre giorni.\n\nLa Prefettura di Parma\nha mandato il suo miglior uomo.' },
-           { title: 'IL DETECTIVE', text: `Quell'uomo sei tu,\n${gameState.playerName}.\n\nUn detective pragmatico, razionale,\ncon un debole per il caffè\ne un sesto senso per i misteri.\n\nFuori ti aspettano la piazza e la cascina.\nE il Campo delle Luci.` },
-           { title: "L'INCARICO", text: `"Detective ${gameState.playerName},\nvada a San Celeste.\nScopra cosa sta succedendo.\nE torni con delle risposte."\n\nNon sai ancora che quelle risposte\nti cambieranno per sempre.\nLe luci sono tornate.\nCome nel 1861. Come nel 1961.` }
-        ];
+         const t = (window as any).t || ((k: string) => k);
+         const playerName = gameState.playerName || 'Maurizio';
+         const introData = [
+            { title: t('cinematic.intro.1.title'), text: t('cinematic.intro.1.text') },
+            { title: t('cinematic.intro.2.title'), text: t('cinematic.intro.2.text') },
+            { title: t('cinematic.intro.3.title'), text: t('cinematic.intro.3.text', { name: playerName }) },
+            { title: t('cinematic.intro.4.title'), text: t('cinematic.intro.4.text', { name: playerName }) }
+         ];
 
         const data = introData[slide] || introData[0];
         
@@ -262,35 +264,37 @@ export class CinematicRenderer {
         }
      }
 
-     if (step === 8) {
-        if (!this.parent.sprites.ui_pro_final) {
-           this.parent._cleanupUI();
-           const cont = new PIXI.Container();
-           const bg = new PIXI.Graphics(); 
-           bg.rect(0, 0, 400, 250).fill({ color: 0xFFFFFF });
-           cont.addChild(bg);
-           const title = new PIXI.Text({ text: 'LE LUCI DI SAN CELESTE', style: { fontFamily: 'monospace', fontSize: 20, fill: 0x0B0C12, fontWeight: 'bold' } });
-           title.anchor.set(0.5); title.x = 200; title.y = 120;
-           cont.addChild(title);
-           const subtitle = new PIXI.Text({ text: "1978 — Un'indagine della Prefettura", style: { fontFamily: 'monospace', fontSize: 11, fill: 0x4A5568 } });
+      if (step === 8) {
+         if (!this.parent.sprites.ui_pro_final) {
+            this.parent._cleanupUI();
+            const cont = new PIXI.Container();
+            const bg = new PIXI.Graphics(); 
+            bg.rect(0, 0, 400, 250).fill({ color: 0xFFFFFF });
+            cont.addChild(bg);
+            const tFinal = (window as any).t || ((k: string) => k);
+            const title = new PIXI.Text({ text: tFinal('prologue.final.title'), style: { fontFamily: 'monospace', fontSize: 20, fill: 0x0B0C12, fontWeight: 'bold' } });
+            title.anchor.set(0.5); title.x = 200; title.y = 120;
+            cont.addChild(title);
+            const subtitle = new PIXI.Text({ text: tFinal('prologue.final.subtitle'), style: { fontFamily: 'monospace', fontSize: 11, fill: 0x4A5568 } });
            subtitle.anchor.set(0.5); subtitle.x = 200; subtitle.y = 142;
            cont.addChild(subtitle);
            this.parent.sprites.ui_pro_final = cont; this.parent.layers.ui.addChild(cont);
         }
      }
 
-     const subtitleTexts = [
-        'San Celeste, 25 luglio 1978. Ore 23:40.',
-        "Elena Bellandi corre tra l'erba alta.",
+      const tSub = (window as any).t || ((k: string) => k);
+      const subtitleTexts = [
+        tSub('prologue.sub.0'),
+        tSub('prologue.sub.1'),
         '',
-        'Una luce si accende dal terreno... non dal cielo.',
+        tSub('prologue.sub.3'),
         '',
-        'Tre cerchi appaiono nel grano.',
-        'Elena si ferma.',
-        'Raccoglie un piccolo oggetto metallico.',
-        'La luce diventa accecante.',
+        tSub('prologue.sub.5'),
+        tSub('prologue.sub.6'),
+        tSub('prologue.sub.7'),
+        tSub('prologue.sub.8'),
         '',
-     ];
+      ];
      const txt = step < subtitleTexts.length ? subtitleTexts[step] : '';
      if (txt && step < 8) {
         const subKey = `ui_pro_sub_${step}`;
@@ -308,8 +312,9 @@ export class CinematicRenderer {
         }
      }
 
-     if (step === 8 && !this.parent.sprites.ui_pro_prompt) {
-        this.parent._renderPrompt('Attendi...', 200, 238);
+      if (step === 8 && !this.parent.sprites.ui_pro_prompt) {
+        const t2 = (window as any).t || ((k: string) => k);
+        this.parent._renderPrompt(t2('prologue.prompt.wait'), 200, 238);
         this.parent.sprites.ui_pro_prompt = true;
      }
   }
@@ -321,23 +326,25 @@ export class CinematicRenderer {
         this.parent.sprites.ui_tut_panel = panel;
         this.parent.layers.ui.addChild(panel);
 
+        const t = (window as any).t || ((k: string) => k);
+
         const headerText = new PIXI.Text({
-           text: 'ISTRUZIONI',
-           style: { fontFamily: 'monospace', fontSize: 16, fill: 0xD4A843, fontWeight: 'bold' }
+            text: t('tutorial.header'),
+            style: { fontFamily: 'monospace', fontSize: 16, fill: 0xD4A843, fontWeight: 'bold' }
         });
         headerText.anchor.set(0.5); headerText.x = 170; headerText.y = 30;
         panel.addChild(headerText);
 
         const controls = [
-           { key: 'WASD', desc: 'Muovi il detective', icon: true },
-           { key: 'E', desc: 'Interagisci / Parla / Raccogli' },
-           { key: 'J', desc: 'Apri il Diario (indizi raccolti)' },
-           { key: 'I', desc: "Apri l'Inventario" },
-           { key: 'T', desc: 'Pannello Teoria (quando disponibile)' },
-           { key: 'N', desc: 'Mostra / nascondi minimappa' },
-           { key: 'M', desc: 'Musica ON / OFF' },
-           { key: 'ESC', desc: 'Chiudi pannelli' },
-        ];
+            { key: 'WASD', desc: t('tutorial.ctrl.wasd'), icon: true },
+            { key: 'E', desc: t('tutorial.ctrl.interact') },
+            { key: 'J', desc: t('tutorial.ctrl.journal') },
+            { key: 'I', desc: t('tutorial.ctrl.inventory') },
+            { key: 'T', desc: t('tutorial.ctrl.deduction') },
+            { key: 'N', desc: t('tutorial.ctrl.minimap') },
+            { key: 'M', desc: t('tutorial.ctrl.music') },
+            { key: 'ESC', desc: t('tutorial.ctrl.close') },
+         ];
 
         const tutY = 55;
         const spacing = 15;
@@ -384,20 +391,20 @@ export class CinematicRenderer {
         });
 
         const objKey = new PIXI.Text({
-           text: 'Obiettivo:',
-           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xD4A843, fontWeight: 'bold' }
+            text: t('tutorial.objective.label'),
+            style: { fontFamily: 'monospace', fontSize: 10, fill: 0xD4A843, fontWeight: 'bold' }
         });
         objKey.x = 25; objKey.y = 182;
         panel.addChild(objKey);
 
         const objText = new PIXI.Text({
-           text: "Scopri la verita' dietro le luci misteriose di San Celeste.",
-           style: { fontFamily: 'monospace', fontSize: 10, fill: 0xE8DCC8 }
+            text: t('tutorial.objective.text'),
+            style: { fontFamily: 'monospace', fontSize: 10, fill: 0xE8DCC8 }
         });
         objText.x = 100; objText.y = 182;
         panel.addChild(objText);
      }
-     this.parent._renderPrompt("Premi ENTER per iniziare l'indagine", CANVAS_W / 2, 240);
+      this.parent._renderPrompt(t('tutorial.prompt.start'), CANVAS_W / 2, 240);
   }
 
   renderParallaxSky(t: number) {

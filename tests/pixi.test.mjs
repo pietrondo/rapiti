@@ -80,4 +80,46 @@ describe('PixiRenderer Prototype', () => {
     expect(pixiRenderer.sprites.player.x).toBe(211);
     expect(pixiRenderer.sprites.player.y).toBe(204);
   });
+
+  describe('Texture Lifecycle', () => {
+    it('should clean up player textures without leaking', async () => {
+      await pixiRenderer.init();
+      // Simula creazione texture player
+      pixiRenderer.playerTextures = [{ destroy: jest.fn() }, { destroy: jest.fn() }];
+      pixiRenderer._cleanupPlayerTextures();
+      expect(pixiRenderer.playerTextures.length).toBe(0);
+    });
+
+    it('should clean up NPC textures on area change', async () => {
+      await pixiRenderer.init();
+      const mockDestroy = jest.fn();
+      pixiRenderer.npcTextures = { teresa: [{ destroy: mockDestroy }] };
+      pixiRenderer.sprites = { npc_teresa: { destroy: jest.fn() } };
+      pixiRenderer._cleanupArea();
+      expect(pixiRenderer.npcTextures.teresa).toBeUndefined();
+    });
+
+    it('should clean up specific NPC texture', async () => {
+      await pixiRenderer.init();
+      const mockDestroy = jest.fn();
+      pixiRenderer.npcTextures = { teresa: [{ destroy: mockDestroy }] };
+      pixiRenderer._cleanupNPCTexture('teresa');
+      expect(pixiRenderer.npcTextures.teresa).toBeUndefined();
+    });
+
+    it('should reset all textures and sprites', async () => {
+      await pixiRenderer.init();
+      pixiRenderer.playerTextures = [{ destroy: jest.fn() }];
+      pixiRenderer.npcTextures = { test: [{ destroy: jest.fn() }] };
+      pixiRenderer.textureCache = { bg_test: { destroy: jest.fn(), destroyed: false } };
+      pixiRenderer.sprites = { player: { destroy: jest.fn() } };
+
+      pixiRenderer.reset();
+
+      expect(pixiRenderer.playerTextures.length).toBe(0);
+      expect(Object.keys(pixiRenderer.npcTextures).length).toBe(0);
+      expect(Object.keys(pixiRenderer.textureCache).length).toBe(0);
+      expect(Object.keys(pixiRenderer.sprites).length).toBe(0);
+    });
+  });
 });

@@ -14,7 +14,10 @@
 export function canOpenDeduction() {
   if (window.gameState.puzzleSolved || window.gameState.puzzlesSolved?.deduction) return false;
 
-  var requiredClues = ['registro_1861', 'mappa_campi', 'tracce_circolari'];
+  // Il campo è raggiungibile solo DOPO deduction_complete (flag settato dal capitolo collegamenti).
+  // Richiedere tracce_circolari qui creerebbe deadlock: per aprire deduction servono tracce (solo al campo),
+  // ma il campo richiede deduction_complete che richiede deduction risolta.
+  var requiredClues = ['registro_1861', 'mappa_campi'];
   var found = window.gameState.cluesFound || [];
   for (var i = 0; i < requiredClues.length; i++) {
     if (found.indexOf(requiredClues[i]) === -1) return false;
@@ -99,8 +102,10 @@ function renderHypothesisLog() {
 
   const confirmed = window.gameState.confirmedHypotheses || [];
   if (confirmed.length === 0) {
-    logDiv.innerHTML =
-      `<div style="font-style:italic;color:#666;text-align:center;margin-top:20px;">${window.t ? window.t('ui.no_connections') : 'Nessun collegamento trovato'}</div>`;
+    var emptyMsg = document.createElement('div');
+    emptyMsg.style.cssText = 'font-style:italic;color:#666;text-align:center;margin-top:20px';
+    emptyMsg.textContent = window.t ? window.t('ui.no_connections') : 'Nessun collegamento trovato';
+    logDiv.appendChild(emptyMsg);
     return;
   }
 
@@ -172,7 +177,11 @@ export function setupDragDrop() {
       // Se l'indizio è già in un altro slot, puliscilo
       slots.forEach((s) => {
         if (s.getAttribute('data-placed-clue') === clueId) {
-          s.innerHTML = `<span style="opacity:0.3;">${window.t ? window.t('ui.drag_clue') : 'Trascina Indizio'}</span>`;
+          s.textContent = '';
+          var ph = document.createElement('span');
+          ph.style.cssText = 'opacity:0.3;text-transform:uppercase;letter-spacing:1px';
+          ph.textContent = window.t ? window.t('ui.drag_clue') : 'Trascina Indizio';
+          s.appendChild(ph);
           s.classList.remove('filled');
           s.removeAttribute('data-placed-clue');
           s.style.background = 'rgba(0,0,0,0.2)';
@@ -180,7 +189,11 @@ export function setupDragDrop() {
       });
 
       const name = window.t ? window.t(`clue.${clueId}.name`) : clue.name;
-      slot.innerHTML = `<div style="font-weight:bold;color:#d4a843">${name}</div>`;
+      slot.textContent = '';
+      var nameDiv = document.createElement('div');
+      nameDiv.style.cssText = 'font-weight:bold;color:#d4a843';
+      nameDiv.textContent = name;
+      slot.appendChild(nameDiv);
       slot.setAttribute('data-placed-clue', clueId);
       slot.classList.add('filled');
       slot.style.background = 'rgba(212,168,67,0.1)';

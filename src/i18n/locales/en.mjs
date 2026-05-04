@@ -176,6 +176,7 @@ export default {
 
   // Toast
   'toast.clue_found': 'New clue: {name}',
+  'toast.clue_hint': 'New lead: "{name}" — check {area}.',
   'toast.puzzle_solved': 'Puzzle solved!',
   'toast.minimap_shown': 'Mini-map visible',
   'toast.minimap_hidden': 'Mini-map hidden',
@@ -210,4 +211,40 @@ export default {
   'dialogue.osvaldo_s3_fiducia.text': 'Inspector, you have been good to me. I will give you something I found behind the counter years ago. It is a key with a symbol I have only seen in the Field of Lights.',
   'dialogue.gino_s3_testimone.text': 'That night in \'74... I was on patrol for night deliveries. I saw a sphere descending over the church. It was not a plane. It moved as if... as if time did not exist.',
   'dialogue.don_pietro_s3_segreto.text': 'Under the altar, there is a crypt dating back to the 1600s. There, the remains of those who "departed" during the Great Harvest are preserved. If you want to know the truth, you must look into the past.',
+
+  // Cinematic Intro
+  'cinematic.intro.1.title': 'SAN CELESTE',
+  'cinematic.intro.1.text': 'A small village between Parma and Piacenza.\n800 souls, a square, a bell tower, a bar.\n\nFor three nights, strange lights have appeared\nin the sky above the northern fields.\nThey are not stars. They are not planes.\n\nThe village is afraid.',
+  'cinematic.intro.2.title': 'THE DISAPPEARANCES',
+  'cinematic.intro.2.text': "Three people have disappeared.\nEnzo Bellandi, 19 years old.\nHe went out to watch the lights.\n\nHis grandmother Teresa\nhasn't slept in three days.\n\nThe Prefecture of Parma\nsent its best man.",
+  'cinematic.intro.3.title': 'THE DETECTIVE',
+  'cinematic.intro.3.text': "That man is you,\n{name}.\n\nA pragmatic, rational detective,\nwith a weakness for coffee\nand a sixth sense for mysteries.\n\nThe square and the farmhouse await you outside.\nAnd the Field of Lights.",
+  'cinematic.intro.4.title': 'THE ASSIGNMENT',
+  'cinematic.intro.4.text': "\"Detective {name},\ngo to San Celeste.\nFind out what is happening.\nAnd come back with answers.\"\n\nYou don't yet know that those answers\nwill change you forever.\nThe lights have returned.\nThe chronicles speak of irregular\nrecurrences since 1861.\nOpenings. Not cycles.",
+
+  // Prologue
+  'prologue.sub.0': 'San Celeste, July 25, 1978. 11:40 PM.',
+  'prologue.sub.1': 'Elena Bellandi runs through the tall grass.',
+  'prologue.sub.3': 'A light ignites from the ground... not from the sky.',
+  'prologue.sub.5': 'Three circles appear in the wheat.',
+  'prologue.sub.6': 'Elena stops.',
+  'prologue.sub.7': 'She picks up a small metallic object.',
+  'prologue.sub.8': 'The light becomes blinding.',
+  'prologue.final.title': 'THE LIGHTS OF SAN CELESTE',
+  'prologue.final.subtitle': "1978 — A Prefecture Investigation",
+  'prologue.prompt.wait': 'Wait...',
+
+  // Tutorial
+  'tutorial.header': 'INSTRUCTIONS',
+  'tutorial.ctrl.wasd': 'Move the detective',
+  'tutorial.ctrl.interact': 'Interact / Talk / Collect',
+  'tutorial.ctrl.journal': 'Open Journal (collected clues)',
+  'tutorial.ctrl.inventory': 'Open Inventory',
+  'tutorial.ctrl.deduction': 'Theory Board (when available)',
+  'tutorial.ctrl.minimap': 'Show / hide minimap',
+  'tutorial.ctrl.music': 'Music ON / OFF',
+  'tutorial.ctrl.close': 'Close panels',
+  'tutorial.objective.label': 'Objective:',
+  'tutorial.objective.text': "Discover the truth behind the mysterious lights of San Celeste.",
+  'tutorial.prompt.start': 'Press ENTER to begin the investigation',
 };

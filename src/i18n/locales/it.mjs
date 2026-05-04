@@ -174,6 +174,7 @@ export default {
 
   // Toast
   'toast.clue_found': 'Nuovo indizio: {name}',
+  'toast.clue_hint': 'Nuova pista: "{name}" — cerca a {area}.',
   'toast.puzzle_solved': 'Puzzle risolto!',
   'toast.minimap_shown': 'Minimappa visibile',
   'toast.minimap_hidden': 'Minimappa nascosta',
@@ -208,4 +209,40 @@ export default {
   'dialogue.osvaldo_s3_fiducia.text': 'Ispettore, vi siete comportato bene con me. Vi darò una cosa che ho trovato dietro il bancone anni fa. È una chiave con un simbolo che ho visto solo nel Campo delle Luci.',
   'dialogue.gino_s3_testimone.text': 'Quella notte del \'74... ero io di pattuglia per le consegne notturne. Ho visto una sfera scendere sopra la chiesa. Non era un aereo. Si muoveva come... come se il tempo non esistesse.',
   'dialogue.don_pietro_s3_segreto.text': 'Sotto l\'altare c\'è una cripta che risale al 1600. Lì sono conservati i resti di chi "partì" durante la Grande Mietitura. Se volete sapere la verità, dovete guardare nel passato.',
+
+  // Cinematiche Intro
+  'cinematic.intro.1.title': 'SAN CELESTE',
+  'cinematic.intro.1.text': 'Un piccolo borgo tra Parma e Piacenza.\n800 anime, una piazza, un campanile, un bar.\n\nDa tre notti, strane luci appaiono\nnel cielo sopra i campi a nord.\nNon sono stelle. Non sono aerei.\n\nIl paese ha paura.',
+  'cinematic.intro.2.title': 'LE SPARIZIONI',
+  'cinematic.intro.2.text': 'Tre persone sono scomparse.\nEnzo Bellandi, 19 anni.\nEra uscito a guardare le luci.\n\nSua nonna Teresa\nnon dorme più da tre giorni.\n\nLa Prefettura di Parma\nha mandato il suo miglior uomo.',
+  'cinematic.intro.3.title': 'IL DETECTIVE',
+  'cinematic.intro.3.text': "Quell'uomo sei tu,\n{name}.\n\nUn detective pragmatico, razionale,\ncon un debole per il caffè\ne un sesto senso per i misteri.\n\nFuori ti aspettano la piazza e la cascina.\nE il Campo delle Luci.",
+  'cinematic.intro.4.title': "L'INCARICO",
+  'cinematic.intro.4.text': "\"Detective {name},\nvada a San Celeste.\nScopra cosa sta succedendo.\nE torni con delle risposte.\"\n\nNon sai ancora che quelle risposte\nti cambieranno per sempre.\nLe luci sono tornate.\nLe cronache parlano di ricorrenze\nirregolari dal 1861.\nAperture. Non cicli.",
+
+  // Prologo
+  'prologue.sub.0': 'San Celeste, 25 luglio 1978. Ore 23:40.',
+  'prologue.sub.1': "Elena Bellandi corre tra l'erba alta.",
+  'prologue.sub.3': 'Una luce si accende dal terreno... non dal cielo.',
+  'prologue.sub.5': 'Tre cerchi appaiono nel grano.',
+  'prologue.sub.6': 'Elena si ferma.',
+  'prologue.sub.7': 'Raccoglie un piccolo oggetto metallico.',
+  'prologue.sub.8': 'La luce diventa accecante.',
+  'prologue.final.title': 'LE LUCI DI SAN CELESTE',
+  'prologue.final.subtitle': "1978 — Un'indagine della Prefettura",
+  'prologue.prompt.wait': 'Attendi...',
+
+  // Tutorial
+  'tutorial.header': 'ISTRUZIONI',
+  'tutorial.ctrl.wasd': 'Muovi il detective',
+  'tutorial.ctrl.interact': 'Interagisci / Parla / Raccogli',
+  'tutorial.ctrl.journal': 'Apri il Diario (indizi raccolti)',
+  'tutorial.ctrl.inventory': "Apri l'Inventario",
+  'tutorial.ctrl.deduction': 'Pannello Teoria (quando disponibile)',
+  'tutorial.ctrl.minimap': 'Mostra / nascondi minimappa',
+  'tutorial.ctrl.music': 'Musica ON / OFF',
+  'tutorial.ctrl.close': 'Chiudi pannelli',
+  'tutorial.objective.label': 'Obiettivo:',
+  'tutorial.objective.text': "Scopri la verita' dietro le luci misteriose di San Celeste.",
+  'tutorial.prompt.start': "Premi ENTER per iniziare l'indagine",
 };
