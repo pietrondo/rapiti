@@ -1,90 +1,145 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * AREA: POLIZIA
- * Stazione di Polizia
+ * Stazione di Polizia — Interno
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawPoliceArea(ctx, t) {
-  window.PF.nightSky(ctx, 12);
-  window.PF.mountains(ctx);
+  var PAL = window.PALETTE;
 
-  ctx.fillStyle = window.PALETTE.oliveGreen;
-  ctx.fillRect(0, 95, window.CANVAS_W, 155);
+  // Parete interna
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-  // Edificio polizia
-  ctx.fillStyle = window.PALETTE.uiBg;
-  ctx.fillRect(100, 25, 200, 95);
+  // Muri
+  ctx.fillStyle = '#2A2D35';
+  ctx.fillRect(0, 0, CANVAS_W, 115);
+  for (var p = 0; p < 8; p++) {
+    ctx.fillStyle = p % 2 === 0 ? '#333840' : '#2A2D35';
+    ctx.fillRect(p * 50, 0, 50, 115);
+    ctx.strokeStyle = '#1A1C20';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(p * 50 + 2, 2, 46, 111);
+  }
 
-  // Tetto
-  ctx.fillStyle = window.PALETTE.greyBrown;
+  // Bacheca con avvisi
+  ctx.fillStyle = '#3E2723';
+  ctx.fillRect(10, 10, 60, 80);
+  ctx.fillStyle = '#E8DCC8';
+  ctx.fillRect(14, 14, 52, 34);
+  ctx.fillRect(14, 52, 52, 34);
+  ctx.fillStyle = '#666';
+  ctx.fillRect(18, 18, 44, 8);
+  ctx.fillRect(18, 56, 40, 6);
+  ctx.fillStyle = '#444';
+  ctx.fillRect(18, 30, 30, 4);
+  ctx.fillRect(18, 66, 35, 4);
+
+  // Mappa sulla parete
+  ctx.fillStyle = '#8B7D6B';
+  ctx.fillRect(280, 15, 70, 50);
+  ctx.fillStyle = '#E8DCC8';
+  ctx.fillRect(284, 19, 62, 42);
+  ctx.fillStyle = '#5C7A4B';
+  ctx.fillRect(288, 26, 25, 18);
+  ctx.fillStyle = '#4A5568';
+  ctx.fillRect(320, 30, 22, 10);
+
+  // Scrivania centrale
+  ctx.fillStyle = '#4A5568';
+  ctx.fillRect(140, 55, 120, 45);
+  ctx.fillStyle = '#5C6A7E';
+  ctx.fillRect(142, 60, 116, 4);
+  // Documenti
+  ctx.fillStyle = '#E8DCC8';
+  ctx.fillRect(155, 50, 35, 5);
+  ctx.fillRect(160, 46, 25, 4);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillRect(240, 55, 8, 12);
+  // Telefono
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(250, 52, 12, 8);
+
+  // Sedia dietro scrivania
+  ctx.fillStyle = '#2D3047';
+  ctx.fillRect(188, 30, 24, 30);
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(194, 20, 12, 15);
+
+  // Schedario metallico
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillRect(340, 20, 40, 80);
+  for (var d = 0; d < 4; d++) {
+    ctx.fillStyle = '#8B9098';
+    ctx.fillRect(342, 22 + d * 18, 36, 3);
+    ctx.fillStyle = '#D4A843';
+    ctx.fillRect(374, 26 + d * 18, 4, 4);
+  }
+
+  // Orologio a muro
+  ctx.fillStyle = '#E8DCC8';
   ctx.beginPath();
-  ctx.moveTo(95, 25);
-  ctx.lineTo(200, 5);
-  ctx.lineTo(305, 25);
+  ctx.arc(170, 18, 10, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = '#1A1C20';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(169, 13, 2, 5);
+  ctx.fillRect(167, 17, 2, 2);
 
-  // Insegna
+  // Pavimento in linoleum
+  for (var row = 0; row < 5; row++) {
+    for (var col = 0; col < 8; col++) {
+      ctx.fillStyle = (row + col) % 2 === 0 ? '#3A3D45' : '#444850';
+      ctx.fillRect(col * 50, 115 + row * 27, 50, 27);
+    }
+  }
+
+  // Luci fluorescenti
+  var flicker = 0.85 + Math.sin(t * 5) * 0.08;
+  ctx.fillStyle = `rgba(200,220,255,${flicker * 0.12})`;
+  ctx.fillRect(0, 0, CANVAS_W, 115);
+  ctx.fillStyle = '#E8DCC8';
+  ctx.fillRect(80, 2, 60, 3);
+  ctx.fillRect(260, 2, 60, 3);
+
+  // Porta d'uscita (in basso al centro)
+  ctx.fillStyle = '#2E1F18';
+  ctx.fillRect(184, 96, 32, 24);
+  ctx.fillStyle = '#4A5568';
+  ctx.fillRect(186, 98, 28, 22);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(210, 108, 4, 4);
+  ctx.fillStyle = 'rgba(212,168,67,0.5)';
+  ctx.font = '6px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('USCITA', 200, 94);
+  ctx.textAlign = 'start';
+
+  // Insegna stazione
   ctx.fillStyle = '#1a365d';
-  ctx.fillRect(130, 35, 140, 20);
+  ctx.fillRect(120, 38, 160, 16);
   ctx.fillStyle = '#fff';
   ctx.font = 'bold 10px "Courier New",monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('POLIZIA', 200, 48);
+  ctx.fillText('STAZIONE POLIZIA', 200, 50);
   ctx.textAlign = 'start';
-
-  // Finestre
-  var glow = 0.5 + Math.sin(t * 1.8) * 0.1;
-  ctx.fillStyle = `rgba(130,160,220,${glow.toFixed(2)})`;
-  ctx.fillRect(120, 65, 40, 30);
-  ctx.fillRect(180, 65, 40, 30);
-  ctx.fillRect(240, 65, 40, 30);
-
-  // Porta
-  ctx.fillStyle = window.PALETTE.earthBrown;
-  ctx.fillRect(185, 90, 30, 30);
-
-  // Auto polizia
-  ctx.fillStyle = '#1a365d';
-  ctx.fillRect(280, 140, 60, 35);
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(285, 145, 20, 15);
-  ctx.fillRect(315, 145, 20, 15);
-  ctx.fillStyle = '#333';
-  ctx.fillRect(285, 170, 12, 8);
-  ctx.fillRect(323, 170, 12, 8);
-
-  // Lampeggiante
-  var flash = Math.sin(t * 8) > 0;
-  ctx.fillStyle = flash ? '#f00' : '#00f';
-  ctx.fillRect(295, 135, 8, 5);
-  ctx.fillRect(315, 135, 8, 5);
-
-  // Recinzione
-  ctx.fillStyle = '#333';
-  ctx.fillRect(0, 140, 60, 35);
-  ctx.fillRect(340, 140, 60, 35);
-
-  // Alberi
-  window.PF.tree(ctx, 50, 130);
-  window.PF.tree(ctx, 350, 130);
-
-  // Lampioni
-  window.PF.lamp(ctx, 80, 180);
-  window.PF.lamp(ctx, 320, 180);
 }
 
 const PoliziaArea = {
   name: 'Stazione di Polizia',
-  walkableTop: 95,
+  walkableTop: 115,
   colliders: [
-    { x: 100, y: 25, w: 200, h: 95 },
-    { x: 280, y: 140, w: 60, h: 35 },
+    { x: 140, y: 55, w: 120, h: 45 }, // Scrivania
+    { x: 340, y: 20, w: 40, h: 80 }, // Schedario
+    { x: 10, y: 10, w: 60, h: 80 }, // Bacheca
   ],
-  npcs: [{ id: 'neri', x: 200, y: 175 }],
-  exits: [{ dir: 'up', xRange: [170, 230], to: 'industriale', spawnX: 200, spawnY: 210 }],
+  npcs: [{ id: 'neri', x: 160, y: 140 }],
+  exits: [{ dir: 'down', xRange: [170, 230], to: 'industriale', spawnX: 200, spawnY: 130 }],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;

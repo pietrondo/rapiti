@@ -64,11 +64,20 @@ export function drawBarExteriorArea(ctx, t) {
   ctx.fillStyle = `rgba(212,168,67,${glow2.toFixed(2)})`;
   ctx.fillRect(229, 73, 28, 36);
 
-  // Porta
+  // Porta (visibile, incorniciata)
+  ctx.fillStyle = '#2E1F18';
+  ctx.fillRect(184, 96, 32, 34);
   ctx.fillStyle = window.PALETTE.earthBrown;
-  ctx.fillRect(185, 100, 30, 30);
+  ctx.fillRect(186, 100, 28, 30);
   ctx.fillStyle = window.PALETTE.lanternYel;
-  ctx.fillRect(210, 115, 3, 3);
+  ctx.fillRect(212, 116, 4, 4);
+  ctx.fillRect(196, 118, 6, 2);
+  // Insegna "ENTRATA" sopra la porta
+  ctx.fillStyle = 'rgba(212,168,67,0.6)';
+  ctx.font = '6px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('ENTRATA', 200, 96);
+  ctx.textAlign = 'start';
 
   // Tavolini esterni
   ctx.fillStyle = window.PALETTE.greyBrown;
@@ -87,8 +96,7 @@ const BarExteriorArea = {
   name: 'Bar — Esterno',
   walkableTop: 130, // Alzato per bloccare l'accesso alla facciata
   colliders: [
-    { x: 82, y: 0, w: 103, h: 250 }, // Edificio (Parte SX) — esteso per bloccare accesso al tetto
-    { x: 215, y: 0, w: 103, h: 250 }, // Edificio (Parte DX) — esteso per bloccare accesso al tetto
+    { x: 82, y: 0, w: 236, h: 130 }, // Edificio (blocco unico, giocatore arriva a y=130 per interagire con la porta)
     { x: 112, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 226, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 302, y: 138, w: 24, h: 34 }, // Albero
