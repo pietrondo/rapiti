@@ -434,50 +434,61 @@ body {
   .panel h2 { font-size: 14px; }
 
 /* ═══════════════════════════════════════════════════════════════
-   MAP EDITOR OVERLAY
+   MAP EDITOR OVERLAY — Stile coerente con il gioco
    ═══════════════════════════════════════════════════════════════ */
 #map-editor-overlay {
   display: flex; flex-direction: column;
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #0a0a0f; z-index: 9999;
-  font-family: 'Courier New', monospace; font-size: 11px; color: #ccc;
+  background: #080A13; z-index: 9999;
+  font-family: 'Courier New', monospace; font-size: 11px; color: #E8DCC8;
+  image-rendering: pixelated;
 }
-#me-toolbar {
+#map-editor-overlay * { font-family: 'Courier New', monospace; }
+.me-toolbar {
   display: flex; align-items: center; gap: 6px;
-  padding: 6px 12px; background: #12141a; border-bottom: 1px solid #2a2a3a;
+  padding: 6px 10px; background: #15161B;
+  border-bottom: 2px solid #D4A843;
 }
-.me-title { color: #D4A843; font-weight: bold; font-size: 14px; margin-right: 12px; }
-#me-area-label { color: #888; }
-#me-area-select { background: #1a1a2e; color: #ccc; border: 1px solid #444; padding: 2px 6px; font-family: inherit; font-size: 11px; }
-.me-btn {
-  background: #1e2030; color: #aaa; border: 1px solid #333; padding: 3px 10px;
-  cursor: pointer; font-family: inherit; font-size: 10px;
+.me-title { color: #D4A843; font-weight: bold; font-size: 13px; margin-right: 12px; letter-spacing: 1px; }
+.me-sep { color: #4A5568; }
+#me-area {
+  background: #1A1C20; color: #E8DCC8; border: 1px solid #4A5568;
+  padding: 2px 6px; font-size: 10px;
 }
-.me-btn:hover { background: #2a2d40; color: #fff; }
-.me-btn.active { background: #D4A843; color: #0a0a0f; border-color: #D4A843; }
-.me-export { background: #2a4a2a; border-color: #3a6a3a; }
-.me-export:hover { background: #3a6a3a; }
-.me-close { background: #4a2a2a; border-color: #6a3a3a; }
-.me-close:hover { background: #6a3a3a; }
-#me-main { display: flex; flex: 1; overflow: hidden; }
-#me-canvas-wrap {
+.me-tbtn {
+  background: #1A1C20; color: #A0A8B0; border: 1px solid #4A5568;
+  padding: 3px 8px; cursor: pointer; font-size: 10px;
+}
+.me-tbtn:hover { background: #2D3047; color: #E8DCC8; }
+.me-tbtn.active { background: #D4A843; color: #0B0C12; border-color: #D4A843; }
+.me-export { background: #2A3A2A; border-color: #5C7A4B; }
+.me-export:hover { background: #3A5A3A; }
+.me-close { background: #3A2020; border-color: #6A3A3A; }
+.me-close:hover { background: #5A2A2A; }
+.me-main { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+.me-canvas-wrap {
   flex: 1; display: flex; align-items: center; justify-content: center;
-  background: #08080f; padding: 10px;
+  background: #0a0a12; padding: 8px; min-width: 0;
 }
-#me-canvas { image-rendering: pixelated; border: 1px solid #333; max-width: 100%; max-height: 100%; }
-#me-props {
-  width: 200px; background: #12141a; border-left: 1px solid #2a2a3a;
-  padding: 10px; overflow-y: auto;
+#me-canvas {
+  image-rendering: pixelated;
+  border: 1px solid #4A5568;
+  max-width: 100%; max-height: 100%; object-fit: contain;
 }
-#me-props h4 { color: #D4A843; margin-bottom: 8px; font-size: 11px; }
-.me-prop-row { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-.me-prop-row span { color: #888; min-width: 60px; font-size: 10px; }
-.me-prop-row input {
-  background: #1a1a2e; color: #ccc; border: 1px solid #444;
-  padding: 2px 4px; font-family: inherit; font-size: 10px;
+.me-props {
+  width: 180px; background: #15161B; border-left: 2px solid #D4A843;
+  padding: 8px; overflow-y: auto; flex-shrink: 0;
 }
+.me-prop-title { color: #D4A843; font-size: 10px; font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #2D3047; padding-bottom: 4px; }
+.me-row { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+.me-row span { color: #A0A8B0; width: 55px; font-size: 9px; flex-shrink: 0; }
+.me-row input {
+  background: #1A1C20; color: #E8DCC8; border: 1px solid #4A5568;
+  padding: 1px 3px; font-size: 9px; width: 70px;
+}
+.me-row input:focus { border-color: #D4A843; outline: none; }
 #me-status {
-  padding: 4px 12px; background: #12141a; border-top: 1px solid #2a2a3a;
-  color: #666; font-size: 10px;
+  padding: 3px 10px; background: #15161B; border-top: 1px solid #2D3047;
+  color: #6B7B6B; font-size: 9px;
 }
 }
