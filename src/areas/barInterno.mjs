@@ -75,6 +75,29 @@ export function drawBarInternoArea(ctx, t) {
   ctx.font = 'bold 9px monospace';
   ctx.strokeText('AMARO SAN CELESTE', 120, 50);
 
+  // Manifesti alle pareti (Calcio, Sanremo '78)
+  ctx.fillStyle = '#3A2A1A';
+  ctx.fillRect(5, 60, 22, 35);
+  ctx.fillRect(373, 70, 22, 28);
+  ctx.fillStyle = '#4ECDC4';
+  ctx.fillRect(8, 63, 16, 8);
+  ctx.fillStyle = '#FF6B6B';
+  ctx.fillRect(8, 74, 16, 12);
+  ctx.fillStyle = '#FFE66D';
+  ctx.fillRect(376, 73, 16, 10);
+  ctx.fillRect(378, 86, 12, 8);
+
+  // Jukebox (angolo)
+  ctx.fillStyle = '#4A3520';
+  ctx.fillRect(365, 150, 30, 45);
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(370, 155, 20, 25);
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(372, 157, 16, 21);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(374, 180, 4, 4);
+  ctx.fillRect(382, 180, 4, 4);
+
   // Sgabelli
   ctx.fillStyle = '#111';
   for (var s = 0; s < 4; s++) {

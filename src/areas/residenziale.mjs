@@ -103,6 +103,34 @@ export function drawResidentialArea(ctx, t) {
     ctx.fill();
   }
 
+  // Auto parcheggiata (Fiat 127, 1978)
+  ctx.fillStyle = '#C4956A';
+  ctx.fillRect(250, 150, 55, 30);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(252, 152, 51, 6);
+  ctx.fillStyle = '#333';
+  ctx.fillRect(252, 172, 12, 8);
+  ctx.fillRect(290, 172, 12, 8);
+  ctx.fillStyle = '#89CFF0';
+  ctx.fillRect(253, 154, 16, 14); ctx.fillRect(285, 154, 16, 14);
+  // Fanali
+  ctx.fillStyle = '#FFE66D';
+  ctx.fillRect(304, 156, 3, 3);
+  ctx.fillStyle = '#FF4444';
+  ctx.fillRect(249, 158, 3, 3);
+
+  // Gino con bicicletta
+  ctx.fillStyle = '#5C7A4B';
+  ctx.fillRect(90, 148, 6, 14);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(91, 146, 4, 4);
+  ctx.fillStyle = '#444';
+  ctx.fillRect(78, 160, 24, 2);
+  ctx.beginPath();
+  ctx.arc(80, 162, 6, 0, Math.PI * 2); ctx.strokeStyle = '#555'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(100, 162, 6, 0, Math.PI * 2); ctx.stroke();
+
   // Lampioni
   window.PF.lamp(ctx, 35, 140, t);
   window.PF.lamp(ctx, 365, 140, t);
