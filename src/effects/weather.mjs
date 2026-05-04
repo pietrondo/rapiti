@@ -126,6 +126,14 @@ WeatherSystem.prototype.draw = function (ctx) {
       ctx.moveTo(p.x, p.y);
       ctx.lineTo(p.x - this.windX * 3, p.y - 8);
       ctx.stroke();
+
+      // Pozzanghere/bottom reflections
+      if (p.y > window.CANVAS_H - 30) {
+        ctx.fillStyle = `rgba(180,200,220,${0.15 * this.intensity})`;
+        ctx.beginPath();
+        ctx.arc(p.x, window.CANVAS_H - 2, 2 + Math.random(), 0, Math.PI * 2);
+        ctx.fill();
+      }
     } else if (this.type === 'snow') {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
       ctx.beginPath();
@@ -149,6 +157,77 @@ WeatherSystem.prototype.getOverlayAlpha = function () {
   if (this.type === 'snow') return 0.05;
   return 0;
 };
+
+/**
+ * Fog System — Nebbia volumetrica per cimitero e campo
+ */
+export function FogSystem() {
+  this.active = false;
+  this.density = 0.4;
+  this.layers = [];
+}
+
+FogSystem.prototype.init = function () {
+  this.active = false;
+  this.layers = [];
+  for (var i = 0; i < 5; i++) {
+    this.layers.push({
+      x: Math.random() * window.CANVAS_W,
+      speed: 3 + Math.random() * 8,
+      alpha: 0.03 + Math.random() * 0.06,
+      width: 60 + Math.random() * 80,
+    });
+  }
+};
+
+FogSystem.prototype.setActive = function (active, density) {
+  this.active = active;
+  this.density = density || 0.4;
+  if (active && this.layers.length === 0) this.init();
+};
+
+FogSystem.prototype.update = function (dt) {
+  if (!this.active) return;
+  for (var i = 0; i < this.layers.length; i++) {
+    var l = this.layers[i];
+    l.x += l.speed * dt;
+    if (l.x > window.CANVAS_W + 100) l.x = -100;
+  }
+};
+
+FogSystem.prototype.draw = function (ctx) {
+  if (!this.active) return;
+  ctx.save();
+  var cy = window.CANVAS_H - 80;
+  for (var i = 0; i < this.layers.length; i++) {
+    var l = this.layers[i];
+    var grad = ctx.createLinearGradient(0, cy - 40, 0, cy + 50);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.5, `rgba(160,180,200,${l.alpha * this.density})`);
+    grad.addColorStop(1, `rgba(140,160,180,${l.alpha * this.density * 1.5})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(l.x - l.width / 2, cy - 40, l.width, 90);
+  }
+  ctx.restore();
+};
+
+/**
+ * Scripted weather — trigger meteo da eventi storia
+ */
+export function triggerScriptedWeather(type) {
+  var w = window;
+  if (type === 'storm_after_deduction') {
+    if (w.WeatherSystem) w.WeatherSystem.setWeather('storm', 0.7);
+    if (w.FogSystem) w.FogSystem.setActive(true, 0.6);
+  } else if (type === 'rain_light') {
+    if (w.WeatherSystem) w.WeatherSystem.setWeather('rain', 0.3);
+  } else if (type === 'fog_cemetery') {
+    if (w.FogSystem) w.FogSystem.setActive(true, 0.5);
+  } else if (type === 'clear') {
+    if (w.WeatherSystem) { w.WeatherSystem.active = false; w.WeatherSystem.type = 'none'; }
+    if (w.FogSystem) w.FogSystem.active = false;
+  }
+}
 
 /**
  * Falling Leaves System - Foglie che cadono
@@ -231,5 +310,12 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     WeatherSystem: WeatherSystem,
     FallingLeavesSystem: FallingLeavesSystem,
+    FogSystem: FogSystem,
+    triggerScriptedWeather: triggerScriptedWeather,
   };
+}
+
+if (typeof window !== 'undefined') {
+  window.FogSystem = window.FogSystem || new FogSystem();
+  window.triggerScriptedWeather = triggerScriptedWeather;
 }
