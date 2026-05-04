@@ -1,6 +1,5 @@
 var bgMusic;
 var _ambientLoops = {};
-var _sfxCache = {};
 var _masterVolume = 0.5;
 
 export function initAudio() {

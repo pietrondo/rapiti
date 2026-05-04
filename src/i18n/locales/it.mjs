@@ -54,8 +54,6 @@ export default {
   'npc.neri': 'Archivista Neri',
   'npc.valli': 'Capitano Valli',
   'npc.anselmo': 'Vecchio Anselmo',
-  'npc.gino': 'Gino il Postino',
-  'npc.osvaldo': 'Osvaldo il Barista',
 
   // Quest
   'quest.anselmo_mystery.title': 'Il Mistero di Anselmo',
@@ -111,6 +109,14 @@ export default {
   'clue.registro_comunale.desc': 'Mancano diverse pagine tra il 1960 e il 1962. Qualcuno ha cercato di nascondere dei dati.',
   'clue.nastro_monte_ferro_2.name': 'Nastro Monte Ferro — Sequenza 4',
   'clue.nastro_monte_ferro_2.desc': '"Coordinate sintonizzate... il segnale risponde... pronti per l\'impulso finale".',
+
+  'clue.menta.name': 'Menta Selvatica',
+  'clue.menta.desc': 'Un mazzetto di menta selvatica profumatissima. Cresce solo vicino ai cerchi nel grano dei Giardini.',
+  'clue.lettera_gino.name': 'Lettera smarrita di Gino',
+  'clue.lettera_gino.desc': 'Una busta gialla con timbro postale. Gino l\'ha persa durante il giro di consegne.',
+  'clue.testim_tracce.name': 'Testimonianza sulle tracce',
+  'clue.testim_tracce.desc': '"Ho visto le impronte quella notte. Non erano di un uomo. Erano... diverse."',
+  'object.gatto_piazze': 'Gatto randagio',
 
   // Ipotesi
   'hypo.esperimento_militare.name': 'Operazione Radar 1961',

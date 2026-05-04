@@ -112,6 +112,14 @@ export default {
   'clue.nastro_monte_ferro_2.name': 'Monte Ferro Tape — Sequence 4',
   'clue.nastro_monte_ferro_2.desc': '"Coordinates tuned... the signal responds... ready for the final pulse".',
 
+  'clue.menta.name': 'Wild Mint',
+  'clue.menta.desc': 'A fragrant bundle of wild mint. It only grows near the crop circles in the Gardens.',
+  'clue.lettera_gino.name': 'Gino\'s Lost Letter',
+  'clue.lettera_gino.desc': 'A yellow envelope with a postal stamp. Gino lost it during his delivery route.',
+  'clue.testim_tracce.name': 'Testimony about the Tracks',
+  'clue.testim_tracce.desc': '"I saw the footprints that night. They weren\'t human. They were... different."',
+  'object.gatto_piazze': 'Stray Cat',
+
   // Hypotheses
   'hypo.esperimento_militare.name': '1961 Radar Operation',
   'hypo.esperimento_militare.desc': 'The 1961 lights were part of a radar experiment covered up by the Ministry.',
