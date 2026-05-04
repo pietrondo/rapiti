@@ -94,21 +94,23 @@ class RenderManager {
     const UIRenderer = (window as any).UIRenderer;
 
     // Phase-based rendering
+    // Note: quando Pixi è attivo, le fasi cinematiche (title, intro, prologo, tutorial)
+    // sono gestite dal PixiRenderer. Il Canvas 2D non deve ridisegnarle sopra.
     switch (ph) {
       case 'title':
-        SceneRenderer?.renderTitle?.(renderCtx);
+        if (!this.usePixi) SceneRenderer?.renderTitle?.(renderCtx);
         break;
       case 'prologue_cutscene':
-        SceneRenderer?.renderPrologueCutscene?.(renderCtx);
+        if (!this.usePixi) SceneRenderer?.renderPrologueCutscene?.(renderCtx);
         break;
       case 'intro':
-        SceneRenderer?.renderIntroSlide?.(renderCtx);
+        if (!this.usePixi) SceneRenderer?.renderIntroSlide?.(renderCtx);
         break;
       case 'prologue':
-        SceneRenderer?.renderPrologue?.(renderCtx);
+        if (!this.usePixi) SceneRenderer?.renderPrologue?.(renderCtx);
         break;
       case 'tutorial':
-        SceneRenderer?.renderTutorial?.(renderCtx);
+        if (!this.usePixi) SceneRenderer?.renderTutorial?.(renderCtx);
         break;
       case 'playing':
       case 'dialogue':

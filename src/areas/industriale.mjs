@@ -95,15 +95,15 @@ export function drawIndustrialArea(ctx, t) {
 
 const IndustrialeArea = {
   name: 'Zona Industriale',
-  walkableTop: 85,
+  walkableTop: 80,
   colliders: [
-    { x: 80, y: 50, w: 240, h: 70 },
-    { x: 20, y: 120, w: 60, h: 40 },
-    { x: 320, y: 50, w: 60, h: 70 },
+    { x: 80, y: 0, w: 240, h: 118 }, // Fabbrica (blocca intera facciata)
+    { x: 20, y: 120, w: 60, h: 40 }, // Container
+    { x: 310, y: 100, w: 70, h: 50 }, // Container DX
   ],
   npcs: [],
   exits: [
-    { dir: 'up', xRange: [170, 230], to: 'residenziale', spawnX: 200, spawnY: 210 },
+    { dir: 'up', xRange: [180, 220], to: 'residenziale', spawnX: 200, spawnY: 210, requiresInteract: true },
     { dir: 'down', xRange: [170, 230], to: 'polizia', spawnX: 200, spawnY: 130 },
   ],
 

@@ -87,8 +87,8 @@ const BarExteriorArea = {
   name: 'Bar — Esterno',
   walkableTop: 130, // Alzato per bloccare l'accesso alla facciata
   colliders: [
-    { x: 82, y: 0, w: 103, h: 130 }, // Edificio (Parte SX)
-    { x: 215, y: 0, w: 103, h: 130 }, // Edificio (Parte DX)
+    { x: 82, y: 0, w: 103, h: 250 }, // Edificio (Parte SX) — esteso per bloccare accesso al tetto
+    { x: 215, y: 0, w: 103, h: 250 }, // Edificio (Parte DX) — esteso per bloccare accesso al tetto
     { x: 112, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 226, y: 150, w: 34, h: 24 }, // Tavolino
     { x: 302, y: 138, w: 24, h: 34 }, // Albero

@@ -124,7 +124,7 @@ const ResidenzialeArea = {
   ],
   exits: [
     { dir: 'up', xRange: [160, 240], to: 'piazze', spawnX: 200, spawnY: 220 }, // Uscita verso Piazza ristretta al centro
-    { dir: 'down', xRange: [0, 400], to: 'industriale', spawnX: 200, spawnY: 100 },
+    { dir: 'down', xRange: [0, 400], to: 'industriale', spawnX: 200, spawnY: 210 },
   ],
 
   draw: (ctx) => {
