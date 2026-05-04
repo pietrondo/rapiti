@@ -132,36 +132,40 @@ export function renderMiniMap(ctx) {
     residenziale: { x: 45, y: 70 },
     industriale: { x: 45, y: 90 },
     polizia: { x: 45, y: 105 },
+    municipio: { x: 60, y: 40 },
+    campo: { x: 5, y: 40 },
   };
   var x = 8;
   var y = 8;
-  var w = 90;
-  var h = 125;
+  var w = 100;
+  var h = 130;
   var current = window.gameState.currentArea;
   var t = Date.now() * 0.001;
 
   window.UIRenderer.drawPixelPanel(ctx, x, y, w, h, 'MAPPA');
 
-  // Linee di collegamento migliorate
+  // Linee di collegamento
   ctx.strokeStyle = 'rgba(160,168,176,0.25)';
   ctx.setLineDash([2, 2]);
   ctx.lineWidth = 1;
   drawMapLink(ctx, nodes, x, y, 'cimitero', 'chiesa');
   drawMapLink(ctx, nodes, x, y, 'chiesa', 'piazze');
   drawMapLink(ctx, nodes, x, y, 'piazze', 'giardini');
+  drawMapLink(ctx, nodes, x, y, 'giardini', 'campo');
   drawMapLink(ctx, nodes, x, y, 'piazze', 'bar_exterior');
+  drawMapLink(ctx, nodes, x, y, 'piazze', 'municipio');
   drawMapLink(ctx, nodes, x, y, 'piazze', 'residenziale');
   drawMapLink(ctx, nodes, x, y, 'residenziale', 'industriale');
   drawMapLink(ctx, nodes, x, y, 'industriale', 'polizia');
   ctx.setLineDash([]);
 
+  // Nodi aree
   for (var id in nodes) {
     var n = nodes[id];
     var active = id === current;
     var areaData = window.areas ? window.areas[id] : null;
 
-    // Rettangolo area
-    ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(80, 80, 80, 0.8)';
+    ctx.fillStyle = active ? window.PALETTE.lanternYel : 'rgba(80,80,80,0.8)';
     ctx.fillRect(x + n.x - 4, y + n.y - 4, 8, 8);
 
     if (active) {
@@ -171,46 +175,66 @@ export function renderMiniMap(ctx) {
       ctx.strokeRect(x + n.x - 5 - pulse / 2, y + n.y - 5 - pulse / 2, 10 + pulse, 10 + pulse);
     }
 
-    // Indicatori dinamici
-    if (areaData) {
-      // 1. NPC presenti (puntini colorati)
-      if (areaData.npcs && areaData.npcs.length > 0) {
-        for (var i = 0; i < areaData.npcs.length; i++) {
-          ctx.fillStyle = '#6EEBFF';
-          ctx.fillRect(x + n.x + 5, y + n.y - 6 + i * 3, 2, 2);
+    // NPC indicator (cyan)
+    if (areaData && areaData.npcs && areaData.npcs.length > 0) {
+      for (var i = 0; i < areaData.npcs.length; i++) {
+        ctx.fillStyle = '#6EEBFF';
+        ctx.fillRect(x + n.x + 5, y + n.y - 6 + i * 3, 2, 2);
+      }
+    }
+
+    // Indizi non raccolti (orange)
+    var areaObjs = window.areaObjects ? window.areaObjects[id] : null;
+    if (areaObjs && areaObjs.length > 0) {
+      var uncollected = 0;
+      for (var oi = 0; oi < areaObjs.length; oi++) {
+        if (areaObjs[oi].type !== 'gatto' && window.gameState.cluesFound.indexOf(areaObjs[oi].id) === -1) {
+          uncollected++;
         }
       }
-
-      // 2. Obiettivi / Quest (Stella o Punto Esclamativo)
-      var hasObjective = false;
-      if (window.StoryManager) {
-        var objectives = window.StoryManager.getCurrentObjectives();
-        // Semplificazione: se l'area e' menzionata negli obiettivi
-        for (var j = 0; j < objectives.length; j++) {
-          if (
-            !objectives[j].completed &&
-            objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0
-          ) {
-            hasObjective = true;
-            break;
-          }
-        }
+      if (uncollected > 0) {
+        ctx.fillStyle = '#FFAA00';
+        ctx.fillRect(x + n.x + 5, y + n.y + 2, uncollected * 2, 2);
       }
+    }
 
-      if (hasObjective) {
-        var flash = Math.sin(t * 10) > 0;
-        ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
-        ctx.font = 'bold 8px monospace';
-        ctx.fillText('!', x + n.x - 12, y + n.y + 4);
+    // Obiettivo attivo (!)
+    if (window.StoryManager) {
+      var objectives = window.StoryManager.getCurrentObjectives();
+      for (var j = 0; j < objectives.length; j++) {
+        if (!objectives[j].completed && objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0) {
+          var flash = Math.sin(t * 10) > 0;
+          ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
+          ctx.font = 'bold 8px monospace';
+          ctx.fillText('!', x + n.x - 12, y + n.y + 4);
+          break;
+        }
       }
     }
   }
 
-  // Nome area corrente in basso
+  // Legenda
+  var lx = x + 4, ly = y + h - 28;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillRect(lx - 2, ly - 2, w - 12, 26);
+  ctx.font = '6px "Courier New",monospace';
+  ctx.fillStyle = '#6EEBFF'; ctx.fillRect(lx, ly, 4, 4);
+  ctx.fillStyle = '#A0A8B0'; ctx.fillText('NPC', lx + 6, ly + 4);
+  ctx.fillStyle = '#FFAA00'; ctx.fillRect(lx + 22, ly, 4, 4);
+  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Indizi', lx + 28, ly + 4);
+  ctx.fillStyle = '#FF5555';
+  ctx.font = 'bold 8px monospace'; ctx.fillText('!', lx + 54, ly + 3);
+  ctx.fillStyle = '#A0A8B0'; ctx.font = '6px "Courier New",monospace'; ctx.fillText('Obiettivo', lx + 58, ly + 4);
+  ctx.fillStyle = '#D4A843'; ctx.fillRect(lx, ly + 10, 4, 4);
+  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Qui', lx + 6, ly + 14);
+  ctx.fillStyle = '#555'; ctx.fillRect(lx + 22, ly + 10, 4, 4);
+  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Altro', lx + 28, ly + 14);
+
+  // Nome area corrente
   ctx.fillStyle = window.PALETTE.creamPaper;
   ctx.font = '7px "Courier New",monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(getAreaShortName(current).toUpperCase(), x + w / 2, y + h - 8);
+  ctx.fillText(getAreaShortName(current).toUpperCase(), x + w / 2, y + h - 32);
   ctx.textAlign = 'start';
 }
 
