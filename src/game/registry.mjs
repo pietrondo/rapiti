@@ -22,10 +22,12 @@ const registryData = [
 ];
 
 export function openRegistryPuzzle() {
+  if (!document.getElementById('registry-overlay')) return;
   if (window.gameState.gamePhase !== 'playing') return;
   window.gameState.previousPhase = 'playing';
   window.gameState.gamePhase = 'registry';
   var pagesDiv = document.getElementById('registry-pages');
+  if (!pagesDiv) return;
   pagesDiv.innerHTML = '';
   // Shuffle pages
   var indices = [0, 1, 2, 3];
@@ -59,13 +61,18 @@ export function openRegistryPuzzle() {
     slots[s].classList.remove('filled');
     slots[s].removeAttribute('data-placed-year');
   }
-  document.getElementById('registry-confirm').disabled = true;
-  document.getElementById('registry-result').textContent = '';
-  document.getElementById('registry-overlay').classList.add('active');
+  var rConfirm = document.getElementById('registry-confirm');
+  if (rConfirm) rConfirm.disabled = true;
+  var rResult = document.getElementById('registry-result');
+  if (rResult) rResult.textContent = '';
+  var rOverlay = document.getElementById('registry-overlay');
+  if (rOverlay) rOverlay.classList.add('active');
 }
 
 export function closeRegistryPuzzle() {
-  document.getElementById('registry-overlay').classList.remove('active');
+  var rOverlay = document.getElementById('registry-overlay');
+  if (!rOverlay) return;
+  rOverlay.classList.remove('active');
   window.gameState.gamePhase = 'playing';
 }
 
@@ -141,7 +148,8 @@ export function updateRegistryConfirmButton() {
       break;
     }
   }
-  document.getElementById('registry-confirm').disabled = !allFilled;
+  var rConfirm = document.getElementById('registry-confirm');
+  if (rConfirm) rConfirm.disabled = !allFilled;
 }
 
 export function checkRegistry() {
@@ -155,13 +163,15 @@ export function checkRegistry() {
     }
   }
   var result = document.getElementById('registry-result');
+  if (!result) return;
   if (correct) {
     result.textContent = "✓ Registro ricostruito! C'è uno schema ciclico...";
     result.style.color = '#44cc44';
     window.gameState.puzzlesSolved.registry = true;
     window.updateNPCStates();
     window.playSFX?.('bell');
-    document.getElementById('registry-confirm').disabled = true;
+    var rConfirm2 = document.getElementById('registry-confirm');
+    if (rConfirm2) rConfirm2.disabled = true;
 
     // Notifica StoryManager
     if (typeof StoryManager !== 'undefined') {

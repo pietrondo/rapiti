@@ -1,15 +1,20 @@
 export function openRadioPuzzle() {
+  if (!document.getElementById('radio-overlay')) return;
   if (window.gameState.gamePhase !== 'playing') return;
   window.gameState.previousPhase = 'playing';
   window.gameState.gamePhase = 'radio';
   window.gameState.radioFrequency = 0;
   updateRadioKnob(0);
-  document.getElementById('radio-message').textContent = '';
-  document.getElementById('radio-overlay').classList.add('active');
+  var rmsgEl = document.getElementById('radio-message');
+  if (rmsgEl) rmsgEl.textContent = '';
+  var roverlay = document.getElementById('radio-overlay');
+  if (roverlay) roverlay.classList.add('active');
 }
 
 export function closeRadioPuzzle() {
-  document.getElementById('radio-overlay').classList.remove('active');
+  var roverlay = document.getElementById('radio-overlay');
+  if (!roverlay) return;
+  roverlay.classList.remove('active');
   window.gameState.gamePhase = 'playing';
 }
 
@@ -61,10 +66,12 @@ export function updateRadioKnob(pct) {
   if (!knob) return;
   knob.style.left = `${pct}%`;
   if (fill) fill.style.width = `${pct}%`;
-  document.getElementById('radio-value').textContent = (pct / 10).toFixed(1);
+  var rvalEl = document.getElementById('radio-value');
+  if (rvalEl) rvalEl.textContent = (pct / 10).toFixed(1);
 
   // Status: 0-69 static, 70-74 interference, 75+ clear
   var statusEl = document.getElementById('radio-status');
+  if (!statusEl) return;
   var target = window.gameState.radioTarget;
   var dist = Math.abs(pct - target);
 
@@ -82,9 +89,12 @@ export function updateRadioKnob(pct) {
         StoryManager.onPuzzleSolved('radio');
       }
 
-      document.getElementById('radio-message').textContent =
-        '"...non guardare... quando si ferma..."';
-      document.getElementById('radio-message').className = 'radio-message-found';
+      var rmsgEl2 = document.getElementById('radio-message');
+      if (rmsgEl2) {
+        rmsgEl2.textContent =
+          '"...non guardare... quando si ferma..."';
+        rmsgEl2.className = 'radio-message-found';
+      }
       // Aggiungi indizio audio al diario
       if (window.gameState.cluesFound.indexOf('radio_audio') === -1) {
         window.gameState.cluesFound.push('radio_audio');

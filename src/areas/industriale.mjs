@@ -88,7 +88,14 @@ export function drawIndustrialArea(ctx, t) {
     ctx.stroke();
   }
 
-  // Lampade industriali (nuovo renderer)
+  // Insegna STAZIONE RADIO
+  ctx.fillStyle = '#1A1C20';
+  ctx.fillRect(90, 35, 220, 16);
+  ctx.fillStyle = '#D4A843';
+  ctx.font = 'bold 8px "Courier New",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('STAZIONE RADIO MONTE FERRO', 200, 47);
+  ctx.textAlign = 'start';
   window.PF.lamp(ctx, 60, 110, t);
   window.PF.lamp(ctx, 340, 110, t);
 }

@@ -23,6 +23,7 @@ export function canOpenDeduction() {
 }
 
 export function openDeduction() {
+  if (!document.getElementById('deduction-overlay')) return;
   window.gameState.previousPhase = 'playing';
   window.gameState.gamePhase = 'deduction';
 
@@ -30,12 +31,15 @@ export function openDeduction() {
   renderHypothesisLog();
   resetDeductionSlots();
 
-  document.getElementById('deduction-overlay').classList.add('active');
+  var dOverlay = document.getElementById('deduction-overlay');
+  if (dOverlay) dOverlay.classList.add('active');
   console.log('[Deduction] Board opened');
 }
 
 export function closeDeduction() {
-  document.getElementById('deduction-overlay').classList.remove('active');
+  var dOverlay = document.getElementById('deduction-overlay');
+  if (!dOverlay) return;
+  dOverlay.classList.remove('active');
   window.gameState.gamePhase = 'playing';
 }
 
@@ -136,7 +140,8 @@ function resetDeductionSlots() {
     slot.classList.remove('filled');
     slot.removeAttribute('data-placed-clue');
   });
-  document.getElementById('deduction-confirm').disabled = true;
+  var dConfirm = document.getElementById('deduction-confirm');
+  if (dConfirm) dConfirm.disabled = true;
 }
 
 /** Setup Drag & Drop */
@@ -184,12 +189,13 @@ export function setupDragDrop() {
     });
   });
 
-  confirmBtn.addEventListener('click', checkDeduction);
+  if (confirmBtn) confirmBtn.addEventListener('click', checkDeduction);
 }
 
 function updateDeductionConfirmButton() {
   const slots = document.querySelectorAll('.deduction-slot.filled');
-  document.getElementById('deduction-confirm').disabled = slots.length < 2;
+  var dConfirm3 = document.getElementById('deduction-confirm');
+  if (dConfirm3) dConfirm3.disabled = slots.length < 2;
 }
 
 /** Verifica se la combinazione di indizi forma un'ipotesi */

@@ -10,16 +10,20 @@ const recorderState = {
 };
 
 export function openRecorderPuzzle() {
+  if (!document.getElementById('recorder-overlay')) return;
   if (window.gameState.gamePhase !== 'playing') return;
   window.gameState.previousPhase = 'playing';
   window.gameState.gamePhase = 'recorder';
   if (!document.getElementById('recorder-overlay')) buildRecorderOverlay();
   refreshRecorderUI();
-  document.getElementById('recorder-overlay').classList.add('active');
+  var rOverlay = document.getElementById('recorder-overlay');
+  if (rOverlay) rOverlay.classList.add('active');
 }
 
 export function closeRecorderPuzzle() {
-  document.getElementById('recorder-overlay').classList.remove('active');
+  var rOverlay = document.getElementById('recorder-overlay');
+  if (!rOverlay) return;
+  rOverlay.classList.remove('active');
   window.gameState.gamePhase = 'playing';
 }
 
@@ -65,12 +69,15 @@ export function buildRecorderOverlay() {
   document.body.appendChild(div);
 
   // Event listeners
-  document.getElementById('recorder-close').addEventListener('click', closeRecorderPuzzle);
-  document.getElementById('recorder-play').addEventListener('click', playRecorder);
+  var rClose = document.getElementById('recorder-close');
+  if (rClose) rClose.addEventListener('click', closeRecorderPuzzle);
+  var rPlay = document.getElementById('recorder-play');
+  if (rPlay) rPlay.addEventListener('click', playRecorder);
 
   // Cable buttons
   for (const color of ['r', 'b', 'g']) {
     var btn = document.getElementById(`rec-cable-${color}`);
+    if (!btn) continue;
     btn.addEventListener('click', () => {
       var ci = color === 'r' ? 0 : color === 'b' ? 1 : 2;
       recorderState.cables[ci] = !recorderState.cables[ci];
@@ -88,7 +95,8 @@ export function buildRecorderOverlay() {
   }
 
   // Power button
-  document.getElementById('rec-power').addEventListener('click', () => {
+  var rPower = document.getElementById('rec-power');
+  if (rPower) rPower.addEventListener('click', () => {
     recorderState.powered = !recorderState.powered;
     refreshRecorderUI();
   });
@@ -99,6 +107,7 @@ export function refreshRecorderUI() {
   // Cable buttons
   ['r', 'b', 'g'].forEach((color, ci) => {
     var btn = document.getElementById(`rec-cable-${color}`);
+    if (!btn) return;
     btn.style.border = rs.cables[ci] ? '3px solid #d4a843' : '3px solid transparent';
     btn.textContent = rs.cables[ci]
       ? color === 'r'
@@ -120,22 +129,31 @@ export function refreshRecorderUI() {
     btn.style.color = rs.bobin === bi ? '#1a1c20' : '#e8dcc8';
   });
   var bl = ['TEST A (prototipo)', 'TEST B (fase intermedia)', 'TEST C — 1978'];
-  document.getElementById('rec-bobin-label').textContent =
-    rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
-  document.getElementById('rec-bobin-label').style.color = rs.bobin >= 0 ? '#d4a843' : '#6b7b6b';
+  var rBobinLabel = document.getElementById('rec-bobin-label');
+  if (rBobinLabel) {
+    rBobinLabel.textContent =
+      rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
+    rBobinLabel.style.color = rs.bobin >= 0 ? '#d4a843' : '#6b7b6b';
+  }
 
   // Power
-  document.getElementById('rec-power').textContent = rs.powered ? '🟢' : '🔴';
-  document.getElementById('rec-power-label').textContent = rs.powered ? 'ON' : 'OFF';
-  document.getElementById('rec-power-label').style.color = rs.powered ? '#44cc44' : '#6b7b6b';
+  var rPowerBtn = document.getElementById('rec-power');
+  if (rPowerBtn) rPowerBtn.textContent = rs.powered ? '\uD83D\uDFE2' : '\uD83D\uDD34';
+  var rPowerLabel = document.getElementById('rec-power-label');
+  if (rPowerLabel) {
+    rPowerLabel.textContent = rs.powered ? 'ON' : 'OFF';
+    rPowerLabel.style.color = rs.powered ? '#44cc44' : '#6b7b6b';
+  }
 
   // Play button
   var allCables = rs.cables[0] && rs.cables[1] && rs.cables[2];
-  document.getElementById('recorder-play').disabled = !(allCables && rs.bobin >= 0 && rs.powered);
+  var rPlayBtn = document.getElementById('recorder-play');
+  if (rPlayBtn) rPlayBtn.disabled = !(allCables && rs.bobin >= 0 && rs.powered);
 }
 
 export function playRecorder() {
   var result = document.getElementById('recorder-result');
+  if (!result) return;
   var correct =
     recorderState.cables[0] &&
     recorderState.cables[1] &&
@@ -150,7 +168,8 @@ export function playRecorder() {
     result.textContent =
       '✓ Nastro: "Test fase tre... interferenza non prevista... risposta non classificabile... interrompere—" (disturbo)';
     result.style.color = '#44cc44';
-    document.getElementById('recorder-play').disabled = true;
+    var rPlayBtn = document.getElementById('recorder-play');
+    if (rPlayBtn) rPlayBtn.disabled = true;
 
     // Notifica StoryManager
     if (typeof StoryManager !== 'undefined') {
