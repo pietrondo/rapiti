@@ -44,6 +44,11 @@ export default {
   'area.industriale': 'Zona Industriale',
   'area.campo': 'Campo delle Luci',
   'area.polizia': 'Stazione Carabinieri',
+  'area.archivio': 'Archivio Comunale',
+  'area.cascina': 'Cascina dei Bellandi',
+  'area.cascina_interno': 'Stanza di Teresa',
+  'area.monte_ferro': 'Stazione Radio Monte Ferro',
+  'area.fienile': 'Fienile',
 
   // NPC Nomi
   'npc.ruggeri': 'Sindaco Ruggeri',

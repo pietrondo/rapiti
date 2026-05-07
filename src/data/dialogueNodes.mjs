@@ -83,6 +83,33 @@ var dialogueNodes = {
     text: 'Saggia decisione. Se vuole un caffè, vada da Osvaldo. Ma non torni qui a parlare di lettere segrete.',
   },
 
+  ruggeri_s2: {
+    text: "Maurizio, ha collegato tutti i punti... Non avrei mai creduto che un ispettore arrivasse così lontano. Il pannello delle deduzioni l'ha portata alla verità. Cosa intende fare con queste informazioni?",
+    choices: [
+      {
+        text: 'Fare rapporto alla Prefettura. È mio dovere.',
+        next: 'ruggeri_s2_rapporto',
+        effect: { subTrust: { ruggeri: 15 } },
+      },
+      {
+        text: 'Voglio capire come fermare il ciclo.',
+        next: 'ruggeri_s2_fermare',
+        effect: { addTrust: { ruggeri: 20 } },
+      },
+      { text: "Voi sapevate tutto fin dall'inizio.", next: 'ruggeri_s2_sapeva' },
+    ],
+  },
+  ruggeri_s2_rapporto: {
+    text: 'La Prefettura... sa già più di quanto immagini. Il suo rapporto finirà in un cassetto, come tutti gli altri dal 1861. Questa è la realtà, Ispettore.',
+  },
+  ruggeri_s2_fermare: {
+    text: "Fermarlo? Nessuno ci è mai riuscito. Ma forse... forse se troviamo il punto esatto dell'apertura, possiamo provare a invertire la frequenza. Ne parli con il Capitano Valli; lui ha i nastri del '61.",
+  },
+  ruggeri_s2_sapeva: {
+    text: "...Sì. E me ne pento ogni giorno. Ma era questo o il panico di massa. Ho scelto l'ordine. Forse ho scelto male. Le darò accesso all'archivio riservato.",
+    effect: { setFlag: 'archivio_riservato' },
+  },
+
   /* -- HYPOTHESIS BRANCH -- */
   ruggeri_s3_esperimento: {
     text: "Quindi ha collegato i punti... Monte Ferro e la lettera del '61. Sì, Maurizio. Non erano alieni. Era un progetto chiamato 'Occhio di Perseo'. Un radar a impulsi che... beh, ha avuto effetti collaterali sulla popolazione locale. Ma se lo dice in giro, non l'ha saputo da me.",
@@ -182,6 +209,45 @@ var dialogueNodes = {
   neri_s0_1861: {
     text: "Registrate, sì. Due persone: un uomo e una donna. Mai ritrovati. Ma guardi che quell'anno ci furono temporali violentissimi. Potrebbero essere annegati nel fiume.",
   },
+  neri_s0_luci: {
+    text: 'Luci? Io sono un uomo di scienza. Non credo ai dischi volanti. Ma... devo ammettere che certi documenti non hanno una spiegazione razionale.',
+  },
+
+  neri_s1: {
+    text: "Ha trovato il registro del 1861. Notevole. Ma sa, ci sono altri registri... quelli che il sindaco ha cercato di nascondere. Il '52, il '61, il '74. Ogni volta, due persone sparite. Ogni volta, le luci.",
+    choices: [
+      { text: 'Perché il sindaco li ha nascosti?', next: 'neri_s1_nascosti' },
+      { text: "Cosa c'entra l'esercito in tutto questo?", next: 'neri_s1_esercito' },
+      {
+        text: 'Mi mostri quei registri.',
+        next: 'neri_s1_registri',
+        effect: { giveClueHint: 'cronaca_parrocchiale' },
+      },
+    ],
+  },
+  neri_s1_nascosti: {
+    text: "Ordini dall'alto. La Prefettura non vuole che la gente sappia. Dicono che crea panico. Ma è peggio non sapere, secondo me.",
+  },
+  neri_s1_esercito: {
+    text: "L'esercito? Ufficialmente non c'entra nulla. Ma ho trovato un foglio con il timbro del Distretto Militare Nord. Progetto 'Sirius'. Non so cosa sia, ma il nome ricorre in tutti i documenti dal '61 in poi.",
+  },
+  neri_s1_registri: {
+    text: 'Ecco. Li ho tenuti da parte, nel caso qualcuno come lei venisse a cercarli. Li legga con attenzione. I pattern sono inequivocabili.',
+  },
+
+  neri_s2: {
+    text: 'Lei ha completato il pannello delle deduzioni... Incredibile. Finalmente qualcuno che vede il quadro completo. Ero convinto che il progetto militare fosse la causa... ma mi sbagliavo. Non è la causa: è la conseguenza. Le luci sono sempre esistite. Loro hanno solo provato a studiarle, e hanno peggiorato tutto.',
+    choices: [
+      { text: 'Come possiamo fermare il ciclo?', next: 'neri_s2_fermare' },
+      { text: 'Che fine hanno fatto Elena ed Enzo?', next: 'neri_s2_spariti' },
+    ],
+  },
+  neri_s2_fermare: {
+    text: "Non lo so. Ma ho calcolato che la prossima apertura sarà entro 72 ore. Il Campo delle Luci... è lì che si concentra l'energia. Deve andarci prima che sia troppo tardi.",
+  },
+  neri_s2_spariti: {
+    text: 'Non capisco la fisica dietro queste sparizioni. Forse non è fisica. Forse è qualcosa di completamente diverso. Ma Enzo... Enzo potrebbe essere ancora vivo. Da qualche parte.',
+  },
 
   /* ── OSVALDO IL BARISTA ── */
   osvaldo_s0: {
@@ -276,6 +342,25 @@ var dialogueNodes = {
     text: 'Cose che non si possono spiegare. Mia moglie, Lena... sparì nel 1952. Dissero che era scappata. Ma io so che non è vero. Era nel campo quella notte. Poi più niente. Come inghiottita dalla terra.',
   },
 
+  anselmo_s1: {
+    text: "*Anselmo aguzza le orecchie.* Ha sentito anche lei la radio del bar? 72 MHz... quella è la frequenza giusta. Lena parlava sempre di un ronzio a 72 MHz. Diceva che le faceva male alla testa. Poi una notte... non c'era più. Mi ascolti, forestiero: qualunque cosa stia succedendo, sta succedendo di nuovo. E questa volta è più forte.",
+    choices: [
+      {
+        text: 'Cosa posso fare per aiutarla, Anselmo?',
+        next: 'anselmo_s1_aiutare',
+        effect: { addTrust: { anselmo: 15 } },
+      },
+      { text: 'Sua moglie... ha mai trovato qualcosa di lei?', next: 'anselmo_s1_lena' },
+    ],
+  },
+  anselmo_s1_aiutare: {
+    text: "Vada a Monte Ferro. Lassù c'era la vecchia stazione radio. Se trova i nastri delle registrazioni... forse capirà cosa dicono. E forse io potrò finalmente sapere cos'è successo a Lena.",
+    effect: { setFlag: 'anselmo_remembering' },
+  },
+  anselmo_s1_lena: {
+    text: 'No. Solo questo ronzio nella testa. Ma ogni volta che le luci tornano, il ronzio torna con loro. È come se... la stessero ancora chiamando. E questa volta, forse risponderò.',
+  },
+
   anselmo_s2_lore: {
     text: "*Anselmo ti guarda fisso, abbassando la voce.* Lena non è l'unica, Maurizio. Le date non sono regolari, ma tornano sempre quando le luci si fanno vicine. Il Sindaco e quelli prima di lui hanno sempre coperto tutto. C'è un patto tra questo paese e... ciò che vive oltre le stelle.",
     choices: [
@@ -342,7 +427,68 @@ var dialogueNodes = {
     text: 'Tieni. Ma fai attenzione. La verità è un peso che non tutti riescono a sopportare.',
   },
 
-  /* ── NUOVI NODI ESPANSIONE ── */
+  /* ── NUOVI NODI ESPANSIONE ──
+
+  ── CAPITANO VALLI ── */
+  valli_s0: {
+    text: "Ispettore. Capitano Valli, Distretto Nord. Mi hanno detto che state indagando sulle luci. Perdita di tempo. Non c'è nulla di soprannaturale qui. Solo contadini superstiziosi e qualche riflesso atmosferico.",
+    choices: [
+      {
+        text: 'E il Progetto Sirius? Ne ha mai sentito parlare?',
+        next: 'valli_s0_sirius',
+        effect: { subTrust: { valli: 10 } },
+      },
+      { text: 'Avete mai registrato anomalie radar nella zona?', next: 'valli_s0_radar' },
+      {
+        text: 'Capisco. Terrò a mente il suo parere.',
+        next: 'valli_s0_capo',
+        effect: { addTrust: { valli: 5 } },
+      },
+    ],
+  },
+  valli_s0_sirius: {
+    text: 'Sirius? Quel nome non dovrebbe conoscerlo, Ispettore. Le suggerisco di lasciar perdere certe domande. Non tutto quel che accade a San Celeste è di sua competenza.',
+  },
+  valli_s0_radar: {
+    text: 'Anomalie? Mah... ogni tanto qualche eco strano sui 72 MHz. Ma sono interferenze elettromagnetiche, niente di più. Lo dica ai suoi superiori.',
+  },
+  valli_s0_capo: {
+    text: 'Saggia decisione. Se ha bisogno di supporto logistico, mi trovi alla stazione. Purché non si parli di... insomma, ha capito.',
+  },
+
+  valli_s1: {
+    text: "Quel frammento che avete trovato... non è materiale terrestre. L'ho fatto analizzare discretamente dai miei tecnici. La composizione è... anomala. Non corrisponde a nessuna lega conosciuta.",
+    choices: [
+      { text: "Allora ammette che c'è qualcosa di strano?", next: 'valli_s1_ammette' },
+      { text: 'Il Progetto Sirius era un tentativo di studiarli?', next: 'valli_s1_sirius' },
+      { text: 'Avete registrazioni delle comunicazioni?', next: 'valli_s1_registrazioni' },
+    ],
+  },
+  valli_s1_ammette: {
+    text: "Non sto ammettendo nulla di ufficiale. Ma... tra noi... qualcosa non quadra. E non mi piace. Nell'esercito ci hanno sempre detto che eravamo soli nell'universo.",
+  },
+  valli_s1_sirius: {
+    text: "Sirius era un progetto di comunicazione a lungo raggio. Pensavamo di aver captato... qualcosa. Ma dopo il '61, il Ministero chiuse tutto. Troppo pericoloso, dissero.",
+  },
+  valli_s1_registrazioni: {
+    text: 'Registrazioni? Forse qualcosa è rimasto nei nastri della vecchia stazione di Monte Ferro. Ma è zona militare dismessa. Non posso autorizzarvi ufficialmente ad andarci.',
+    effect: { giveClueHint: 'registro_monte_ferro' },
+  },
+
+  valli_s2: {
+    text: "Avete completato le deduzioni... Quindi sapete del segnale di risposta. Dannazione. Va bene, Ispettore. Vi devo la verità. Nel '61 non stavamo solo ascoltando. Stavamo trasmettendo. E qualcosa... ha risposto.",
+    choices: [
+      { text: 'Che genere di risposta?', next: 'valli_s2_risposta' },
+      { text: 'Perché avete coperto tutto per 17 anni?', next: 'valli_s2_coperto' },
+    ],
+  },
+  valli_s2_risposta: {
+    text: 'Coordinate. Sequenze numeriche. Poi... voci. Voci di persone che conoscevamo. Parlavano in una lingua che non esiste, ma le capivamo lo stesso. E dicevano di tornare.',
+  },
+  valli_s2_coperto: {
+    text: 'Paura. Puro terrore. Se la gente avesse saputo che stavamo comunicando con... qualunque cosa sia lassù... sarebbe stato il caos. Abbiamo scelto il silenzio. Ma ora... ora forse è il momento di parlare.',
+    effect: { setFlag: 'valli_confessione' },
+  },
 
   ruggeri_s5_complotto: {
     text: 'Siete arrivato a frugare nei registri comunali? Ispettore, vi consiglio di non scavare troppo a fondo. Certe omissioni sono state fatte per il bene del paese, per evitare il panico.',
@@ -430,6 +576,15 @@ var dialogueNodes = {
   },
   teresa_s2_ricordo: {
     text: 'Ra\u200Bccolse qualc\u200Bosa da terr\u200Ba. Un ogge\u200Btto. Luccicav\u200Ba. Poi la l\u200Buce... tutto bi\u200Banco. E il si\u200Blenzio. Un si\u200Blenzio che pe\u200Bsa.',
+  },
+
+  /* ── TERESA S2_MEMORY (triggered by story system) ── */
+  teresa_s2_memory: {
+    text: 'L\u200B\u200Be lu\u200Bci... l\u200Be lu\u200Bci t\u200Bornan\u200Bo sem\u200Bre. N\u200Bon s\u200Bono st\u200Belle. N\u200Bon s\u200Bono... n\u200Bon... Il pannello... avete capito? Enzo l\u2019aveva cap\u200Bito prim\u200Ba di me. Le ci\u200Bcl\u200Bi\u200Bche...',
+    choices: [
+      { text: 'Teresa, mi sente? Mi racconti di Elena.', next: 'teresa_s2_calma' },
+      { text: 'Il pannello delle deduzioni... cosa ha visto?', next: 'teresa_s2_ricordo' },
+    ],
   },
 
   /* ── TRUST-BASED VARIATIONS ── */

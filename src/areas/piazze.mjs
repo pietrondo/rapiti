@@ -196,6 +196,14 @@ const PiazzeArea = {
     { dir: 'up', xRange: [20, 80], to: 'chiesa', spawnX: 200, spawnY: 220 },
     {
       dir: 'up',
+      xRange: [100, 140],
+      to: 'archivio',
+      spawnX: 200,
+      spawnY: 210,
+      requiresInteract: true,
+    },
+    {
+      dir: 'up',
       xRange: [320, 350],
       to: 'bar_exterior',
       spawnX: 130,

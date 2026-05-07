@@ -119,6 +119,30 @@ const clues = [
     area: 'cimitero',
     desc: 'La raccomandata che Gino ha perso tra le lapidi.',
   },
+  {
+    id: 'scena_lanterna',
+    name: 'Lanterna rotta',
+    area: 'cascina',
+    desc: "Caduta a terra, vetro rotto. Qualcuno l'ha lasciata cadere di corsa.",
+  },
+  {
+    id: 'scena_impronte',
+    name: 'Impronte nel fango',
+    area: 'cascina',
+    desc: 'Impronte che girano in cerchio, poi tornano indietro.',
+  },
+  {
+    id: 'scena_segni',
+    name: 'Segni nel terreno',
+    area: 'cascina',
+    desc: 'Cerchi perfetti nel grano. Il centro è sprofondato.',
+  },
+  {
+    id: 'nastro_monte_ferro_1',
+    name: 'Nastro Audio "TEST A"',
+    area: 'fienile',
+    desc: 'Un vecchio nastro magnetico con etichetta "TEST A — 1961". Inizio della sequenza di registrazione.',
+  },
 ];
 
 /** Ipotesi — Combinazioni di indizi che sbloccano nuove deduzioni */
@@ -262,6 +286,40 @@ const _areaObjects = {
   ],
   municipio: [
     { id: 'registro_comunale', x: 300, y: 130, w: 20, h: 16, type: 'clue', drawHint: true },
+  ],
+  archivio: [
+    { id: 'verbale_carabinieri', x: 40, y: 100, w: 16, h: 12, type: 'clue', drawHint: true },
+    { id: 'cronaca_parrocchiale', x: 330, y: 70, w: 16, h: 12, type: 'clue', drawHint: true },
+  ],
+  cascina: [
+    { id: 'scena_lanterna', x: 220, y: 155, w: 14, h: 10, type: 'scene', drawHint: true },
+    {
+      id: 'scena_impronte',
+      x: 120,
+      y: 180,
+      w: 20,
+      h: 14,
+      type: 'scene',
+      drawHint: true,
+      requires: 'scena_lanterna',
+    },
+    {
+      id: 'scena_segni',
+      x: 310,
+      y: 170,
+      w: 18,
+      h: 14,
+      type: 'scene',
+      drawHint: true,
+      requires: 'scena_impronte',
+    },
+  ],
+  cascina_interno: [],
+  monte_ferro: [
+    { id: 'registro_monte_ferro', x: 280, y: 115, w: 18, h: 14, type: 'clue', drawHint: true },
+  ],
+  fienile: [
+    { id: 'nastro_monte_ferro_1', x: 100, y: 155, w: 12, h: 8, type: 'clue', drawHint: true },
   ],
 };
 

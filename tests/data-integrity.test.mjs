@@ -12,6 +12,11 @@ const areaModulePaths = [
   '../src/areas/residenziale.mjs',
   '../src/areas/industriale.mjs',
   '../src/areas/polizia.mjs',
+  '../src/areas/archivio.mjs',
+  '../src/areas/cascina.mjs',
+  '../src/areas/cascina_interno.mjs',
+  '../src/areas/monte_ferro.mjs',
+  '../src/areas/fienile.mjs',
 ];
 
 describe('data integrity', () => {
@@ -25,13 +30,18 @@ describe('data integrity', () => {
 
   it('registers every runtime area module, including the final field', () => {
     expect(window.areaManager.getIds().sort()).toEqual([
+      'archivio',
       'bar_exterior',
       'bar_interno',
       'campo',
+      'cascina',
+      'cascina_interno',
       'chiesa',
       'cimitero',
+      'fienile',
       'giardini',
       'industriale',
+      'monte_ferro',
       'municipio',
       'piazze',
       'polizia',
@@ -51,7 +61,7 @@ describe('data integrity', () => {
   });
 
   it('keeps areaObjects clue references valid', () => {
-    const specialTypes = new Set(['radio', 'recorder', 'gatto']);
+    const specialTypes = new Set(['radio', 'recorder', 'gatto', 'scene']);
     const missingClues = [];
 
     for (const [areaId, objects] of Object.entries(window.areaObjects)) {

@@ -131,6 +131,11 @@ registerGlobalArea('municipio', 'MunicipioArea');
 registerGlobalArea('residenziale', 'ResidenzialeArea');
 registerGlobalArea('industriale', 'IndustrialeArea');
 registerGlobalArea('polizia', 'PoliziaArea');
+registerGlobalArea('archivio', 'ArchivioArea');
+registerGlobalArea('cascina', 'CascinaArea');
+registerGlobalArea('cascina_interno', 'CascinaInternoArea');
+registerGlobalArea('monte_ferro', 'MonteFerroArea');
+registerGlobalArea('fienile', 'FienileArea');
 
 // Global exports
 if (typeof window !== 'undefined') {

@@ -44,6 +44,11 @@ export default {
   'area.industriale': 'Industrial Zone',
   'area.campo': 'Field of Lights',
   'area.polizia': 'Police Station',
+  'area.archivio': 'Town Archives',
+  'area.cascina': 'Bellandi Farmhouse',
+  'area.cascina_interno': "Teresa's Room",
+  'area.monte_ferro': 'Monte Ferro Radio Station',
+  'area.fienile': 'Barn',
 
   // NPC Names
   'npc.ruggeri': 'Mayor Ruggeri',

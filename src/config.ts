@@ -61,7 +61,7 @@ export const gameState: GameState = {
   previousPhase: null,
   player: { x: 195, y: 188, w: PLAYER_W, h: PLAYER_H, dir: 'down', frame: 0 },
   cluesFound: [],
-  npcStates: { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0, don_pietro: 0 },
+  npcStates: { ruggeri: 0, teresa: 0, neri: 0, valli: 0, anselmo: 0, don_pietro: 0, osvaldo: 0, gino: 0 },
   playerName: 'Detective Maurizio',
   playerColors: { body: '#8B7355', head: '#D4A84B', legs: '#3D3025', detail: '#2D3047' },
   musicEnabled: true,

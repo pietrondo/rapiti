@@ -119,6 +119,7 @@ const IndustrialeArea = {
       requiresInteract: true,
     },
     { dir: 'down', xRange: [170, 230], to: 'polizia', spawnX: 200, spawnY: 130 },
+    { dir: 'left', xRange: [0, 40], to: 'monte_ferro', spawnX: 200, spawnY: 200 },
   ],
 
   draw: (ctx) => {

@@ -162,6 +162,7 @@ const GiardiniArea = {
       spawnY: 170,
       requiresFlag: 'deduction_complete',
     },
+    { dir: 'up', xRange: [180, 220], to: 'cascina', spawnX: 200, spawnY: 200 },
   ],
 
   draw: (ctx) => {
