@@ -148,7 +148,7 @@ const CascinaInternoArea = {
     { x: 80, y: 85, w: 50, h: 30 }, // Cassapanca
     { x: 280, y: 85, w: 36, h: 20 }, // Sedia+comodino
   ],
-  npcs: [{ id: 'teresa', x: 200, spawnY: 160 }],
+  npcs: [{ id: 'teresa', x: 200, y: 160 }],
   exits: [{ dir: 'down', xRange: [175, 225], to: 'cascina', spawnX: 300, spawnY: 140 }],
 
   draw: (ctx) => {

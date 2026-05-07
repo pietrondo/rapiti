@@ -188,6 +188,16 @@ var dialogueNodes = {
       { text: 'Enzo aveva un diario?', next: 'teresa_s1_diario' },
     ],
   },
+  teresa_s1_chi: {
+    text: 'Non lo so. Ma chiunque sia stato, conosce i segni antichi. Mia nonna li chiamava "le firme degli angeli". Diceva che erano messaggi tra mondi diversi.',
+  },
+  teresa_s1_altro: {
+    text: 'Ho trovato un pezzo di metallo freddo, vicino ai segni. Non si scalda mai. Lo tenga. Forse lei capirà meglio di me.',
+  },
+  teresa_s1_diario: {
+    text: "Sì, Enzo scriveva tutto. Aveva paura di dimenticare. L'ho nascosto nei Giardini, dentro la cassetta degli attrezzi del vecchio custode. Vada a prenderlo.",
+    effect: { giveClueHint: 'diario_enzo' },
+  },
 
   /* ── ARCHIVISTA NERI ── */
   neri_s0: {
@@ -211,6 +221,9 @@ var dialogueNodes = {
   },
   neri_s0_luci: {
     text: 'Luci? Io sono un uomo di scienza. Non credo ai dischi volanti. Ma... devo ammettere che certi documenti non hanno una spiegazione razionale.',
+  },
+  neri_s0_militari: {
+    text: 'Documenti militari? Mah... ufficialmente no. Ma ho trovato un foglio con timbro del Distretto Nord. Progetto "Sirius". Non mi hanno mai detto cosa fosse. Ma è datato 17 luglio 1961, esattamente tre giorni prima della prima sparizione.',
   },
 
   neri_s1: {
@@ -340,6 +353,12 @@ var dialogueNodes = {
   },
   anselmo_s0_cose: {
     text: 'Cose che non si possono spiegare. Mia moglie, Lena... sparì nel 1952. Dissero che era scappata. Ma io so che non è vero. Era nel campo quella notte. Poi più niente. Come inghiottita dalla terra.',
+  },
+  anselmo_s0_luci: {
+    text: "Le luci... ah, sì. Le ho viste la prima volta nel '52. Sfere silenziose, grosse come un fienile. Mio nonno le chiamava 'le lanterne dei morti'. Diceva che portavano via le anime. Io non ci credevo. Poi Lena...",
+  },
+  anselmo_s0_piacere: {
+    text: "Piacere suo. Si sieda qui sulla panchina, c'è posto. Sa, da quando Lena non c'è più, non ho molte visite. I giovani dicono che sono matto. Ma lei non sembra uno che giudica.",
   },
 
   anselmo_s1: {
@@ -499,6 +518,9 @@ var dialogueNodes = {
   },
   ruggeri_s5_sirio: {
     text: 'Sirius... quel nome non dovrebbe essere sulla bocca di un civile. Se sapete questo, allora sapete che non posso aiutarvi oltre. Fate attenzione a dove camminate di notte.',
+  },
+  ruggeri_s0_pensa: {
+    text: 'Ci pensi, Ispettore. Non tutte le verità vanno raccontate. A volte il silenzio è la scelta più patriottica che un uomo possa fare.',
   },
 
   valli_s3_segnale: {

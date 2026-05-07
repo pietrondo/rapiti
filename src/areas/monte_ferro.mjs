@@ -165,7 +165,7 @@ const MonteFerroArea = {
     { x: 245, y: 20, w: 4, h: 70 }, // Palo antenna
   ],
   npcs: [],
-  exits: [{ dir: 'down', xRange: [180, 220], to: 'industriale', spawnX: 200, spawnY: 200 }],
+  exits: [{ dir: 'right', xRange: [200, 250], to: 'industriale', spawnX: 40, spawnY: 130 }],
 
   draw: (ctx) => {
     var t = Date.now() * 0.001;

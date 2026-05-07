@@ -177,13 +177,14 @@ const PiazzeArea = {
   name: 'Piazza del Paese',
   walkableTop: 125, // Portato a 125 per permettere di toccare le porte (prima era 140)
   colliders: [
-    { x: 125, y: 0, w: 150, h: 120 }, // Municipio (Ridotto h per accessibilità)
+    { x: 125, y: 0, w: 150, h: 120 }, // Municipio
     { x: 302, y: 0, w: 23, h: 160 }, // Bar SX
     { x: 349, y: 0, w: 51, h: 160 }, // Bar DX
     { x: 82, y: 0, w: 36, h: 160 }, // Bacheca
     { x: 240, y: 155, w: 42, h: 28 }, // Fontana
     { x: 0, y: 0, w: 100, h: 120 }, // Chiesa
   ],
+  npcs: [],
   exits: [
     {
       dir: 'up',
