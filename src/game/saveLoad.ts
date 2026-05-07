@@ -16,6 +16,7 @@ interface SaveMeta {
   area?: string;
   name?: string;
   playTime?: number;
+  completionPct?: number;
 }
 
 interface SaveSlotInfo {

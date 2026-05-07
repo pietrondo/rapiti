@@ -110,7 +110,14 @@ const IndustrialeArea = {
   ],
   npcs: [],
   exits: [
-    { dir: 'up', xRange: [180, 220], to: 'residenziale', spawnX: 200, spawnY: 210, requiresInteract: true },
+    {
+      dir: 'up',
+      xRange: [180, 220],
+      to: 'residenziale',
+      spawnX: 200,
+      spawnY: 210,
+      requiresInteract: true,
+    },
     { dir: 'down', xRange: [170, 230], to: 'polizia', spawnX: 200, spawnY: 130 },
   ],
 

@@ -3,11 +3,31 @@
    ══════════════════════════════════════════════════════════════ */
 
 const sceneElements = [
-  { id: 'scena_lanterna', name: 'Lanterna rotta', desc: "Caduta a terra, vetro rotto. Qualcuno l'ha lasciata cadere di corsa." },
-  { id: 'scena_impronte', name: 'Impronte nel fango', desc: 'Impronte che girano in cerchio, poi tornano indietro.' },
-  { id: 'scena_segni', name: 'Segni nel terreno', desc: 'Cerchi perfetti nel grano. Il centro è sprofondato.' },
-  { id: 'scena_pietra', name: 'Pietra bruciata', desc: 'Una pietra annerita, ancora tiepida. Odore di ozono.' },
-  { id: 'scena_stoffa', name: 'Brandello di stoffa', desc: 'Un pezzo di tessuto blu impigliato nel rovo vicino.' },
+  {
+    id: 'scena_lanterna',
+    name: 'Lanterna rotta',
+    desc: "Caduta a terra, vetro rotto. Qualcuno l'ha lasciata cadere di corsa.",
+  },
+  {
+    id: 'scena_impronte',
+    name: 'Impronte nel fango',
+    desc: 'Impronte che girano in cerchio, poi tornano indietro.',
+  },
+  {
+    id: 'scena_segni',
+    name: 'Segni nel terreno',
+    desc: 'Cerchi perfetti nel grano. Il centro è sprofondato.',
+  },
+  {
+    id: 'scena_pietra',
+    name: 'Pietra bruciata',
+    desc: 'Una pietra annerita, ancora tiepida. Odore di ozono.',
+  },
+  {
+    id: 'scena_stoffa',
+    name: 'Brandello di stoffa',
+    desc: 'Un pezzo di tessuto blu impigliato nel rovo vicino.',
+  },
 ];
 
 let sceneFound = [];

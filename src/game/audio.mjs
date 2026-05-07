@@ -5,7 +5,7 @@ var _masterVolume = 0.5;
 export function initAudio() {
   bgMusic = document.getElementById('bg-music');
   if (bgMusic) {
-     bgMusic.volume = _masterVolume * 0.5; // Music is generally quieter
+    bgMusic.volume = _masterVolume * 0.5; // Music is generally quieter
   }
   console.log('[Audio] Sistema inizializzato');
 }
@@ -21,7 +21,7 @@ export const audioManager = {
   setVolume(v) {
     _masterVolume = v;
     if (bgMusic) bgMusic.volume = v * 0.5;
-  }
+  },
 };
 
 /** Riproduce un effetto sonoro sintetico procedurale */
@@ -49,8 +49,10 @@ export function playSFX(type, options) {
     osc2.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.3);
     gain2.gain.setValueAtTime(0.15 * vol, audioCtx.currentTime);
     gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-    osc2.connect(gain2); gain2.connect(audioCtx.destination);
-    osc2.start(); osc2.stop(audioCtx.currentTime + 0.5);
+    osc2.connect(gain2);
+    gain2.connect(audioCtx.destination);
+    osc2.start();
+    osc2.stop(audioCtx.currentTime + 0.5);
   } else if (type === 'door_open') {
     var osc3 = audioCtx.createOscillator();
     var gain3 = audioCtx.createGain();
@@ -59,8 +61,10 @@ export function playSFX(type, options) {
     osc3.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.3);
     gain3.gain.setValueAtTime(0.12 * vol, audioCtx.currentTime);
     gain3.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-    osc3.connect(gain3); gain3.connect(audioCtx.destination);
-    osc3.start(); osc3.stop(audioCtx.currentTime + 0.4);
+    osc3.connect(gain3);
+    gain3.connect(audioCtx.destination);
+    osc3.start();
+    osc3.stop(audioCtx.currentTime + 0.4);
   } else if (type === 'door_close') {
     var osc4 = audioCtx.createOscillator();
     var gain4 = audioCtx.createGain();
@@ -69,8 +73,10 @@ export function playSFX(type, options) {
     osc4.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.25);
     gain4.gain.setValueAtTime(0.1 * vol, audioCtx.currentTime);
     gain4.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-    osc4.connect(gain4); gain4.connect(audioCtx.destination);
-    osc4.start(); osc4.stop(audioCtx.currentTime + 0.35);
+    osc4.connect(gain4);
+    gain4.connect(audioCtx.destination);
+    osc4.start();
+    osc4.stop(audioCtx.currentTime + 0.35);
   } else if (type === 'bell') {
     var oscB = audioCtx.createOscillator();
     var gainB = audioCtx.createGain();
@@ -80,8 +86,10 @@ export function playSFX(type, options) {
     oscB.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 1.5);
     gainB.gain.setValueAtTime(0.15 * vol, audioCtx.currentTime);
     gainB.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-    oscB.connect(gainB); gainB.connect(audioCtx.destination);
-    oscB.start(); oscB.stop(audioCtx.currentTime + 1.5);
+    oscB.connect(gainB);
+    gainB.connect(audioCtx.destination);
+    oscB.start();
+    oscB.stop(audioCtx.currentTime + 1.5);
   } else if (type === 'radio_static') {
     _playNoise(audioCtx, vol * 0.04, 0.3, 100, 800);
   } else if (type === 'radio_click') {
@@ -91,8 +99,10 @@ export function playSFX(type, options) {
     oscC.frequency.setValueAtTime(800, audioCtx.currentTime);
     gainC.gain.setValueAtTime(0.06 * vol, audioCtx.currentTime);
     gainC.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
-    oscC.connect(gainC); gainC.connect(audioCtx.destination);
-    oscC.start(); oscC.stop(audioCtx.currentTime + 0.03);
+    oscC.connect(gainC);
+    gainC.connect(audioCtx.destination);
+    oscC.start();
+    oscC.stop(audioCtx.currentTime + 0.03);
   } else if (type === 'recorder_click') {
     var oscR = audioCtx.createOscillator();
     var gainR = audioCtx.createGain();
@@ -100,8 +110,10 @@ export function playSFX(type, options) {
     oscR.frequency.setValueAtTime(600, audioCtx.currentTime);
     gainR.gain.setValueAtTime(0.05 * vol, audioCtx.currentTime);
     gainR.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
-    oscR.connect(gainR); gainR.connect(audioCtx.destination);
-    oscR.start(); oscR.stop(audioCtx.currentTime + 0.04);
+    oscR.connect(gainR);
+    gainR.connect(audioCtx.destination);
+    oscR.start();
+    oscR.stop(audioCtx.currentTime + 0.04);
   } else if (type === 'wind') {
     _playNoise(audioCtx, vol * 0.03, 1.0, 50, 300);
   } else if (type === 'thunder') {
@@ -113,8 +125,10 @@ export function playSFX(type, options) {
     oscT.frequency.exponentialRampToValueAtTime(15, audioCtx.currentTime + 0.5);
     gainT.gain.setValueAtTime(0.1 * vol, audioCtx.currentTime);
     gainT.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-    oscT.connect(gainT); gainT.connect(audioCtx.destination);
-    oscT.start(); oscT.stop(audioCtx.currentTime + 0.6);
+    oscT.connect(gainT);
+    gainT.connect(audioCtx.destination);
+    oscT.start();
+    oscT.stop(audioCtx.currentTime + 0.6);
   }
 }
 

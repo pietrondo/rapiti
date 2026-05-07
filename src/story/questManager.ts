@@ -96,7 +96,8 @@ export class QuestManager {
    * Complete a quest
    * @param {string} questId - Quest to complete
    */
-  completeQuest(questId: string): void {
+  completeQuest(questId: string): boolean {
+    if (!this.activeQuests[questId]) return false;
     delete this.activeQuests[questId];
     this.completedQuests.push(questId);
 
@@ -112,6 +113,7 @@ export class QuestManager {
     }
 
     console.log('[QuestManager] Quest completed:', questId);
+    return true;
   }
 
   /**
@@ -264,7 +266,15 @@ export class QuestManager {
   deserialize(data: SerializedQuests): boolean {
     if (!data) return false;
 
-    this.activeQuests = data.activeQuests || {};
+    this.activeQuests = {};
+    if (data.activeQuests) {
+      for (const id in data.activeQuests) {
+        this.activeQuests[id] = {
+          id,
+          ...data.activeQuests[id],
+        };
+      }
+    }
     this.completedQuests = data.completedQuests || [];
 
     return true;

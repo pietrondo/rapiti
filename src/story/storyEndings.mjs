@@ -25,7 +25,7 @@ const storyEndingConditions = {
     id: 'military',
     title: 'Dossier "Progetto SIRIO"',
     description:
-      "Hai dimostrato che le luci sono esperimenti radar illegali. I militari vengono indagati, ma le sparizioni restano senza una risposta ufficiale.",
+      'Hai dimostrato che le luci sono esperimenti radar illegali. I militari vengono indagati, ma le sparizioni restano senza una risposta ufficiale.',
     priority: 50,
     conditions: {
       hasHypothesis: 'esperimento_militare',
@@ -88,7 +88,7 @@ const storyEndingConditions = {
     id: 'psychological',
     title: 'Nebbia Padana',
     description:
-      "Non hai raccolto abbastanza prove. La Prefettura ti richiama a Parma. Le luci di San Celeste restano solo una leggenda locale.",
+      'Non hai raccolto abbastanza prove. La Prefettura ti richiama a Parma. Le luci di San Celeste restano solo una leggenda locale.',
     priority: 0,
     conditions: {},
   },

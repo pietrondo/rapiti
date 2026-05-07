@@ -8,7 +8,7 @@
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.drawVignette */
 
 export function drawChurchArea(ctx, t) {
-  var PAL = window.PALETTE;
+  var _PAL = window.PALETTE;
 
   // Sfondo interno scuro
   ctx.fillStyle = '#0E1016';
@@ -33,19 +33,22 @@ export function drawChurchArea(ctx, t) {
     ctx.fillRect(vx, vy, vw, vh);
     ctx.fillStyle = `rgba(${hue},${glow * 0.6})`;
     ctx.beginPath();
-    ctx.arc(vx + vw/2, vy + 8, 8, 0, Math.PI, true);
+    ctx.arc(vx + vw / 2, vy + 8, 8, 0, Math.PI, true);
     ctx.fill();
     ctx.fillStyle = `rgba(${hue + 30},${glow * 0.4})`;
     ctx.fillRect(vx + 5, vy + 18, vw - 10, vh - 22);
     ctx.strokeStyle = '#2A2D35';
     ctx.lineWidth = 2;
     ctx.strokeRect(vx, vy, vw, vh);
-    ctx.beginPath(); ctx.moveTo(vx + vw/2, vy); ctx.lineTo(vx + vw/2, vy + vh); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(vx + vw / 2, vy);
+    ctx.lineTo(vx + vw / 2, vy + vh);
+    ctx.stroke();
   }
-  drawVetrata(30, 15, 35, 55, 200, glow1);       // Blu
-  drawVetrata(95, 15, 35, 55, 180, glow2);       // Ciano
-  drawVetrata(335, 15, 35, 55, 220, glow2);       // Viola
-  drawVetrata(270, 15, 35, 55, 200, glow1);       // Blu
+  drawVetrata(30, 15, 35, 55, 200, glow1); // Blu
+  drawVetrata(95, 15, 35, 55, 180, glow2); // Ciano
+  drawVetrata(335, 15, 35, 55, 220, glow2); // Viola
+  drawVetrata(270, 15, 35, 55, 200, glow1); // Blu
 
   // Rosone centrale (sopra l'altare)
   ctx.fillStyle = `rgba(212,168,67,${0.35 + Math.sin(t * 2) * 0.1})`;
@@ -53,11 +56,12 @@ export function drawChurchArea(ctx, t) {
   ctx.arc(200, 25, 20, 0, Math.PI * 2);
   ctx.fill();
   ctx.strokeStyle = '#1A1C20';
-  ctx.lineWidth = 2; ctx.stroke();
+  ctx.lineWidth = 2;
+  ctx.stroke();
   for (var r = 0; r < 8; r++) {
     ctx.beginPath();
     ctx.moveTo(200, 25);
-    ctx.lineTo(200 + Math.cos(r * Math.PI / 4) * 20, 25 + Math.sin(r * Math.PI / 4) * 20);
+    ctx.lineTo(200 + Math.cos((r * Math.PI) / 4) * 20, 25 + Math.sin((r * Math.PI) / 4) * 20);
     ctx.stroke();
   }
 
@@ -77,9 +81,13 @@ export function drawChurchArea(ctx, t) {
   ctx.fillRect(173, 38, 3, 10);
   ctx.fillRect(224, 38, 3, 10);
   ctx.fillStyle = `rgba(255,200,100,${flicker1})`;
-  ctx.beginPath(); ctx.arc(174, 36, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(174, 36, 3, 0, Math.PI * 2);
+  ctx.fill();
   ctx.fillStyle = `rgba(255,200,100,${flicker2})`;
-  ctx.beginPath(); ctx.arc(225, 36, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath();
+  ctx.arc(225, 36, 3, 0, Math.PI * 2);
+  ctx.fill();
   // Tovaglia altare
   ctx.fillStyle = '#E8DCC8';
   ctx.fillRect(162, 50, 76, 8);

@@ -94,7 +94,7 @@ export class GameplaySync {
     const f = Math.floor(sm.animState.playerFrame || 0);
     s.texture = this.parent.playerTextures[(dir * 4) + (f % 4)];
     
-    if (p.discoveryJump > 0) {
+    if (p.discoveryJump != null && p.discoveryJump > 0) {
       const pr = p.discoveryJump / 20;
       s.scale.y = 1 + Math.sin(pr * Math.PI) * 0.3; s.scale.x = 1 / s.scale.y;
     } else s.scale.set(1);

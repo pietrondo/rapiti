@@ -96,8 +96,8 @@ function render() {
   for (let y = 0; y < CANVAS_H; y += 20) { c2d.beginPath(); c2d.moveTo(0, y); c2d.lineTo(CANVAS_W, y); c2d.stroke(); }
 
   // Area preview
-  if (typeof area.draw === 'function') {
-    try { area.draw(c2d); } catch (e) { c2d.fillStyle = '#333'; c2d.fillRect(0, 0, CANVAS_W, CANVAS_H); }
+  if (typeof (area as any).draw === 'function') {
+    try { (area as any).draw(c2d); } catch (e) { c2d.fillStyle = '#333'; c2d.fillRect(0, 0, CANVAS_W, CANVAS_H); }
   }
 
   // Colliders (red)

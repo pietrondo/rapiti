@@ -55,20 +55,30 @@ export function renderAreaExitMarkers(ctx, area) {
 
     // Barra colorata al bordo
     if (ex.dir === 'up') {
-      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
+      ctx.fillStyle = ex.requiresInteract
+        ? `rgba(255,200,100,${alpha})`
+        : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(ex.xRange[0], area.walkableTop - 2, ex.xRange[1] - ex.xRange[0], 8);
       y = area.walkableTop + 62;
     } else if (ex.dir === 'down') {
-      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
+      ctx.fillStyle = ex.requiresInteract
+        ? `rgba(255,200,100,${alpha})`
+        : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(ex.xRange[0], window.CANVAS_H - 10, ex.xRange[1] - ex.xRange[0], 10);
       y = window.CANVAS_H - 18;
     } else if (ex.dir === 'left') {
-      x = 36; y = mid;
-      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
+      x = 36;
+      y = mid;
+      ctx.fillStyle = ex.requiresInteract
+        ? `rgba(255,200,100,${alpha})`
+        : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(0, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     } else {
-      x = window.CANVAS_W - 36; y = mid;
-      ctx.fillStyle = ex.requiresInteract ? `rgba(255,200,100,${alpha})` : `rgba(212,168,67,${alpha})`;
+      x = window.CANVAS_W - 36;
+      y = mid;
+      ctx.fillStyle = ex.requiresInteract
+        ? `rgba(255,200,100,${alpha})`
+        : `rgba(212,168,67,${alpha})`;
       ctx.fillRect(window.CANVAS_W - 10, ex.xRange[0], 10, ex.xRange[1] - ex.xRange[0]);
     }
 
@@ -176,7 +186,7 @@ export function renderMiniMap(ctx) {
     }
 
     // NPC indicator (cyan)
-    if (areaData && areaData.npcs && areaData.npcs.length > 0) {
+    if (areaData?.npcs && areaData.npcs.length > 0) {
       for (var i = 0; i < areaData.npcs.length; i++) {
         ctx.fillStyle = '#6EEBFF';
         ctx.fillRect(x + n.x + 5, y + n.y - 6 + i * 3, 2, 2);
@@ -188,7 +198,10 @@ export function renderMiniMap(ctx) {
     if (areaObjs && areaObjs.length > 0) {
       var uncollected = 0;
       for (var oi = 0; oi < areaObjs.length; oi++) {
-        if (areaObjs[oi].type !== 'gatto' && window.gameState.cluesFound.indexOf(areaObjs[oi].id) === -1) {
+        if (
+          areaObjs[oi].type !== 'gatto' &&
+          window.gameState.cluesFound.indexOf(areaObjs[oi].id) === -1
+        ) {
           uncollected++;
         }
       }
@@ -202,7 +215,10 @@ export function renderMiniMap(ctx) {
     if (window.StoryManager) {
       var objectives = window.StoryManager.getCurrentObjectives();
       for (var j = 0; j < objectives.length; j++) {
-        if (!objectives[j].completed && objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0) {
+        if (
+          !objectives[j].completed &&
+          objectives[j].description.toLowerCase().indexOf(getAreaShortName(id).toLowerCase()) >= 0
+        ) {
           var flash = Math.sin(t * 10) > 0;
           ctx.fillStyle = flash ? '#FF5555' : '#AA0000';
           ctx.font = 'bold 8px monospace';
@@ -214,21 +230,33 @@ export function renderMiniMap(ctx) {
   }
 
   // Legenda
-  var lx = x + 4, ly = y + h - 28;
+  var lx = x + 4,
+    ly = y + h - 28;
   ctx.fillStyle = 'rgba(0,0,0,0.5)';
   ctx.fillRect(lx - 2, ly - 2, w - 12, 26);
   ctx.font = '6px "Courier New",monospace';
-  ctx.fillStyle = '#6EEBFF'; ctx.fillRect(lx, ly, 4, 4);
-  ctx.fillStyle = '#A0A8B0'; ctx.fillText('NPC', lx + 6, ly + 4);
-  ctx.fillStyle = '#FFAA00'; ctx.fillRect(lx + 22, ly, 4, 4);
-  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Indizi', lx + 28, ly + 4);
+  ctx.fillStyle = '#6EEBFF';
+  ctx.fillRect(lx, ly, 4, 4);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillText('NPC', lx + 6, ly + 4);
+  ctx.fillStyle = '#FFAA00';
+  ctx.fillRect(lx + 22, ly, 4, 4);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillText('Indizi', lx + 28, ly + 4);
   ctx.fillStyle = '#FF5555';
-  ctx.font = 'bold 8px monospace'; ctx.fillText('!', lx + 54, ly + 3);
-  ctx.fillStyle = '#A0A8B0'; ctx.font = '6px "Courier New",monospace'; ctx.fillText('Obiettivo', lx + 58, ly + 4);
-  ctx.fillStyle = '#D4A843'; ctx.fillRect(lx, ly + 10, 4, 4);
-  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Qui', lx + 6, ly + 14);
-  ctx.fillStyle = '#555'; ctx.fillRect(lx + 22, ly + 10, 4, 4);
-  ctx.fillStyle = '#A0A8B0'; ctx.fillText('Altro', lx + 28, ly + 14);
+  ctx.font = 'bold 8px monospace';
+  ctx.fillText('!', lx + 54, ly + 3);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.font = '6px "Courier New",monospace';
+  ctx.fillText('Obiettivo', lx + 58, ly + 4);
+  ctx.fillStyle = '#D4A843';
+  ctx.fillRect(lx, ly + 10, 4, 4);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillText('Qui', lx + 6, ly + 14);
+  ctx.fillStyle = '#555';
+  ctx.fillRect(lx + 22, ly + 10, 4, 4);
+  ctx.fillStyle = '#A0A8B0';
+  ctx.fillText('Altro', lx + 28, ly + 14);
 
   // Nome area corrente
   ctx.fillStyle = window.PALETTE.creamPaper;

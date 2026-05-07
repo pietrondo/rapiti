@@ -12,7 +12,8 @@
     "lint:fix": "biome check --write src/",
     "format": "biome format --write src/",
     "check": "biome check --write src/",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.13",

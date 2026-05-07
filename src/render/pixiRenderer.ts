@@ -292,18 +292,18 @@ class PixiRenderer {
     }
 
     if (sm?.hasFlag('near_lights')) {
-       if (this.world.filters.length === 1) {
-          this.world.filters.push(new PIXI.ColorMatrixFilter());
+       if (this.world.filters && this.world.filters.length === 1) {
+          this.world.filters = [...this.world.filters, new PIXI.ColorMatrixFilter()];
        }
-       const f = this.world.filters[1] as PIXI.ColorMatrixFilter;
-       f.hue(Math.sin(Date.now() * 0.005) * 45, true);
+       const f = this.world.filters?.[1] as PIXI.ColorMatrixFilter;
+       if (f) f.hue(Math.sin(Date.now() * 0.005) * 45, true);
        
        if (Math.random() > 0.9) {
           this.world.x = (Math.random() - 0.5) * 6;
           this.world.y = (Math.random() - 0.5) * 6;
        } else { this.world.x = 0; this.world.y = 0; }
     } else {
-       if (this.world.filters.length > 1) this.world.filters.pop();
+       if (this.world.filters && this.world.filters.length > 1) this.world.filters = [this.world.filters[0]];
        this.world.x = 0; this.world.y = 0;
     }
     

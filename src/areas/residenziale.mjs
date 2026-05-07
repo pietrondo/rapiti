@@ -112,7 +112,8 @@ export function drawResidentialArea(ctx, t) {
   ctx.fillRect(252, 172, 12, 8);
   ctx.fillRect(290, 172, 12, 8);
   ctx.fillStyle = '#89CFF0';
-  ctx.fillRect(253, 154, 16, 14); ctx.fillRect(285, 154, 16, 14);
+  ctx.fillRect(253, 154, 16, 14);
+  ctx.fillRect(285, 154, 16, 14);
   // Fanali
   ctx.fillStyle = '#FFE66D';
   ctx.fillRect(304, 156, 3, 3);
@@ -127,9 +128,13 @@ export function drawResidentialArea(ctx, t) {
   ctx.fillStyle = '#444';
   ctx.fillRect(78, 160, 24, 2);
   ctx.beginPath();
-  ctx.arc(80, 162, 6, 0, Math.PI * 2); ctx.strokeStyle = '#555'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.arc(80, 162, 6, 0, Math.PI * 2);
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 1;
+  ctx.stroke();
   ctx.beginPath();
-  ctx.arc(100, 162, 6, 0, Math.PI * 2); ctx.stroke();
+  ctx.arc(100, 162, 6, 0, Math.PI * 2);
+  ctx.stroke();
 
   // Lampioni
   window.PF.lamp(ctx, 35, 140, t);

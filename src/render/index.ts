@@ -9,7 +9,6 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import type { GameState } from '../types.js';
 import { CANVAS_H, CANVAS_W, gameState } from '../config.ts';
 
 // Side-effect imports to ensure window globals are initialized
@@ -231,7 +230,7 @@ export function render(ctx?: CanvasRenderingContext2D): void {
 
 // Global exports
 if (typeof window !== 'undefined') {
-  window.RenderManager = RenderManager;
+  (window as any).RenderManager = RenderManager;
   window.renderManager = renderManager;
   window.RenderModule = { render: (ctx: CanvasRenderingContext2D) => renderManager.render(ctx) };
   (window as any).render = render;

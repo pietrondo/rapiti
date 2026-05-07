@@ -26,12 +26,17 @@ const storyQuests = {
         id: 'hear_story',
         description: 'Riascolta Anselmo dopo aver risolto la radio',
         condition: { talkedTo: 'anselmo', hasFlag: 'anselmo_remembering' },
-        reward: { giveClueHint: 'cronaca_parrocchiale', setFlag: 'anselmo_quest_complete', addTrust: { anselmo: 20 } },
+        reward: {
+          giveClueHint: 'cronaca_parrocchiale',
+          setFlag: 'anselmo_quest_complete',
+          addTrust: { anselmo: 20 },
+        },
       },
     ],
     onComplete: {
       xp: 50,
-      message: 'Hai aiutato Anselmo a ricordare. Ti ha suggerito di cercare tra le cronache parrocchiali.',
+      message:
+        'Hai aiutato Anselmo a ricordare. Ti ha suggerito di cercare tra le cronache parrocchiali.',
     },
   },
 
@@ -58,7 +63,11 @@ const storyQuests = {
         id: 'solve_scene',
         description: 'Risolvi il puzzle della scena',
         condition: { puzzleSolved: 'scene' },
-        reward: { giveClue: 'diario_enzo', setFlag: 'cascina_quest_complete', addTrust: { teresa: 25 } },
+        reward: {
+          giveClue: 'diario_enzo',
+          setFlag: 'cascina_quest_complete',
+          addTrust: { teresa: 25 },
+        },
       },
     ],
     onComplete: {
@@ -84,12 +93,18 @@ const storyQuests = {
         id: 'solve_registry',
         description: "Ricostruisci l'ordine cronologico",
         condition: { puzzleSolved: 'registry' },
-        reward: { giveClue: 'lettera_censurata', setFlag: 'registry_solved', updateNPCState: { neri: 1 }, addTrust: { neri: 15 } },
+        reward: {
+          giveClue: 'lettera_censurata',
+          setFlag: 'registry_solved',
+          updateNPCState: { neri: 1 },
+          addTrust: { neri: 15 },
+        },
       },
     ],
     onComplete: {
       xp: 50,
-      message: 'Il pattern è chiaro. Neri ti ha consegnato una lettera militare che teneva nascosta.',
+      message:
+        'Il pattern è chiaro. Neri ti ha consegnato una lettera militare che teneva nascosta.',
     },
   },
 
@@ -135,13 +150,16 @@ const storyQuests = {
         id: 'deliver_menta',
         description: 'Consegna la menta a Osvaldo',
         condition: { talkedTo: 'osvaldo', hasFlag: 'menta_collected' },
-        reward: { giveClueHint: 'radio_audio', setFlag: 'osvaldo_quest_complete', addTrust: { osvaldo: 20 } },
+        reward: {
+          giveClueHint: 'radio_audio',
+          setFlag: 'osvaldo_quest_complete',
+          addTrust: { osvaldo: 20 },
+        },
       },
     ],
     onComplete: {
       xp: 40,
-      message:
-        'Osvaldo è felice. Ti ha svelato che la radio del bar intercetta strane frequenze.',
+      message: 'Osvaldo è felice. Ti ha svelato che la radio del bar intercetta strane frequenze.',
     },
   },
 
@@ -162,7 +180,11 @@ const storyQuests = {
         id: 'deliver_letter',
         description: 'Riporta la lettera a Gino',
         condition: { talkedTo: 'gino', hasFlag: 'letter_found' },
-        reward: { giveClueHint: 'registro_comunale', setFlag: 'gino_quest_complete', addTrust: { gino: 15 } },
+        reward: {
+          giveClueHint: 'registro_comunale',
+          setFlag: 'gino_quest_complete',
+          addTrust: { gino: 15 },
+        },
       },
     ],
     onComplete: {

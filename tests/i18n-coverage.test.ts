@@ -10,8 +10,11 @@
  */
 
 import { describe, expect, it } from '@jest/globals';
-import itDict from '../src/i18n/locales/it.mjs';
-import enDict from '../src/i18n/locales/en.mjs';
+import itDictRaw from '../src/i18n/locales/it.mjs';
+import enDictRaw from '../src/i18n/locales/en.mjs';
+
+const itDict: Record<string, string> = itDictRaw as Record<string, string>;
+const enDict: Record<string, string> = enDictRaw as Record<string, string>;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // EXPECTED DATA SETS

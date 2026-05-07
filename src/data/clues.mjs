@@ -151,7 +151,7 @@ const hypotheses = [
     id: 'complotto_comunale',
     name: 'Infiltrazione Istituzionale',
     clues: ['registro_comunale', 'lettera_censurata'],
-    desc: 'Il Comune ha attivamente rimosso dati sulle sparizioni per coprire l\'Operazione Sirius.',
+    desc: "Il Comune ha attivamente rimosso dati sulle sparizioni per coprire l'Operazione Sirius.",
   },
   {
     id: 'segnale_risposta',
@@ -238,21 +238,30 @@ const _areaObjects = {
   ],
   bar_interno: [
     { id: 'radio_bar', x: 60, y: 100, w: 34, h: 25, type: 'radio', drawHint: true },
-    { id: 'giornale_1952', x: 220, y: 110, w: 16, h: 12, type: 'clue', drawHint: true }
+    { id: 'giornale_1952', x: 220, y: 110, w: 16, h: 12, type: 'clue', drawHint: true },
   ],
   bar_exterior: [],
   residenziale: [
-    { id: 'appunti_enzo_2', x: 250, y: 180, w: 14, h: 10, type: 'clue', drawHint: true }
+    { id: 'appunti_enzo_2', x: 250, y: 180, w: 14, h: 10, type: 'clue', drawHint: true },
   ],
   industriale: [
     { id: 'recorder', x: 100, y: 150, w: 28, h: 16, type: 'recorder', drawHint: true },
-    { id: 'nastro_monte_ferro_2', x: 220, y: 160, w: 12, h: 8, type: 'clue', drawHint: true, requires: 'registro_monte_ferro' }
+    {
+      id: 'nastro_monte_ferro_2',
+      x: 220,
+      y: 160,
+      w: 12,
+      h: 8,
+      type: 'clue',
+      drawHint: true,
+      requires: 'registro_monte_ferro',
+    },
   ],
   polizia: [
-    { id: 'verbale_carabinieri', x: 80, y: 110, w: 16, h: 20, type: 'clue', drawHint: true }
+    { id: 'verbale_carabinieri', x: 80, y: 110, w: 16, h: 20, type: 'clue', drawHint: true },
   ],
   municipio: [
-    { id: 'registro_comunale', x: 300, y: 130, w: 20, h: 16, type: 'clue', drawHint: true }
+    { id: 'registro_comunale', x: 300, y: 130, w: 20, h: 16, type: 'clue', drawHint: true },
   ],
 };
 

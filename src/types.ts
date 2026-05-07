@@ -335,6 +335,7 @@ export interface SaveData {
   story: StorySaveData;
   stats: GameStats;
   playTime: number;
+  completionPct?: number;
 }
 
 /** Story serialization data */

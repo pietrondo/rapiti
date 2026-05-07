@@ -50,7 +50,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
       '@effects': path.resolve(__dirname, 'src/effects'),
       '@areas': path.resolve(__dirname, 'src/areas'),
-      '@sprites': path.resolve(__dirname, 'src/sprites'),
+
       '@render': path.resolve(__dirname, 'src/render'),
       '@engine': path.resolve(__dirname, 'src/engine'),
       '@story': path.resolve(__dirname, 'src/story'),

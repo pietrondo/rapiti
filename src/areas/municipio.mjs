@@ -8,7 +8,7 @@
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.drawWallTexture, window.drawVignette */
 
 export function drawMunicipioInternoArea(ctx, t) {
-  var PAL = window.PALETTE;
+  var _PAL = window.PALETTE;
 
   // Sfondo elegante
   ctx.fillStyle = '#1A1410';
@@ -32,15 +32,27 @@ export function drawMunicipioInternoArea(ctx, t) {
   ctx.beginPath();
   ctx.arc(312, 30, 8, 0, Math.PI * 2);
   ctx.fill();
-  ctx.strokeStyle = '#4A3428'; ctx.lineWidth = 2;
+  ctx.strokeStyle = '#4A3428';
+  ctx.lineWidth = 2;
   ctx.strokeRect(280, 15, 50, 60);
-  ctx.beginPath(); ctx.moveTo(305, 15); ctx.lineTo(305, 75); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(305, 15);
+  ctx.lineTo(305, 75);
+  ctx.stroke();
   // Tende
   ctx.fillStyle = '#8B0000';
   ctx.beginPath();
-  ctx.moveTo(278, 12); ctx.lineTo(290, 12); ctx.lineTo(295, 55); ctx.lineTo(280, 55); ctx.fill();
+  ctx.moveTo(278, 12);
+  ctx.lineTo(290, 12);
+  ctx.lineTo(295, 55);
+  ctx.lineTo(280, 55);
+  ctx.fill();
   ctx.beginPath();
-  ctx.moveTo(330, 12); ctx.lineTo(318, 12); ctx.lineTo(313, 55); ctx.lineTo(328, 55); ctx.fill();
+  ctx.moveTo(330, 12);
+  ctx.lineTo(318, 12);
+  ctx.lineTo(313, 55);
+  ctx.lineTo(328, 55);
+  ctx.fill();
   // Bastone tenda
   ctx.fillStyle = '#D4A843';
   ctx.fillRect(276, 11, 58, 2);
@@ -53,7 +65,7 @@ export function drawMunicipioInternoArea(ctx, t) {
     ctx.fillRect(12, 20 + r * 22, 66, 3);
     var books = 4 + (r % 3);
     for (var b = 0; b < books; b++) {
-      var bh = 14 + (r * 3) % 6;
+      var bh = 14 + ((r * 3) % 6);
       var bc = ['#6B4E3D', '#8B7355', '#5C7A4B', '#A0A8B0', '#4A5568', '#C4956A'][r % 6];
       ctx.fillStyle = bc;
       ctx.fillRect(14 + b * 14, 25 + r * 22 - bh, 10, bh);
@@ -94,9 +106,12 @@ export function drawMunicipioInternoArea(ctx, t) {
   // Bandiera Italiana
   ctx.fillStyle = '#555';
   ctx.fillRect(92, 8, 2, 90);
-  ctx.fillStyle = '#00853E'; ctx.fillRect(94, 10, 12, 22);
-  ctx.fillStyle = '#FFF'; ctx.fillRect(106, 10, 12, 22);
-  ctx.fillStyle = '#C83737'; ctx.fillRect(118, 10, 12, 22);
+  ctx.fillStyle = '#00853E';
+  ctx.fillRect(94, 10, 12, 22);
+  ctx.fillStyle = '#FFF';
+  ctx.fillRect(106, 10, 12, 22);
+  ctx.fillStyle = '#C83737';
+  ctx.fillRect(118, 10, 12, 22);
 
   // Quadro incorniciato (Sandro Pertini, 1978)
   ctx.fillStyle = '#4E342E';
@@ -130,7 +145,10 @@ export function drawMunicipioInternoArea(ctx, t) {
   ctx.strokeStyle = '#1A1A1A';
   ctx.lineWidth = 1;
   for (var r2 = 0; r2 < 5; r2++) {
-    ctx.beginPath(); ctx.moveTo(0, 135 + r2 * 29); ctx.lineTo(400, 135 + r2 * 29); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, 135 + r2 * 29);
+    ctx.lineTo(400, 135 + r2 * 29);
+    ctx.stroke();
   }
 
   // Tappeto Rosso

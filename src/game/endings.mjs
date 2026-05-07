@@ -26,10 +26,10 @@ export function showEndingOverlay() {
   const et = window.gameState.endingType || 'psychological';
   const name = window.gameState.playerName || 'Maurizio';
   const data = window.storyEndingConditions?.[et];
-  
+
   if (!data) {
-     console.error('[Endings] No data found for ending type:', et);
-     return;
+    console.error('[Endings] No data found for ending type:', et);
+    return;
   }
 
   const titleEl = document.getElementById('ending-title');
@@ -40,7 +40,7 @@ export function showEndingOverlay() {
   const textEl = document.getElementById('ending-text');
   if (textEl) {
     textEl.textContent = '';
-    
+
     // Testo principale
     const mainText = data.description.replace(/Maurizio/g, name);
     mainText.split('\n').forEach((line, i) => {
@@ -51,22 +51,22 @@ export function showEndingOverlay() {
     // Aggiungi varianti (epiloghi)
     let epilogueText = '';
     if (data.variants) {
-       for (const v of data.variants) {
-          if (window.StoryManager?.engine?.checkCondition(v.condition)) {
-             epilogueText += `\n\n${v.text}`;
-          }
-       }
+      for (const v of data.variants) {
+        if (window.StoryManager?.engine?.checkCondition(v.condition)) {
+          epilogueText += `\n\n${v.text}`;
+        }
+      }
     } else if (data.variant) {
-       if (window.StoryManager?.engine?.checkCondition(data.variant.condition || data.variant)) {
-          epilogueText += `\n\n${data.variant.text}`;
-       }
+      if (window.StoryManager?.engine?.checkCondition(data.variant.condition || data.variant)) {
+        epilogueText += `\n\n${data.variant.text}`;
+      }
     }
 
     if (epilogueText) {
-       epilogueText.split('\n').forEach(line => {
-          textEl.appendChild(document.createElement('br'));
-          textEl.appendChild(document.createTextNode(line));
-       });
+      epilogueText.split('\n').forEach((line) => {
+        textEl.appendChild(document.createElement('br'));
+        textEl.appendChild(document.createTextNode(line));
+      });
     }
 
     // Firma
@@ -82,4 +82,3 @@ export function showEndingOverlay() {
     overlay.classList.add('active');
   }
 }
-

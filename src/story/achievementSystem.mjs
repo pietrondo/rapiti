@@ -42,7 +42,7 @@ const AchievementSystem = {
     return [];
   },
 
-  deserialize: (data) => {
+  deserialize: (_data) => {
     // Gestito da StoryEngine.deserialize
   },
 };

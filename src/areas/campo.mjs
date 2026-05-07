@@ -8,7 +8,7 @@
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawCampoArea(ctx, t) {
-  var PAL = window.PALETTE;
+  var _PAL = window.PALETTE;
 
   // Cielo mistico (violaceo)
   var skyGrad = ctx.createLinearGradient(0, 0, 0, 90);
@@ -21,7 +21,12 @@ export function drawCampoArea(ctx, t) {
   ctx.fillStyle = '#E8DCC8';
   for (var s = 0; s < 50; s++) {
     ctx.globalAlpha = 0.2 + Math.random() * 0.6;
-    ctx.fillRect(Math.random() * CANVAS_W, Math.random() * 70, 1 + Math.random(), 1 + Math.random());
+    ctx.fillRect(
+      Math.random() * CANVAS_W,
+      Math.random() * 70,
+      1 + Math.random(),
+      1 + Math.random()
+    );
   }
   ctx.globalAlpha = 1;
 
@@ -31,17 +36,29 @@ export function drawCampoArea(ctx, t) {
     var ay = 25 + Math.sin(t * 1.5 + al) * 10;
     var aa = 0.3 + Math.sin(t * 3 + al * 2) * 0.25;
     ctx.fillStyle = `rgba(150,200,255,${aa * 0.3})`;
-    ctx.beginPath(); ctx.arc(ax, ay, 16, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ax, ay, 16, 0, Math.PI * 2);
+    ctx.fill();
     ctx.fillStyle = `rgba(200,230,255,${aa * 0.6})`;
-    ctx.beginPath(); ctx.arc(ax, ay, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ax, ay, 7, 0, Math.PI * 2);
+    ctx.fill();
     ctx.fillStyle = `rgba(255,255,255,${aa})`;
-    ctx.beginPath(); ctx.arc(ax, ay, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ax, ay, 3, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   // Montagne scure
   ctx.fillStyle = '#0E0A18';
   ctx.beginPath();
-  ctx.moveTo(0, 90); ctx.lineTo(80, 58); ctx.lineTo(180, 72); ctx.lineTo(300, 50); ctx.lineTo(400, 85); ctx.lineTo(400, 90); ctx.lineTo(0, 90);
+  ctx.moveTo(0, 90);
+  ctx.lineTo(80, 58);
+  ctx.lineTo(180, 72);
+  ctx.lineTo(300, 50);
+  ctx.lineTo(400, 85);
+  ctx.lineTo(400, 90);
+  ctx.lineTo(0, 90);
   ctx.fill();
 
   // Campo di grano
@@ -109,13 +126,18 @@ export function drawCampoArea(ctx, t) {
     var py = 130 + Math.cos(t * 1.5 + p * 0.6) * 40;
     var pa = 0.2 + Math.sin(t * 3 + p) * 0.15;
     ctx.fillStyle = `rgba(255,220,100,${pa})`;
-    ctx.beginPath(); ctx.arc(px, py, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath();
+    ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   // Freccia uscita
   ctx.fillStyle = 'rgba(212,168,67,0.5)';
   ctx.beginPath();
-  ctx.moveTo(395, 172); ctx.lineTo(390, 177); ctx.lineTo(390, 167); ctx.fill();
+  ctx.moveTo(395, 172);
+  ctx.lineTo(390, 177);
+  ctx.lineTo(390, 167);
+  ctx.fill();
   ctx.font = 'bold 8px "Courier New", monospace';
   ctx.fillStyle = '#FFF';
   ctx.textAlign = 'right';

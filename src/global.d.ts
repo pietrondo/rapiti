@@ -14,7 +14,7 @@ declare global {
   var gameState: GameState;
 
   /** [BOTH] Static config */
-  var PALETTE: string[];
+  var PALETTE: Record<string, string>;
   var CANVAS_W: number;
   var CANVAS_H: number;
   var PLAYER_SPEED: number;

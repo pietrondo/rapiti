@@ -231,7 +231,9 @@ export function checkDeduction() {
     if (window.gameState.confirmedHypotheses.indexOf(foundHypo.id) === -1) {
       window.gameState.confirmedHypotheses.push(foundHypo.id);
       const hypoName = window.t ? window.t(`hypo.${foundHypo.id}.name`) : foundHypo.name;
-      window.showToast(`${window.t ? window.t('toast.new_hypothesis') : 'Nuova Ipotesi'}: ${hypoName}`);
+      window.showToast(
+        `${window.t ? window.t('toast.new_hypothesis') : 'Nuova Ipotesi'}: ${hypoName}`
+      );
       console.log(`[Deduction] Hypothesis confirmed: ${foundHypo.id}`);
 
       // Sblocca flag o eventi
@@ -242,16 +244,26 @@ export function checkDeduction() {
         window.StoryManager.onPuzzleSolved('deduction');
         window.updateNPCStates();
         window.playSFX?.('bell');
-        window.showToast(window.t ? window.t('toast.deduction_complete') : 'Tutti i pezzi del puzzle combaciano. La verità è vicina.');
+        window.showToast(
+          window.t
+            ? window.t('toast.deduction_complete')
+            : 'Tutti i pezzi del puzzle combaciano. La verità è vicina.'
+        );
       }
     } else {
-      window.showToast(window.t ? window.t('toast.hypothesis_exists') : 'Hai già formulato questa ipotesi.');
+      window.showToast(
+        window.t ? window.t('toast.hypothesis_exists') : 'Hai già formulato questa ipotesi.'
+      );
     }
 
     renderHypothesisLog();
     resetDeductionSlots();
   } else {
-    window.showToast(window.t ? window.t('toast.no_logic_link') : 'Nessun collegamento logico evidente tra questi indizi.');
+    window.showToast(
+      window.t
+        ? window.t('toast.no_logic_link')
+        : 'Nessun collegamento logico evidente tra questi indizi.'
+    );
     // Visivamente resetta gli slot con un flash rosso
     slots.forEach((s) => {
       s.style.borderColor = '#f44';

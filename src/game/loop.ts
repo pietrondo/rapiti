@@ -18,10 +18,7 @@ import { render as renderFrame } from '../render/index.ts';
 // Side-effect imports to ensure window globals are initialized
 import '../effects/ambient.mjs';
 
-/** Stub — interaction checking is handled by input handlers */
-function checkInteractions(): void {
-  /* no-op: interactions triggered by keypress, not per-frame polling */
-}
+
 
 declare const gameState: GameState;
 
@@ -116,7 +113,6 @@ class GameLoop {
   private _updatePlaying(): void {
     updatePlayerPosition();
     checkAreaExits();
-    checkInteractions();
 
     // Step sounds (random, ~every 20 frames)
     if (Math.random() < 0.05) {

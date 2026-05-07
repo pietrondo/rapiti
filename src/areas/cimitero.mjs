@@ -8,7 +8,7 @@
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawCemeteryArea(ctx, t) {
-  var PAL = window.PALETTE;
+  var _PAL = window.PALETTE;
 
   // Cielo notturno cupo
   ctx.fillStyle = '#06090F';

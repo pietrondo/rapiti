@@ -8,7 +8,7 @@
 /* global window.PALETTE, window.CANVAS_W, window.CANVAS_H, window.PF, window.drawVignette */
 
 export function drawPoliceArea(ctx, t) {
-  var PAL = window.PALETTE;
+  var _PAL = window.PALETTE;
 
   window.PF.nightSky(ctx, 12, t);
   window.PF.mountains(ctx);
@@ -22,15 +22,20 @@ export function drawPoliceArea(ctx, t) {
   // Bandiera Italiana
   ctx.fillStyle = '#666';
   ctx.fillRect(50, 10, 2, 50);
-  ctx.fillStyle = '#00853E'; ctx.fillRect(52, 12, 10, 13);
-  ctx.fillStyle = '#FFF'; ctx.fillRect(62, 12, 10, 13);
-  ctx.fillStyle = '#C83737'; ctx.fillRect(72, 12, 10, 13);
+  ctx.fillStyle = '#00853E';
+  ctx.fillRect(52, 12, 10, 13);
+  ctx.fillStyle = '#FFF';
+  ctx.fillRect(62, 12, 10, 13);
+  ctx.fillStyle = '#C83737';
+  ctx.fillRect(72, 12, 10, 13);
 
   // Asfalto
   ctx.fillStyle = '#2A2D33';
   ctx.fillRect(0, 90, CANVAS_W, 160);
   ctx.fillStyle = '#333840';
-  for (var i = 0; i < 8; i++) { ctx.fillRect(i * 50, 90, 2, 160); }
+  for (var i = 0; i < 8; i++) {
+    ctx.fillRect(i * 50, 90, 2, 160);
+  }
 
   // Edificio stazione
   ctx.fillStyle = '#3A3D45';
@@ -60,8 +65,10 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillRect(215, 63, 30, 24);
   ctx.fillRect(271, 63, 30, 24);
   ctx.fillStyle = '#444';
-  ctx.fillRect(118, 63, 1, 24); ctx.fillRect(174, 63, 1, 24);
-  ctx.fillRect(230, 63, 1, 24); ctx.fillRect(286, 63, 1, 24);
+  ctx.fillRect(118, 63, 1, 24);
+  ctx.fillRect(174, 63, 1, 24);
+  ctx.fillRect(230, 63, 1, 24);
+  ctx.fillRect(286, 63, 1, 24);
 
   // Portone principale
   ctx.fillStyle = '#1A1C20';
@@ -91,7 +98,8 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillStyle = '#1A365D';
   ctx.fillRect(310, 170, 40, 22);
   ctx.fillStyle = '#444';
-  ctx.fillRect(310, 188, 8, 8); ctx.fillRect(342, 188, 8, 8);
+  ctx.fillRect(310, 188, 8, 8);
+  ctx.fillRect(342, 188, 8, 8);
   // Faro
   ctx.fillStyle = '#D4A843';
   ctx.fillRect(348, 174, 4, 4);
@@ -115,7 +123,8 @@ export function drawPoliceArea(ctx, t) {
   ctx.fillStyle = '#CC4444';
   ctx.fillRect(0, 98, 45, 3);
   ctx.fillStyle = '#FFF';
-  ctx.fillRect(10, 98, 8, 3); ctx.fillRect(26, 98, 8, 3);
+  ctx.fillRect(10, 98, 8, 3);
+  ctx.fillRect(26, 98, 8, 3);
 
   // Cartello PARCHEGGIO
   ctx.fillStyle = '#1A1C20';
@@ -143,7 +152,10 @@ export function drawPoliceArea(ctx, t) {
   // Freccia USCITA (verso industriale, in alto)
   ctx.fillStyle = 'rgba(212,168,67,0.5)';
   ctx.beginPath();
-  ctx.moveTo(200, 5); ctx.lineTo(205, 12); ctx.lineTo(195, 12); ctx.fill();
+  ctx.moveTo(200, 5);
+  ctx.lineTo(205, 12);
+  ctx.lineTo(195, 12);
+  ctx.fill();
 }
 
 const PoliziaArea = {

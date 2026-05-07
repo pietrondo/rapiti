@@ -38,7 +38,7 @@ const EventSystem = {
     return [];
   },
 
-  deserialize: (data) => {
+  deserialize: (_data) => {
     // La deserializzazione è gestita da StoryEngine.deserialize
   },
 };

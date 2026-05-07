@@ -18,7 +18,7 @@ const DialogueSystem = {
     if (typeof StoryEngine !== 'undefined' && StoryEngine.getDialogueNodeForNPC) {
       return StoryEngine.getDialogueNodeForNPC(npcId);
     }
-    return npcId + '_s0';
+    return `${npcId}_s0`;
   },
 
   /**
@@ -37,7 +37,7 @@ const DialogueSystem = {
       return StoryEngine.checkCondition(condition);
     }
     return true;
-  }
+  },
 };
 
 if (typeof window !== 'undefined') {

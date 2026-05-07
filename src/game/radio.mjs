@@ -91,8 +91,7 @@ export function updateRadioKnob(pct) {
 
       var rmsgEl2 = document.getElementById('radio-message');
       if (rmsgEl2) {
-        rmsgEl2.textContent =
-          '"...non guardare... quando si ferma..."';
+        rmsgEl2.textContent = '"...non guardare... quando si ferma..."';
         rmsgEl2.className = 'radio-message-found';
       }
       // Aggiungi indizio audio al diario

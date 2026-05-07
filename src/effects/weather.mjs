@@ -224,7 +224,10 @@ export function triggerScriptedWeather(type) {
   } else if (type === 'fog_cemetery') {
     if (w.FogSystem) w.FogSystem.setActive(true, 0.5);
   } else if (type === 'clear') {
-    if (w.WeatherSystem) { w.WeatherSystem.active = false; w.WeatherSystem.type = 'none'; }
+    if (w.WeatherSystem) {
+      w.WeatherSystem.active = false;
+      w.WeatherSystem.type = 'none';
+    }
     if (w.FogSystem) w.FogSystem.active = false;
   }
 }

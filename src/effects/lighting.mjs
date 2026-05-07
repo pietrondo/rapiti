@@ -118,7 +118,7 @@ LightingSystem.prototype.draw = function (ctx) {
   }
 
   // Flash fulmine (dal WeatherSystem)
-  if (window.WeatherSystem && window.WeatherSystem.lightningActive && window.WeatherSystem.screenFlash > 0) {
+  if (window.WeatherSystem?.lightningActive && window.WeatherSystem.screenFlash > 0) {
     ctx.globalCompositeOperation = 'lighter';
     ctx.fillStyle = `rgba(200,220,255,${window.WeatherSystem.screenFlash * 0.4})`;
     ctx.fillRect(0, 0, window.CANVAS_W, window.CANVAS_H);

@@ -356,9 +356,9 @@ var dialogueNodes = {
   },
 
   valli_s3_segnale: {
-    text: 'Quindi avete trovato i nastri. Sì, eravamo noi a trasmettere. Ma non ci aspettavamo una risposta. Quello che è arrivato da lassù... ha mandato in corto circuito l\'intera stazione radar.',
+    text: "Quindi avete trovato i nastri. Sì, eravamo noi a trasmettere. Ma non ci aspettavamo una risposta. Quello che è arrivato da lassù... ha mandato in corto circuito l'intera stazione radar.",
     choices: [
-      { text: 'Perché continuate a negare l\'evidenza?', next: 'valli_s3_negazione' },
+      { text: "Perché continuate a negare l'evidenza?", next: 'valli_s3_negazione' },
       { text: 'Enzo è stato preso a causa vostra?', next: 'valli_s3_colpa' },
     ],
   },
@@ -386,7 +386,7 @@ var dialogueNodes = {
   /* ── NUOVI NODI TRUST-GATED ── */
 
   neri_s3_confessione: {
-    text: 'Va bene, Maurizio. Avete vinto. Ero io il consulente scientifico del Progetto Sirius nel \'61. Pensavamo di poter controllare l\'apertura. Ma abbiamo solo attirato la loro attenzione.',
+    text: "Va bene, Maurizio. Avete vinto. Ero io il consulente scientifico del Progetto Sirius nel '61. Pensavamo di poter controllare l'apertura. Ma abbiamo solo attirato la loro attenzione.",
     choices: [
       { text: 'Perché me lo dite solo ora?', next: 'neri_s3_perche' },
       { text: 'Cosa possiamo fare per chiudere la falla?', next: 'neri_s3_falla' },
@@ -406,7 +406,7 @@ var dialogueNodes = {
   },
 
   gino_s3_testimone: {
-    text: 'Quella notte del \'74... ero io di pattuglia per le consegne notturne. Ho visto una sfera scendere sopra la chiesa. Non era un aereo. Si muoveva come... come se il tempo non esistesse.',
+    text: "Quella notte del '74... ero io di pattuglia per le consegne notturne. Ho visto una sfera scendere sopra la chiesa. Non era un aereo. Si muoveva come... come se il tempo non esistesse.",
   },
 
   don_pietro_s3_segreto: {
@@ -434,13 +434,13 @@ var dialogueNodes = {
 
   /* ── TRUST-BASED VARIATIONS ── */
   ruggeri_s0_trust_low: {
-    text: "Lei è qui per le luci, suppongo. Tutti vengono qui per quello. Non ho tempo per queste sciocchezze. Se ha qualcosa di concreto, mi faccia rapporto. Altrimenti, arrivederci.",
+    text: 'Lei è qui per le luci, suppongo. Tutti vengono qui per quello. Non ho tempo per queste sciocchezze. Se ha qualcosa di concreto, mi faccia rapporto. Altrimenti, arrivederci.',
   },
   ruggeri_s0_trust_high: {
-    text: "Detective! Mi fa piacere rivederla. So che posso fidarmi di lei. Tra noi... le cose non quadrano. La Prefettura sa più di quanto dice. Ma continui a scavare. Io la copro.",
+    text: 'Detective! Mi fa piacere rivederla. So che posso fidarmi di lei. Tra noi... le cose non quadrano. La Prefettura sa più di quanto dice. Ma continui a scavare. Io la copro.',
   },
   neri_s1_trust_high: {
-    text: "Ho trovato altri documenti che potrebbero interessarla. Rapporti del 1961. Nominali, ma con annotazioni a margine... non ufficiali. Qualcuno teneva un diario parallelo degli avvistamenti.",
+    text: 'Ho trovato altri documenti che potrebbero interessarla. Rapporti del 1961. Nominali, ma con annotazioni a margine... non ufficiali. Qualcuno teneva un diario parallelo degli avvistamenti.',
   },
 };
 

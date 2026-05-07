@@ -16,6 +16,7 @@
     "alwaysStrict": true,
     
     /* Code quality */
+    "allowImportingTsExtensions": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
@@ -36,6 +37,7 @@
     "ignoreDeprecations": "6.0",
     
     /* Output */
+    "noEmit": true,
     "declaration": false,
     "sourceMap": true,
     "outDir": "./dist",

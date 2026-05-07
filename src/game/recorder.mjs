@@ -96,10 +96,11 @@ export function buildRecorderOverlay() {
 
   // Power button
   var rPower = document.getElementById('rec-power');
-  if (rPower) rPower.addEventListener('click', () => {
-    recorderState.powered = !recorderState.powered;
-    refreshRecorderUI();
-  });
+  if (rPower)
+    rPower.addEventListener('click', () => {
+      recorderState.powered = !recorderState.powered;
+      refreshRecorderUI();
+    });
 }
 
 export function refreshRecorderUI() {
@@ -131,8 +132,7 @@ export function refreshRecorderUI() {
   var bl = ['TEST A (prototipo)', 'TEST B (fase intermedia)', 'TEST C — 1978'];
   var rBobinLabel = document.getElementById('rec-bobin-label');
   if (rBobinLabel) {
-    rBobinLabel.textContent =
-      rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
+    rBobinLabel.textContent = rs.bobin >= 0 ? bl[rs.bobin] : 'Nessuna selezionata';
     rBobinLabel.style.color = rs.bobin >= 0 ? '#d4a843' : '#6b7b6b';
   }
 
